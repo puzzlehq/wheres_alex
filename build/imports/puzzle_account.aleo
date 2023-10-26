@@ -1,0 +1,54 @@
+program puzzle_account.aleo;
+
+record OwnerRules:
+    owner as address.private;
+    m as u8.private;
+    n as u8.private;
+    signer_address_one as address.private;
+    signer_address_two as address.private;
+
+record Signatures:
+    owner as address.private;
+    message_one as field.private;
+    message_two as field.private;
+    message_three as field.private;
+    message_four as field.private;
+    signed_message as signature.private;
+    signer_address as address.private;
+
+
+function mint_owner_rules_record:
+    input r0 as address.private;
+    input r1 as address.private;
+    input r2 as address.private;
+    cast r0 1u8 1u8 r1 r2 into r3 as OwnerRules.record;
+    output r3 as OwnerRules.record;
+
+
+function consume_owner_rules_record:
+    input r0 as OwnerRules.record;
+    output r0.m as u8.private;
+    output r0.n as u8.private;
+    output r0.signer_address_one as address.private;
+    output r0.signer_address_two as address.private;
+
+
+function mint_signatures_record:
+    input r0 as field.private;
+    input r1 as field.private;
+    input r2 as field.private;
+    input r3 as field.private;
+    input r4 as signature.private;
+    input r5 as address.private;
+    cast self.caller r0 r1 r2 r3 r4 r5 into r6 as Signatures.record;
+    output r6 as Signatures.record;
+
+
+function consume_signatures_record:
+    input r0 as Signatures.record;
+    output r0.message_one as field.private;
+    output r0.message_two as field.private;
+    output r0.message_three as field.private;
+    output r0.message_four as field.private;
+    output r0.signed_message as signature.private;
+    output r0.signer_address as address.private;
