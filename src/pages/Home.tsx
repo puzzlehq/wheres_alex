@@ -1,14 +1,14 @@
 
 function Home() {
     return (
-        <div className="min-h-screen flex justify-center items-center bg-yellow-300">
-            <div className="max-w-xs w-full px-4 py-8 bg-yellow-300">
-                <div className="mb-4 text-center mt-4">
-                    <button className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
-                </div>
+        <div className="min-h-screen flex justify-center items-center bg-yellow-500">
+            <div className="w-full px-4 py-10 bg-yellow-500">
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-black">Total Winnings</h2>
                     <p className="bg-gray-300 p-2 rounded-full mt-2 text-black text-xl">10 Puzzle Pieces</p>
+                </div>
+                <div className="mb-4 text-center mt-4">
+                    <button className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
                 </div>
                 <h3 className="mb-4 text-center text-xl font-bold text-black">Notifications</h3>
                     <div className="mb-6 overflow-y-auto notifications-scrollbar" style={{ maxHeight: '200px' }}>

@@ -18,25 +18,21 @@ function App() {
   };
   
   return (
-    <div className="min-h-screen bg-gray-200 flex justify-center items-center">
-      <div className="max-w-screen-sm w-full h-[100vh] bg-white shadow-md overflow-y-auto">
+    <div className="min-h-screen bg-yellow-500 flex justify-center items-center">
+      <div className="max-w-screen-sm w-full bg-yellow-500 shadow-md overflow-y-auto">
         <Header isConnected={isConnected} address={account?.address} />
-        <div className="w-full flex-grow flex flex-col justify-center items-center">
-          {isConnected ? 
-            <div className="max-w-screen-sm w-full h-[90vh]">
-              <Home /> 
-            </div>
-            : (
-            <div className="text-center">
-              <button 
-                onClick={onConnectWallet} 
-                className="px-4 py-2 bg-blue-600 text-white rounded shadow-md hover:bg-blue-700"
-              >
-                Connect your wallet
-              </button>
-            </div>
-          )}
-        </div>
+        {isConnected ? 
+          <Home />
+          : 
+          <div className="w-full flex flex-col justify-center items-center h-[calc(100vh-4rem)]"> {/* subtracting header height */}
+            <button 
+              onClick={onConnectWallet} 
+              className="px-10 py-4 bg-gray-600 text-white rounded shadow-md hover:bg-blue-700 text-xl"
+            >
+              Play!
+            </button>
+          </div>
+        }
       </div>
     </div>
   );
@@ -46,11 +42,11 @@ export default App;
 
 function Header({ isConnected, address }: { isConnected: boolean, address: string | undefined }) {
   return (
-    <div className="w-full h-16 border-b flex justify-between items-center px-8 dark:bg-orange-800">
+    <div className="w-full h-16 flex justify-between items-center px-8 dark:bg-orange-500">
       {isConnected && address ? (
         <>
           <span className="text-3xl font-bold">Find Alex!</span>
-          <button className="px-4 py-1 bg-blue-600 text-white rounded shadow-md hover:bg-blue-700">
+          <button className="px-4 py-1 bg-gray-600 text-white rounded shadow-md hover:bg-blue-700">
             {shortenAddress(address)}
           </button>
         </>
