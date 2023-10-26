@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import qrImg from '../assets/bx-scan.svg';
 import { Html5Qrcode } from "html5-qrcode";
 
-function NewGame() {
+function StartWager() {
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [isScanning, setIsScanning] = useState<boolean>(false); // New state variable
   const scannerRef = useRef<Html5Qrcode | null>(null);
@@ -99,4 +99,4 @@ function NewGame() {
   );
 }
 
-export default NewGame;
+export default StartWager;

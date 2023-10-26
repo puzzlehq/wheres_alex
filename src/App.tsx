@@ -2,7 +2,8 @@ import { shortenAddress } from '@puzzlehq/sdk';
 import PuzzleAccount from './models/account.js';
 import { useState } from 'react';
 import Home from './pages/Home.js';
-import NewGame from './pages/NewGame.js';  // Assuming you have this component
+import NewGame from './pages/NewGame.js';
+import StartWager from './pages/StartWager.js';
 import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
@@ -28,6 +29,7 @@ function App() {
           <div className="max-w-screen-sm w-full h-[calc(100vh-4rem)]">
             <Routes>
               <Route path="/new-game" element={<NewGame />} /> {/* Use the element prop */}
+              <Route path="/new-game" element={<StartWager />} /> {/* Use the element prop */}
               <Route 
                 path="/" 
                 element={ isConnected ? <Home /> : (

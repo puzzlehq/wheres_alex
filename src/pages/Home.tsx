@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import GameState from '../models/game_states';
 import rightImageSrc from '../assets/alex_mic_left_tilt.png';
@@ -50,6 +51,7 @@ function Home() {
             setTimeLeft(prevTime => {
                 const newTime: { [key: string]: any } = {};
     
+                // eslint-disable-next-line prefer-const
                 for (let player in prevTime) {
                     let { hours, minutes, seconds } = prevTime[player];
     
