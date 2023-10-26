@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { QrReader } from 'react-qr-reader';
+import { Result } from '@zxing/library';
 import qrImg from '../assets/bx-scan.svg';
 
 function NewGame() {
