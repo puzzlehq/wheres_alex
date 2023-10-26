@@ -1,23 +1,39 @@
 import { shortenAddress, useAccount, useConnect } from '@puzzlehq/sdk';
-import Dashboard from './Dashboard.js';
+// import Dashboard from './pages/Dashboard.js';
+import PuzzleAccount from './models/account.js';
+import { useState } from 'react';
+import Home from './pages/Home.js';
 
 function App() {
-  const { connect, isConnected, loading } = useConnect();
-  const { account } = useAccount();
+  // const { connect, isConnected, loading } = useConnect();
+  const [isConnected, SetIsConnected] = useState<boolean>(false);
+  // const { account } = useAccount();
+  const account: PuzzleAccount = {
+    network: 'Aleo',
+    chainId: '1',
+    address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
+    shortenedAddress: 'aleo1as..tuvr6'
+  };
+  const onConnectWallet = () => { 
+    SetIsConnected(true);
+  };
+  
+  
 
   return (
     <div className='w-full h-full flex justify-center items-center'>
       <Header address={account?.address} />
       <div className='w-full h-full pt-20 pb-4 items-center align-middle'>
-        {loading && 
+        {/* {loading && 
           <div className='w-full h-full text-center align-middle'>
             loading...
           </div>
         }
-        {!loading && isConnected && <Dashboard />}
-        {!loading && !isConnected && 
+        {!loading && isConnected && <Dashboard />} */}
+        {isConnected && <Home />}
+        {!isConnected && 
           <div className='w-full h-full text-center align-middle'>
-            <button onClick={connect}>Connect your wallet</button>
+            <button onClick={onConnectWallet}>Connect your wallet</button>
           </div>
         }
       </div>

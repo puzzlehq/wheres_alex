@@ -1,6 +1,6 @@
 import { Record, useAccount, useConnect, useExecuteProgram, useRecords } from '@puzzlehq/sdk';
 import { useEffect, useState } from 'react';
-import Mint from './Mint.js';
+import Mint from '../Mint.js';
 
 export const shortenAddress = (
   address: string,
