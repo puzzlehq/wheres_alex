@@ -1,4 +1,5 @@
-import { shortenAddress, useAccount, useConnect } from '@puzzlehq/sdk';
+// import { shortenAddress, useAccount, useConnect } from '@puzzlehq/sdk';
+import { shortenAddress } from '@puzzlehq/sdk';
 // import Dashboard from './pages/Dashboard.js';
 import PuzzleAccount from './models/account.js';
 import { useState } from 'react';

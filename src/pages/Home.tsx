@@ -1,3 +1,4 @@
+
 function Home() {
     return (
         <div className="min-h-screen flex justify-center items-center bg-yellow-300">
@@ -13,8 +14,8 @@ function Home() {
                     <h2 className="text-2xl font-bold text-black">Total Winnings</h2>
                     <p className="bg-gray-300 p-2 rounded-full mt-2 text-black text-xl">10 Puzzle Pieces</p>
                 </div>
-                <div className="mb-6 overflow-y-auto notifications-scrollbar" style={{ maxHeight: '200px' }}>
-                    <h3 className="mb-4 text-center text-xl font-bold text-black">Notifications</h3>
+                <h3 className="mb-4 text-center text-xl font-bold text-black">Notifications</h3>
+                    <div className="mb-6 overflow-y-auto notifications-scrollbar" style={{ maxHeight: '200px' }}>
                     {["Bob", "Matt", "Darv", "Stef"].map(name => (
                         <div className="flex items-center justify-between bg-white p-4 rounded-lg mb-2">
                             <div className="flex items-center flex-grow">
@@ -50,28 +51,6 @@ function Home() {
                     <button className="items-center bg-orange-500 p-2 rounded-full text-xs">Past Games</button>
                 </div>
             </div>
-            <style jsx global>{`
-                .custom-scrollbar::-webkit-scrollbar,
-                .notifications-scrollbar::-webkit-scrollbar {
-                    width: 10px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-track,
-                .notifications-scrollbar::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb,
-                .notifications-scrollbar::-webkit-scrollbar-thumb {
-                    background-color: rgba(255, 255, 255, 0.1);
-                    border-radius: 10px;
-                }
-
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover,
-                .notifications-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background-color: rgba(255, 255, 255, 0.2);
-                }
-            `}</style>
         </div>
     );
 }
