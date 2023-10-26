@@ -1,7 +1,65 @@
+import React, { useState, useEffect } from 'react';
+import GameState from '../models/game_states';
 import rightImageSrc from '../assets/alex_mic_left_tilt.png';
 import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 
 function Home() {
+    const gameStates: GameState[] = [
+        { player: "Alice", wager: "10 P", action: "Start" },
+        { player: "Bob", wager: "20 P", action: "Finish" },
+        { player: "Charlie", wager: "30 P", action: "Reneg" },
+        { player: "David", wager: "40 P", action: "Delete" },
+        { player: "Eva", blockheight: 10500, wager: "50 P", action: "Claim" },
+        { player: "Frank", blockheight: 105000, wager: "60 P", action: "Claim" }
+    ];
+
+    const aleo_blockheight: number = 50000;
+    const aleo_blocks_per_hr: number = 6055;
+
+    const liveGames = gameStates.filter(game => game.action === 'Reneg' || (game.action === 'Claim' && game.blockheight <= aleo_blockheight));
+    const notifications = gameStates.filter(game => ['Start', 'Finish', 'Delete'].includes(game.action) || (game.action === 'Claim' && game.blockheight > aleo_blockheight));
+
+    // Timer logic
+    const calculateTimeLeft = (blockheight: number) => {
+        const hoursLeft = (blockheight - aleo_blockheight) / aleo_blocks_per_hr;
+        return {
+            hours: Math.floor(hoursLeft),
+            minutes: Math.floor((hoursLeft % 1) * 60),
+            seconds: Math.floor((((hoursLeft % 1) * 60) % 1) * 60),
+        };
+    };
+
+    const initialTimeLeft = liveGames.reduce<{ [key: string]: any }>((acc, game) => {
+        if (game.action === 'Claim') {
+            acc[game.player] = calculateTimeLeft(game.blockheight);
+        }
+        return acc;
+    }, {});
+
+    const [timeLeft, setTimeLeft] = useState<{ [key: string]: any }>(initialTimeLeft);
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            setTimeLeft(prevTime => {
+                const newTime: { [key: string]: any } = {};
+
+                for (let player in prevTime) {
+                    let { hours, minutes, seconds } = prevTime[player];
+
+                    if (seconds > 0) seconds--;
+                    else if (minutes > 0) { minutes--; seconds = 59; }
+                    else if (hours > 0) { hours--; minutes = 59; seconds = 59; }
+
+                    newTime[player] = { hours, minutes, seconds };
+                }
+
+                return newTime;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, []);
+
     return (
         <div className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-yellow-500">
             <div className="w-full bg-yellow-500"> {/* Removed px-4 from here */}
@@ -22,35 +80,40 @@ function Home() {
             </div>
                 <h3 className="mb-4 text-center text-xl font-bold text-black">Notifications</h3>
                 <div className="mb-6 overflow-y-auto notifications-scrollbar px-4" style={{ maxHeight: '200px' }}>
-                    {["Bob", "Matt", "Darv", "Stef"].map(name => (
+                    {notifications.map(notification => (
                         <div className="flex items-center justify-between bg-white p-4 rounded-lg mb-2">
                             <div className="flex items-center flex-grow">
                                 <div className="bg-blue-500 rounded-full w-10 h-10"></div>
-                                <span className="ml-2 text-blue-500 text-sm">{name}</span>
+                                <span className="ml-2 text-blue-500 text-sm">{notification.player}</span>
                             </div>
                             <div className="flex items-center space-x-2">
-                                <button className="bg-green-500 p-2 rounded-full text-sm w-24">{name === "Stef" ? "Delete" : name === "Matt" ? "Start" : "Finish"}</button>
-                                <span className="text-blue-500 text-sm w-12 text-right">{name === "Matt" ? "25 P" : name === "Darv" ? "50 P" : "10 P"}</span>
+                                <button className={`p-2 rounded-full text-sm w-24 ${notification.action === 'Delete' ? 'bg-red-500' : 'bg-green-500'}`}>{notification.action}</button>
+                                <span className="text-blue-500 text-sm w-12 text-right">{notification.wager}</span>
                             </div>
                         </div>
                     ))}
                 </div>
                 <h3 className="mb-4 text-center text-xl font-bold text-black">Live Games</h3>
                 <div className="grid gap-2 overflow-y-auto custom-scrollbar px-4" style={{ maxHeight: '250px' }}>
-                    {[...Array(2)].map(() => (
-                        ["Alice", "Luke", "Veda"].map((name, index) => (
-                            <div className="flex items-center justify-between bg-white p-4 rounded-lg">
-                                <div className="flex items-center flex-grow">
-                                    <div className="bg-blue-500 rounded-full w-10 h-10"></div>
-                                    <span className="ml-2 text-blue-500 text-sm">{name}</span>
-                                </div>
-                                <div className="flex items-center space-x-2">
-                                    <button className="bg-red-500 p-1 rounded-full text-xs">Reneg</button>
-                                    <button className="bg-gray-400 p-1 rounded-full text-xs">Ping</button>
-                                    <span className="text-blue-500 text-sm w-12 text-right">{index === 0 ? '10 P' : index === 1 ? '100 P' : '69 P'}</span>
-                                </div>
+                    {liveGames.map(game => (
+                        <div className="flex items-center justify-between bg-white p-4 rounded-lg">
+                            <div className="flex items-center space-x-2">
+                                {game.action === 'Claim' ? (
+                                    <>
+                                        <div className="bg-red-500 p-1 rounded-full text-xs text-white">
+                                            {timeLeft[game.player] && `${String(timeLeft[game.player].hours).padStart(2, '0')}:${String(timeLeft[game.player].minutes).padStart(2, '0')}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
+                                        </div>
+                                        <button className="bg-gray-400 p-1 rounded-full text-xs">Ping</button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button className="bg-red-500 p-1 rounded-full text-xs">{game.action}</button>
+                                        <button className="bg-gray-400 p-1 rounded-full text-xs">Ping</button>
+                                    </>
+                                )}
+                                <span className="text-blue-500 text-sm w-12 text-right">{game.wager}</span>
                             </div>
-                        ))
+                        </div>
                     ))}
                 </div>
             </div>
