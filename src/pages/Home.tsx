@@ -42,21 +42,21 @@ function Home() {
         const timer = setInterval(() => {
             setTimeLeft(prevTime => {
                 const newTime: { [key: string]: any } = {};
-
+    
                 for (let player in prevTime) {
                     let { hours, minutes, seconds } = prevTime[player];
-
-                    if (seconds > 0) seconds--;
-                    else if (minutes > 0) { minutes--; seconds = 59; }
-                    else if (hours > 0) { hours--; minutes = 59; seconds = 59; }
-
+    
+                    if (seconds < 59) seconds++;
+                    else if (minutes < 59) { minutes++; seconds = 0; }
+                    else { hours++; minutes = 0; seconds = 0; }
+    
                     newTime[player] = { hours, minutes, seconds };
                 }
-
+    
                 return newTime;
             });
         }, 1000);
-
+    
         return () => clearInterval(timer);
     }, []);
 
@@ -97,6 +97,10 @@ function Home() {
                 <div className="grid gap-2 overflow-y-auto custom-scrollbar px-4" style={{ maxHeight: '250px' }}>
                     {liveGames.map(game => (
                         <div className="flex items-center justify-between bg-white p-4 rounded-lg">
+                            <div className="flex items-center flex-grow">
+                                <div className="bg-blue-500 rounded-full w-10 h-10"></div>
+                                <span className="ml-2 text-blue-500 text-sm">{game.player}</span>
+                            </div>
                             <div className="flex items-center space-x-2">
                                 {game.action === 'Claim' ? (
                                     <>
