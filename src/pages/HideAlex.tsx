@@ -3,14 +3,14 @@ import qrImg from '../assets/bx-scan.svg';
 import { Html5Qrcode } from "html5-qrcode";
 import { useNavigate } from 'react-router-dom';
 
-function NewGame() {
+function HideAlex() {
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const navigate = useNavigate(); // Initialize useHistory
 
   const navigateToPlaceWager = () => {
-    navigate("/start-wager", {state:{walletAddress}}); // Navigates to PlaceWager route
+    navigate("/start-wager"); // Navigates to PlaceWager route
   };
 
   const startScanner = async () => {
@@ -108,4 +108,4 @@ function NewGame() {
   );
 }
 
-export default NewGame;
+export default HideAlex;

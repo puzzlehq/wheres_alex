@@ -1,99 +1,65 @@
-import { useState, useRef } from 'react';
-import qrImg from '../assets/bx-scan.svg';
-import { Html5Qrcode } from "html5-qrcode";
+import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function StartWager() {
-  const [walletAddress, setWalletAddress] = useState<string>("");
-  const [isScanning, setIsScanning] = useState<boolean>(false); // New state variable
-  const scannerRef = useRef<Html5Qrcode | null>(null);
+  const location = useLocation();
+  const walletAddress = location.state?.walletAddress || "N/A";
+  const [amount, setAmount] = useState<string | null>(null);
+  const [tempAmount, setTempAmount] = useState<string>("");
+  const navigate = useNavigate();
 
-  const startScanner = async () => {
-    setIsScanning(true); // Set state when scanning starts
-
-    if (!scannerRef.current) {
-      scannerRef.current = new Html5Qrcode('qr-code-scanner');
-    }
-
-    try {
-      await scannerRef.current.start(
-        { facingMode: 'user' },
-        { fps: 10, qrbox: 250 },
-        handleScanSuccess,
-        handleScanError
-      );
-    } catch (err) {
-      console.error("Unable to start scanning", err);
-    }
+  const handleBackClick = () => {
+    navigate('/new-game');
   };
 
-  const handleScanSuccess = (decodedText: string) => {
-    setIsScanning(false); // Reset state when scanning is successful
-    setWalletAddress(decodedText);
-    if (scannerRef.current) {
-      scannerRef.current.stop().catch(err => console.error("Failed to stop the scanner", err));
+  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTempAmount(event.target.value);
+  };
+
+  const handleAmountBlur = () => {
+    setAmount(tempAmount);
+  };
+
+  const handleAmountKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      setAmount(tempAmount);
+      // Navigate to hide-alex route with walletAddress and amount
+      navigate('/hide-alex', {
+        state: { walletAddress, amount: amount }
+      });
     }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleScanError = (error: any) => {
-    console.info(`QR Code scan error: ${error}`);
-  };
-
-  const handlePasteFromClipboard = async () => {
-    const clipboardData = await navigator.clipboard.readText();
-    setWalletAddress(clipboardData);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
-      <div className="max-w-xs w-full p-4 bg-white rounded">
-        <div className="flex justify-between mb-4">
-          <div className="w-8 h-8 border-2 border-black bg-orange-500 rounded-full"></div>
-          <div className="w-8 h-8 border-4 border-orange-500 rounded-full"></div>
-          <div className="w-8 h-8 border-4 border-orange-500 rounded-full"></div>
+    <div className="flex flex-col h-screen justify-center items-center bg-gray-100">
+      <div className="p-4 w-full max-w-xs">
+        <div className="flex justify-between mb-6">
+          <div className="w-16 h-16 bg-orange-400 rounded-full"></div>
+          <div className="w-16 h-16 bg-orange-400 rounded-full"></div>
+          <div className="w-16 h-16 bg-orange-200 rounded-full border-2 border-orange-400"></div>
         </div>
-        <h1 className="text-xl font-bold mb-4">Who would you like to challenge?</h1>
-        <div className="relative mb-2">
-          <input
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Opponent:</label>
+          <div className="bg-gray-200 px-3 py-2 rounded-md text-gray-700">{walletAddress}</div>
+        </div>
+        <div className="mb-6">
+          <label className="block text-gray-700 text-sm font-bold mb-2">Wager:</label>
+          <input 
             type="text"
-            className="w-full px-4 py-2 border rounded"
-            placeholder="Enter Wallet Address"
-            value={walletAddress}
-            readOnly
+            placeholder="Enter Amount"
+            className="w-full px-3 py-2 rounded-md text-gray-700 border border-gray-300 focus:outline-none focus:border-indigo-500"
+            onChange={handleAmountChange}
+            onBlur={handleAmountBlur}
+            onKeyUp={handleAmountKeyPress}
           />
-          <button
-            onClick={startScanner}
-            className="absolute right-1 top-1/2 transform -translate-y-1/2 bg-white border border-white rounded p-1"
-          >
-            <img src={qrImg} alt="QR Scanner" />
-          </button>
+          <div className="text-center mt-2 text-black">Puzzle Pieces</div>
         </div>
         <button
-          onClick={handlePasteFromClipboard}
-          className="w-full py-2 mb-2 border rounded bg-gray-100 text-gray-700"
+          onClick={handleBackClick}
+          className="w-full py-2 px-4 bg-gray-300 text-gray-700 rounded-md focus:outline-none focus:bg-gray-400"
         >
-          Paste from Clipboard
+          Back
         </button>
-        <div id="qr-code-scanner" className="w-full mb-2 relative" style={{ height: '240px' }}>
-          {/* Conditionally render the pseudo-element styles only when isScanning is true */}
-          {isScanning && (
-            <style>
-              {`
-                #qr-code-scanner::before {
-                  content: "";
-                  position: absolute;
-                  top: 12.5%;
-                  left: 12.5%;
-                  width: 75%;
-                  height: 75%;
-                  border: 3px solid lightgreen;
-                  background-color: rgba(255, 255, 255, 0.3); /* semi-transparent fill */
-                  box-sizing: border-box;
-                }
-              `}
-            </style>
-          )}
-        </div>
       </div>
     </div>
   );

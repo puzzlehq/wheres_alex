@@ -6,6 +6,7 @@ import NewGame from './pages/NewGame.js';
 import StartWager from './pages/StartWager.js';
 import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import HideAlex from './pages/HideAlex.js';
 
 function App() {
   const [isConnected, SetIsConnected] = useState<boolean>(false);
@@ -28,8 +29,9 @@ function App() {
         <Router>
           <div className="max-w-screen-sm w-full h-[calc(100vh-4rem)]">
             <Routes>
-              <Route path="/new-game" element={<NewGame />} /> {/* Use the element prop */}
-              <Route path="/new-game" element={<StartWager />} /> {/* Use the element prop */}
+              <Route path="/new-game" element={<NewGame />} /> 
+              <Route path="/start-wager" element={<StartWager />} /> 
+              <Route path="/hide-alex" element={<HideAlex />} /> 
               <Route 
                 path="/" 
                 element={ isConnected ? <Home /> : (
