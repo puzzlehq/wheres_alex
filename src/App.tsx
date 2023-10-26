@@ -20,9 +20,13 @@ function App() {
   return (
     <div className="min-h-screen bg-gray-200 flex justify-center items-center">
       <div className="max-w-screen-sm w-full h-[100vh] bg-white shadow-md overflow-y-auto">
-        <Header address={account?.address} />
+        <Header isConnected={isConnected} address={account?.address} />
         <div className="w-full flex-grow flex flex-col justify-center items-center">
-          {isConnected ? <Home /> : (
+          {isConnected ? 
+            <div className="max-w-screen-sm w-full h-[90vh]">
+              <Home /> 
+            </div>
+            : (
             <div className="text-center">
               <button 
                 onClick={onConnectWallet} 
@@ -40,13 +44,19 @@ function App() {
 
 export default App;
 
-function Header({address}: {address: string | undefined}) {
+function Header({ isConnected, address }: { isConnected: boolean, address: string | undefined }) {
   return (
-    <div className="w-full h-16 border-b flex justify-between items-center px-8 bg-white dark:bg-gray-800">
-      <span className="text-3xl font-bold">ZK Summit 10 Token</span>
-      {address && <span className="text-lg">
-        {shortenAddress(address)}
-      </span>}
+    <div className="w-full h-16 border-b flex justify-between items-center px-8 dark:bg-orange-800">
+      {isConnected && address ? (
+        <>
+          <span className="text-3xl font-bold">Find Alex!</span>
+          <button className="px-4 py-1 bg-blue-600 text-white rounded shadow-md hover:bg-blue-700">
+            {shortenAddress(address)}
+          </button>
+        </>
+      ) : (
+        <span className="text-3xl font-bold mx-auto">Find Alex!</span>
+      )}
     </div>
   );
 }

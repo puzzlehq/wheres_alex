@@ -3,12 +3,8 @@ function Home() {
     return (
         <div className="min-h-screen flex justify-center items-center bg-yellow-300">
             <div className="max-w-xs w-full px-4 py-8 bg-yellow-300">
-                <div className="flex justify-between items-center mb-4">
+                <div className="mb-4 text-center mt-4">
                     <button className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
-                    <button className="flex items-center ml-2 bg-white text-black p-2 rounded-full">
-                        <div className="bg-black rounded-full w-3 h-3 mr-2"></div>
-                        ...Alice
-                    </button>
                 </div>
                 <div className="mb-6 text-center">
                     <h2 className="text-2xl font-bold text-black">Total Winnings</h2>
