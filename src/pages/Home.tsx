@@ -2,7 +2,7 @@
 function Home() {
     return (
         <div className="min-h-screen flex justify-center items-center bg-yellow-300">
-            <div className="max-w-xs w-full px-4 py-8 bg-yellow-400">
+            <div className="max-w-xs w-full px-4 py-8 bg-yellow-300">
                 <div className="flex justify-between items-center mb-4">
                     <button className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
                     <button className="flex items-center ml-2 bg-white text-black p-2 rounded-full">
