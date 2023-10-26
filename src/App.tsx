@@ -2,6 +2,7 @@ import { shortenAddress } from '@puzzlehq/sdk';
 import PuzzleAccount from './models/account.js';
 import { useState } from 'react';
 import Home from './pages/Home.js';
+import mainImg from '../src/assets/alex_behind_wall.png';
 
 function App() {
   const [isConnected, SetIsConnected] = useState<boolean>(false);
@@ -18,16 +19,19 @@ function App() {
   };
   
   return (
-    <div className="min-h-screen bg-yellow-500 flex justify-center items-center">
-      <div className="max-w-screen-sm w-full bg-yellow-500 shadow-md overflow-y-auto">
+    <div className="App min-h-screen bg-yellow-500 flex justify-center">
+      <div className="max-w-screen-sm w-full bg-yellow-500 shadow-md overflow-y-auto flex flex-col">
         <Header isConnected={isConnected} address={account?.address} />
         {isConnected ? 
-          <Home />
+          <div className="max-w-screen-sm w-full h-[calc(100vh-4rem)]">
+            <Home />
+          </div>
           : 
-          <div className="w-full flex flex-col justify-center items-center h-[calc(100vh-4rem)]"> {/* subtracting header height */}
+          <div className="w-full flex flex-col items-center flex-grow space-y-4 mt-8"> {/* Adjusted styles */}
+            <img src={mainImg} alt="Alex Behind Wall" className="w-3/5 mx-auto" />
             <button 
               onClick={onConnectWallet} 
-              className="px-10 py-4 bg-gray-600 text-white rounded shadow-md hover:bg-blue-700 text-xl"
+              className="px-10 py-4 bg-gray-600 text-white rounded shadow-md hover:bg-blue-700 text-xl mt-auto" 
             >
               Play!
             </button>

@@ -1,17 +1,27 @@
+import rightImageSrc from '../assets/alex_mic_left_tilt.png';
+import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 
 function Home() {
     return (
-        <div className="min-h-screen flex justify-center items-center bg-yellow-500">
-            <div className="w-full px-4 py-10 bg-yellow-500">
-                <div className="mb-6 text-center">
+        <div className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-yellow-500">
+            <div className="w-full bg-yellow-500"> {/* Removed px-4 from here */}
+            <div className="mb-18 flex items-center justify-between mt-4">
+                <img src={leftImageSrc} alt="Left decoration" className="h-full max-w-[40%] max-h-[10rem] object-contain flex-shrink-0" />
+
+                <div className="flex flex-col items-center mx-4 flex-grow">
                     <h2 className="text-2xl font-bold text-black">Total Winnings</h2>
-                    <p className="bg-gray-300 p-2 rounded-full mt-2 text-black text-xl">10 Puzzle Pieces</p>
+                    <div className="bg-gray-300 p-2 rounded-full mt-2 flex items-center justify-center"> {/* Adjusted the wrapper div */}
+                        <span className="text-black text-xl">10 Puzzle Pieces</span>
+                    </div>
+                    <div className="mb-4 text-center mt-4">
+                        <button className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
+                    </div>
                 </div>
-                <div className="mb-4 text-center mt-4">
-                    <button className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
-                </div>
+
+                <img src={rightImageSrc} alt="Right decoration" className="h-full max-w-[40%] max-h-[10rem] object-contain flex-shrink-0" />
+            </div>
                 <h3 className="mb-4 text-center text-xl font-bold text-black">Notifications</h3>
-                    <div className="mb-6 overflow-y-auto notifications-scrollbar" style={{ maxHeight: '200px' }}>
+                <div className="mb-6 overflow-y-auto notifications-scrollbar px-4" style={{ maxHeight: '200px' }}>
                     {["Bob", "Matt", "Darv", "Stef"].map(name => (
                         <div className="flex items-center justify-between bg-white p-4 rounded-lg mb-2">
                             <div className="flex items-center flex-grow">
@@ -26,7 +36,7 @@ function Home() {
                     ))}
                 </div>
                 <h3 className="mb-4 text-center text-xl font-bold text-black">Live Games</h3>
-                <div className="grid gap-2 overflow-y-auto custom-scrollbar" style={{ maxHeight: '250px' }}>
+                <div className="grid gap-2 overflow-y-auto custom-scrollbar px-4" style={{ maxHeight: '250px' }}>
                     {[...Array(2)].map(() => (
                         ["Alice", "Luke", "Veda"].map((name, index) => (
                             <div className="flex items-center justify-between bg-white p-4 rounded-lg">
@@ -43,9 +53,9 @@ function Home() {
                         ))
                     ))}
                 </div>
-                <div className="text-center mt-4">
-                    <button className="items-center bg-orange-500 p-2 rounded-full text-xs">Past Games</button>
-                </div>
+            </div>
+            <div className="text-center mt-4 pb-4 px-4"> {/* Adding px-4 back here to maintain padding for the bottom button */}
+                <button className="items-center bg-orange-500 p-2 rounded-full text-xs">Past Games</button>
             </div>
         </div>
     );
