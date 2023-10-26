@@ -19,9 +19,9 @@ function App() {
   
   return (
     <div className="min-h-screen bg-gray-200 flex justify-center items-center">
-      <div className="max-w-screen-sm w-full h-screen bg-white shadow-md overflow-y-auto">
+      <div className="max-w-screen-sm w-full h-[100vh] bg-white shadow-md overflow-y-auto">
         <Header address={account?.address} />
-        <div className="w-full h-full pt-20 pb-4 flex flex-col justify-center items-center">
+        <div className="w-full flex-grow flex flex-col justify-center items-center">
           {isConnected ? <Home /> : (
             <div className="text-center">
               <button 
