@@ -57,7 +57,7 @@ program coinflip.aleo {
         private answer: u32,
         private sig: signature,
         private m_of_n: u8)
-    -> (Answer, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record) {
+    -> (Answer, Key, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record) {
         // assert wager microcredits > 0;
         let wager_record: Puzz = wager;
         assert_eq(wager_amount, wager_record.amount);
@@ -97,7 +97,7 @@ program coinflip.aleo {
 
         // set the user amount on the contract
 
-        return (answer_record, receiver_puzz_record, puzz_change);
+        return (answer_record, player_two_key_record, receiver_puzz_record, puzz_change);
     }
 
     // transition withdraw_wager(wagerer: address, wager_amount: u64) -> credits_new_world.leo/credits.record {

@@ -49,5 +49,6 @@ function propose_game:
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 into r12;
     call puzzle_token.aleo/transfer_private r3 r1 r4 into r13 r14;
     output r11 as Answer.record;
+    output r10 as Key.record;
     output r13 as puzzle_token.aleo/Puzz.record;
     output r14 as puzzle_token.aleo/Puzz.record;
