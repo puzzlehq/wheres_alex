@@ -4,6 +4,10 @@ record Puzz:
     owner as address.private;
     amount as u64.private;
 
+record ClaimRecord:
+    owner as address.private;
+    claimable as boolean.private;
+
 
 mapping supply:
 	key as field.public;

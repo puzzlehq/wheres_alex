@@ -8,8 +8,13 @@ program puzzle_token.aleo {
         private amount: u64,
     }
 
+    record ClaimRecord {
+        private owner: address,
+        private claimable: bool,
+    }
+
     transition mint (private amount: u64, private to: address) -> Puzz {
-        // todo: address check -> likely only permissioned address cna mint puzz
+        // todo: address check -> likely only permissioned address can mint puzz
 
         return Puzz {
             owner: to,
