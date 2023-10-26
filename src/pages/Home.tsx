@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import GameState from '../models/game_states';
 import rightImageSrc from '../assets/alex_mic_left_tilt.png';
 import leftImageSrc from '../assets/alex_mic_right_tilt.png';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
     const gameStates: GameState[] = [
@@ -18,6 +19,12 @@ function Home() {
 
     const liveGames = gameStates.filter(game => game.action === 'Reneg' || (game.action === 'Claim' && game.blockheight <= aleo_blockheight));
     const notifications = gameStates.filter(game => ['Start', 'Finish', 'Delete'].includes(game.action) || (game.action === 'Claim' && game.blockheight > aleo_blockheight));
+
+    const navigate = useNavigate();  // Get the history object
+
+    const navigateToNewGame = () => {
+        navigate('/new-game');  // Navigate to the NewGame page
+    }
 
     // Timer logic
     const calculateTimeLeft = (blockheight: number) => {
@@ -72,7 +79,8 @@ function Home() {
                         <span className="text-black text-xl">10 Puzzle Pieces</span>
                     </div>
                     <div className="mb-4 text-center mt-4">
-                        <button className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
+                        {/* Update the button to use the navigateToNewGame function */}
+                        <button onClick={navigateToNewGame} className="bg-orange-500 p-3 rounded-full text-white">New Game</button>
                     </div>
                 </div>
 
