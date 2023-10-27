@@ -11,7 +11,7 @@ function HideAlex() {
   const handleHideChoice = (choice: string) => {
     setAnswer(choice);
     navigate('/ConfirmStartGame', {
-      state: { opponent, amount, answer }
+      state: { opponent, amount, answer}
     });
   };
 
