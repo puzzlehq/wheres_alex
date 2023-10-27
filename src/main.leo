@@ -25,6 +25,11 @@ program coinflip.aleo {
         private answer: field,
     }
 
+    record RevealedAnswer {
+        private owner: address,
+        private answer: field,
+    }
+
     // todo: this will likely need to store each player answer
     record Game {
         private owner: address,
@@ -172,7 +177,7 @@ program coinflip.aleo {
         private player_two_signature: signature,
         // todo: adjust msg type here
         private leo_message: field,
-    ) -> (Game)
+    ) -> (Game, puzzle_account.leo/OwnerRules.record)
     {
         // assert that each player has wagered the same amount
         assert_eq(player_one_claim_record.amount, player_two_claim_record.amount);
@@ -190,34 +195,34 @@ program coinflip.aleo {
             wager: game_record.wager,
         };
 
+        // note: will need to tweak owner rules structure likely to include sig to lock next turn
         let new_owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address);
 
-
-
-
-
-
-
-        // output game record to multisig with bobs answer
-
+        // todo: tweak for notify records
         // output owner rules record to ms so bob can claim later on
-        return (game_record_new);
+        return (game_record_new, new_owner_rules);
     }
 
     transition reveal_answer (
         private answer_record: Answer
+    ) -> (RevealedAnswer)
+    {
+        let revealed_answer: RevealedAnswer = RevealedAnswer {
+            owner: answer_record.owner,
+            answer: answer_record.answer,
+        };
+
+        // todo: tweak for notify records
+        return revealed_answer;
+    }
+
+    transition finish_game (
+        private game_record: Game,
+        private revealed_answer_record: RevealedAnswer
     ) -> ()
     {
 
-
-
-    }
-
-    transition finish_game () -> (
-        
-    )
-    {
-
+        // todo: tweak for notify records
     }
 
     transition claim_wager () -> () {}

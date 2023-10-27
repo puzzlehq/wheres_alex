@@ -17,6 +17,10 @@ record Answer:
     N as field.private;
     answer as field.private;
 
+record RevealedAnswer:
+    owner as address.private;
+    answer as field.private;
+
 record Game:
     owner as address.private;
     answer_1 as field.private;
@@ -113,13 +117,18 @@ function accept_game:
     cast r0.owner r0.answer_1 r5 r0.wager into r8 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r0.owner self.caller r1.signer_address into r9;
     output r8 as Game.record;
+    output r9 as puzzle_account.aleo/OwnerRules.record;
 
 
 function reveal_answer:
     input r0 as Answer.record;
+    cast r0.owner r0.answer into r1 as RevealedAnswer.record;
+    output r1 as RevealedAnswer.record;
 
 
 function finish_game:
+    input r0 as Game.record;
+    input r1 as RevealedAnswer.record;
 
 
 function claim_wager:
