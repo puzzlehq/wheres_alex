@@ -31,6 +31,7 @@ program coinflip.aleo {
     }
 
     // todo: this will likely need to store each player answer
+    // todo: may be best to store players in the game here on game record
     record Game {
         private owner: address,
         private answer_1: field,
@@ -218,15 +219,24 @@ program coinflip.aleo {
 
     transition finish_game (
         private game_record: Game,
-        private revealed_answer_record: RevealedAnswer
+        private revealed_answer_record: RevealedAnswer,
+        private puzz_record: puzzle_token.leo/Puzz.record,
     ) -> ()
     {
+        // todo: how do we transfer out from ms/game addr to winner
+        // todo: do we just mint new tokens to winner?
+        // todo: add logic here to transfer to correct winner
+        // todo: how are we going to get player 1 and player 2 addresses here?
+        if (game_record.answer_1 === 1field) {
+            puzzle_token.leo/transfer_private(puzz_record, revealed_answer_record.owner, game_record.wager);
+        } else {
+            puzzle_token.leo/transfer_private(puzz_record, self.caller, game_record.wager);
+        }
 
         // todo: tweak for notify records
     }
 
     transition claim_wager () -> () {}
-
 
 
 
