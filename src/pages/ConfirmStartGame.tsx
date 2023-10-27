@@ -32,7 +32,7 @@ function ConfirmStartGame({ account }: Props) {
     }, [opponent, player_account]);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
+    function proposeGame(_opponent: string, _player_account: string, _gameMultisig: string, _seed: Uint8Array, _amount: number, _answer: string) {
         // Our logic here would be for potentially grabbing puzzle records, signatures, and propose game function on Leo
         
         navigate("/pending-confirm-start-game");
