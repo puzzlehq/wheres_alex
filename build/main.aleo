@@ -96,9 +96,17 @@ function player_two_renege_proposal:
 
 
 function accept_game:
+    input r0 as Game.record;
+    input r1 as puzzle_account.aleo/Claim.record;
+    input r2 as puzzle_account.aleo/Claim.record;
+    input r3 as puzzle_account.aleo/OwnerRules.record;
+    input r4 as field.private;
+    input r5 as signature.private;
+    input r6 as field.private;
 
 
 function reveal_answer:
+    input r0 as Answer.record;
 
 
 function finish_game:

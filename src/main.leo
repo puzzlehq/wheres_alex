@@ -39,7 +39,7 @@ program coinflip.aleo {
         return puzz_token;
     }
 
-    // todo: do we want to limit only users or will we allow contracts to call?
+    // todo: do we want to limit this fn call only to users or will we allow contracts to call?
     // todo: do we need to pass credits as input?
     // player one proposes game
     // outputs
@@ -109,16 +109,16 @@ program coinflip.aleo {
 
 
     transition player_one_renege_proposal (
-        private game: Game,
+        private game_record: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
-        private claim: puzzle_account.leo/Claim.record,
-        private token_record: puzzle_token.leo/Puzz.record,
+        private player_one_claim_record: puzzle_account.leo/Claim.record,
+        private puzz_record: puzzle_token.leo/Puzz.record,
         private amount: u64,
     ) -> ()
     {
         // todo: how are we going to transfer this out, likely need record as input to this function?
         // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(token_record, self.caller, amount);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(puzz_record, self.caller, amount);
         // todo: logic around ms_rules, game record tbd
     }
 
@@ -139,9 +139,9 @@ program coinflip.aleo {
     }
 
     transition player_two_renege_proposal (
-        private game: Game,
+        private game_record: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
-        private claim: puzzle_account.leo/Claim.record,
+        private player_two_claim_record: puzzle_account.leo/Claim.record,
         private token_record: puzzle_token.leo/Puzz.record,
         private amount: u64
     ) -> ()
@@ -153,14 +153,26 @@ program coinflip.aleo {
     }
 
     transition accept_game (
-
-
+        private game_record: Game,
+        private player_one_claim_record: puzzle_account.leo/Claim.record,
+        private player_two_claim_record: puzzle_account.leo/Claim.record,
+        private owner_rules_record: puzzle_account.leo/OwnerRules.record,
+        private player_two_answer: field,
+        private player_two_signature: signature,
+        // todo: adjust msg type here
+        private leo_message: field,
     ) -> ()
     {
 
     }
 
-    transition reveal_answer () -> () {}
+    transition reveal_answer (
+        private answer_record: Answer
+    ) -> ()
+    {
+
+
+    }
 
     transition finish_game () -> () {}
 
