@@ -14,6 +14,8 @@ program puzzle_account.aleo {
         signer_address: address,
     }
 
+    // todo: tweak owner rules here to have signatures for lock on transfers of puzz token and lock game state
+    // maybe some next_turn: address mechanism so only certain player can mess with next game state
     record OwnerRules {
         owner: address,
         m: u8,
