@@ -24,7 +24,7 @@ program coinflip.aleo {
         private answer: u32,
     }
 
-    record GameRecord {
+    record Game {
         private owner: address,
         private answer_1: field,
         private answer_2: field,
@@ -60,9 +60,10 @@ program coinflip.aleo {
         private sig: signature,
         private m_of_n: u8,
         private nonce: field
-    ) -> (Answer, Claim, Key, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
+    ) -> (Answer, Claim, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
         let N: field = 1field;
+
         // assert that the wager amount > 0 and wager inside credit == wager amt passed
         let wager_record: Puzz = wager;
         assert(wager_amount > 0u64);
@@ -78,11 +79,16 @@ program coinflip.aleo {
         // return answer record to player 1 in order to reveal later
         let answer_record: Answer = Answer {
             owner: self.caller,
-            N: 1field,
+            N: N,
             answer: answer,
         };
 
         // output game record
+        let game_record: Game = Game {
+            owner: game_address,
+            answer_1: 0field,
+            answer_2: 1field,
+        };
 
         // output rules record with caller and opponent with game ms address
         // tbd on m of n here, or if even necessary
@@ -95,20 +101,30 @@ program coinflip.aleo {
             amount: wager_amount,
         };
 
-        // transfer aleo credits to game address
+        // transfer puzz tokens to game address
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(wager, game_address, wager_amount);
 
 
-        return (answer_record, player_one_claim_record, player_two_key_record, owner_rules, puzz_change, receiver_puzz_record);
+        return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules, puzz_change, receiver_puzz_record);
     }
 
 
     //
-    transition player_one_renege_proposal (private game: GameRecord, private ms_rules: puzzle_account.leo/OwnerRules.record, private claim: puzzle_token.leo/ClaimRecord.record, private player_one_address: address) -> () {
+    transition player_one_renege_proposal (
+        private game: Game,
+        private ms_rules: puzzle_account.leo/OwnerRules.record,
+        private claim: puzzle_token.leo/ClaimRecord.record,
+        private token_record: puzzle_token.leo/Puzz.record,
+        private amount: u64,
+    ) -> ()
+    {
         // todo: how are we going to transfer this out, likely need record as input to this function?
-        // let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private()
+        // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(token_record, self.caller, amount);
+        // todo: logic around ms_rules, game record tbd
     }
+
     transition submit_wager (
         private game_address: address,
         private wager:  puzzle_token.leo/Puzz.record,
@@ -128,9 +144,27 @@ program coinflip.aleo {
 
     }
 
-    transition player_two_renege_proposal () -> () {}
+    transition player_two_renege_proposal (
+        private game: Game,
+        private ms_rules: puzzle_account.leo/OwnerRules.record,
+        private claim: puzzle_token.leo/ClaimRecord.record,
+        private token_record: puzzle_token.leo/Puzz.record,
+        private amount: u64
+    ) -> ()
+    {
+        // todo: how are we going to transfer this out, likely need record as input to this function?
+        // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(token_record, self.caller, amount);
+        // todo: logic around ms_rules, game record tbd
+    }
 
-    transition accept_game () -> () {}
+    transition accept_game (
+        
+
+    ) -> ()
+    {
+
+    }
 
     transition reveal_answer () -> () {}
 
