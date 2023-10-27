@@ -8,10 +8,10 @@ program coinflip.aleo {
 
     // record PlayerTwoClaim {}
 
-    record Claim {
-        private owner: address,
-        private amount: u64,
-    }
+    // record Claim {
+    //     private owner: address,
+    //     private amount: u64,
+    // }
 
     record Key {
         private owner: address,
@@ -60,7 +60,7 @@ program coinflip.aleo {
         private sig: signature,
         private m_of_n: u8,
         private nonce: field
-    ) -> (Answer, Claim, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
+    ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
         let N: field = 1field;
 
@@ -96,10 +96,7 @@ program coinflip.aleo {
 
         // output claim record to player 1 in case of renege or player 2 rejects
         // todo: will likely need to iterate on claim design here
-        let player_one_claim_record: Claim = Claim {
-            owner: self.caller,
-            amount: wager_amount,
-        };
+        let player_one_claim_record: Claim = puzzle_account.leo/mint_claim_record(game_address, wager_amount);
 
         // transfer puzz tokens to game address
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
@@ -110,11 +107,11 @@ program coinflip.aleo {
     }
 
 
-    //
+
     transition player_one_renege_proposal (
         private game: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
-        private claim: puzzle_token.leo/ClaimRecord.record,
+        private claim: puzzle_account.leo/Claim.record,
         private token_record: puzzle_token.leo/Puzz.record,
         private amount: u64,
     ) -> ()
@@ -129,16 +126,13 @@ program coinflip.aleo {
         private game_address: address,
         private wager:  puzzle_token.leo/Puzz.record,
         private wager_amount: u64
-    ) -> (Claim, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record) {
+    ) -> (puzzle_account.leo/Claim.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record) {
 
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(wager, game_address, wager_amount);
 
         // output claim record to player 2 in case he wants to renege later on
         // todo: will likely need to iterate on claim design here
-        let player_two_claim_record: Claim = Claim {
-            owner: self.caller,
-            amount: wager_amount,
-        };
+        let player_two_claim_record: Claim = puzzle_account.leo/mint_claim_record(game_address, wager_amount);
 
         return (player_two_claim_record, receiver_puzz_record, puzz_change);
 
@@ -147,7 +141,7 @@ program coinflip.aleo {
     transition player_two_renege_proposal (
         private game: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
-        private claim: puzzle_token.leo/ClaimRecord.record,
+        private claim: puzzle_account.leo/Claim.record,
         private token_record: puzzle_token.leo/Puzz.record,
         private amount: u64
     ) -> ()
@@ -159,7 +153,7 @@ program coinflip.aleo {
     }
 
     transition accept_game (
-        
+
 
     ) -> ()
     {

@@ -7,6 +7,13 @@ program puzzle_account.aleo {
     // need to generate new addr on the fly
     // store multiple Signatures
 
+    record Claim {
+        owner: address,
+        amount: u64,
+        claimable: bool,
+        signer_address: address,
+    }
+
     record OwnerRules {
         owner: address,
         m: u8,
@@ -23,6 +30,17 @@ program puzzle_account.aleo {
         message_four: field,
         signed_message: signature,
         signer_address: address,
+    }
+
+    transition mint_claim_record (owner_address: address, claim_amount: u64) -> Claim {
+        let is_claimable: bool = true;
+        let claim: Claim = Claim {
+            owner: owner_address,
+            amount: claim_amount,
+            claimable: is_claimable,
+            signer_address: self.caller,
+        };
+        return claim;
     }
 
     // Create new owner rules record

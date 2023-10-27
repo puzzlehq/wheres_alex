@@ -1,5 +1,11 @@
 program puzzle_account.aleo;
 
+record Claim:
+    owner as address.private;
+    amount as u64.private;
+    claimable as boolean.private;
+    signer_address as address.private;
+
 record OwnerRules:
     owner as address.private;
     m as u8.private;
@@ -15,6 +21,13 @@ record Signatures:
     message_four as field.private;
     signed_message as signature.private;
     signer_address as address.private;
+
+
+function mint_claim_record:
+    input r0 as address.private;
+    input r1 as u64.private;
+    cast r0 r1 true self.caller into r2 as Claim.record;
+    output r2 as Claim.record;
 
 
 function mint_owner_rules_record:

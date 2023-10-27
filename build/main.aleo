@@ -6,9 +6,6 @@ program coinflip.aleo;
 
 
 
-record Claim:
-    owner as address.private;
-    amount as u64.private;
 
 record Key:
     owner as address.private;
@@ -58,10 +55,10 @@ function propose_game:
     cast self.caller 1field r5 into r11 as Answer.record;
     cast r1 0field 1field into r12 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 into r13;
-    cast self.caller r4 into r14 as Claim.record;
+    call puzzle_account.aleo/mint_claim_record r1 r4 into r14;
     call puzzle_token.aleo/transfer_private r3 r1 r4 into r15 r16;
     output r11 as Answer.record;
-    output r14 as Claim.record;
+    output r14 as puzzle_account.aleo/Claim.record;
     output r10 as Key.record;
     output r12 as Game.record;
     output r13 as puzzle_account.aleo/OwnerRules.record;
@@ -72,7 +69,7 @@ function propose_game:
 function player_one_renege_proposal:
     input r0 as Game.record;
     input r1 as puzzle_account.aleo/OwnerRules.record;
-    input r2 as puzzle_token.aleo/ClaimRecord.record;
+    input r2 as puzzle_account.aleo/Claim.record;
     input r3 as puzzle_token.aleo/Puzz.record;
     input r4 as u64.private;
     call puzzle_token.aleo/transfer_private r3 self.caller r4 into r5 r6;
@@ -83,8 +80,8 @@ function submit_wager:
     input r1 as puzzle_token.aleo/Puzz.record;
     input r2 as u64.private;
     call puzzle_token.aleo/transfer_private r1 r0 r2 into r3 r4;
-    cast self.caller r2 into r5 as Claim.record;
-    output r5 as Claim.record;
+    call puzzle_account.aleo/mint_claim_record r0 r2 into r5;
+    output r5 as puzzle_account.aleo/Claim.record;
     output r3 as puzzle_token.aleo/Puzz.record;
     output r4 as puzzle_token.aleo/Puzz.record;
 
@@ -92,7 +89,7 @@ function submit_wager:
 function player_two_renege_proposal:
     input r0 as Game.record;
     input r1 as puzzle_account.aleo/OwnerRules.record;
-    input r2 as puzzle_token.aleo/ClaimRecord.record;
+    input r2 as puzzle_account.aleo/Claim.record;
     input r3 as puzzle_token.aleo/Puzz.record;
     input r4 as u64.private;
     call puzzle_token.aleo/transfer_private r3 self.caller r4 into r5 r6;
