@@ -7,6 +7,8 @@ import StartWager from './pages/StartWager.js';
 import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HideAlex from './pages/HideAlex.js';
+import ConfirmStartGame from './pages/ConfirmStartGame.js';
+import PendingConfirmStartGame from './pages/PendingConfirmStartGame.js';
 
 function App() {
   const [isConnected, SetIsConnected] = useState<boolean>(false);
@@ -31,7 +33,9 @@ function App() {
             <Routes>
               <Route path="/new-game" element={<NewGame />} /> 
               <Route path="/start-wager" element={<StartWager />} /> 
-              <Route path="/hide-alex" element={<HideAlex />} /> 
+              <Route path="/hide-alex" element={<HideAlex />} />
+              <Route path="/confirm-start-game" element={<ConfirmStartGame account={account}/>} />
+              <Route path="/pending-confirm-start-game" element={<PendingConfirmStartGame />} /> 
               <Route 
                 path="/" 
                 element={ isConnected ? <Home /> : (
