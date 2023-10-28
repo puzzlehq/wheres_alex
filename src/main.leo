@@ -4,7 +4,7 @@ import puzzle_account.leo;
 // todo: wait we're going to use alice's credits to send to multisig?
 // todo: for now, limit function calls to only self.caller as no need to open up attack vectors
 // todo: logic around hashing of answer, a bit unclear
-// todo: ownerrules lock on game state? next turn: address work?
+// todo: ownerrules lock on game state? next turn: address on game_record work?
 
 // The 'coinflip' program.
 program coinflip.aleo {
@@ -136,6 +136,8 @@ program coinflip.aleo {
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(wager, game_address, wager_amount);
 
+        //
+
 
         return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules, puzz_change, receiver_puzz_record);
     }
@@ -228,23 +230,27 @@ program coinflip.aleo {
 
     transition reveal_answer (
         private answer_record: Answer,
-        private game_record: Game,
+        private game_address: address,
+        private opponent_address: address,
     ) -> (RevealedAnswer, NotifyRevealedAnswer, NotifyRevealedAnswer)
     {
         // todo: what is the best way to get p2's address here?
-        // take in game record for now maybe something better.
+        // take in opponent and game address for now, may be something better here
+
         let revealed_answer: RevealedAnswer = RevealedAnswer {
-            owner: answer_record.owner,
+            owner: game_address,
             answer: answer_record.answer,
         };
 
+        // send notify reveal record answer to player 1
         let notify_reveal_answer_p1: NotifyRevealedAnswer = NotifyRevealedAnswer {
             owner: answer_record.owner,
             answer: answer_record.answer,
         };
 
+        // send notify reveal record answer to player 2
         let notify_reveal_answer_p2: NotifyRevealedAnswer = NotifyRevealedAnswer {
-            owner: game_record.player_two_address,
+            owner: opponent_address,
             answer: answer_record.answer,
         };
 
@@ -263,7 +269,9 @@ program coinflip.aleo {
         // todo: add logic here to transfer to correct winner
         // todo: how are we going to get player 1 and player 2 addresses here?
         if (game_record.player_one_answer == 1field) {
+            // transfer all funds to winner
             puzzle_token.leo/transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
+            // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,
                 winner: self.caller,
@@ -276,7 +284,9 @@ program coinflip.aleo {
             };
             return (notify_game_over_p1_record, notify_game_over_p2_record);
         } else {
+            // transfer all funds to winner
             puzzle_token.leo/transfer_private(puzz_record, self.caller, game_record.total_pot);
+            // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,
                 winner: game_record.player_two_address,
