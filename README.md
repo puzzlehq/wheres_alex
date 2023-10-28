@@ -33,9 +33,6 @@ propose_game(
 )
 ```
 
-Params:
-- The admin can perform some special operations on the token, like `set_token_faucet`.
-
 Example Command:
 ```
 leo run propose_game 12312412field aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww "{
