@@ -13,6 +13,12 @@ program coinflip.aleo {
     //     private amount: u64,
     // }
 
+    record NotifyGameOver {
+        private owner: address,
+        private winner: address,
+        private total_pot: u64,
+    }
+
     record Key {
         private owner: address,
         private keys: field,
@@ -34,9 +40,11 @@ program coinflip.aleo {
     // todo: may be best to store players in the game here on game record
     record Game {
         private owner: address,
-        private answer_1: field,
-        private answer_2: field,
-        private wager: u64,
+        private player_one_answer: field,
+        private player_two_answer: field,
+        private total_pot: u64,
+        private player_one_address: address,
+        private player_two_address: address,
     }
 
     mapping puzz_supply: field => u128;
@@ -99,9 +107,11 @@ program coinflip.aleo {
         // todo: hash this answer?
         let game_record: Game = Game {
             owner: game_address,
-            answer_1: player_one_answer,
-            answer_2: 1field,
-            wager: wager_amount,
+            player_one_answer: player_one_answer,
+            player_two_answer: 1field,
+            total_pot: wager_amount,
+            player_one_address: self.caller,
+            player_two_address: opponent,
         };
 
         // output rules record with caller and opponent with game ms address
@@ -191,9 +201,11 @@ program coinflip.aleo {
         // todo: answers will need to be hashed?
         let game_record_new: Game = Game {
             owner: game_record.owner,
-            answer_1: game_record.answer_1,
-            answer_2: player_two_answer,
-            wager: game_record.wager,
+            player_one_answer: game_record.player_one_answer,
+            player_two_answer: player_two_answer,
+            total_pot: game_record.total_pot,
+            player_one_address: game_record.player_one_address,
+            player_two_address: game_record.player_two_address,
         };
 
         // note: will need to tweak owner rules structure likely to include sig to lock next turn
@@ -221,16 +233,38 @@ program coinflip.aleo {
         private game_record: Game,
         private revealed_answer_record: RevealedAnswer,
         private puzz_record: puzzle_token.leo/Puzz.record,
-    ) -> ()
+    ) -> (NotifyGameOver, NotifyGameOver)
     {
         // todo: how do we transfer out from ms/game addr to winner
         // todo: do we just mint new tokens to winner?
         // todo: add logic here to transfer to correct winner
         // todo: how are we going to get player 1 and player 2 addresses here?
-        if (game_record.answer_1 === 1field) {
-            puzzle_token.leo/transfer_private(puzz_record, revealed_answer_record.owner, game_record.wager);
+        if (game_record.player_one_answer == 1field) {
+            puzzle_token.leo/transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
+            let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
+                owner: self.caller,
+                winner: self.caller,
+                total_pot: game_record.total_pot
+            };
+            let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
+                owner: game_record.player_two_address,
+                winner: self.caller,
+                total_pot: game_record.total_pot
+            };
+            return (notify_game_over_p1_record, notify_game_over_p2_record);
         } else {
-            puzzle_token.leo/transfer_private(puzz_record, self.caller, game_record.wager);
+            puzzle_token.leo/transfer_private(puzz_record, self.caller, game_record.total_pot);
+            let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
+                owner: self.caller,
+                winner: game_record.player_two_address,
+                total_pot: game_record.total_pot
+            };
+            let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
+                owner: game_record.player_two_address,
+                winner: game_record.player_two_address,
+                total_pot: game_record.total_pot
+            };
+            return (notify_game_over_p1_record, notify_game_over_p2_record);
         }
 
         // todo: tweak for notify records

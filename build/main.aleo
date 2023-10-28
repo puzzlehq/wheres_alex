@@ -7,6 +7,11 @@ program coinflip.aleo;
 
 
 
+record NotifyGameOver:
+    owner as address.private;
+    winner as address.private;
+    total_pot as u64.private;
+
 record Key:
     owner as address.private;
     keys as field.private;
@@ -23,9 +28,11 @@ record RevealedAnswer:
 
 record Game:
     owner as address.private;
-    answer_1 as field.private;
-    answer_2 as field.private;
-    wager as u64.private;
+    player_one_answer as field.private;
+    player_two_answer as field.private;
+    total_pot as u64.private;
+    player_one_address as address.private;
+    player_two_address as address.private;
 
 
 mapping puzz_supply:
@@ -60,7 +67,7 @@ function propose_game:
     assert.eq r4 r3.amount;
     cast r2 r0 into r10 as Key.record;
     cast self.caller r1 1field r5 into r11 as Answer.record;
-    cast r1 r5 1field r4 into r12 as Game.record;
+    cast r1 r5 1field r4 self.caller r2 into r12 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 into r13;
     call puzzle_account.aleo/mint_claim_record r1 r4 into r14;
     call puzzle_token.aleo/transfer_private r3 r1 r4 into r15 r16;
@@ -114,7 +121,7 @@ function accept_game:
     assert.eq r1.amount r2.amount;
     assert.eq r1.owner r2.owner;
     assert.eq r0.owner r1.owner;
-    cast r0.owner r0.answer_1 r5 r0.wager into r8 as Game.record;
+    cast r0.owner r0.player_one_answer r5 r0.total_pot r0.player_one_address r0.player_two_address into r8 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r0.owner self.caller r1.signer_address into r9;
     output r8 as Game.record;
     output r9 as puzzle_account.aleo/OwnerRules.record;
@@ -129,6 +136,24 @@ function reveal_answer:
 function finish_game:
     input r0 as Game.record;
     input r1 as RevealedAnswer.record;
+    input r2 as puzzle_token.aleo/Puzz.record;
+    is.eq r0.player_one_answer 1field into r3;
+    call puzzle_token.aleo/transfer_private r2 r1.owner r0.total_pot into r4 r5;
+    cast self.caller self.caller r0.total_pot into r6 as NotifyGameOver.record;
+    cast r0.player_two_address self.caller r0.total_pot into r7 as NotifyGameOver.record;
+    call puzzle_token.aleo/transfer_private r2 self.caller r0.total_pot into r8 r9;
+    cast self.caller r0.player_two_address r0.total_pot into r10 as NotifyGameOver.record;
+    cast r0.player_two_address r0.player_two_address r0.total_pot into r11 as NotifyGameOver.record;
+    ternary r3 r6.owner r10.owner into r12;
+    ternary r3 r6.winner r10.winner into r13;
+    ternary r3 r6.total_pot r10.total_pot into r14;
+    cast r12 r13 r14 into r15 as NotifyGameOver.record;
+    ternary r3 r7.owner r11.owner into r16;
+    ternary r3 r7.winner r11.winner into r17;
+    ternary r3 r7.total_pot r11.total_pot into r18;
+    cast r16 r17 r18 into r19 as NotifyGameOver.record;
+    output r15 as NotifyGameOver.record;
+    output r19 as NotifyGameOver.record;
 
 
 function claim_wager:
