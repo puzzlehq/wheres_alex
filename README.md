@@ -16,7 +16,7 @@ snarkvm run hello
 
 ### propose_game
 
-`create_token` is used to create a new token.
+`propose_game` to create a game with a friend.
 
 Function:
 ```rust
