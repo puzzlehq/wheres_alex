@@ -1,6 +1,11 @@
 import puzzle_token.leo;
 import puzzle_account.leo;
 
+// todo: wait we're going to use alice's credits to send to multisig?
+// todo: for now, limit function calls to only self.caller as no need to open up attack vectors
+// todo: logic around hashing of answer, a bit unclear
+// todo: ownerrules lock on game state? next turn: address work?
+
 // The 'coinflip' program.
 program coinflip.aleo {
 
@@ -12,6 +17,11 @@ program coinflip.aleo {
     //     private owner: address,
     //     private amount: u64,
     // }
+
+    record NotifyRevealedAnswer {
+        private owner: address,
+        private answer: field,
+    }
 
     record NotifyGameOver {
         private owner: address,
@@ -217,16 +227,29 @@ program coinflip.aleo {
     }
 
     transition reveal_answer (
-        private answer_record: Answer
-    ) -> (RevealedAnswer)
+        private answer_record: Answer,
+        private game_record: Game,
+    ) -> (RevealedAnswer, NotifyRevealedAnswer, NotifyRevealedAnswer)
     {
+        // todo: what is the best way to get p2's address here?
+        // take in game record for now maybe something better.
         let revealed_answer: RevealedAnswer = RevealedAnswer {
             owner: answer_record.owner,
             answer: answer_record.answer,
         };
 
+        let notify_reveal_answer_p1: NotifyRevealedAnswer = NotifyRevealedAnswer {
+            owner: answer_record.owner,
+            answer: answer_record.answer,
+        };
+
+        let notify_reveal_answer_p2: NotifyRevealedAnswer = NotifyRevealedAnswer {
+            owner: game_record.player_two_address,
+            answer: answer_record.answer,
+        };
+
         // todo: tweak for notify records
-        return revealed_answer;
+        return (revealed_answer, notify_reveal_answer_p1, notify_reveal_answer_p2);
     }
 
     transition finish_game (
@@ -266,8 +289,6 @@ program coinflip.aleo {
             };
             return (notify_game_over_p1_record, notify_game_over_p2_record);
         }
-
-        // todo: tweak for notify records
     }
 
     transition claim_wager () -> () {}

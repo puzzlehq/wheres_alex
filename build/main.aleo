@@ -7,6 +7,10 @@ program coinflip.aleo;
 
 
 
+record NotifyRevealedAnswer:
+    owner as address.private;
+    answer as field.private;
+
 record NotifyGameOver:
     owner as address.private;
     winner as address.private;
@@ -129,8 +133,13 @@ function accept_game:
 
 function reveal_answer:
     input r0 as Answer.record;
-    cast r0.owner r0.answer into r1 as RevealedAnswer.record;
-    output r1 as RevealedAnswer.record;
+    input r1 as Game.record;
+    cast r0.owner r0.answer into r2 as RevealedAnswer.record;
+    cast r0.owner r0.answer into r3 as NotifyRevealedAnswer.record;
+    cast r1.player_two_address r0.answer into r4 as NotifyRevealedAnswer.record;
+    output r2 as RevealedAnswer.record;
+    output r3 as NotifyRevealedAnswer.record;
+    output r4 as NotifyRevealedAnswer.record;
 
 
 function finish_game:
