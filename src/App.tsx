@@ -11,7 +11,7 @@ import ConfirmStartGame from './pages/ConfirmStartGame.js';
 import PendingConfirmStartGame from './pages/PendingConfirmStartGame.js';
 
 function App() {
-  const [isConnected, SetIsConnected] = useState<boolean>(false);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
 
   const account: PuzzleAccount = {
     network: 'Aleo',
@@ -21,7 +21,7 @@ function App() {
   };
 
   const onConnectWallet = () => { 
-    SetIsConnected(true);
+    setIsConnected(true);
   };
 
   return (
@@ -62,16 +62,24 @@ export default App;
 
 function Header({ isConnected, address }: { isConnected: boolean, address: string | undefined }) {
   return (
-    <div className="w-full h-16 flex justify-between items-center px-8 dark:bg-orange-500">
+    <div className="self-stretch flex w-full items-start justify-between gap-5">
       {isConnected && address ? (
         <>
-          <span className="text-3xl font-bold">Find Alex!</span>
-          <button className="px-4 py-1 bg-gray-600 text-white rounded shadow-md hover:bg-blue-700">
-            {shortenAddress(address)}
+          <img
+                    loading="lazy"
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cd84c866-46d9-4d71-af0b-2055777b3fcb?"
+                    className="aspect-[2.95] object-cover object-center w-[230px] fill-white overflow-hidden self-stretch max-w-full"
+          />
+          <button className="border-[color:var(--White,#FCFCFC)] self-stretch flex w-[155px] max-w-full flex-col px-5 py-4 rounded-[200px] border-2 border-solid justify-center items-center hover:bg-white text-zinc-50 text-center text-xs font-bold whitespace-nowrap">
+              {shortenAddress(address)}
           </button>
         </>
       ) : (
-        <span className="text-3xl font-bold mx-auto">Find Alex!</span>
+        <img
+                    loading="lazy"
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cd84c866-46d9-4d71-af0b-2055777b3fcb?"
+                    className="aspect-[2.95] object-cover object-center w-[230px] fill-white overflow-hidden self-stretch max-w-full"
+        />
       )}
     </div>
   );

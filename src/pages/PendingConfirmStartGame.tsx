@@ -1,19 +1,19 @@
 function PendingConfirmStartGame() {
 
     return (
-        <div className="items-center bg-neutral-900 flex w-[390px] flex-col pl-5 pr-5">
-          <div className="bg-neutral-900 self-stretch flex w-full flex-col mt-8 mb-20 pl-1 max-md:ml-px max-md:mb-10">
+        <div className="items-center bg-neutral-900 flex w-full flex-col p-5 md:p-8">
+          <div className="bg-neutral-900 self-stretch flex w-full flex-col mt-8 mb-20 pl-1 md:ml-px md:mb-10">
             <div className="self-stretch flex w-full items-start justify-between gap-5">
-              <img
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/cd84c866-46d9-4d71-af0b-2055777b3fcb?"
-                className="aspect-[2.95] object-cover object-center w-[115px] fill-white overflow-hidden self-stretch max-w-full"
-              />
-              <div className="border-[color:var(--White,#FCFCFC)] self-stretch flex w-[155px] max-w-full flex-col px-5 py-4 rounded-[200px] border-2 border-solid">
-                <div className="text-zinc-50 text-center text-xs font-bold self-center whitespace-nowrap">
-                  aleo7899...3456
+                <img
+                    loading="lazy"
+                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cd84c866-46d9-4d71-af0b-2055777b3fcb?"
+                    className="aspect-[2.95] object-cover object-center w-[230px] fill-white overflow-hidden self-stretch max-w-full"
+                />
+                <div className="border-[color:var(--White,#FCFCFC)] self-stretch flex w-[155px] max-w-full flex-col px-5 py-4 rounded-[200px] border-2 border-solid justify-center items-center">
+                    <div className="text-zinc-50 text-center text-xs font-bold whitespace-nowrap">
+                        aleo7899...3456
+                    </div>
                 </div>
-              </div>
             </div>
             <div className="text-lime-600 text-right text-base font-bold border-[color:var(--Green,#4EC331)] self-stretch w-full pl-0 mt-8 pr-2.5 py-3.5 border-2 border-solid max-md:mr-1">
               000000000010
