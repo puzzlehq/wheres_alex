@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, SetStateAction } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import behindBuildingImg from '../assets/behind_building.svg';
-import inWeedsImg from '../assets/in_weeds.svg';
 
 function Navigation() {
     return (
@@ -11,12 +9,12 @@ function Navigation() {
             1. CHALLENGE
         </a>
         <div className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
-          <a href="#" className="text-white text-center text-xs font-extrabold underline tracking-tight self-stretch">
+          <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
             2. HIDE ALEX
           </a>
         </div>
         <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
-          <a href="#" className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
+          <a href="#" className="text-white underline text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
             3.WAGER
           </a>
         </div>
@@ -27,58 +25,36 @@ function Navigation() {
 function Section() {
     return (
       <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
-        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> HIDE ALEX </h1>
+        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> MAKE YOUR </h1>
       </section>
     );
 }
 
-type HideAlexProps = {
-    handleButtonClick: (text: string) => void;
+type ChooseWagerAmountProps = {
+    setAmount: (number: number) => void;
 }
 
-function HideAlex({ handleButtonClick }: HideAlexProps) {
-    const [answer, setAnswer] = useState('');
+function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
+    const [localAmount, setLocalAmount] = useState<number>(0);
 
-    const onButtonClick = (text: string) => {
-        handleButtonClick(text);  // Use the prop here
-        setAnswer(text);
+    const handleAmountChange = (e: { target: { value: any; }; }) => {
+        const newAmount = Number(e.target.value);
+        setLocalAmount(newAmount);
+        setAmount(newAmount);
     };
 
     return (
-        <div>
-            <section className="self-center flex w-[298px] max-w-full items-start justify-between gap-5 mt-16 mb-16 max-md:mt-10">
-                <div className="flex flex-col self-start">
-                    <button onClick={() => onButtonClick('In Weeds')} className="flex flex-col items-center w-[150px] hover:opacity-100">
-                        <img
-                            loading="lazy"
-                            src={inWeedsImg}
-                            className={`aspect-square object-cover object-center w-[100px] h-[100px] overflow-hidden rounded-[50%] ${answer === 'In Weeds' ? '' : 'opacity-40'}`}
-                            alt="In Weeds"
-                        />
-                        <div className={`text-center text-sm font-extrabold mt-2.5 whitespace-nowrap ${answer === 'In Weeds' ? 'text-lime-600' : 'text-white opacity-40 hover:text-lime-600'}`}>
-                            In Weeds
-                        </div>
-                    </button>
-                </div>
-                <div className="flex flex-col self-start">
-                    <button onClick={() => onButtonClick('Behind Building')} className="flex flex-col items-center w-[150px] hover:opacity-100">
-                        <img
-                            loading="lazy"
-                            src={behindBuildingImg}
-                            className={`aspect-square object-cover object-center w-[100px] h-[100px] overflow-hidden rounded-[50%] ${answer === 'Behind Building' ? '' : 'opacity-40'}`}
-                            alt="Behind Building"
-                        />
-                        <div className={`text-center text-sm font-extrabold mt-2.5 whitespace-nowrap ${answer === 'Behind Building' ? 'text-lime-600' : 'text-white opacity-40 hover:text-lime-600'}`}>
-                            Behind Building
-                        </div>
-                    </button>
-                </div>
-            </section>
-            {answer && (
-                <p className="text-lime-600 text-center text-sm font-extrabold tracking-tight self-center mt-20 whitespace-nowrap max-md:mt-10">
-                    You chose to hide Alex {answer}!
-                </p>
-            )}
+        <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
+          <input 
+            type="number" 
+            value={localAmount}
+            onChange={handleAmountChange}
+            className="border-[color:var(--Grey,#868686)] self-stretch flex w-full flex-col mt-14 px-5 py-7 border-[3px] border-solid max-md:mt-10 text-lime-600 text-center text-3xl font-bold opacity-40 self-center w-full"
+            placeholder="Enter amount"
+          />
+          <div className="text-lime-600 text-center text-base font-bold self-center mt-3 whitespace-nowrap mb-24">
+            Puzzle Pieces
+          </div>
         </div>
     );
 }
@@ -88,18 +64,19 @@ function HideAlex({ handleButtonClick }: HideAlexProps) {
 
 type NextButtonProps = {
     isDisabled: boolean;
-    answer: string;
+    amount: number;
 }
 
 
-function NextButton({isDisabled, answer}: NextButtonProps) {
+function NextButton({isDisabled, amount}: NextButtonProps) {
     const navigate = useNavigate();
     const location = useLocation();
     const opponent = location.state?.walletAddress || "N/A";
+    const answer = location.state?.answer || "N/A";
 
     const navigateToStartWager = () => {
-        navigate('/start-wager', {
-            state: {opponent, answer}
+        navigate('/confirm-start-game', {
+            state: {opponent, answer, amount}
         });  // Navigate to the start-wager page
     }
     return (
@@ -116,18 +93,15 @@ function NextButton({isDisabled, answer}: NextButtonProps) {
 }
 
 function PendingConfirmStartGame() {
-    const [answer, setAnswer] = useState('');
-    const handleButtonClick = (text: SetStateAction<string>) => {
-        setAnswer(text);
-    }
+    const [amount, setAmount] = useState<number>(0);
 
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
             <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
                 <Navigation />
                 <Section />
-                <HideAlex handleButtonClick={handleButtonClick} />
-                <NextButton isDisabled={!answer} answer={answer} />
+                <ChooseWagerAmount setAmount={setAmount} />
+                <NextButton isDisabled={amount <= 0} amount={amount}/>
             </div>
         </main>
     );

@@ -1,68 +1,107 @@
-import React, { useState } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-function StartWager() {
-  const location = useLocation();
-  const walletAddress = location.state?.walletAddress || "N/A";
-  const [amount, setAmount] = useState<string | null>(null);
-  const [tempAmount, setTempAmount] = useState<string>("");
-  const navigate = useNavigate();
-
-  const handleBackClick = () => {
-    navigate('/new-game');
-  };
-
-  const handleAmountChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTempAmount(event.target.value);
-  };
-
-  const handleAmountBlur = () => {
-    setAmount(tempAmount);
-  };
-
-  const handleAmountKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      setAmount(tempAmount);
-      // Navigate to hide-alex route with walletAddress and amount
-      navigate('/hide-alex', {
-        state: { walletAddress, amount: amount }
-      });
-    }
-  };
-
-  return (
-    <div className="flex flex-col h-screen justify-center items-center bg-gray-100">
-      <div className="p-4 w-full max-w-xs">
-        <div className="flex justify-between mb-6">
-          <div className="w-16 h-16 bg-orange-400 rounded-full"></div>
-          <div className="w-16 h-16 bg-orange-400 rounded-full"></div>
-          <div className="w-16 h-16 bg-orange-200 rounded-full border-2 border-orange-400"></div>
+function Navigation() {
+    return (
+      <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
+        <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
+            1. CHALLENGE
+        </a>
+        <div className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
+          <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
+            2. HIDE ALEX
+          </a>
         </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Opponent:</label>
-          <div className="bg-gray-200 px-3 py-2 rounded-md text-gray-700">{walletAddress}</div>
+        <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
+          <a href="#" className="text-white underline text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
+            3.WAGER
+          </a>
         </div>
-        <div className="mb-6">
-          <label className="block text-gray-700 text-sm font-bold mb-2">Wager:</label>
+      </nav>
+    );
+}
+  
+function Section() {
+    return (
+      <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
+        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> MAKE YOUR WAGER</h1>
+      </section>
+    );
+}
+
+type ChooseWagerAmountProps = {
+    setAmount: (number: number) => void;
+}
+
+function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
+    const [localAmount, setLocalAmount] = useState<string>("0");
+
+    const handleAmountChange = (e: { target: { value: any; }; }) => {
+        const newAmount = e.target.value;
+        setLocalAmount(newAmount);
+        setAmount(Number(newAmount));
+    };
+
+    return (
+        <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
           <input 
-            type="text"
-            placeholder="Enter Amount"
-            className="w-full px-3 py-2 rounded-md text-gray-700 border border-gray-300 focus:outline-none focus:border-indigo-500"
+            type="number" 
+            value={localAmount === "0" ? "" : localAmount}
             onChange={handleAmountChange}
-            onBlur={handleAmountBlur}
-            onKeyUp={handleAmountKeyPress}
+            className="border-[color:var(--Grey,#868686)] self-stretch flex w-full flex-col mt-14 px-5 py-7 border-[3px] border-solid max-md:mt-10 text-lime-600 text-center text-3xl font-bold opacity-40 self-center w-full"
+            placeholder="Enter amount"
           />
-          <div className="text-center mt-2 text-black">Puzzle Pieces</div>
+          <div className="text-lime-600 text-center text-base font-bold self-center mt-3 whitespace-nowrap mb-24">
+            Puzzle Pieces
+          </div>
         </div>
-        <button
-          onClick={handleBackClick}
-          className="w-full py-2 px-4 bg-gray-300 text-gray-700 rounded-md focus:outline-none focus:bg-gray-400"
-        >
-          Back
+    );
+}
+
+type NextButtonProps = {
+    isDisabled: boolean;
+    amount: number;
+}
+
+
+function NextButton({isDisabled, amount}: NextButtonProps) {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const opponent = location.state?.walletAddress || "N/A";
+    const answer = location.state?.answer || "N/A";
+
+    const navigateToStartWager = () => {
+        navigate('/confirm-start-game', {
+            state: {opponent, answer, amount}
+        });  // Navigate to the confirm-start-game page
+    }
+    return (
+        <button 
+            onClick={navigateToStartWager}
+            disabled={isDisabled}
+            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
+                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-[#4EC331]'} 
+                        bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
+        > 
+            NEXT 
         </button>
-      </div>
-    </div>
-  );
+    );
+}
+
+function StartWager() {
+    const [amount, setAmount] = useState<number>(0);
+
+    return (
+        <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
+            <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
+                <Navigation />
+                <Section />
+                <ChooseWagerAmount setAmount={setAmount} />
+                <NextButton isDisabled={amount <= 0} amount={amount}/>
+            </div>
+        </main>
+    );
 }
 
 export default StartWager;
