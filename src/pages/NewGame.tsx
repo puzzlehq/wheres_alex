@@ -7,7 +7,8 @@ function NewGame() {
   const [walletAddress, setWalletAddress] = useState<string>("");
   const [isScanning, setIsScanning] = useState<boolean>(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
-  const navigate = useNavigate(); // Initialize useHistory
+  const navigate = useNavigate();
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const navigateToPlaceWager = () => {
     navigate("/start-wager", {state:{walletAddress}}); // Navigates to PlaceWager route
@@ -20,9 +21,11 @@ function NewGame() {
       scannerRef.current = new Html5Qrcode('qr-code-scanner');
     }
 
+    const cameraFacingMode = isMobile ? 'environment' : 'user';
+
     try {
       await scannerRef.current.start(
-        { facingMode: 'user' },
+        { facingMode: cameraFacingMode },
         { fps: 10, qrbox: 250 },
         handleScanSuccess,
         handleScanError
@@ -30,7 +33,7 @@ function NewGame() {
     } catch (err) {
       console.error("Unable to start scanning", err);
     }
-  };
+  };  
 
   const handleScanSuccess = (decodedText: string) => {
     setIsScanning(false);
