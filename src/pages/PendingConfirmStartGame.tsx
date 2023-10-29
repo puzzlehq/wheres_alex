@@ -21,7 +21,8 @@ function PasteyQR() {
     const [walletAddress, setWalletAddress] = useState<string>("");
     const [isScanning, setIsScanning] = useState<boolean>(false);
     const scannerRef = useRef<Html5Qrcode | null>(null);
-    const navigate = useNavigate();  // Get the history object
+    const navigate = useNavigate();
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
     const navigateToHideAlex = () => {
         navigate('/hide-alex', {
@@ -31,22 +32,24 @@ function PasteyQR() {
 
     const startScanner = async () => {
         setIsScanning(true);
-
+    
         if (!scannerRef.current) {
-            scannerRef.current = new Html5Qrcode('qr-code-scanner');
+          scannerRef.current = new Html5Qrcode('qr-code-scanner');
         }
-
+    
+        const cameraFacingMode = isMobile ? 'environment' : 'user';
+    
         try {
-            await scannerRef.current.start(
-            { facingMode: 'user' },
+          await scannerRef.current.start(
+            { facingMode: cameraFacingMode },
             { fps: 10, qrbox: 250 },
             handleScanSuccess,
             handleScanError
-            );
+          );
         } catch (err) {
-            console.error("Unable to start scanning", err);
+          console.error("Unable to start scanning", err);
         }
-    };
+    }; 
 
     const handleScanSuccess = (decodedText: string) => {
         setIsScanning(false);
