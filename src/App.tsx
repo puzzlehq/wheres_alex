@@ -27,7 +27,9 @@ function App() {
   return (
     <div className="App min-h-screen bg-yellow-500 flex justify-center">
       <div className="max-w-screen-sm w-full bg-yellow-500 shadow-md overflow-y-auto flex flex-col">
-        <Header isConnected={isConnected} address={account?.address} />
+        
+        {isConnected && account?.address && <Header isConnected={isConnected} address={account?.address} />}
+        
         <Router>
           <div className="max-w-screen-sm w-full h-[calc(100vh-4rem)]">
             <Routes>
@@ -62,25 +64,23 @@ export default App;
 
 function Header({ isConnected, address }: { isConnected: boolean, address: string | undefined }) {
   return (
-    <div className="self-stretch flex w-full items-start justify-between gap-5">
+    <div className="flex w-full items-stretch justify-between gap-5 bg-black p-4">
       {isConnected && address ? (
         <>
           <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cd84c866-46d9-4d71-af0b-2055777b3fcb?"
-                    className="aspect-[2.95] object-cover object-center w-[230px] fill-white overflow-hidden self-stretch max-w-full"
+            loading="lazy"
+            src="https://cdn.builder.io/api/v1/image/assets/TEMP/cd84c866-46d9-4d71-af0b-2055777b3fcb?"
+            className="aspect-[2.95] object-cover object-center w-[161px] fill-white overflow-hidden self-stretch max-w-full"
           />
           <button className="border-[color:var(--White,#FCFCFC)] self-stretch flex w-[155px] max-w-full flex-col px-5 py-4 rounded-[200px] border-2 border-solid justify-center items-center hover:bg-white text-zinc-50 text-center text-xs font-bold whitespace-nowrap">
-              {shortenAddress(address)}
+            {shortenAddress(address)}
           </button>
         </>
       ) : (
-        <img
-                    loading="lazy"
-                    src="https://cdn.builder.io/api/v1/image/assets/TEMP/cd84c866-46d9-4d71-af0b-2055777b3fcb?"
-                    className="aspect-[2.95] object-cover object-center w-[230px] fill-white overflow-hidden self-stretch max-w-full"
-        />
+        <div className="self-stretch w-full"></div>
       )}
     </div>
   );
 }
+
+

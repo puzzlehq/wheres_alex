@@ -131,11 +131,41 @@ function Home() {
                     ))}
                 </div>
             </div>
-            <div className="text-center mt-4 pb-4 px-4"> {/* Adding px-4 back here to maintain padding for the bottom button */}
-                <button className="items-center bg-orange-500 p-2 rounded-full text-xs">Past Games</button>
-            </div>
+            <PastGames />
         </div>
     );
 }
+
+function PastGames() {
+    return (
+      <section className="border-[color:var(--Grey,#868686)] self-stretch flex flex-col mt-8 mb-9 pr-5 pb-5 border-2 border-solid">
+        <div className="bg-zinc-500 flex max-w-full flex-col px-5 py-2 self-start">
+          <div className="text-neutral-900 text-left text-xs font-extrabold leading-3 self-center"> PAST GAMES </div>
+        </div>
+        <div className="items-start self-stretch flex grow flex-col ml-5 mt-3.5 self-start">
+          <div className="justify-between items-start self-stretch flex w-full gap-5 max-md:justify-center">
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto max-sm:mr-auto"> Alice </div>
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto max-sm:mr-auto"> 10 Puzzle </div>
+            <button className="text-black text-left text-xs font-extrabold self-stretch bg-zinc-500 max-w-full px-5 py-3 rounded-[200px] whitespace-nowrap max-sm:w-[78px]"> WON </button>
+          </div>
+          <div className="justify-between items-start self-stretch flex w-full gap-5 mt-4 max-md:justify-center">
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto"> Alice </div>
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto"> 10 Puzzle </div>
+            <button className="text-black text-left text-xs font-extrabold self-stretch bg-zinc-500 max-w-full pl-5 pr-5 py-3 rounded-[200px] whitespace-nowrap"> LOST </button>
+          </div>
+          <div className="justify-between items-start self-stretch flex w-full gap-5 mt-4 max-md:justify-center">
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto"> Alice </div>
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto"> 10 Puzzle </div>
+            <button className="text-black text-left text-xs font-extrabold self-stretch bg-zinc-500 max-w-full px-4 py-3 rounded-[200px]"> DRAW </button>
+          </div>
+          <div className="justify-between items-start self-stretch flex w-full gap-5 mt-4 max-md:justify-center">
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto"> Alice </div>
+            <div className="text-zinc-500 text-left text-xs font-bold self-center my-auto"> 10 Puzzle </div>
+            <button className="text-black text-left text-xs font-extrabold self-stretch bg-zinc-500 max-w-full px-2.5 py-3 rounded-[200px] whitespace-nowrap"> CANCELED </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
 export default Home;
