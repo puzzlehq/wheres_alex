@@ -4,16 +4,29 @@ import { useNavigate } from 'react-router-dom';
 import { Html5Qrcode } from "html5-qrcode";
 import qrImg from '../assets/qrscanner.svg';
 
-function PendingConfirmStartGame() {
+function Navigation() {
     return (
-        <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
-            <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
-                <Navigation />
-                <Section />
-                <PasteyQR />
-                <NextButton />
-            </div>
-        </main>
+      <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
+        <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight underline self-stretch">
+          <ul>
+            <li>1. CHALLENGE</li>
+          </ul>
+        </a>
+        <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch">
+          <a href="#">2. HIDE ALEX</a>
+        </div>
+        <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
+          <a href="#">3.WAGER</a>
+        </div>
+      </nav>
+    );
+}
+  
+function Section() {
+    return (
+      <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
+        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> WHO WOULD YOU LIKE TO CHALLENGE? </h1>
+      </section>
     );
 }
 
@@ -132,30 +145,17 @@ function NextButton() {
     );
 }
 
-function Navigation() {
-  return (
-    <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
-      <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight underline self-stretch">
-        <ul>
-          <li>1. CHALLENGE</li>
-        </ul>
-      </a>
-      <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch">
-        <a href="#">2. HIDE ALEX</a>
-      </div>
-      <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
-        <a href="#">3.WAGER</a>
-      </div>
-    </nav>
-  );
-}
-
-function Section() {
-  return (
-    <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
-      <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> WHO WOULD YOU LIKE TO CHALLENGE? </h1>
-    </section>
-  );
+function PendingConfirmStartGame() {
+    return (
+        <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
+            <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
+                <Navigation />
+                <Section />
+                <PasteyQR />
+                <NextButton />
+            </div>
+        </main>
+    );
 }
 
 export default PendingConfirmStartGame;
