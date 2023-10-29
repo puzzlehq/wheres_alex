@@ -4,9 +4,20 @@ record Puzz:
     owner as address.private;
     amount as u64.private;
 
-record ClaimRecord:
+record TokenOwnerRules:
     owner as address.private;
+    m as u8.private;
+    n as u8.private;
+    signer_address_one as address.private;
+    signer_address_two as address.private;
+    signer_one_signature as signature.private;
+    signer_two_signature as signature.private;
+
+record TokenClaim:
+    owner as address.private;
+    amount as u64.private;
     claimable as boolean.private;
+    signer_address as address.private;
 
 
 mapping supply:

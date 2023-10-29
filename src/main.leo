@@ -5,6 +5,8 @@ import puzzle_account.leo;
 // todo: for now, limit function calls to only self.caller as no need to open up attack vectors
 // todo: logic around hashing of answer, a bit unclear
 // todo: ownerrules lock on game state? next turn: address on game_record work?
+// todo: are imports deployed separately to separate addresses? yes looks like it -> https://t.me/c/1766615939/3581
+// todo: how do we transfer puzz into game at the beginning? don't have bobs address and is_claimable false
 
 // The 'coinflip' program.
 program coinflip.aleo {
@@ -48,6 +50,7 @@ program coinflip.aleo {
 
     // todo: this will likely need to store each player answer
     // todo: may be best to store players in the game here on game record
+    // todo: add block height to game record?
     record Game {
         private owner: address,
         private player_one_answer: field,
@@ -126,7 +129,7 @@ program coinflip.aleo {
 
         // output rules record with caller and opponent with game ms address
         // tbd on m of n here, or if even necessary
-        let owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_address, self.caller, opponent);
+        let owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
         // output claim record to game_addr if player 1 wants to renege or player 2 rejects
         // todo: will likely need to iterate on claim design here
@@ -135,8 +138,6 @@ program coinflip.aleo {
         // transfer puzz tokens to game address
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(wager, game_address, wager_amount);
-
-        //
 
 
         return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules, puzz_change, receiver_puzz_record);
@@ -221,7 +222,7 @@ program coinflip.aleo {
         };
 
         // note: will need to tweak owner rules structure likely to include sig to lock next turn
-        let new_owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address);
+        let new_owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
 
         // todo: tweak for notify records
         // output owner rules record to ms so bob can claim later on

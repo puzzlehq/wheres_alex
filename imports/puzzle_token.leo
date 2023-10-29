@@ -8,9 +8,22 @@ program puzzle_token.aleo {
         private amount: u64,
     }
 
-    record ClaimRecord {
-        private owner: address,
-        private claimable: bool,
+    record TokenOwnerRules {
+        owner: address,
+        m: u8,
+        n: u8,
+        signer_address_one: address,
+        signer_address_two: address,
+        signer_one_signature: signature,
+        signer_two_signature: signature,
+    }
+
+
+    record TokenClaim {
+        owner: address,
+        amount: u64,
+        claimable: bool,
+        signer_address: address,
     }
 
     transition mint (private amount: u64, private to: address) -> Puzz {

@@ -12,6 +12,17 @@ record OwnerRules:
     n as u8.private;
     signer_address_one as address.private;
     signer_address_two as address.private;
+    is_claimable as boolean.private;
+    signer_one_signature as signature.private;
+    signer_two_signature as signature.private;
+
+record OwnerRulesClaim:
+    owner as address.private;
+    m as u8.private;
+    n as u8.private;
+    signer_address_one as address.private;
+    signer_address_two as address.private;
+    is_claimable as boolean.private;
 
 record Signatures:
     owner as address.private;
@@ -34,8 +45,10 @@ function mint_owner_rules_record:
     input r0 as address.private;
     input r1 as address.private;
     input r2 as address.private;
-    cast r0 1u8 1u8 r1 r2 into r3 as OwnerRules.record;
-    output r3 as OwnerRules.record;
+    input r3 as signature.private;
+    input r4 as signature.private;
+    cast r0 2u8 2u8 r1 r2 false r3 r4 into r5 as OwnerRules.record;
+    output r5 as OwnerRules.record;
 
 
 function consume_owner_rules_record:

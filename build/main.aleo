@@ -7,6 +7,8 @@ program coinflip.aleo;
 
 
 
+
+
 record NotifyRevealedAnswer:
     owner as address.private;
     answer as field.private;
@@ -72,7 +74,7 @@ function propose_game:
     cast r2 r0 into r10 as Key.record;
     cast self.caller r1 1field r5 into r11 as Answer.record;
     cast r1 r5 1field r4 self.caller r2 into r12 as Game.record;
-    call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 into r13;
+    call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r13;
     call puzzle_account.aleo/mint_claim_record r1 r4 into r14;
     call puzzle_token.aleo/transfer_private r3 r1 r4 into r15 r16;
     output r11 as Answer.record;
@@ -126,20 +128,21 @@ function accept_game:
     assert.eq r1.owner r2.owner;
     assert.eq r0.owner r1.owner;
     cast r0.owner r0.player_one_answer r5 r0.total_pot r0.player_one_address r0.player_two_address into r8 as Game.record;
-    call puzzle_account.aleo/mint_owner_rules_record r0.owner self.caller r1.signer_address into r9;
+    call puzzle_account.aleo/mint_owner_rules_record r0.owner self.caller r1.signer_address r6 r6 into r9;
     output r8 as Game.record;
     output r9 as puzzle_account.aleo/OwnerRules.record;
 
 
 function reveal_answer:
     input r0 as Answer.record;
-    input r1 as Game.record;
-    cast r0.owner r0.answer into r2 as RevealedAnswer.record;
-    cast r0.owner r0.answer into r3 as NotifyRevealedAnswer.record;
-    cast r1.player_two_address r0.answer into r4 as NotifyRevealedAnswer.record;
-    output r2 as RevealedAnswer.record;
-    output r3 as NotifyRevealedAnswer.record;
+    input r1 as address.private;
+    input r2 as address.private;
+    cast r1 r0.answer into r3 as RevealedAnswer.record;
+    cast r0.owner r0.answer into r4 as NotifyRevealedAnswer.record;
+    cast r2 r0.answer into r5 as NotifyRevealedAnswer.record;
+    output r3 as RevealedAnswer.record;
     output r4 as NotifyRevealedAnswer.record;
+    output r5 as NotifyRevealedAnswer.record;
 
 
 function finish_game:
