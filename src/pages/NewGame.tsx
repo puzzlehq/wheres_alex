@@ -5,21 +5,23 @@ import { Html5Qrcode } from "html5-qrcode";
 import qrImg from '../assets/qrscanner.svg';
 
 function Navigation() {
-    return (
-      <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
-        <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight underline self-stretch">
-          <ul>
-            <li>1. CHALLENGE</li>
-          </ul>
+  return (
+    <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
+      <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch underline">
+          1. CHALLENGE
+      </a>
+      <div className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
+        <a href="#" className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch">
+          2. HIDE ALEX
         </a>
-        <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch">
-          <a href="#">2. HIDE ALEX</a>
-        </div>
-        <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
-          <a href="#">3.WAGER</a>
-        </div>
-      </nav>
-    );
+      </div>
+      <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
+        <a href="#" className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
+          3.WAGER
+        </a>
+      </div>
+    </nav>
+  );
 }
   
 function Section() {
