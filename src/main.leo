@@ -80,6 +80,8 @@ program coinflip.aleo {
     // -> Game record to the game/multisig address
     // -> PuzzRecord to the game/multisig address
     // -> PuzzRecord to player 1 of any change from the wager credit
+
+    // todo: tweak messages here
     transition propose_game(
         private ms_seed: field,
         private game_address: address,
@@ -88,6 +90,7 @@ program coinflip.aleo {
         private wager_amount: u64,
         private player_one_answer: field,
         private sig: signature,
+        private msg: field,
         private m_of_n: u8,
         private nonce: field
     ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
@@ -129,6 +132,7 @@ program coinflip.aleo {
 
         // output rules record with caller and opponent with game ms address
         // tbd on m of n here, or if even necessary
+        // todo: send player 1 sig here and message to verify we can transfer on propose_game?
         let owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
         // output claim record to game_addr if player 1 wants to renege or player 2 rejects
