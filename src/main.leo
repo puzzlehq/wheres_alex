@@ -60,7 +60,7 @@ program coinflip.aleo {
     }
 
     mapping puzz_supply: field => u128;
-    mapping balances: address => u64;
+    mapping games: address => u32;
 
 
     transition mint_token (private amount: u64, private to: address) -> puzzle_token.leo/Puzz.record {
@@ -129,7 +129,6 @@ program coinflip.aleo {
         };
 
         // output game record
-        // todo: hash this answer?
         let game_record: Game = Game {
             owner: game_address,
             player_one_comm: player_one_answer_comm,
@@ -156,9 +155,13 @@ program coinflip.aleo {
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
 
 
-        return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules, puzz_change, receiver_puzz_record);
+        return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules, puzz_change, receiver_puzz_record) then finalize(game_address);
     }
 
+
+    finalize propose_game (game_address: address) {
+        Mapping::set(games, game_address, block.height);
+    }
 
 
     transition player_one_renege_proposal (
@@ -177,6 +180,12 @@ program coinflip.aleo {
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(puzz_record, self.caller, amount);
         // todo: logic around ms_rules, game record tbd
     }
+
+    // finalize player_one_renege_proposal (game_address: address) {
+    //     let previous_block_height: u32 = Mapping::get(games, game_address);
+    //     assert(block.height > previous_block_height);
+    //     Mapping::set(games, game_address, block.height);
+    // }
 
     // todo: how do we check bob is wagering the correct amount before wager submisison
     transition submit_wager (
@@ -212,6 +221,13 @@ program coinflip.aleo {
         // todo: logic around ms_rules, game record tbd
     }
 
+    // finalize player_two_renege_proposal (game_address: address)
+    // {
+    //     let previous_block_height: u32 = Mapping::get(games, game_address);
+    //     assert(block.height > previous_block_height);
+    //     Mapping::set(games, game_address, block.height);
+    // }
+
     transition accept_game (
         private game_record: Game,
         private player_one_claim_record: puzzle_account.leo/Claim.record,
@@ -225,8 +241,6 @@ program coinflip.aleo {
         private leo_message: field,
     ) -> (Game, puzzle_account.leo/OwnerRules.record)
     {
-
-
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
@@ -236,6 +250,9 @@ program coinflip.aleo {
         // assert that the game_address matches on player claim records and game record
         assert_eq(player_one_claim_record.owner, player_two_claim_record.owner);
         assert_eq(game_record.owner, player_one_claim_record.owner);
+
+        // assert that player 1s answer is either "in weeds" or "behind building"
+        assert(player_two_answer == 0field || player_two_answer == 1field);
 
         // add player 2's answer to the game record
         // todo: answers will need to be hashed?
@@ -253,7 +270,13 @@ program coinflip.aleo {
 
         // todo: tweak for notify records
         // output owner rules record to ms so bob can claim later on
-        return (game_record_new, new_owner_rules);
+        return (game_record_new, new_owner_rules) then finalize(game_record.owner);
+    }
+
+    finalize accept_game (game_address: address) {
+        let previous_block_height: u32 = Mapping::get(games, game_address);
+        assert(block.height > previous_block_height);
+        Mapping::set(games, game_address, block.height);
     }
 
     transition reveal_answer (
@@ -318,7 +341,7 @@ program coinflip.aleo {
                 winner: self.caller,
                 total_pot: game_record.total_pot
             };
-            return (notify_game_over_p1_record, notify_game_over_p2_record);
+            return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         } else {
             // transfer all funds to winner
             puzzle_token.leo/puzz_transfer_private(puzz_record, self.caller, game_record.total_pot);
@@ -333,8 +356,14 @@ program coinflip.aleo {
                 winner: game_record.player_two_address,
                 total_pot: game_record.total_pot
             };
-            return (notify_game_over_p1_record, notify_game_over_p2_record);
+            return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
+    }
+
+    finalize finish_game (game_address: address) {
+        let previous_block_height: u32 = Mapping::get(games, game_address);
+        assert(block.height > previous_block_height);
+        Mapping::set(games, game_address, block.height);
     }
 
     transition claim_wager () -> () {

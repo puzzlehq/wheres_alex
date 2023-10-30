@@ -49,9 +49,9 @@ mapping puzz_supply:
 	value as u128.public;
 
 
-mapping balances:
+mapping games:
 	key as address.public;
-	value as u64.public;
+	value as u32.public;
 
 function mint_token:
     input r0 as u64.private;
@@ -87,6 +87,7 @@ function propose_game:
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r18;
     call puzzle_account.aleo/mint_claim_record r1 r4 into r19;
     call puzzle_token.aleo/puzz_transfer_private r3 r1 r4 into r20 r21;
+    async propose_game r1 into r22;
     output r16 as Answer.record;
     output r19 as puzzle_account.aleo/Claim.record;
     output r15 as Key.record;
@@ -94,6 +95,11 @@ function propose_game:
     output r18 as puzzle_account.aleo/OwnerRules.record;
     output r21 as puzzle_token.aleo/Puzz.record;
     output r20 as puzzle_token.aleo/Puzz.record;
+    output r22 as coinflip.aleo/propose_game.future;
+
+finalize propose_game:
+    input r0 as address.public;
+    set block.height into games[r0];
 
 
 function player_one_renege_proposal:
@@ -140,10 +146,23 @@ function accept_game:
     assert.eq r1.amount r2.amount;
     assert.eq r1.owner r2.owner;
     assert.eq r0.owner r1.owner;
-    cast r0.owner r0.player_one_comm r5 r0.total_pot r0.player_one_address r0.player_two_address into r8 as Game.record;
-    call puzzle_account.aleo/mint_owner_rules_record r0.owner self.caller r1.signer_address r6 r6 into r9;
-    output r8 as Game.record;
-    output r9 as puzzle_account.aleo/OwnerRules.record;
+    is.eq r5 0field into r8;
+    is.eq r5 1field into r9;
+    or r8 r9 into r10;
+    assert.eq r10 true;
+    cast r0.owner r0.player_one_comm r5 r0.total_pot r0.player_one_address r0.player_two_address into r11 as Game.record;
+    call puzzle_account.aleo/mint_owner_rules_record r0.owner self.caller r1.signer_address r6 r6 into r12;
+    async accept_game r0.owner into r13;
+    output r11 as Game.record;
+    output r12 as puzzle_account.aleo/OwnerRules.record;
+    output r13 as coinflip.aleo/accept_game.future;
+
+finalize accept_game:
+    input r0 as address.public;
+    get games[r0] into r1;
+    gt block.height r1 into r2;
+    assert.eq r2 true;
+    set block.height into games[r0];
 
 
 function reveal_answer:
@@ -179,8 +198,18 @@ function finish_game:
     ternary r3 r7.winner r11.winner into r17;
     ternary r3 r7.total_pot r11.total_pot into r18;
     cast r16 r17 r18 into r19 as NotifyGameOver.record;
+    ternary r3 r0.owner r0.owner into r20;
+    async finish_game r20 into r21;
     output r15 as NotifyGameOver.record;
     output r19 as NotifyGameOver.record;
+    output r21 as coinflip.aleo/finish_game.future;
+
+finalize finish_game:
+    input r0 as address.public;
+    get games[r0] into r1;
+    gt block.height r1 into r2;
+    assert.eq r2 true;
+    set block.height into games[r0];
 
 
 function claim_wager:
