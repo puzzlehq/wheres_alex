@@ -1,107 +1,188 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
-function Navigation() {
-    return (
-      <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
-        <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
-            1. CHALLENGE
-        </a>
-        <div className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
-          <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
-            2. HIDE ALEX
-          </a>
-        </div>
-        <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
-          <a href="#" className="text-white underline text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
-            3.WAGER
-          </a>
-        </div>
-      </nav>
-    );
-}
+import PuzzleAccount from '../models/account';
+import behindBuildingImg from '../assets/behind_building.svg';
+import inWeedsImg from '../assets/in_weeds.svg';
   
 function Section() {
     return (
-      <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
-        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> MAKE YOUR </h1>
+      <section className="justify-center items-center bg-pink-300 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
+        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> REVIEW AND KICKOFF GAME </h1>
       </section>
     );
 }
 
-type ChooseWagerAmountProps = {
-    setAmount: (number: number) => void;
-}
-
-function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
-    const [localAmount, setLocalAmount] = useState<number>(0);
-
-    const handleAmountChange = (e: { target: { value: any; }; }) => {
-        const newAmount = Number(e.target.value);
-        setLocalAmount(newAmount);
-        setAmount(newAmount);
-    };
+function OpponentSection() {
+    const location = useLocation();
+    const opponent = location.state?.walletAddress || "N/A";
 
     return (
-        <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
-          <input 
-            type="number" 
-            value={localAmount}
-            onChange={handleAmountChange}
-            className="border-[color:var(--Grey,#868686)] self-stretch flex w-full flex-col mt-14 px-5 py-7 border-[3px] border-solid max-md:mt-10 text-lime-600 text-center text-3xl font-bold opacity-40 self-center w-full"
-            placeholder="Enter amount"
-          />
-          <div className="text-lime-600 text-center text-base font-bold self-center mt-3 whitespace-nowrap mb-24">
+      <div className="text-white text-center text-xs font-bold self-center mt-5 whitespace-nowrap">
+        You are challenging
+        <div className="border-[color:var(--White,#FCFCFC)] bg-zinc-50 self-center flex w-[155px] max-w-full flex-col mt-1.5 mb-1.5 px-5 py-4 rounded-[200px] border-2 border-solid">
+          <div className="text-neutral-900 text-center text-xs font-bold self-center whitespace-nowrap">
+            {opponent}
+          </div>
+        </div>
+        to find where you hid Alex!
+      </div>
+    );
+}
+
+function WagerSection() {
+    const location = useLocation();
+    const amount = location.state?.amount || 0;
+
+    return (
+      <div className="border-[color:var(--Green,#4EC331)] self-center flex w-[149px] max-w-full flex-col mt-9 pb-3.5 border-[3px] border-solid">
+        <div className="text-neutral-900 text-center text-xs font-extrabold leading-3 bg-lime-600 self-stretch w-full px-5 py-2">
+          WAGER
+        </div>
+        <div className="self-center flex w-[121px] max-w-full items-start gap-2.5 mt-2.5">
+          <div className="text-lime-600 text-center text-3xl font-bold self-center my-auto">
+            {amount}
+          </div>
+          <div className="text-lime-600 text-center text-base font-bold leading-4 self-stretch">
             Puzzle Pieces
           </div>
+        </div>
+      </div>
+    );
+}
+
+function AnswerSection() {
+    const location = useLocation();
+    const answer = location.state?.answer || "N/A";
+
+    return (
+        <div className="flex w-full flex-col items-center">
+            <div className="self-center flex w-[298px] max-w-full items-start justify-between gap-5 mt-9">
+                <div className="flex flex-col self-start">
+                    <img
+                        loading="lazy"
+                        src={inWeedsImg}
+                        className="aspect-square object-cover object-center w-full opacity-40 overflow-hidden self-stretch rounded-[50%]"
+                        alt="In Weeds"
+                    />
+                    <div className="text-white text-center text-sm font-extrabold tracking-tight opacity-40 self-center mt-2.5 whitespace-nowrap">
+                        In Weeds
+                    </div>
+                </div>
+                <div className="flex flex-col self-start">
+                    <img
+                        loading="lazy"
+                        src={behindBuildingImg}
+                        className="aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%]"
+                        alt="Behind Building"
+                    />
+                    <div className="text-lime-600 text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap">
+                        Behind Building
+                    </div>
+                </div>
+            </div>
+            <div className="text-lime-600 text-center text-sm font-extrabold tracking-tight self-center mt-8 whitespace-nowrap">
+                You chose to hide Alex {answer}!
+            </div>
         </div>
     );
 }
 
+type Props = {
+    account: PuzzleAccount;
+};
 
+function KickoffButton({account}: Props) {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const player_account = account.address;
+    const opponent = location.state?.opponent || "N/A";
+    const amount = location.state?.amount || 0;
+    const answer = location.state?.answer || "N/A";
+    const [gameMultisig, setGameMultisig] = useState<string>("");
+    const [eventID, setEventID] = useState<string>("");
+    const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
 
+    useEffect(() => {
+        function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
+            // Our logic to generate gameMultisig and seed using hooks to wallet wasm
+            return {
+                gameMultisig: "Game" + opponent + player_account, // example outputs
+                seed: new Uint8Array(),
+            };
+        }
+        const result = generateGameMultisig(opponent, player_account);
+        setGameMultisig(result.gameMultisig);
+        setSeed(result.seed);
+    }, [opponent, player_account]);
 
-type NextButtonProps = {
-    isDisabled: boolean;
-    amount: number;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
+        // Our logic here would be for potentially grabbing puzzle records, signatures, and propose game function on Leo
+        setEventID(opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer);
+
+        navigate("/pending-confirm-start-game", {
+            state: {gameMultisig, eventID}
+        });
+    }
+    return (
+        <button 
+            onClick={() => proposeGame(
+                opponent,
+                player_account,
+                gameMultisig,
+                seed,
+                amount,
+                answer
+            )}
+            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
+                        bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
+        > 
+            KICKOFF GAME! 
+        </button>
+    );
 }
 
-
-function NextButton({isDisabled, amount}: NextButtonProps) {
+function BackButton() {
     const navigate = useNavigate();
     const location = useLocation();
     const opponent = location.state?.walletAddress || "N/A";
     const answer = location.state?.answer || "N/A";
+    const amount = location.state?.amount || "N/A";
 
-    const navigateToStartWager = () => {
-        navigate('/confirm-start-game', {
+    const navigateBackToStartWager = () => {
+        navigate('/start-wager', {
             state: {opponent, answer, amount}
         });  // Navigate to the start-wager page
     }
     return (
         <button 
-            onClick={navigateToStartWager}
-            disabled={isDisabled}
+            onClick={navigateBackToStartWager}
             className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
-                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-[#4EC331]'} 
-                        bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
-        > 
-            NEXT 
+                bg-zinc-500 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
+            > 
+            BACK 
         </button>
     );
 }
 
 function PendingConfirmStartGame() {
-    const [amount, setAmount] = useState<number>(0);
+    const account: PuzzleAccount = {
+        network: 'aleo',
+        chainId: '1',
+        address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
+        shortenedAddress: '123456'
+    };
 
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
             <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
-                <Navigation />
                 <Section />
-                <ChooseWagerAmount setAmount={setAmount} />
-                <NextButton isDisabled={amount <= 0} amount={amount}/>
+                <OpponentSection />
+                <WagerSection />
+                <AnswerSection />
+                <KickoffButton account={account} />
+                <BackButton />
             </div>
         </main>
     );
