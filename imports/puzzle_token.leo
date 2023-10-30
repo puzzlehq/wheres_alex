@@ -42,7 +42,7 @@ program puzzle_token.aleo {
 
 
     // owner_rules.claim have it return another owner rules bool or claim record that says no
-    transition transfer_private (private puzz_token: Puzz, private to: address, private amount: u64) -> (Puzz, Puzz) {
+    transition puzz_transfer_private (private puzz_token: Puzz, private to: address, private amount: u64) -> (Puzz, Puzz) {
 
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {

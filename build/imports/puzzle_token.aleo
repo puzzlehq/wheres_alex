@@ -35,7 +35,7 @@ function mint:
     output r2 as Puzz.record;
 
 
-function transfer_private:
+function puzz_transfer_private:
     input r0 as Puzz.record;
     input r1 as address.private;
     input r2 as u64.private;

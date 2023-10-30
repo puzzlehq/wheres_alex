@@ -1,9 +1,7 @@
 import puzzle_token.leo;
 import puzzle_account.leo;
 
-// todo: wait we're going to use alice's credits to send to multisig?
-// todo: for now, limit function calls to only self.caller as no need to open up attack vectors
-// todo: logic around hashing of answer, a bit unclear
+// todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
 // todo: ownerrules lock on game state? next turn: address on game_record work?
 // todo: are imports deployed separately to separate addresses? yes looks like it -> https://t.me/c/1766615939/3581
 // todo: how do we transfer puzz into game at the beginning? don't have bobs address and is_claimable false
@@ -88,6 +86,8 @@ program coinflip.aleo {
         private game_address: address,
         private opponent: address,
         private wager: puzzle_token.leo/Puzz.record,
+        // private leo_credits: credits.leo/credits.record,
+        // private credit_amount: u64,
         private wager_amount: u64,
         private player_one_answer: field,
         private sig: signature,
@@ -141,13 +141,16 @@ program coinflip.aleo {
         // todo: send player 1 sig here and message to verify we can transfer on propose_game?
         let owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
+        // todo: send credits to multisig
+        // let creds_to_ms_record: (credits, credits) = credits.leo/transfer_private(leo_credits, game_address, credit_amount);
+
         // output claim record to game_addr if player 1 wants to renege or player 2 rejects
         // todo: will likely need to iterate on claim design here
         let player_one_claim_record: Claim = puzzle_account.leo/mint_claim_record(game_address, wager_amount);
 
         // transfer puzz tokens to game address
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(wager, game_address, wager_amount);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
 
 
         return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules, puzz_change, receiver_puzz_record);
@@ -168,7 +171,7 @@ program coinflip.aleo {
 
         // todo: how are we going to transfer this out, likely need record as input to this function?
         // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(puzz_record, self.caller, amount);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(puzz_record, self.caller, amount);
         // todo: logic around ms_rules, game record tbd
     }
 
@@ -179,7 +182,7 @@ program coinflip.aleo {
         private wager_amount: u64
     ) -> (puzzle_account.leo/Claim.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record) {
 
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(wager, game_address, wager_amount);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
 
         // output claim record to ms_addr in case player 2 wants to renege later on
         // todo: will likely need to iterate on claim design here
@@ -202,7 +205,7 @@ program coinflip.aleo {
 
         // todo: how are we going to transfer this out, likely need record as input to this function?
         // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(token_record, self.caller, amount);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(token_record, self.caller, amount);
         // todo: logic around ms_rules, game record tbd
     }
 
@@ -300,7 +303,7 @@ program coinflip.aleo {
 
         if (revealed_answer_record.answer == 1field) {
             // transfer all funds to winner
-            puzzle_token.leo/transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
+            puzzle_token.leo/puzz_transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,
@@ -315,7 +318,7 @@ program coinflip.aleo {
             return (notify_game_over_p1_record, notify_game_over_p2_record);
         } else {
             // transfer all funds to winner
-            puzzle_token.leo/transfer_private(puzz_record, self.caller, game_record.total_pot);
+            puzzle_token.leo/puzz_transfer_private(puzz_record, self.caller, game_record.total_pot);
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,

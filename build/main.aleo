@@ -71,6 +71,7 @@ function propose_game:
     input r7 as field.private;
     input r8 as u8.private;
     input r9 as scalar.private;
+    assert.eq self.caller self.signer;
     assert.neq r1 r2;
     commit.bhp256 r5 r9 into r10 as field;
     gt r4 0u64 into r11;
@@ -81,7 +82,7 @@ function propose_game:
     cast r1 r10 1field r4 self.caller r2 into r14 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r15;
     call puzzle_account.aleo/mint_claim_record r1 r4 into r16;
-    call puzzle_token.aleo/transfer_private r3 r1 r4 into r17 r18;
+    call puzzle_token.aleo/puzz_transfer_private r3 r1 r4 into r17 r18;
     output r13 as Answer.record;
     output r16 as puzzle_account.aleo/Claim.record;
     output r12 as Key.record;
@@ -97,14 +98,15 @@ function player_one_renege_proposal:
     input r2 as puzzle_account.aleo/Claim.record;
     input r3 as puzzle_token.aleo/Puzz.record;
     input r4 as u64.private;
-    call puzzle_token.aleo/transfer_private r3 self.caller r4 into r5 r6;
+    assert.eq self.caller self.signer;
+    call puzzle_token.aleo/puzz_transfer_private r3 self.caller r4 into r5 r6;
 
 
 function submit_wager:
     input r0 as address.private;
     input r1 as puzzle_token.aleo/Puzz.record;
     input r2 as u64.private;
-    call puzzle_token.aleo/transfer_private r1 r0 r2 into r3 r4;
+    call puzzle_token.aleo/puzz_transfer_private r1 r0 r2 into r3 r4;
     call puzzle_account.aleo/mint_claim_record r0 r2 into r5;
     output r5 as puzzle_account.aleo/Claim.record;
     output r3 as puzzle_token.aleo/Puzz.record;
@@ -117,7 +119,8 @@ function player_two_renege_proposal:
     input r2 as puzzle_account.aleo/Claim.record;
     input r3 as puzzle_token.aleo/Puzz.record;
     input r4 as u64.private;
-    call puzzle_token.aleo/transfer_private r3 self.caller r4 into r5 r6;
+    assert.eq self.caller self.signer;
+    call puzzle_token.aleo/puzz_transfer_private r3 self.caller r4 into r5 r6;
 
 
 function accept_game:
@@ -129,6 +132,7 @@ function accept_game:
     input r5 as field.private;
     input r6 as signature.private;
     input r7 as field.private;
+    assert.eq self.caller self.signer;
     assert.eq r1.amount r2.amount;
     assert.eq r1.owner r2.owner;
     assert.eq r0.owner r1.owner;
@@ -142,6 +146,7 @@ function reveal_answer:
     input r0 as Answer.record;
     input r1 as address.private;
     input r2 as address.private;
+    assert.eq self.caller self.signer;
     cast r1 r0.answer r0.nonce into r3 as RevealedAnswer.record;
     cast r0.owner r0.answer into r4 as NotifyRevealedAnswer.record;
     cast r2 r0.answer into r5 as NotifyRevealedAnswer.record;
@@ -154,11 +159,12 @@ function finish_game:
     input r0 as Game.record;
     input r1 as RevealedAnswer.record;
     input r2 as puzzle_token.aleo/Puzz.record;
+    assert.eq self.caller self.signer;
     is.eq r1.answer 1field into r3;
-    call puzzle_token.aleo/transfer_private r2 r1.owner r0.total_pot into r4 r5;
+    call puzzle_token.aleo/puzz_transfer_private r2 r1.owner r0.total_pot into r4 r5;
     cast self.caller self.caller r0.total_pot into r6 as NotifyGameOver.record;
     cast r0.player_two_address self.caller r0.total_pot into r7 as NotifyGameOver.record;
-    call puzzle_token.aleo/transfer_private r2 self.caller r0.total_pot into r8 r9;
+    call puzzle_token.aleo/puzz_transfer_private r2 self.caller r0.total_pot into r8 r9;
     cast self.caller r0.player_two_address r0.total_pot into r10 as NotifyGameOver.record;
     cast r0.player_two_address r0.player_two_address r0.total_pot into r11 as NotifyGameOver.record;
     ternary r3 r6.owner r10.owner into r12;
