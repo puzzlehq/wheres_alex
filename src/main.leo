@@ -94,7 +94,7 @@ program coinflip.aleo {
         private msg: field,
         private m_of_n: u8,
         private nonce: scalar,
-    ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
+    ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_token.leo/TokenOwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
 
         // limit calls to only users
@@ -141,7 +141,7 @@ program coinflip.aleo {
         // output rules record with caller and opponent with game ms address
         // tbd on m of n here, or if even necessary
         // todo: send player 1 sig here and message to verify we can transfer on propose_game?
-        let owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
+        let token_owner_rules_record: TokenOwnerRules = puzzle_token.leo/mint_token_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
         // todo: send credits to multisig
         // let creds_to_ms_record: (credits, credits) = credits.leo/transfer_private(leo_credits, game_address, credit_amount);
@@ -155,7 +155,7 @@ program coinflip.aleo {
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
 
 
-        return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules, puzz_change, receiver_puzz_record) then finalize(game_address);
+        return (answer_record, player_one_claim_record, player_two_key_record, game_record, token_owner_rules_record, puzz_change, receiver_puzz_record) then finalize(game_address);
     }
 
 

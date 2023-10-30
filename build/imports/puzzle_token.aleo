@@ -4,6 +4,10 @@ record Puzz:
     owner as address.private;
     amount as u64.private;
 
+record PuzzClaim:
+    owner as address.private;
+    amount as u64.private;
+
 record TokenOwnerRules:
     owner as address.private;
     m as u8.private;
@@ -12,6 +16,7 @@ record TokenOwnerRules:
     signer_address_two as address.private;
     signer_one_signature as signature.private;
     signer_two_signature as signature.private;
+    is_claimable as boolean.private;
 
 record PuzzStake:
     owner as address.private;
@@ -35,6 +40,16 @@ function mint:
     output r2 as Puzz.record;
 
 
+function mint_token_owner_rules_record:
+    input r0 as address.private;
+    input r1 as address.private;
+    input r2 as address.private;
+    input r3 as signature.private;
+    input r4 as signature.private;
+    cast r0 2u8 2u8 r1 r2 r3 r4 false into r5 as TokenOwnerRules.record;
+    output r5 as TokenOwnerRules.record;
+
+
 function puzz_transfer_private:
     input r0 as Puzz.record;
     input r1 as address.private;
@@ -44,6 +59,16 @@ function puzz_transfer_private:
     cast self.caller r4 into r5 as Puzz.record;
     output r3 as Puzz.record;
     output r5 as Puzz.record;
+
+
+function stake_transfer_private_in:
+    input r0 as Puzz.record;
+    input r1 as address.private;
+    input r2 as u64.private;
+    cast self.caller r2 into r3 as PuzzStake.record;
+    cast self.caller r2 into r4 as PuzzClaim.record;
+    output r3 as PuzzStake.record;
+    output r4 as PuzzClaim.record;
 
 
 function stake_transfer_private_out:

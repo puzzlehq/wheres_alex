@@ -11,6 +11,7 @@ program coinflip.aleo;
 
 
 
+
 record NotifyRevealedAnswer:
     owner as address.private;
     answer as field.private;
@@ -84,7 +85,7 @@ function propose_game:
     cast r2 r0 into r15 as Key.record;
     cast self.caller r1 r9 r5 into r16 as Answer.record;
     cast r1 r13 1field r4 self.caller r2 into r17 as Game.record;
-    call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r18;
+    call puzzle_token.aleo/mint_token_owner_rules_record r1 self.caller r2 r6 r6 into r18;
     call puzzle_account.aleo/mint_claim_record r1 r4 into r19;
     call puzzle_token.aleo/puzz_transfer_private r3 r1 r4 into r20 r21;
     async propose_game r1 into r22;
@@ -92,7 +93,7 @@ function propose_game:
     output r19 as puzzle_account.aleo/Claim.record;
     output r15 as Key.record;
     output r17 as Game.record;
-    output r18 as puzzle_account.aleo/OwnerRules.record;
+    output r18 as puzzle_token.aleo/TokenOwnerRules.record;
     output r21 as puzzle_token.aleo/Puzz.record;
     output r20 as puzzle_token.aleo/Puzz.record;
     output r22 as coinflip.aleo/propose_game.future;
