@@ -5,9 +5,13 @@ import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
 
 function Navigation() {
+    const navigate = useNavigate();
+
     return (
       <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
-        <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
+        <a href="#"
+        onClick={() => navigate('/new-game')}  
+        className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
             1. CHALLENGE
         </a>
         <div className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
@@ -33,15 +37,18 @@ function Section() {
 }
 
 type HideAlexProps = {
-    handleButtonClick: (text: string) => void;
+    handleButtonClick: (text: string, opponent: string) => void;
+    opponent: string;
 }
 
-function ChooseLocation({ handleButtonClick }: HideAlexProps) {
+function ChooseLocation({ handleButtonClick, opponent }: HideAlexProps) {
     const [answer, setAnswer] = useState('');
 
     const onButtonClick = (text: string) => {
-        handleButtonClick(text);  // Use the prop here
+        handleButtonClick(text, opponent);  // Use the prop here
         setAnswer(text);
+        console.log(answer);
+        console.log(opponent);
     };
 
     return (
@@ -89,18 +96,20 @@ function ChooseLocation({ handleButtonClick }: HideAlexProps) {
 type NextButtonProps = {
     isDisabled: boolean;
     answer: string;
+    opponent: string;
 }
 
 
-function NextButton({isDisabled, answer}: NextButtonProps) {
+function NextButton({isDisabled, answer, opponent}: NextButtonProps) {
     const navigate = useNavigate();
     const location = useLocation();
-    const opponent = location.state?.walletAddress || "N/A";
 
     const navigateToStartWager = () => {
+        console.log(opponent);
+        console.log(answer);
         navigate('/start-wager', {
-            state: {opponent, answer}
-        });  // Navigate to the start-wager page
+            state: {...location.state, opponent, answer}
+        });  
     }
     return (
         <button 
@@ -116,9 +125,19 @@ function NextButton({isDisabled, answer}: NextButtonProps) {
 }
 
 function HideAlex() {
-    const [answer, setAnswer] = useState('');
-    const handleButtonClick = (text: SetStateAction<string>) => {
+    const location = useLocation();
+    const opponentFromLocation = location.state?.opponent || "N/A";
+    console.log(opponentFromLocation);
+    const answerFromLocation = location.state?.answer || '';
+
+
+    const [answer, setAnswer] = useState(answerFromLocation);
+    const [opponent, setOpponent] = useState(opponentFromLocation);
+    const handleButtonClick = (text: SetStateAction<string>, opponent: SetStateAction<string>) => {
         setAnswer(text);
+        setOpponent(opponent);
+        console.log(opponent);
+        console.log(answer);
     }
 
     return (
@@ -126,8 +145,8 @@ function HideAlex() {
             <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
                 <Navigation />
                 <Section />
-                <ChooseLocation handleButtonClick={handleButtonClick} />
-                <NextButton isDisabled={!answer} answer={answer} />
+                <ChooseLocation handleButtonClick={handleButtonClick} opponent={opponent}/>
+                <NextButton isDisabled={!answer} answer={answer} opponent={opponent}/>
             </div>
         </main>
     );

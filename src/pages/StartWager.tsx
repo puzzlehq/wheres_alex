@@ -2,14 +2,26 @@
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-function Navigation() {
+type NavigationProps = {
+    opponent: string,
+    answer: string
+}
+
+function Navigation({opponent, answer}: NavigationProps) {
+    const navigate = useNavigate();
+
     return (
       <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
         <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
             1. CHALLENGE
         </a>
         <div className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
-          <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
+          <a href="#" 
+            onClick={() => navigate('/hide-alex', {
+                state: {opponent, answer}
+            })} 
+            className="text-white text-center text-xs font-extrabold tracking-tight self-stretch"
+            >
             2. HIDE ALEX
           </a>
         </div>
@@ -41,7 +53,14 @@ function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
         const newAmount = e.target.value;
         setLocalAmount(newAmount);
         setAmount(Number(newAmount));
+        console.log(localAmount);
     };
+
+    // Determine input text color based on localAmount value
+    const inputTextColor = localAmount !== "0" ? "text-lime-600" : "";
+
+    // Determine input opacity based on localAmount value
+    const inputOpacity = localAmount === "0" ? "opacity-40" : "";
 
     return (
         <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
@@ -49,7 +68,7 @@ function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
             type="number" 
             value={localAmount === "0" ? "" : localAmount}
             onChange={handleAmountChange}
-            className="border-[color:var(--Grey,#868686)] self-stretch flex w-full flex-col mt-14 px-5 py-7 border-[3px] border-solid max-md:mt-10 text-lime-600 text-center text-3xl font-bold opacity-40 self-center w-full"
+            className={`border-[color:var(--Grey,#868686)] self-stretch flex w-full flex-col mt-14 px-5 py-7 border-[3px] border-solid max-md:mt-10 ${inputTextColor} ${inputOpacity} text-center text-3xl font-bold self-center w-full`}
             placeholder="Enter amount"
           />
           <div className="text-lime-600 text-center text-base font-bold self-center mt-3 whitespace-nowrap mb-24">
@@ -58,6 +77,7 @@ function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
         </div>
     );
 }
+
 
 type NextButtonProps = {
     isDisabled: boolean;
@@ -68,8 +88,10 @@ type NextButtonProps = {
 function NextButton({isDisabled, amount}: NextButtonProps) {
     const navigate = useNavigate();
     const location = useLocation();
-    const opponent = location.state?.walletAddress || "N/A";
+    const opponent = location.state?.opponent || "N/A";
+    console.log(opponent);
     const answer = location.state?.answer || "N/A";
+    console.log(answer);
 
     const navigateToStartWager = () => {
         navigate('/confirm-start-game', {
@@ -91,11 +113,16 @@ function NextButton({isDisabled, amount}: NextButtonProps) {
 
 function StartWager() {
     const [amount, setAmount] = useState<number>(0);
+    const location = useLocation();
+    const opponent = location.state?.opponent || "N/A";
+    console.log(opponent);
+    const answer = location.state?.answer || "N/A";
+    console.log(answer);
 
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
             <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
-                <Navigation />
+                <Navigation opponent={opponent} answer={answer} />
                 <Section />
                 <ChooseWagerAmount setAmount={setAmount} />
                 <NextButton isDisabled={amount <= 0} amount={amount}/>

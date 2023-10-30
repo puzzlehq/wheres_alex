@@ -74,6 +74,7 @@ function App() {
     address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
     shortenedAddress: 'aleo1as..tuvr6'
   };
+  console.log(account.address);
 
   const onConnectWallet = () => { 
     setIsConnected(true);

@@ -32,18 +32,15 @@ function Section() {
     );
 }
 
-function PasteyQR() {
-    const [walletAddress, setWalletAddress] = useState<string>("");
+interface PasteyQRProps {
+  setOpponent: (address: string) => void;
+  opponent: string;
+}
+
+function PasteyQR( {setOpponent, opponent}: PasteyQRProps ) {
     const [isScanning, setIsScanning] = useState<boolean>(false);
     const scannerRef = useRef<Html5Qrcode | null>(null);
-    const navigate = useNavigate();
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-    const navigateToHideAlex = () => {
-        navigate('/hide-alex', {
-            state: { walletAddress }
-        });  // Navigate to the NewGame page
-    }
 
     const startScanner = async () => {
         setIsScanning(true);
@@ -68,8 +65,8 @@ function PasteyQR() {
 
     const handleScanSuccess = (decodedText: string) => {
         setIsScanning(false);
-        setWalletAddress(decodedText);
-        navigateToHideAlex(); // Navigate when scan is successful
+        setOpponent(decodedText);
+        console.log(opponent);
         if (scannerRef.current) {
             scannerRef.current.stop().catch(err => console.error("Failed to stop the scanner", err));
         }
@@ -82,8 +79,8 @@ function PasteyQR() {
 
     const handlePasteFromClipboard = async () => {
         const clipboardData = await navigator.clipboard.readText();
-        setWalletAddress(clipboardData);
-        navigateToHideAlex(); // Navigate when address is pasted from clipboard
+        setOpponent(clipboardData);
+        console.log(opponent);
     };
     return (
         <div className="flex w-full flex-col items-center"> 
@@ -91,8 +88,8 @@ function PasteyQR() {
                     type="text" 
                     className="text-white text-sm font-semibold leading-4 border-[color:var(--Grey,#868686)] self-stretch w-full mt-5 pl-3.5 pr-5 py-7 border-[3px] border-solid max-md:mr-px"
                     placeholder="Enter Wallet Address"
-                    id="wallet-address" 
-                    value={walletAddress}
+                    id="opponent" 
+                    value={opponent}
                     readOnly
             />
             <div className="flex items-center">  {/* Use flex container here */}
@@ -131,30 +128,45 @@ function PasteyQR() {
     );
 }
 
-function NextButton() {
-    const navigate = useNavigate();  // Get the history object
+interface NextButtonProps {
+  opponent: string;
+}
 
-    const navigateToHideAlex = () => {
-        navigate('/hide-alex');  // Navigate to the NewGame page
-    }
-    return (
-        <button 
-            onClick={navigateToHideAlex}
-            className="text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap bg-lime-600 bg-opacity-40 hover:bg-[#4EC331] self-stretch w-full mt-24 p-5 rounded-[200px] max-md:ml-px max-md:mt-10"
-        > 
-            NEXT 
-        </button>
-    );
+
+function NextButton({ opponent }: NextButtonProps) {
+  const navigate = useNavigate();
+
+  const navigateToHideAlex = () => {
+      if (opponent) {
+          navigate('/hide-alex', {
+              state: { opponent }
+          });
+      }
+  };
+
+  return (
+      <button 
+          onClick={navigateToHideAlex}
+          className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap self-stretch w-full mt-24 p-5 rounded-[200px] max-md:ml-px max-md:mt-10 
+          ${opponent ? "bg-lime-600 hover:bg-[#4EC331]" : "bg-lime-600 bg-opacity-20 cursor-not-allowed"}
+          `}
+          disabled={!opponent} 
+      > 
+          NEXT 
+      </button>
+  );
 }
 
 function NewGame() {
+    const [opponent, setOpponent] = useState<string>("");
+
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
             <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
                 <Navigation />
                 <Section />
-                <PasteyQR />
-                <NextButton />
+                <PasteyQR setOpponent={setOpponent} opponent={opponent} />
+                <NextButton opponent={opponent} />
             </div>
         </main>
     );

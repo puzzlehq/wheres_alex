@@ -1,23 +1,114 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PuzzleAccount from '../models/account';
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
+  
+function Section() {
+    return (
+      <section className="justify-center items-center bg-pink-300 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
+        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> REVIEW AND KICKOFF GAME </h1>
+      </section>
+    );
+}
+
+function OpponentSection() {
+    const location = useLocation();
+    const opponent = location.state?.opponent || "N/A";
+    
+    // Shorten the opponent string
+    const displayOpponent = 
+        opponent.length > 9 
+        ? opponent.slice(0, 5) + "..." + opponent.slice(-4)
+        : opponent;
+
+    return (
+      <div className="text-white text-center text-xs font-bold self-center mt-5 whitespace-nowrap">
+        You are challenging
+        <div className="border-[color:var(--White,#FCFCFC)] bg-zinc-50 self-center flex w-[155px] max-w-full flex-col mt-1.5 mb-1.5 px-5 py-4 rounded-[200px] border-2 border-solid">
+          <div className="text-neutral-900 text-center text-xs font-bold self-center whitespace-nowrap">
+            {displayOpponent}
+          </div>
+        </div>
+        to find where you hid Alex!
+      </div>
+    );
+}
+
+
+function WagerSection() {
+    const location = useLocation();
+    const amount = location.state?.amount || 0;
+
+    return (
+      <div className="border-[color:var(--Green,#4EC331)] self-center flex w-[149px] max-w-full flex-col mt-9 pb-3.5 border-[3px] border-solid">
+        <div className="text-neutral-900 text-center text-xs font-extrabold leading-3 bg-lime-600 self-stretch w-full px-5 py-2">
+          WAGER
+        </div>
+        <div className="self-center flex w-[121px] max-w-full items-start gap-2.5 mt-2.5">
+          <div className="text-lime-600 text-center text-3xl font-bold self-center my-auto">
+            {amount}
+          </div>
+          <div className="text-lime-600 text-center text-base font-bold leading-4 self-stretch">
+            Puzzle Pieces
+          </div>
+        </div>
+      </div>
+    );
+}
+
+function AnswerSection() {
+    const location = useLocation();
+    const answer = location.state?.answer || "N/A";
+
+    return (
+        <div className="flex w-full flex-col items-center">
+            <div className="self-center flex w-[298px] max-w-full items-start justify-between gap-5 mt-9">
+                <div className="flex flex-col self-start">
+                    <img
+                        loading="lazy"
+                        src={inWeedsImg}
+                        className="aspect-square object-cover object-center w-full opacity-40 overflow-hidden self-stretch rounded-[50%]"
+                        alt="In Weeds"
+                    />
+                    <div className="text-white text-center text-sm font-extrabold tracking-tight opacity-40 self-center mt-2.5 whitespace-nowrap">
+                        In Weeds
+                    </div>
+                </div>
+                <div className="flex flex-col self-start">
+                    <img
+                        loading="lazy"
+                        src={behindBuildingImg}
+                        className="aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%]"
+                        alt="Behind Building"
+                    />
+                    <div className="text-lime-600 text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap">
+                        Behind Building
+                    </div>
+                </div>
+            </div>
+            <div className="text-lime-600 text-center text-sm font-extrabold tracking-tight self-center mt-8 whitespace-nowrap">
+                You chose to hide Alex {answer}!
+            </div>
+        </div>
+    );
+}
 
 type Props = {
     account: PuzzleAccount;
 };
 
-function ConfirmStartGame({ account }: Props) {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const player_account = account.address;
-  const opponent = location.state?.opponent || "N/A";
-  const amount = location.state?.amount || 0;
-  const answer = location.state?.answer || "N/A";
-  const [gameMultisig, setGameMultisig] = useState<string>("");
-  const [eventID, setEventID] = useState<string>("");
-  const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
+function KickoffButton({account}: Props) {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const player_account = account.address;
+    const opponent = location.state?.opponent || "N/A";
+    const amount = location.state?.amount || 0;
+    const answer = location.state?.answer || "N/A";
+    const [gameMultisig, setGameMultisig] = useState<string>("");
+    const [eventID, setEventID] = useState<string>("");
+    const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
 
     useEffect(() => {
         function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
@@ -33,58 +124,73 @@ function ConfirmStartGame({ account }: Props) {
     }, [opponent, player_account]);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    function proposeGame(_opponent: string, _player_account: string, _gameMultisig: string, _seed: Uint8Array, _amount: number, _answer: string) {
+    function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
         // Our logic here would be for potentially grabbing puzzle records, signatures, and propose game function on Leo
-        setEventID("aleo txn1234")
+        setEventID(opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer);
 
         navigate("/pending-confirm-start-game", {
             state: {gameMultisig, eventID}
         });
     }
+    return (
+        <button 
+            onClick={() => proposeGame(
+                opponent,
+                player_account,
+                gameMultisig,
+                seed,
+                amount,
+                answer
+            )}
+            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
+                        bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
+        > 
+            KICKOFF GAME! 
+        </button>
+    );
+}
+
+function BackButton() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const opponent = location.state?.opponent || "N/A";
+    const answer = location.state?.answer || "N/A";
+    const amount = location.state?.amount || "N/A";
+
+    const navigateBackToStartWager = () => {
+        navigate('/start-wager', {
+            state: {opponent, answer, amount}
+        });  // Navigate to the start-wager page
+    }
+    return (
+        <button 
+            onClick={navigateBackToStartWager}
+            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
+                bg-zinc-500 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
+            > 
+            BACK 
+        </button>
+    );
+}
+
+function ConfirmStartGame({account}: Props) {
+    // const account: PuzzleAccount = {
+    //     network: 'aleo',
+    //     chainId: '1',
+    //     address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
+    //     shortenedAddress: '123456'
+    // };
+    const player = account;
 
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
-            
-            <div className="min-h-screen flex justify-center items-center bg-gray-100">
-                <div className="max-w-xs w-full p-6 bg-white rounded-md shadow-md">
-                    <h1 className="text-2xl font-bold mb-4">Review & Confirm</h1>
-                    <div className="flex justify-center items-center mb-4">
-                        <div className="w-20 h-10 bg-gray-300 rounded-full mr-4">
-                            <span className="mb-4 text-black font-semibold">Game {gameMultisig}</span>
-                        </div>
-                    </div>
-                    <div className="flex justify-center items-center mb-6">
-                        <div className="w-16 h-8 bg-gray-300 rounded-full mr-2">
-                            <span>{opponent}</span>
-                        </div>
-                        <span className="mx-2 text-black">vs</span>
-                        <div className="w-16 h-8 bg-gray-300 rounded-full mr-2">
-                            <span>{player_account}</span>
-                        </div>
-                    </div>
-                    <h2 className="text-xl mb-4 text-black text-center">Hid Alex in:</h2>
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                        <div className="relative">
-                            <div className={`mb-4 rounded-full w-full h-32 object-cover ${answer === "In Weeds" ? "border-2 border-green-500" : ""}`}>
-                                <img src={inWeedsImg} alt="In Weeds" className="rounded-full w-full h-32 object-cover" />
-                                <span className="text-center mt-2 text-black">In Weeds</span>
-                            </div>
-                            <div className={`mb-4 rounded-full w-full h-32 object-cover ${answer === "Behind Building" ? "border-2 border-green-500" : ""}`}>
-                                <img src={behindBuildingImg} alt="Behind Building" className="rounded-full w-full h-32 object-cover" />
-                                <span className="text-center mt-2 text-black">Behind Building</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <p className="mb-4 text-black font-semibold">Wager: {amount} Puzzle Pieces</p>
-
-                    <button className="bg-green-500 text-white p-4 rounded-lg mb-4 w-full font-bold" onClick={() => proposeGame(opponent, player_account, gameMultisig, seed, amount, answer)}>
-                        Kickoff Game!
-                    </button>
-                    <button className="bg-gray-300 text-black p-2 rounded-lg w-1/3" onClick={() => navigate("/hide-alex")}>
-                        Back
-                    </button>
-                </div>
+            <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
+                <Section />
+                <OpponentSection />
+                <WagerSection />
+                <AnswerSection />
+                <KickoffButton account={player} />
+                <BackButton />
             </div>
         </main>
     );

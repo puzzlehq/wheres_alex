@@ -8,7 +8,7 @@ import inWeedsImg from '../assets/in_weeds.svg';
 function Section() {
     return (
       <section className="justify-center items-center bg-pink-300 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
-        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> REVIEW AND KICKOFF GAME </h1>
+        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> PENDING START GAME </h1>
       </section>
     );
 }
@@ -54,6 +54,7 @@ function WagerSection() {
 function AnswerSection() {
     const location = useLocation();
     const answer = location.state?.answer || "N/A";
+    console.log(answer);
 
     return (
         <div className="flex w-full flex-col items-center">
@@ -62,10 +63,10 @@ function AnswerSection() {
                     <img
                         loading="lazy"
                         src={inWeedsImg}
-                        className="aspect-square object-cover object-center w-full opacity-40 overflow-hidden self-stretch rounded-[50%]"
+                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%] ${answer === "In Weeds" ? "" : "opacity-40"}`}
                         alt="In Weeds"
                     />
-                    <div className="text-white text-center text-sm font-extrabold tracking-tight opacity-40 self-center mt-2.5 whitespace-nowrap">
+                    <div className={`text-white text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap ${answer === "In Weeds" ? "" : "opacity-40"}`}>
                         In Weeds
                     </div>
                 </div>
@@ -73,10 +74,10 @@ function AnswerSection() {
                     <img
                         loading="lazy"
                         src={behindBuildingImg}
-                        className="aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%]"
+                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%] ${answer === "Behind Building" ? "" : "opacity-40"}`}
                         alt="Behind Building"
                     />
-                    <div className="text-lime-600 text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap">
+                    <div className={`text-white text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap ${answer === "Behind Building" ? "" : "opacity-40"}`}>
                         Behind Building
                     </div>
                 </div>
@@ -87,6 +88,7 @@ function AnswerSection() {
         </div>
     );
 }
+
 
 type Props = {
     account: PuzzleAccount;
