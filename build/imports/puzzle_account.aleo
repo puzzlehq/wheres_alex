@@ -6,6 +6,10 @@ record Claim:
     claimable as boolean.private;
     signer_address as address.private;
 
+record PuzzAcctStake:
+    owner as address.private;
+    amount as u64.private;
+
 record OwnerRules:
     owner as address.private;
     m as u8.private;

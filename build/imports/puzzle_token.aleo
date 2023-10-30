@@ -13,6 +13,10 @@ record TokenOwnerRules:
     signer_one_signature as signature.private;
     signer_two_signature as signature.private;
 
+record PuzzStake:
+    owner as address.private;
+    amount as u64.private;
+
 record TokenClaim:
     owner as address.private;
     amount as u64.private;
@@ -32,6 +36,17 @@ function mint:
 
 
 function transfer_private:
+    input r0 as Puzz.record;
+    input r1 as address.private;
+    input r2 as u64.private;
+    cast r1 r2 into r3 as Puzz.record;
+    sub r0.amount r2 into r4;
+    cast self.caller r4 into r5 as Puzz.record;
+    output r3 as Puzz.record;
+    output r5 as Puzz.record;
+
+
+function stake_transfer_private_out:
     input r0 as Puzz.record;
     input r1 as address.private;
     input r2 as u64.private;

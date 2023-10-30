@@ -39,13 +39,14 @@ program coinflip.aleo {
     record Answer {
         private owner: address,
         private game_address: address,
-        private N: field,
+        private nonce: scalar,
         private answer: field,
     }
 
     record RevealedAnswer {
         private owner: address,
         private answer: field,
+        private nonce: scalar,
     }
 
     // todo: this will likely need to store each player answer
@@ -53,7 +54,7 @@ program coinflip.aleo {
     // todo: add block height to game record?
     record Game {
         private owner: address,
-        private player_one_answer: field,
+        private player_one_comm: field,
         private player_two_answer: field,
         private total_pot: u64,
         private player_one_address: address,
@@ -92,12 +93,13 @@ program coinflip.aleo {
         private sig: signature,
         private msg: field,
         private m_of_n: u8,
-        private nonce: field
+        private nonce: scalar,
     ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
         // random edge case, maybe unnecessary
         assert_neq(game_address, opponent);
-        let N: field = 1field;
+        // hash the answer and nonce
+        let player_one_answer_comm: field = BHP256::commit_to_field(player_one_answer, nonce);
 
         // assert that the wager amount > 0 and wager inside credit == wager amt passed
         let wager_record: Puzz = wager;
@@ -115,7 +117,7 @@ program coinflip.aleo {
         let answer_record: Answer = Answer {
             owner: self.caller,
             game_address: game_address,
-            N: N,
+            nonce: nonce,
             answer: player_one_answer,
         };
 
@@ -123,7 +125,7 @@ program coinflip.aleo {
         // todo: hash this answer?
         let game_record: Game = Game {
             owner: game_address,
-            player_one_answer: player_one_answer,
+            player_one_comm: player_one_answer_comm,
             player_two_answer: 1field,
             total_pot: wager_amount,
             player_one_address: self.caller,
@@ -218,7 +220,7 @@ program coinflip.aleo {
         // todo: answers will need to be hashed?
         let game_record_new: Game = Game {
             owner: game_record.owner,
-            player_one_answer: game_record.player_one_answer,
+            player_one_comm: game_record.player_one_comm,
             player_two_answer: player_two_answer,
             total_pot: game_record.total_pot,
             player_one_address: game_record.player_one_address,
@@ -245,6 +247,7 @@ program coinflip.aleo {
         let revealed_answer: RevealedAnswer = RevealedAnswer {
             owner: game_address,
             answer: answer_record.answer,
+            nonce: answer_record.nonce,
         };
 
         // send notify reveal record answer to player 1
@@ -273,7 +276,8 @@ program coinflip.aleo {
         // todo: do we just mint new tokens to winner?
         // todo: add logic here to transfer to correct winner
         // todo: how are we going to get player 1 and player 2 addresses here?
-        if (game_record.player_one_answer == 1field) {
+        // todo: adjust revealing logic now that we are hashing p1's answer
+        if (revealed_answer_record.answer == 1field) {
             // transfer all funds to winner
             puzzle_token.leo/transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
             // notify p1 and p2 the game is over

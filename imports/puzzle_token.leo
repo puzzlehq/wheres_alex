@@ -18,6 +18,11 @@ program puzzle_token.aleo {
         signer_two_signature: signature,
     }
 
+    record PuzzStake {
+        private owner: address,
+        private amount: u64,
+    }
+
 
     record TokenClaim {
         owner: address,
@@ -39,8 +44,35 @@ program puzzle_token.aleo {
     // owner_rules.claim have it return another owner rules bool or claim record that says no
     transition transfer_private (private puzz_token: Puzz, private to: address, private amount: u64) -> (Puzz, Puzz) {
 
+        // new puzz record to receiver
+        let receiver_new_record: Puzz = Puzz {
+            owner: to,
+            amount: amount
+        };
+
+        // puzz record with change for sender
+        let sender_new_record: Puzz = Puzz {
+            owner: self.caller,
+            amount: puzz_token.amount - amount
+        };
+
+        return (receiver_new_record, sender_new_record);
+    }
+
+    // transition stake_transfer_private_in (private puzz_token: Puzz, private to: address, private amount: u64) -> (PuzzClaim) {
+
+    //     return PuzzClaim {
+    //         owner: self.caller,
+    //         amount: amount,
+    //     };
+
+    // }
+
+    // owner_rules.claim have it return another owner rules bool or claim record that says no
+    transition stake_transfer_private_out (private puzz_token: Puzz, private to: address, private amount: u64) -> (Puzz, Puzz) {
+
         // could have logic around signer_2_signature not present?
-        
+
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
             owner: to,
