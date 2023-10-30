@@ -102,6 +102,9 @@ program coinflip.aleo {
 
         // random edge case, maybe unnecessary
         assert_neq(game_address, opponent);
+
+        // assert that player 1s answer is either "in weeds" or "behind building"
+        assert(player_one_answer == 0field || player_one_answer == 1field);
         // hash the answer and nonce
         let player_one_answer_comm: field = BHP256::commit_to_field(player_one_answer, nonce);
 
