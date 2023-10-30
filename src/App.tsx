@@ -12,6 +12,7 @@ import PendingConfirmStartGame from './pages/PendingConfirmStartGame.js';
 import rightImageSrc from '../src/assets/alex_mic_left_tilt.png';
 import leftImageSrc from '../src/assets/alex_mic_right_tilt.png';
 import bottomImageSrc from '../src/assets/alexbottom.png';
+import GameStarted from './pages/GameStarted.js';
 
 function Welcome({ onConnectWallet }: { onConnectWallet: () => void }) {
   return (
@@ -93,6 +94,7 @@ function App() {
               <Route path="/start-wager" element={<StartWager />} /> 
               <Route path="/hide-alex" element={<HideAlex />} />
               <Route path="/confirm-start-game" element={<ConfirmStartGame account={account}/>} />
+              <Route path='/game-started' element={<GameStarted />} />
               <Route path="/pending-confirm-start-game" element={<PendingConfirmStartGame />} /> 
               <Route 
                 path="/" 

@@ -69,10 +69,14 @@ function AnswerSection() {
                     <img
                         loading="lazy"
                         src={inWeedsImg}
-                        className="aspect-square object-cover object-center w-full opacity-40 overflow-hidden self-stretch rounded-[50%]"
+                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%] 
+                        ${answer === "In Weeds" ? "" : "opacity-40"}`}
                         alt="In Weeds"
                     />
-                    <div className="text-white text-center text-sm font-extrabold tracking-tight opacity-40 self-center mt-2.5 whitespace-nowrap">
+                    <div 
+                        className={`text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap 
+                        ${answer === "In Weeds" ? "" : "opacity-40"}
+                        ${answer === "In Weeds" ? "text-lime-600" : "text-white"}`}>
                         In Weeds
                     </div>
                 </div>
@@ -80,10 +84,14 @@ function AnswerSection() {
                     <img
                         loading="lazy"
                         src={behindBuildingImg}
-                        className="aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%]"
+                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%] 
+                        ${answer === "Behind Building" ? "" : "opacity-40"}`}
                         alt="Behind Building"
                     />
-                    <div className="text-lime-600 text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap">
+                    <div 
+                        className={`text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap 
+                        ${answer === "Behind Building" ? "" : "opacity-40"}
+                        ${answer === "Behind Building" ? "text-lime-600" : "text-white"}`}>
                         Behind Building
                     </div>
                 </div>
@@ -114,7 +122,7 @@ function KickoffButton({account}: Props) {
         function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
             // Our logic to generate gameMultisig and seed using hooks to wallet wasm
             return {
-                gameMultisig: "Game" + opponent + player_account, // example outputs
+                gameMultisig: "ms_" + opponent + player_account, // example outputs
                 seed: new Uint8Array(),
             };
         }
@@ -123,14 +131,19 @@ function KickoffButton({account}: Props) {
         setSeed(result.seed);
     }, [opponent, player_account]);
 
+    useEffect(() => {
+        if (eventID) {
+            navigate("/game-started", {
+                state: { gameMultisig, eventID }
+            });
+        }
+    }, [eventID, navigate, gameMultisig]);
+
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
-        // Our logic here would be for potentially grabbing puzzle records, signatures, and propose game function on Leo
-        setEventID(opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer);
-
-        navigate("/pending-confirm-start-game", {
-            state: {gameMultisig, eventID}
-        });
+        const result = opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer;
+        console.log(result);
+        setEventID(result);
     }
     return (
         <button 
