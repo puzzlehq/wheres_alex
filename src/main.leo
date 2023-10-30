@@ -96,6 +96,10 @@ program coinflip.aleo {
         private nonce: scalar,
     ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
+
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
+
         // random edge case, maybe unnecessary
         assert_neq(game_address, opponent);
         // hash the answer and nonce
@@ -159,6 +163,9 @@ program coinflip.aleo {
         private amount: u64,
     ) -> ()
     {
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
+
         // todo: how are we going to transfer this out, likely need record as input to this function?
         // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(puzz_record, self.caller, amount);
@@ -190,6 +197,9 @@ program coinflip.aleo {
         private amount: u64
     ) -> ()
     {
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
+
         // todo: how are we going to transfer this out, likely need record as input to this function?
         // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/transfer_private(token_record, self.caller, amount);
@@ -209,6 +219,11 @@ program coinflip.aleo {
         private leo_message: field,
     ) -> (Game, puzzle_account.leo/OwnerRules.record)
     {
+
+
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
+
         // assert that each player has wagered the same amount
         assert_eq(player_one_claim_record.amount, player_two_claim_record.amount);
 
@@ -241,9 +256,11 @@ program coinflip.aleo {
         private opponent_address: address,
     ) -> (RevealedAnswer, NotifyRevealedAnswer, NotifyRevealedAnswer)
     {
-        // todo: what is the best way to get p2's address here?
-        // take in opponent and game address for now, may be something better here
 
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
+
+        // todo: what is the best way to get p2's address here?
         let revealed_answer: RevealedAnswer = RevealedAnswer {
             owner: game_address,
             answer: answer_record.answer,
@@ -277,6 +294,10 @@ program coinflip.aleo {
         // todo: add logic here to transfer to correct winner
         // todo: how are we going to get player 1 and player 2 addresses here?
         // todo: adjust revealing logic now that we are hashing p1's answer
+
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
+
         if (revealed_answer_record.answer == 1field) {
             // transfer all funds to winner
             puzzle_token.leo/transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
@@ -310,7 +331,10 @@ program coinflip.aleo {
         }
     }
 
-    transition claim_wager () -> () {}
+    transition claim_wager () -> () {
+        // limit calls to only users
+        assert_eq(self.caller, self.signer);
+    }
 
 
 

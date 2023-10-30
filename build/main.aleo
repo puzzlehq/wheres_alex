@@ -174,3 +174,4 @@ function finish_game:
 
 
 function claim_wager:
+    assert.eq self.caller self.signer;
