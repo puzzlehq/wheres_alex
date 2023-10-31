@@ -94,7 +94,7 @@ program coinflip.aleo {
         private msg: field,
         private m_of_n: u8,
         private nonce: scalar,
-    ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_token.leo/TokenOwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
+    ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/PuzzClaim.record)
     {
 
         // limit calls to only users
@@ -141,7 +141,11 @@ program coinflip.aleo {
         // output rules record with caller and opponent with game ms address
         // tbd on m of n here, or if even necessary
         // todo: send player 1 sig here and message to verify we can transfer on propose_game?
-        let token_owner_rules_record: TokenOwnerRules = puzzle_token.leo/mint_token_owner_rules_record(game_address, self.caller, opponent, sig, sig);
+        let owner_rules_record: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
+
+        // stake puzz token in
+        // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
+        let (puzz_claim, puzz_receiver, puzz_sender_change): (PuzzClaim, Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_in(wager, game_address, wager_amount);
 
         // todo: send credits to multisig
         // let creds_to_ms_record: (credits, credits) = credits.leo/transfer_private(leo_credits, game_address, credit_amount);
@@ -151,11 +155,10 @@ program coinflip.aleo {
         let player_one_claim_record: Claim = puzzle_account.leo/mint_claim_record(game_address, wager_amount);
 
         // transfer puzz tokens to game address
-        // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
+        // let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
 
 
-        return (answer_record, player_one_claim_record, player_two_key_record, game_record, token_owner_rules_record, puzz_change, receiver_puzz_record) then finalize(game_address);
+        return (answer_record, player_one_claim_record, player_two_key_record, game_record, owner_rules_record, puzz_claim) then finalize(game_address);
     }
 
 
@@ -167,9 +170,10 @@ program coinflip.aleo {
     transition player_one_renege_proposal (
         private game_record: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
-        private player_one_claim_record: puzzle_account.leo/Claim.record,
+        private player_one_claim_record: puzzle_token.leo/PuzzClaim.record,
         private puzz_record: puzzle_token.leo/Puzz.record,
         private amount: u64,
+        private sig: signature,
     ) -> ()
     {
         // limit calls to only users
@@ -177,7 +181,8 @@ program coinflip.aleo {
 
         // todo: how are we going to transfer this out, likely need record as input to this function?
         // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(puzz_record, self.caller, amount);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, player_one_claim_record, sig);
+
         // todo: logic around ms_rules, game record tbd
     }
 
@@ -327,7 +332,7 @@ program coinflip.aleo {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
-        if (revealed_answer_record.answer == 1field) {
+        if (revealed_answer_record.answer != game_record.player_two_answer) {
             // transfer all funds to winner
             puzzle_token.leo/puzz_transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
             // notify p1 and p2 the game is over

@@ -46,8 +46,7 @@ program puzzle_token.aleo {
     }
 
     // Create new owner rules record
-    transition mint_token_owner_rules_record
-    (
+    transition mint_token_owner_rules_record (
         owner_address: address,
         signer_address_one: address,
         signer_address_two: address,
@@ -74,7 +73,12 @@ program puzzle_token.aleo {
 
 
     // owner_rules.claim have it return another owner rules bool or claim record that says no
-    transition puzz_transfer_private (private puzz_token: Puzz, private to: address, private amount: u64) -> (Puzz, Puzz) {
+    transition puzz_transfer_private (
+        private puzz_token: Puzz,
+        private to: address,
+        private amount: u64
+    ) -> (Puzz, Puzz)
+    {
 
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
@@ -91,27 +95,23 @@ program puzzle_token.aleo {
         return (receiver_new_record, sender_new_record);
     }
 
-    transition stake_transfer_private_in (private puzz_token: Puzz, private to: address, private amount: u64) -> (PuzzStake, PuzzClaim) {
+    transition stake_transfer_private_in (
+        private puzz_token: Puzz,
+        private to: address,
+        private amount: u64
+    ) -> (PuzzClaim, Puzz, Puzz)
+    {
 
-        let puzz_stake_record: PuzzStake = PuzzStake {
-            owner: self.caller,
-            amount: amount,
-        };
+        // let puzz_stake_record: PuzzStake = PuzzStake {
+        //     owner: self.caller,
+        //     amount: amount,
+        // };
 
         let puzz_claim_record: PuzzClaim = PuzzClaim {
             owner: self.caller,
             amount: amount,
         };
 
-        return (puzz_stake_record, puzz_claim_record);
-
-    }
-
-    // owner_rules.claim have it return another owner rules bool or claim record that says no
-    transition stake_transfer_private_out (private puzz_token: Puzz, private to: address, private amount: u64) -> (Puzz, Puzz) {
-
-        // could have logic around signer_2_signature not present?
-
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
             owner: to,
@@ -124,16 +124,36 @@ program puzzle_token.aleo {
             amount: puzz_token.amount - amount
         };
 
-        return (receiver_new_record, sender_new_record);
+        // puzz_stake_record,
+        return ( puzz_claim_record, receiver_new_record, sender_new_record);
+
     }
 
-    //     } then finalize (amount);
-    // }
+    transition stake_transfer_private_out (
+        private puzz_token: Puzz,
+        // private puzz_stake: PuzzStake,
+        private puzz_claim: PuzzClaim,
+        private signatures: signature,
+    ) -> (Puzz, Puzz)
+    {
 
-    // finalize mint (minted_amount: u128) {
-    //     let current_supply: u128 = Mapping::get(supply, 123field);
-    //     Mapping::set(supply, 123field, current_supply + minted_amount);
-    // }
+        // could have logic around signer_2_signature not present?
 
+        // todo: check sigs, owner rules
+
+        // new puzz record to receiver
+        let receiver_new_record: Puzz = Puzz {
+            owner: puzz_claim.owner,
+            amount: puzz_claim.amount,
+        };
+
+        // puzz record with change for sender
+        let sender_new_record: Puzz = Puzz {
+            owner: puzz_claim.owner,
+            amount: puzz_token.amount - puzz_claim.amount
+        };
+
+        return (receiver_new_record, sender_new_record);
+    }
 
 }
