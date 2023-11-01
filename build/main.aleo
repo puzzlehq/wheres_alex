@@ -138,11 +138,14 @@ function submit_wager:
 function player_two_renege_proposal:
     input r0 as Game.record;
     input r1 as puzzle_account.aleo/OwnerRules.record;
-    input r2 as puzzle_account.aleo/Claim.record;
-    input r3 as puzzle_token.aleo/Puzz.record;
-    input r4 as u64.private;
+    input r2 as puzzle_token.aleo/TokenOwnerRules.record;
+    input r3 as puzzle_token.aleo/PuzzClaim.record;
+    input r4 as puzzle_token.aleo/Puzz.record;
+    input r5 as u64.private;
+    input r6 as signature.private;
+    input r7 as field.private;
     assert.eq self.caller self.signer;
-    call puzzle_token.aleo/puzz_transfer_private r3 self.caller r4 into r5 r6;
+    call puzzle_token.aleo/stake_transfer_private_out r4 r2 r3 r6 r7 into r8 r9;
 
 
 function accept_game:

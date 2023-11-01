@@ -234,20 +234,22 @@ program coinflip.aleo {
     transition player_two_renege_proposal (
         private game_record: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
-        private player_two_claim_record: puzzle_account.leo/Claim.record,
-        private token_record: puzzle_token.leo/Puzz.record,
-        private amount: u64
+        private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
+        private player_two_claim_record: puzzle_token.leo/PuzzClaim.record,
+        private puzz_record: puzzle_token.leo/Puzz.record,
+        private amount: u64,
+        private sig: signature, // player 1 sig
+        private msg: field, // msg generated on propose_game with nonce
     ) -> ()
     {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
-        // todo: how are we going to transfer this out, likely need record as input to this function?
-        // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(token_record, self.caller, amount);
-        // todo: logic around ms_rules, game record tbd
-    }
+        // transfer out and check player 1 sig and message that is signed
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_two_claim_record, sig, msg);
 
+        // todo: what clean-up do we need to do here?
+    }
     // finalize player_two_renege_proposal (game_address: address)
     // {
     //     let previous_block_height: u32 = Mapping::get(games, game_address);
