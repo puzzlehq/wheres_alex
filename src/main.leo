@@ -87,7 +87,8 @@ program coinflip.aleo {
     // -> PuzzRecord to player 1 of any change from the wager credit
 
     // todo: tweak messages here
-    transition propose_game(
+    transition propose_game
+    (
         private ms_seed: field,
         private game_address: address,
         private opponent: address,
@@ -179,7 +180,8 @@ program coinflip.aleo {
     }
 
 
-    transition player_one_renege_proposal (
+    transition player_one_renege_proposal
+    (
         private game_record: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
         private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
@@ -188,13 +190,15 @@ program coinflip.aleo {
         private amount: u64,
         private sig: signature, // player 1 sig
         private msg: field, // msg generated on propose_game with nonce
-    ) -> ()
+    ) -> (puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
         // transfer out and check player 1 sig and message that is signed
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_one_claim_record, sig, msg);
+
+        return (receiver_puzz_record, puzz_record);
 
         // todo: what clean-up do we need to do here?
     }
@@ -239,13 +243,15 @@ program coinflip.aleo {
         private amount: u64,
         private sig: signature, // player 1 sig
         private msg: field, // msg generated on propose_game with nonce
-    ) -> ()
+    ) -> (puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
         // transfer out and check player 1 sig and message that is signed
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_two_claim_record, sig, msg);
+
+        return (receiver_puzz_record, puzz_change);
 
         // todo: what clean-up do we need to do here?
         // todo: update game state to finished/tbd if we need sep states between finished and cancelled/rejected
@@ -354,6 +360,10 @@ program coinflip.aleo {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
+        // assert that the game has been accepted
+        assert_eq(game_record.game_state, 1field);
+
+        // player 1 wins, player 2 loses
         if (revealed_answer_record.answer != game_record.player_two_answer) {
             // transfer all funds to winner
             puzzle_token.leo/puzz_transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
@@ -369,7 +379,9 @@ program coinflip.aleo {
                 total_pot: game_record.total_pot
             };
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
-        } else {
+        }
+        // player 1 loses, player 2 wins
+        else {
             // transfer all funds to winner
             puzzle_token.leo/puzz_transfer_private(puzz_record, self.caller, game_record.total_pot);
             // notify p1 and p2 the game is over

@@ -118,6 +118,8 @@ function player_one_renege_proposal:
     input r7 as field.private;
     assert.eq self.caller self.signer;
     call puzzle_token.aleo/stake_transfer_private_out r4 r2 r3 r6 r7 into r8 r9;
+    output r8 as puzzle_token.aleo/Puzz.record;
+    output r4 as puzzle_token.aleo/Puzz.record;
 
 
 function submit_wager:
@@ -147,6 +149,8 @@ function player_two_renege_proposal:
     input r7 as field.private;
     assert.eq self.caller self.signer;
     call puzzle_token.aleo/stake_transfer_private_out r4 r2 r3 r6 r7 into r8 r9;
+    output r8 as puzzle_token.aleo/Puzz.record;
+    output r9 as puzzle_token.aleo/Puzz.record;
 
 
 function accept_game:
@@ -200,6 +204,7 @@ function finish_game:
     input r1 as RevealedAnswer.record;
     input r2 as puzzle_token.aleo/Puzz.record;
     assert.eq self.caller self.signer;
+    assert.eq r0.game_state 1field;
     is.neq r1.answer r0.player_two_answer into r3;
     call puzzle_token.aleo/puzz_transfer_private r2 r1.owner r0.total_pot into r4 r5;
     cast self.caller self.caller r0.total_pot into r6 as NotifyGameOver.record;
