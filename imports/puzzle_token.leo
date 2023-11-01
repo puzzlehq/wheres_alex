@@ -19,7 +19,7 @@ program puzzle_token.aleo {
         n: u8,
         signer_address_one: address,
         signer_address_two: address,
-        signer_one_signature: signature,
+        signer_signature: signature,
         signer_two_signature: signature,
         is_claimable: bool,
     }
@@ -64,7 +64,7 @@ program puzzle_token.aleo {
             n: 2u8,
             signer_address_one: signer_address_one,
             signer_address_two: signer_address_two,
-            signer_one_signature: signer_one_signature,
+            signer_signature: signer_one_signature,
             signer_two_signature: signer_two_signature,
             is_claimable: false,
         };

@@ -24,6 +24,7 @@ record NotifyGameOver:
 record Key:
     owner as address.private;
     keys as field.private;
+    opponent as address.private;
 
 record Answer:
     owner as address.private;
@@ -83,21 +84,22 @@ function propose_game:
     gt r4 0u64 into r15;
     assert.eq r15 true;
     assert.eq r4 r3.amount;
-    cast r2 r0 into r16 as Key.record;
+    cast r2 r0 self.caller into r16 as Key.record;
     cast self.caller r1 r9 r5 into r17 as Answer.record;
     cast r1 r14 1field r4 self.caller r2 into r18 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r19;
     call puzzle_token.aleo/mint_token_owner_rules_record r1 self.caller r2 r6 r6 into r20;
     call puzzle_token.aleo/stake_transfer_private_in r3 r1 r4 into r21 r22 r23;
-    call puzzle_account.aleo/mint_claim_record r1 r4 into r24;
-    async propose_game r1 into r25;
+    async propose_game r1 into r24;
     output r17 as Answer.record;
-    output r24 as puzzle_account.aleo/Claim.record;
     output r16 as Key.record;
     output r18 as Game.record;
     output r19 as puzzle_account.aleo/OwnerRules.record;
+    output r20 as puzzle_token.aleo/TokenOwnerRules.record;
     output r21 as puzzle_token.aleo/PuzzClaim.record;
-    output r25 as coinflip.aleo/propose_game.future;
+    output r22 as puzzle_token.aleo/Puzz.record;
+    output r23 as puzzle_token.aleo/Puzz.record;
+    output r24 as coinflip.aleo/propose_game.future;
 
 finalize propose_game:
     input r0 as address.public;
@@ -119,13 +121,18 @@ function player_one_renege_proposal:
 
 function submit_wager:
     input r0 as address.private;
-    input r1 as puzzle_token.aleo/Puzz.record;
-    input r2 as u64.private;
-    call puzzle_token.aleo/puzz_transfer_private r1 r0 r2 into r3 r4;
-    call puzzle_account.aleo/mint_claim_record r0 r2 into r5;
-    output r5 as puzzle_account.aleo/Claim.record;
-    output r3 as puzzle_token.aleo/Puzz.record;
-    output r4 as puzzle_token.aleo/Puzz.record;
+    input r1 as address.private;
+    input r2 as puzzle_token.aleo/Puzz.record;
+    input r3 as u64.private;
+    input r4 as field.private;
+    input r5 as field.private;
+    input r6 as signature.private;
+    call puzzle_token.aleo/stake_transfer_private_in r2 r0 r3 into r7 r8 r9;
+    call puzzle_token.aleo/mint_token_owner_rules_record r0 self.caller r1 r6 r6 into r10;
+    output r10 as puzzle_token.aleo/TokenOwnerRules.record;
+    output r7 as puzzle_token.aleo/PuzzClaim.record;
+    output r8 as puzzle_token.aleo/Puzz.record;
+    output r9 as puzzle_token.aleo/Puzz.record;
 
 
 function player_two_renege_proposal:

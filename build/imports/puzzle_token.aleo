@@ -14,7 +14,7 @@ record TokenOwnerRules:
     n as u8.private;
     signer_address_one as address.private;
     signer_address_two as address.private;
-    signer_one_signature as signature.private;
+    signer_signature as signature.private;
     signer_two_signature as signature.private;
     is_claimable as boolean.private;
 
