@@ -57,6 +57,11 @@ program coinflip.aleo {
         private total_pot: u64,
         private player_one_address: address,
         private player_two_address: address,
+        // private game_state: field,
+        // 0 -> propose game
+        // 1 -> accept game
+        // 2 -> answer revealed
+        // 3 -> game finished
     }
 
     mapping puzz_supply: field => u128;
