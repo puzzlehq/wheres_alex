@@ -107,6 +107,7 @@ program puzzle_token.aleo {
         //     amount: amount,
         // };
 
+        // todo: do we need this? since we renege and transfer out with ms key
         let puzz_claim_record: PuzzClaim = PuzzClaim {
             owner: self.caller,
             amount: amount,
@@ -131,15 +132,15 @@ program puzzle_token.aleo {
 
     transition stake_transfer_private_out (
         private puzz_token: Puzz,
-        // private puzz_stake: PuzzStake,
+        private token_owner_rules: TokenOwnerRules,
         private puzz_claim: PuzzClaim,
-        private signatures: signature,
+        private sig: signature,
+        private msg: field,
     ) -> (Puzz, Puzz)
     {
 
-        // could have logic around signer_2_signature not present?
-
-        // todo: check sigs, owner rules
+        // todo: logic to validate that the signature is either player 1 or player 2's signature in order to transfer out ?
+        // todo: either player must have valid claim record and fn. logic will check valid signature, then allow withdraw of puzz tokens
 
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {

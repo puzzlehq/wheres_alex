@@ -37,14 +37,14 @@ program coinflip.aleo {
     record Answer {
         private owner: address,
         private game_address: address,
-        private nonce: scalar,
+        private nonce: field,
         private answer: field,
     }
 
     record RevealedAnswer {
         private owner: address,
         private answer: field,
-        private nonce: scalar,
+        private nonce: field,
     }
 
     // todo: this will likely need to store each player answer
@@ -98,7 +98,7 @@ program coinflip.aleo {
         private sig: signature,
         private msg: field,
         private m_of_n: u8,
-        private nonce: scalar,
+        private nonce: field,
     ) -> (Answer, puzzle_account.leo/Claim.record, Key, Game, puzzle_account.leo/OwnerRules.record, puzzle_token.leo/PuzzClaim.record)
     {
 
@@ -111,7 +111,7 @@ program coinflip.aleo {
         // assert that player 1s answer is either "in weeds" or "behind building"
         assert(player_one_answer == 0field || player_one_answer == 1field);
         // hash the answer and nonce
-        let player_one_answer_comm: field = BHP256::commit_to_field(player_one_answer, nonce);
+        let player_one_answer_comm: field = BHP256::commit_to_field(player_one_answer, nonce as scalar);
 
         // assert that the wager amount > 0 and wager inside credit == wager amt passed
         let wager_record: Puzz = wager;
@@ -148,6 +148,9 @@ program coinflip.aleo {
         // todo: send player 1 sig here and message to verify we can transfer on propose_game?
         let owner_rules_record: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
+        // check if player 1 sig is here for reneg?
+        let token_owner_rules_record: TokenOwnerRules = puzzle_token.leo/mint_token_owner_rules_record(game_address, self.caller, opponent, sig, sig);
+
         // stake puzz token in
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
         let (puzz_claim, puzz_receiver, puzz_sender_change): (PuzzClaim, Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_in(wager, game_address, wager_amount);
@@ -175,20 +178,21 @@ program coinflip.aleo {
     transition player_one_renege_proposal (
         private game_record: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
+        private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
         private player_one_claim_record: puzzle_token.leo/PuzzClaim.record,
         private puzz_record: puzzle_token.leo/Puzz.record,
         private amount: u64,
-        private sig: signature,
+        private sig: signature, // player 1 sig
+        private msg: field, // msg generated on propose_game with nonce
     ) -> ()
     {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
-        // todo: how are we going to transfer this out, likely need record as input to this function?
-        // todo: checks on amount being transferred out and that player 1 is transferring out the correct record
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, player_one_claim_record, sig);
+        // transfer out and check player 1 sig and message that is signed
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_one_claim_record, sig, msg);
 
-        // todo: logic around ms_rules, game record tbd
+        // todo: what clean-up do we need to do here?
     }
 
     // finalize player_one_renege_proposal (game_address: address) {
