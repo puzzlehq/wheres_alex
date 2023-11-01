@@ -58,11 +58,11 @@ program coinflip.aleo {
         private total_pot: u64,
         private player_one_address: address,
         private player_two_address: address,
+        private game_state: field,
         // private game_state: field,
         // 0 -> propose game
         // 1 -> accept game
-        // 2 -> answer revealed
-        // 3 -> game finished
+        // 2 -> game finished
     }
 
     mapping puzz_supply: field => u128;
@@ -144,6 +144,7 @@ program coinflip.aleo {
             total_pot: wager_amount,
             player_one_address: self.caller,
             player_two_address: opponent,
+            game_state: 0field,
         };
 
         // output rules record with caller and opponent with game ms address
@@ -223,8 +224,6 @@ program coinflip.aleo {
 
         // let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
 
-        // output claim record to ms_addr in case player 2 wants to renege later on
-        // todo: will likely need to iterate on claim design here
         // let player_two_claim_record: Claim = puzzle_account.leo/mint_claim_record(game_address, wager_amount);
 
         return (token_owner_rules_record, puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record);
@@ -249,13 +248,8 @@ program coinflip.aleo {
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_two_claim_record, sig, msg);
 
         // todo: what clean-up do we need to do here?
+        // todo: update game state to finished/tbd if we need sep states between finished and cancelled/rejected
     }
-    // finalize player_two_renege_proposal (game_address: address)
-    // {
-    //     let previous_block_height: u32 = Mapping::get(games, game_address);
-    //     assert(block.height > previous_block_height);
-    //     Mapping::set(games, game_address, block.height);
-    // }
 
     transition accept_game (
         private game_record: Game,
@@ -280,6 +274,9 @@ program coinflip.aleo {
         assert_eq(player_one_claim_record.owner, player_two_claim_record.owner);
         assert_eq(game_record.owner, player_one_claim_record.owner);
 
+        // assert that the game is in the propose_state status
+        assert_eq(game_record.game_state, 0field);
+
         // assert that player 1s answer is either "in weeds" or "behind building"
         assert(player_two_answer == 0field || player_two_answer == 1field);
 
@@ -292,6 +289,7 @@ program coinflip.aleo {
             total_pot: game_record.total_pot,
             player_one_address: game_record.player_one_address,
             player_two_address: game_record.player_two_address,
+            game_state: 1field, // update to game accepted
         };
 
         // note: will need to tweak owner rules structure likely to include sig to lock next turn

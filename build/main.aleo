@@ -44,6 +44,7 @@ record Game:
     total_pot as u64.private;
     player_one_address as address.private;
     player_two_address as address.private;
+    game_state as field.private;
 
 
 mapping puzz_supply:
@@ -86,7 +87,7 @@ function propose_game:
     assert.eq r4 r3.amount;
     cast r2 r0 self.caller into r16 as Key.record;
     cast self.caller r1 r9 r5 into r17 as Answer.record;
-    cast r1 r14 1field r4 self.caller r2 into r18 as Game.record;
+    cast r1 r14 1field r4 self.caller r2 0field into r18 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r19;
     call puzzle_token.aleo/mint_token_owner_rules_record r1 self.caller r2 r6 r6 into r20;
     call puzzle_token.aleo/stake_transfer_private_in r3 r1 r4 into r21 r22 r23;
@@ -161,11 +162,12 @@ function accept_game:
     assert.eq r1.amount r2.amount;
     assert.eq r1.owner r2.owner;
     assert.eq r0.owner r1.owner;
+    assert.eq r0.game_state 0field;
     is.eq r5 0field into r8;
     is.eq r5 1field into r9;
     or r8 r9 into r10;
     assert.eq r10 true;
-    cast r0.owner r0.player_one_comm r5 r0.total_pot r0.player_one_address r0.player_two_address into r11 as Game.record;
+    cast r0.owner r0.player_one_comm r5 r0.total_pot r0.player_one_address r0.player_two_address 1field into r11 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r0.owner self.caller r1.signer_address r6 r6 into r12;
     async accept_game r0.owner into r13;
     output r11 as Game.record;
