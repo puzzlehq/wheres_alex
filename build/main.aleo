@@ -90,7 +90,7 @@ function propose_game:
     cast r1 r14 1field r4 self.caller r2 0field into r18 as Game.record;
     call puzzle_account.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r19;
     call puzzle_token.aleo/mint_token_owner_rules_record r1 self.caller r2 r6 r6 into r20;
-    call puzzle_token.aleo/stake_transfer_private_in r3 r1 r4 into r21 r22 r23;
+    call puzzle_token.aleo/stake_transfer_private_in r3 self.caller r1 r4 into r21 r22 r23;
     async propose_game r1 into r24;
     output r17 as Answer.record;
     output r16 as Key.record;
@@ -130,7 +130,7 @@ function submit_wager:
     input r4 as field.private;
     input r5 as field.private;
     input r6 as signature.private;
-    call puzzle_token.aleo/stake_transfer_private_in r2 r0 r3 into r7 r8 r9;
+    call puzzle_token.aleo/stake_transfer_private_in r2 self.caller r0 r3 into r7 r8 r9;
     call puzzle_token.aleo/mint_token_owner_rules_record r0 self.caller r1 r6 r6 into r10;
     output r10 as puzzle_token.aleo/TokenOwnerRules.record;
     output r7 as puzzle_token.aleo/PuzzClaim.record;

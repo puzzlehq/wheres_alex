@@ -97,6 +97,7 @@ program puzzle_token.aleo {
 
     transition stake_transfer_private_in (
         private puzz_token: Puzz,
+        private sender: address, // can't use self.caller as this is ref coinflip addr
         private to: address,
         private amount: u64
     ) -> (PuzzClaim, Puzz, Puzz)
@@ -104,7 +105,7 @@ program puzzle_token.aleo {
 
         // todo: do we need this? since we renege and transfer out with ms key
         let puzz_claim_record: PuzzClaim = PuzzClaim {
-            owner: self.caller,
+            owner: sender,
             amount: amount,
         };
 
@@ -116,7 +117,7 @@ program puzzle_token.aleo {
 
         // puzz record with change for sender
         let sender_new_record: Puzz = Puzz {
-            owner: self.caller,
+            owner: sender,
             amount: puzz_token.amount - amount
         };
 

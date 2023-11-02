@@ -159,7 +159,7 @@ program coinflip.aleo {
 
         // stake puzz token in
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
-        let (puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record): (PuzzClaim, Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_in(wager, game_address, wager_amount);
+        let (puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record): (PuzzClaim, Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_in(wager, self.caller, game_address, wager_amount);
 
         // todo: send credits to multisig
         // let creds_to_ms_record: (credits, credits) = credits.leo/transfer_private(leo_credits, game_address, credit_amount);
@@ -223,7 +223,7 @@ program coinflip.aleo {
     ) -> (puzzle_token.leo/TokenOwnerRules.record, puzzle_token.leo/PuzzClaim.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record) {
 
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
-        let (puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record): (PuzzClaim, Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_in(wager, game_address, wager_amount);
+        let (puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record): (PuzzClaim, Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_in(wager, self.caller, game_address, wager_amount);
 
         // mint token owner rules with player 2 sig against nonce, will need to store message and sig on FE
         let token_owner_rules_record: TokenOwnerRules = puzzle_token.leo/mint_token_owner_rules_record(game_address, self.caller, opponent, sig, sig);
