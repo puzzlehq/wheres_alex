@@ -81,8 +81,10 @@ function stake_transfer_private_out:
     input r3 as signature.private;
     input r4 as field.private;
     input r5 as u64.private;
-    cast r2.owner r5 into r6 as Puzz.record;
-    sub r0.amount r5 into r7;
-    cast r2.owner r7 into r8 as Puzz.record;
-    output r6 as Puzz.record;
-    output r8 as Puzz.record;
+    sign.verify r3 r2.owner r4 into r6;
+    assert.eq r6 true;
+    cast r2.owner r5 into r7 as Puzz.record;
+    sub r0.amount r5 into r8;
+    cast r2.owner r8 into r9 as Puzz.record;
+    output r7 as Puzz.record;
+    output r9 as Puzz.record;

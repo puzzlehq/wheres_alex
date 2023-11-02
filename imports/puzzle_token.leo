@@ -139,6 +139,10 @@ program puzzle_token.aleo {
         // todo: logic to validate that the signature is either player 1 or player 2's signature in order to transfer out ?
         // todo: either player must have valid claim record and fn. logic will check valid signature, then allow withdraw of puzz tokens
 
+        // validate if sig on puzz_claim is valid
+        let is_verified: bool = sig.verify(puzz_claim.owner, msg);
+        assert_eq(is_verified, true);
+
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
             owner: puzz_claim.owner,
