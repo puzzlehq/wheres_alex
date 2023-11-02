@@ -100,14 +100,16 @@ program puzzle_token.aleo {
         private sender: address, // can't use self.caller as this is ref coinflip addr
         private to: address,
         private amount: u64
-    ) -> (PuzzClaim, Puzz, Puzz)
+    ) -> (Puzz, Puzz)
     {
 
+        // note: commenting out puzz_claim for now
+
         // todo: do we need this? since we renege and transfer out with ms key
-        let puzz_claim_record: PuzzClaim = PuzzClaim {
-            owner: sender,
-            amount: amount,
-        };
+        // let puzz_claim_record: PuzzClaim = PuzzClaim {
+        //     owner: to,
+        //     amount: amount,
+        // };
 
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
@@ -122,17 +124,19 @@ program puzzle_token.aleo {
         };
 
         // puzz_stake_record,
-        return ( puzz_claim_record, receiver_new_record, sender_new_record);
+        // return ( puzz_claim_record, receiver_new_record, sender_new_record);
+        return (receiver_new_record, sender_new_record);
 
     }
 
     // todo: change to take in amount
     transition stake_transfer_private_out (
         private puzz_token: Puzz,
-        private token_owner_rules: TokenOwnerRules,
-        private puzz_claim: PuzzClaim,
-        private sig: signature,
-        private msg: field,
+        // private token_owner_rules: TokenOwnerRules,
+        // private puzz_claim: PuzzClaim,
+        private to: address,
+        // private sig: signature,
+        // private msg: field,
         private amount_to_transfer: u64,
     ) -> (Puzz, Puzz)
     {
@@ -140,19 +144,22 @@ program puzzle_token.aleo {
         // todo: logic to validate that the signature is either player 1 or player 2's signature in order to transfer out ?
         // todo: either player must have valid claim record and fn. logic will check valid signature, then allow withdraw of puzz tokens
 
+        // todo: claim record needs to be owned by ms
+        // todo: address check on claim?
+
         // validate if sig on puzz_claim is valid
-        let is_verified: bool = sig.verify(puzz_claim.owner, msg);
-        assert_eq(is_verified, true);
+        // let is_verified: bool = sig.verify(puzz_claim.owner, msg);
+        // assert_eq(is_verified, true);
 
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
-            owner: puzz_claim.owner,
+            owner: to,
             amount: amount_to_transfer,
         };
 
         // puzz record with change for sender
         let sender_new_record: Puzz = Puzz {
-            owner: puzz_claim.owner,
+            owner: puzz_token.owner,
             amount: puzz_token.amount - amount_to_transfer
         };
 

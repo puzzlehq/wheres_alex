@@ -66,26 +66,19 @@ function stake_transfer_private_in:
     input r1 as address.private;
     input r2 as address.private;
     input r3 as u64.private;
-    cast r1 r3 into r4 as PuzzClaim.record;
-    cast r2 r3 into r5 as Puzz.record;
-    sub r0.amount r3 into r6;
-    cast r1 r6 into r7 as Puzz.record;
-    output r4 as PuzzClaim.record;
-    output r5 as Puzz.record;
-    output r7 as Puzz.record;
+    cast r2 r3 into r4 as Puzz.record;
+    sub r0.amount r3 into r5;
+    cast r1 r5 into r6 as Puzz.record;
+    output r4 as Puzz.record;
+    output r6 as Puzz.record;
 
 
 function stake_transfer_private_out:
     input r0 as Puzz.record;
-    input r1 as TokenOwnerRules.record;
-    input r2 as PuzzClaim.record;
-    input r3 as signature.private;
-    input r4 as field.private;
-    input r5 as u64.private;
-    sign.verify r3 r2.owner r4 into r6;
-    assert.eq r6 true;
-    cast r2.owner r5 into r7 as Puzz.record;
-    sub r0.amount r5 into r8;
-    cast r2.owner r8 into r9 as Puzz.record;
-    output r7 as Puzz.record;
-    output r9 as Puzz.record;
+    input r1 as address.private;
+    input r2 as u64.private;
+    cast r1 r2 into r3 as Puzz.record;
+    sub r0.amount r2 into r4;
+    cast r0.owner r4 into r5 as Puzz.record;
+    output r3 as Puzz.record;
+    output r5 as Puzz.record;
