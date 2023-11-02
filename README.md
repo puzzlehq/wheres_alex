@@ -49,7 +49,7 @@ Example Command:
 leo run reveal_answer "{                                                                    5s  system
   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private,
   game_address: aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu.private,
-  nonce: 1scalar.private,
+  nonce: 1field.private,
   answer: 1field.private,
   _nonce: 3758214225201963159322315890422876208404622381900552146703962096804019801163group.public
 }" aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww
