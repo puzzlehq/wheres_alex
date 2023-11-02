@@ -26,7 +26,7 @@ leo run propose_game 12312412field aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzv
   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private,
   amount: 1u64.private,
   _nonce: 3208710856480263791337381472273621837437204638140170253923868382800284202059group.public
-}" 1u64 1field sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg 1field 1u8 1scalar
+}" 1u64 1field sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg 1field 1u8 1field
 ```
 
 ### reveal_answer
@@ -46,7 +46,7 @@ Example Command:
 
 
 ```
-leo run reveal_answer "{                                                                    5s  system
+leo run reveal_answer "{
   owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u.private,
   game_address: aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu.private,
   nonce: 1field.private,
