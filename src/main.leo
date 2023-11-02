@@ -220,8 +220,8 @@ program coinflip.aleo {
         private opponent: address,
         private wager: puzzle_token.leo/Puzz.record,
         private wager_amount: u64,
-        private nonce: field,
-        private msg: field,
+        // private nonce: field,
+        // private msg: field,
         private sig: signature,
     ) -> (puzzle_token.leo/TokenOwnerRules.record, puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record) {
 
@@ -244,13 +244,13 @@ program coinflip.aleo {
     // called by ms key
     transition player_two_renege_proposal (
         private game_record: Game,
-        private ms_rules: puzzle_account.leo/OwnerRules.record,
-        private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
+        // private ms_rules: puzzle_account.leo/OwnerRules.record,
+        // private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
         // private player_two_claim_record: puzzle_token.leo/PuzzClaim.record,
         private puzz_record: puzzle_token.leo/Puzz.record,
         private amount: u64,
-        private sig: signature, // player 1 sig
-        private msg: field, // msg generated on propose_game with nonce
+        // private sig: signature, // player 1 sig
+        // private msg: field, // msg generated on propose_game with nonce
     ) -> (puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
         // limit calls to only users
@@ -269,26 +269,26 @@ program coinflip.aleo {
     // called by ms key
     transition accept_game (
         private game_record: Game,
-        private player_one_claim_record: puzzle_account.leo/Claim.record,
-        private player_two_claim_record: puzzle_account.leo/Claim.record,
+        // private player_one_claim_record: puzzle_account.leo/Claim.record,
+        // private player_two_claim_record: puzzle_account.leo/Claim.record,
         // todo: do we need puzz record here/what for? since puzz record is already transferred to ms
-        private puzz_record: puzzle_token.leo/Puzz.record,
-        private owner_rules_record: puzzle_account.leo/OwnerRules.record,
+        // private puzz_record: puzzle_token.leo/Puzz.record,
+        // private owner_rules_record: puzzle_account.leo/OwnerRules.record,
         private player_two_answer: field,
-        private player_two_signature: signature,
+        // private player_two_signature: signature,
         // todo: adjust msg type here
-        private leo_message: field,
-    ) -> (Game, puzzle_account.leo/OwnerRules.record)
+        // private leo_message: field,
+    ) -> (Game)
     {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
         // assert that each player has wagered the same amount
-        assert_eq(player_one_claim_record.amount, player_two_claim_record.amount);
+        // assert_eq(player_one_claim_record.amount, player_two_claim_record.amount);
 
         // assert that the game_address matches on player claim records and game record
-        assert_eq(player_one_claim_record.owner, player_two_claim_record.owner);
-        assert_eq(game_record.owner, player_one_claim_record.owner);
+        // assert_eq(player_one_claim_record.owner, player_two_claim_record.owner);
+        // assert_eq(game_record.owner, player_one_claim_record.owner);
 
         // assert that the game is in the propose_state status
         assert_eq(game_record.game_state, 0field);
@@ -309,12 +309,13 @@ program coinflip.aleo {
         };
 
         // note: will need to tweak owner rules structure likely to include sig to lock next turn
-        let new_owner_rules: OwnerRules =
-        puzzle_account.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
+        // let new_owner_rules: OwnerRules =
+        // puzzle_account.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
 
         // todo: tweak for notify records
         // output owner rules record to ms so bob can claim later on
-        return (game_record_new, new_owner_rules) then finalize(game_record.owner);
+        // return (game_record_new, new_owner_rules) then finalize(game_record.owner);
+        return (game_record_new) then finalize(game_record.owner);
     }
 
     finalize accept_game (game_address: address) {
@@ -364,7 +365,7 @@ program coinflip.aleo {
         private puzz_record: puzzle_token.leo/Puzz.record,
         // private player_claim_record: puzzle_token.leo/PuzzClaim.record,
         // private puzz_stake_two: puzzle_token.leo/PuzzStake.record,
-        private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
+        // private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
         // private sig: signature,
         // private msg: field,
     ) -> (NotifyGameOver, NotifyGameOver)
@@ -434,9 +435,9 @@ program coinflip.aleo {
         private puzz_record: puzzle_token.leo/Puzz.record,
         // private player_claim_record: puzzle_token.leo/PuzzClaim.record,
         // private puzz_stake_two: puzzle_token.leo/PuzzStake.record,
-        private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
-        private sig: signature,
-        private msg: field,
+        // private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
+        // private sig: signature,
+        // private msg: field,
     ) -> (puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
     {
         // todo: if alice never reveals answer than bob gets to claim total pot
