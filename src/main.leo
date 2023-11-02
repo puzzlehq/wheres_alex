@@ -87,6 +87,7 @@ program coinflip.aleo {
     // -> PuzzRecord to player 1 of any change from the wager credit
 
     // todo: tweak messages here
+    // called by p1 key
     transition propose_game
     (
         private ms_seed: field,
@@ -179,7 +180,7 @@ program coinflip.aleo {
         Mapping::set(games, game_address, block.height);
     }
 
-
+    // called by ms key
     transition player_one_renege_proposal
     (
         private game_record: Game,
@@ -196,7 +197,7 @@ program coinflip.aleo {
         assert_eq(self.caller, self.signer);
 
         // transfer out and check player 1 sig and message that is signed
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_one_claim_record, sig, msg);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_one_claim_record, sig, msg, amount);
 
         return (receiver_puzz_record, puzz_record);
 
@@ -209,7 +210,8 @@ program coinflip.aleo {
     //     Mapping::set(games, game_address, block.height);
     // }
 
-    // todo: how do we check bob is wagering the correct amount before wager submisison
+    // todo: how do we check bob is wagering the correct amount before wager submission
+    // called by player 2 key
     transition submit_wager (
         private game_address: address,
         private opponent: address,
@@ -234,6 +236,7 @@ program coinflip.aleo {
 
     }
 
+    // called by ms key
     transition player_two_renege_proposal (
         private game_record: Game,
         private ms_rules: puzzle_account.leo/OwnerRules.record,
@@ -249,7 +252,7 @@ program coinflip.aleo {
         assert_eq(self.caller, self.signer);
 
         // transfer out and check player 1 sig and message that is signed
-        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_two_claim_record, sig, msg);
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_two_claim_record, sig, msg, amount);
 
         return (receiver_puzz_record, puzz_change);
 
@@ -257,6 +260,7 @@ program coinflip.aleo {
         // todo: update game state to finished/tbd if we need sep states between finished and cancelled/rejected
     }
 
+    // called by ms key
     transition accept_game (
         private game_record: Game,
         private player_one_claim_record: puzzle_account.leo/Claim.record,
@@ -299,7 +303,8 @@ program coinflip.aleo {
         };
 
         // note: will need to tweak owner rules structure likely to include sig to lock next turn
-        let new_owner_rules: OwnerRules = puzzle_account.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
+        let new_owner_rules: OwnerRules =
+        puzzle_account.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
 
         // todo: tweak for notify records
         // output owner rules record to ms so bob can claim later on
@@ -312,6 +317,7 @@ program coinflip.aleo {
         Mapping::set(games, game_address, block.height);
     }
 
+    // called by p1 key
     transition reveal_answer (
         private answer_record: Answer,
         private game_address: address,
@@ -322,7 +328,6 @@ program coinflip.aleo {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
-        // todo: what is the best way to get p2's address here?
         let revealed_answer: RevealedAnswer = RevealedAnswer {
             owner: game_address,
             answer: answer_record.answer,
@@ -345,10 +350,17 @@ program coinflip.aleo {
         return (revealed_answer, notify_reveal_answer_p1, notify_reveal_answer_p2);
     }
 
+
+    // called by ms key
     transition finish_game (
         private game_record: Game,
         private revealed_answer_record: RevealedAnswer,
         private puzz_record: puzzle_token.leo/Puzz.record,
+        private player_claim_record: puzzle_token.leo/PuzzClaim.record,
+        private puzz_stake_two: puzzle_token.leo/PuzzStake.record,
+        private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
+        private sig: signature,
+        private msg: field,
     ) -> (NotifyGameOver, NotifyGameOver)
     {
         // todo: how do we transfer out from ms/game addr to winner
@@ -366,7 +378,9 @@ program coinflip.aleo {
         // player 1 wins, player 2 loses
         if (revealed_answer_record.answer != game_record.player_two_answer) {
             // transfer all funds to winner
-            puzzle_token.leo/puzz_transfer_private(puzz_record, revealed_answer_record.owner, game_record.total_pot);
+            let (receiver_puzz_record, puzz_change): (Puzz, Puzz) =
+            puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
+
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,
@@ -383,7 +397,8 @@ program coinflip.aleo {
         // player 1 loses, player 2 wins
         else {
             // transfer all funds to winner
-            puzzle_token.leo/puzz_transfer_private(puzz_record, self.caller, game_record.total_pot);
+            let (receiver_puzz_record, puzz_change): (Puzz, Puzz) =
+            puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,
@@ -405,11 +420,33 @@ program coinflip.aleo {
         Mapping::set(games, game_address, block.height);
     }
 
-    transition claim_wager () -> () {
+    // called by ms key
+    transition claim_total_pot (
+        private game_record: Game,
+        private revealed_answer_record: RevealedAnswer,
+        private puzz_record: puzzle_token.leo/Puzz.record,
+        private player_claim_record: puzzle_token.leo/PuzzClaim.record,
+        private puzz_stake_two: puzzle_token.leo/PuzzStake.record,
+        private token_owner_rules: puzzle_token.leo/TokenOwnerRules.record,
+        private sig: signature,
+        private msg: field,
+    ) -> (puzzle_token.leo/Puzz.record, puzzle_token.leo/Puzz.record)
+    {
+        // todo: if alice never reveals answer than bob gets to claim total pot
         // limit calls to only users
         assert_eq(self.caller, self.signer);
+
+        // need to assert that player 2 valid signature and valid message signed here, will validate inside stake transfer private logic
+        let (receiver_puzz_record, puzz_change): (Puzz, Puzz) =
+            puzzle_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
+
+        return (receiver_puzz_record, puzz_change) then finalize(game_record.owner);
     }
 
-
-
+    finalize claim_total_pot (game_address: address) -> () {
+        // todo: change logic here to assert that a certain amount of time has passed to allow p2 to claim total pot
+        let previous_block_height: u32 = Mapping::get(games, game_address);
+        assert(block.height > previous_block_height + 1000u32);
+        Mapping::set(games, game_address, block.height);
+    }
 }

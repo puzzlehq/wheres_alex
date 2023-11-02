@@ -102,11 +102,6 @@ program puzzle_token.aleo {
     ) -> (PuzzClaim, Puzz, Puzz)
     {
 
-        // let puzz_stake_record: PuzzStake = PuzzStake {
-        //     owner: self.caller,
-        //     amount: amount,
-        // };
-
         // todo: do we need this? since we renege and transfer out with ms key
         let puzz_claim_record: PuzzClaim = PuzzClaim {
             owner: self.caller,
@@ -130,12 +125,14 @@ program puzzle_token.aleo {
 
     }
 
+    // todo: change to take in amount
     transition stake_transfer_private_out (
         private puzz_token: Puzz,
         private token_owner_rules: TokenOwnerRules,
         private puzz_claim: PuzzClaim,
         private sig: signature,
         private msg: field,
+        private amount_to_transfer: u64,
     ) -> (Puzz, Puzz)
     {
 
@@ -145,13 +142,13 @@ program puzzle_token.aleo {
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
             owner: puzz_claim.owner,
-            amount: puzz_claim.amount,
+            amount: amount_to_transfer,
         };
 
         // puzz record with change for sender
         let sender_new_record: Puzz = Puzz {
             owner: puzz_claim.owner,
-            amount: puzz_token.amount - puzz_claim.amount
+            amount: puzz_token.amount - amount_to_transfer
         };
 
         return (receiver_new_record, sender_new_record);
