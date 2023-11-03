@@ -119,11 +119,11 @@ function KickoffButton({account}: Props) {
     const [eventID, setEventID] = useState<string>("");
     const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
     // const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
-    //     type: ,
-    //     programId: ,
-    //     functionId: ,
-    //     fee: ,
-    //     inputs: ,
+    //     type: 'Execute',
+    //     programId: 'cflip_gm_aleo_testing_123.aleo',
+    //     functionId: 'propose_game',
+    //     fee: 10000,
+    //     inputs: "1",
     // })
 
     useEffect(() => {
@@ -150,7 +150,7 @@ function KickoffButton({account}: Props) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
         const result = opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer;
-        console.log(result);
+        // requestCreateEvent()
         setEventID(result);
     }
     return (
