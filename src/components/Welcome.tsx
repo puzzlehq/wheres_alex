@@ -1,8 +1,24 @@
+import { useConnect } from '@puzzlehq/sdk';
 import rightImageSrc from '../assets/alex_mic_left_tilt.png';
 import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 import bottomImageSrc from '../assets/alexbottom.png';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
-export const Welcome = ({ onConnectWallet }: { onConnectWallet: () => void }) => {
+export const Welcome = () => {
+  const navigate = useNavigate();
+  const { connect, isConnected, loading } = useConnect();
+
+  console.log(isConnected);
+
+  useEffect(() => {
+    console.log('connecting');
+    if (isConnected) {
+    console.log('connecting...');
+      navigate('/');
+    }
+  }, [isConnected, loading, navigate]);
+
   return (
     <div className="h-screen flex w-full justify-between items-stretch">
       <div className="relative flex w-full flex-col justify-center items-center h-full">
@@ -20,7 +36,7 @@ export const Welcome = ({ onConnectWallet }: { onConnectWallet: () => void }) =>
             A thrilling game showcasing the power of Aleo and the Puzzle multiparty privacy stack through a wager between friends!
         </p>
         <button
-            onClick={onConnectWallet}
+            onClick={connect}
             className="z-10 bg-yellow-300 flex justify-center items-center mt-7 px-5 py-8 rounded-[200px] text-black text-4xl font-extrabold w-1/2 hover:bg-yellow-400"
         >
             Play!

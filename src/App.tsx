@@ -12,22 +12,21 @@ import PendingConfirmStartGame from './pages/PendingConfirmStartGame.js';
 import GameStarted from './pages/GameStarted.js';
 import { Header } from './components/header.js';
 import { Welcome } from './components/Welcome.js';
+import { useAccount, useConnect } from '@puzzlehq/sdk';
 
 
 function App() {
-  const [isConnected, setIsConnected] = useState<boolean>(false);
+  // const [isConnected, setIsConnected] = useState<boolean>(false);
+  // const { isConnected, loading } = useConnect();
+  const { isConnected, loading } = useConnect();
+  const { account } = useAccount();
 
-  const account: PuzzleAccount = {
-    network: 'Aleo',
-    chainId: '1',
-    address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
-    shortenedAddress: 'aleo1as..tuvr6'
-  };
-  console.log(account.address);
-
-  const onConnectWallet = () => {
-    setIsConnected(true);
-  };
+  // const account: PuzzleAccount = {
+  //   network: 'Aleo',
+  //   chainId: '1',
+  //   address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
+  //   shortenedAddress: 'aleo1as..tuvr6'
+  // };
 
   return (
     <div className="App min-h-screen bg-yellow-500 flex justify-center">
@@ -46,7 +45,7 @@ function App() {
               <Route path="/pending-confirm-start-game" element={<PendingConfirmStartGame />} />
               <Route
                 path="/"
-                element={ isConnected ? <Home /> : <Welcome onConnectWallet={onConnectWallet} /> }
+                element={ !loading && isConnected ? <Home /> : <Welcome /> }
               />
             </Routes>
           </div>

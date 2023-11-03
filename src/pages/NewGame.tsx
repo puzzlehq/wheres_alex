@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Html5Qrcode } from "html5-qrcode";
 import qrImg from '../assets/qrscanner.svg';
+import { useAccount } from '@puzzlehq/sdk';
 
 function Navigation() {
   return (
@@ -23,7 +24,7 @@ function Navigation() {
     </nav>
   );
 }
-  
+
 function Section() {
     return (
       <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
@@ -44,13 +45,13 @@ function PasteyQR( {setOpponent, opponent}: PasteyQRProps ) {
 
     const startScanner = async () => {
         setIsScanning(true);
-    
+
         if (!scannerRef.current) {
           scannerRef.current = new Html5Qrcode('qr-code-scanner');
         }
-    
+
         const cameraFacingMode = isMobile ? 'environment' : 'user';
-    
+
         try {
           await scannerRef.current.start(
             { facingMode: cameraFacingMode },
@@ -61,7 +62,7 @@ function PasteyQR( {setOpponent, opponent}: PasteyQRProps ) {
         } catch (err) {
           console.error("Unable to start scanning", err);
         }
-    }; 
+    };
 
     const handleScanSuccess = (decodedText: string) => {
         setIsScanning(false);
@@ -83,12 +84,12 @@ function PasteyQR( {setOpponent, opponent}: PasteyQRProps ) {
         console.log(opponent);
     };
     return (
-        <div className="flex w-full flex-col items-center"> 
-            <input 
-                    type="text" 
+        <div className="flex w-full flex-col items-center">
+            <input
+                    type="text"
                     className="text-white text-sm font-semibold leading-4 border-[color:var(--Grey,#868686)] self-stretch w-full mt-5 pl-3.5 pr-5 py-7 border-[3px] border-solid max-md:mr-px"
                     placeholder="Enter Wallet Address"
-                    id="opponent" 
+                    id="opponent"
                     value={opponent}
                     readOnly
             />
@@ -145,20 +146,23 @@ function NextButton({ opponent }: NextButtonProps) {
   };
 
   return (
-      <button 
+      <button
           onClick={navigateToHideAlex}
-          className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap self-stretch w-full mt-24 p-5 rounded-[200px] max-md:ml-px max-md:mt-10 
+          className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap self-stretch w-full mt-24 p-5 rounded-[200px] max-md:ml-px max-md:mt-10
           ${opponent ? "bg-lime-600 hover:bg-[#4EC331]" : "bg-lime-600 bg-opacity-20 cursor-not-allowed"}
           `}
-          disabled={!opponent} 
-      > 
-          NEXT 
+          disabled={!opponent}
+      >
+          NEXT
       </button>
   );
 }
 
 function NewGame() {
     const [opponent, setOpponent] = useState<string>("");
+    const { account } = useAccount();
+
+    console.log(account);
 
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
