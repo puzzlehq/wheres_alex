@@ -14,11 +14,10 @@ function TotalWinnings() {
                 <div className="text-neutral-900 text-left text-xs font-extrabold leading-3 self-center whitespace-nowrap">
                     TOTAL WINNINGS
                 </div>
-                </div>
-                <div className='flex flex-grow' />
-                <p className='font-bold'>Puzzle Pieces</p>
+            </div>
+            <div className='flex flex-grow' />
+            <p className='font-bold'>Puzzle Pieces</p>
         </div>
-
       </section>
     );
 }
