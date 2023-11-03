@@ -4,6 +4,9 @@ dependencies:
   '@puzzlehq/sdk':
     specifier: 0.1.0
     version: 0.1.0(@types/react@18.2.21)(react-dom@18.2.0)
+  '@puzzlehq/types':
+    specifier: ^1.0.3
+    version: 1.0.3
   html5-qrcode:
     specifier: ^2.3.8
     version: 2.3.8
@@ -696,6 +699,10 @@ packages:
       - react-native
       - supports-color
       - utf-8-validate
+    dev: false
+
+  /@puzzlehq/types@1.0.3:
+    resolution: {integrity: sha512-WdX/i5JZCGTh/vd9YGmWn0DC9cVw61kMSoHBEk7JdPJLWE1vTOaOwMqEtWYWBlTNMs2X8nb1OI0OGzIsy4rpag==}
     dev: false
 
   /@remix-run/router@1.10.0:

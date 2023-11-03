@@ -5,6 +5,7 @@ import PuzzleAccount from '../models/account';
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
 import { useRequestCreateEvent } from "@puzzlehq/sdk";
+import { EventType } from '@puzzlehq/types';
 
 function Section() {
     return (
@@ -118,13 +119,19 @@ function KickoffButton({account}: Props) {
     const [gameMultisig, setGameMultisig] = useState<string>("");
     const [eventID, setEventID] = useState<string>("");
     const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
-    // const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
-    //     type: 'Execute',
-    //     programId: 'cflip_gm_aleo_testing_123.aleo',
-    //     functionId: 'propose_game',
-    //     fee: 10000,
-    //     inputs: "1",
-    // })
+    const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
+        type: EventType.Execute,
+        programId: 'cflip_gm_aleo_testing_123.aleo',
+        functionId: 'mint',
+        fee: 10000,
+        inputs: ["10u64", "aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls"]
+    })
+
+    //     inputs: ["{
+//   owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
+//   amount: 10u64.private,
+//   _nonce: 5625235871236005310515293264000494952576041125138106701418752227259843614760group.public
+// }",
 
     useEffect(() => {
         function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
@@ -155,14 +162,7 @@ function KickoffButton({account}: Props) {
     }
     return (
         <button
-            onClick={() => proposeGame(
-                opponent,
-                player_account,
-                gameMultisig,
-                seed,
-                amount,
-                answer
-            )}
+            onClick={requestCreateEvent}
             className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap
                         bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
         >
