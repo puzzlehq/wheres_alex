@@ -1,7 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import GameState from '../models/game_states';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Route, Routes  } from 'react-router-dom';
+import AcceptGame from '../pages/AcceptGame';
+import FinishGame from './FinishGame';
+import FinishGameClaim from './FinishGameClaim';
+
+<Routes>
+  <Route path='/accept-game' element={<AcceptGame />} />
+  <Route path='/finish-game' element={<FinishGame />} />
+  <Route path='/finish-game-claim' element={<FinishGameClaim />} />
+</Routes>
 
 function TotalWinnings() {
     return (
@@ -43,6 +52,71 @@ type NotificationProps = {
 };
 
 function NotificationItem({ notification }: NotificationProps) {
+    const navigate = useNavigate(); // Hook to navigate
+
+    const handleStartClick = () => {
+        // Navigate to accept-game and pass the challenger and wager as state
+        navigate('/accept-game', { state: { challenger: notification.player, wager: notification.wager } });
+    };
+
+    const handleFinishClick = () => {
+        // Navigate to accept-game and pass the challenger and wager as state
+        navigate('/finish-game', { state: { challenger: notification.player, wager: notification.wager } });
+    };
+
+    const handleFinishClaimClick = () => {
+        // Navigate to accept-game and pass the challenger and wager as state
+        navigate('/finish-game-claim', { state: { challenger: notification.player, wager: notification.wager } });
+    };
+
+    const renderActionButton = () => {
+        switch (notification.action) {
+            case 'Start':
+                return (
+                    <button 
+                        onClick={handleStartClick}
+                        className="text-black text-center text-xs font-extrabold self-stretch max-w-full px-5 py-3 rounded-[200px] max-sm:ml-24 bg-yellow-300"
+                        style={{ minWidth: '100px' }}
+                    >
+                        {notification.action}
+                    </button>
+                );
+            case 'Finish':
+                return (
+                    <button 
+                        onClick={handleFinishClick}
+                        className="text-black text-center text-xs font-extrabold self-stretch max-w-full px-5 py-3 rounded-[200px] max-sm:ml-24 bg-yellow-300"
+                        style={{ minWidth: '100px' }}
+                    >
+                        {notification.action}
+                    </button>
+                );
+            case 'Claim':
+                return (
+                    <button 
+                        onClick={handleFinishClaimClick}
+                        className="text-black text-center text-xs font-extrabold self-stretch max-w-full px-5 py-3 rounded-[200px] max-sm:ml-24 bg-yellow-300"
+                        style={{ minWidth: '100px' }}
+                    >
+                        {notification.action}
+                    </button>
+                );
+            default:
+                // The 'else' part for '... other buttons'
+                return (
+                    <>
+                        <button 
+                            className={`text-black text-center text-xs font-extrabold self-stretch max-w-full px-5 py-3 rounded-[200px] max-sm:ml-24 ${notification.action === 'Delete' ? 'bg-zinc-500' : 'bg-yellow-300'}`}
+                            style={{ minWidth: '100px' }}
+                        >
+                            {notification.action}
+                        </button>
+                    </>
+                );
+        }
+    };
+
+
     return (
         <div className="grid grid-cols-[1fr,auto,1fr] gap-5 items-center w-full mb-2">
             <div className="text-pink-300 text-left text-xs font-bold tracking-tight self-center my-auto max-sm:ml-2">
@@ -52,12 +126,7 @@ function NotificationItem({ notification }: NotificationProps) {
                 {notification.wager}
             </div>
             <div className="flex justify-end">
-                <button 
-                    className={`text-black text-center text-xs font-extrabold self-stretch max-w-full px-5 py-3 rounded-[200px] max-sm:ml-24 ${notification.action === 'Delete' ? 'bg-zinc-500' : 'bg-yellow-300'}`}
-                    style={{ minWidth: '100px' }}
-                >
-                    {notification.action}
-                </button>
+                {renderActionButton()}
             </div>
         </div>
     );
@@ -90,6 +159,66 @@ type LiveGameProps = {
 };
 
 function LiveGameItem({ game, timeLeft }: LiveGameProps) {
+    const navigate = useNavigate(); // Hook to navigate
+
+    const handleStartClick = () => {
+        // Navigate to accept-game and pass the challenger and wager as state
+        navigate('/accept-game', { state: { challenger: game.player, wager: game.wager } });
+    };
+
+    const renderActionButton = () => {
+        switch (game.action) {
+            case 'Start':
+                return (
+                    <button 
+                        onClick={handleStartClick}
+                        className="text-black flex items-center justify-center text-xs font-extrabold bg-yellow-300 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
+                        style={{ minWidth: '100px' }}
+                    >
+                        {game.action}
+                    </button>
+                );
+            case 'Claim':
+                // Assuming 'Claim' needs a special button not shown in this snippet
+                // This is just an example
+                return (
+                    <>
+                        <div 
+                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
+                        style={{ minWidth: '100px' }}
+                        >
+                        {timeLeft[game.player] && `${String(timeLeft[game.player].hours).padStart(2, '0')}:${String(timeLeft[game.player].minutes).padStart(2, '0')}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
+                        </div>
+                        <button 
+                            className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
+                            style={{ minWidth: '100px' }}
+                        >
+                            Ping
+                        </button>
+                    </>
+                );
+            default:
+                // The 'else' part for '... other buttons'
+                return (
+                    <>
+                        <button 
+                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
+                        style={{ minWidth: '100px' }}
+                        >
+                            {game.action}
+                        </button>
+                        <button 
+                            className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
+                            style={{ minWidth: '100px' }}
+                        >
+                            Ping
+                        </button>
+                    </>
+                );
+        }
+    };
+
+
     return (
         <div className="grid grid-cols-[1fr,auto,1fr] gap-5 items-center w-full mb-2">
             <div className="text-red-500 text-left text-xs font-bold self-center my-auto max-sm:mr-auto">
@@ -99,37 +228,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
                 {game.wager}
             </div>
             <div className="flex justify-end">
-                {game.action === 'Claim' ? (
-                <>
-                    <div 
-                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
-                        style={{ minWidth: '100px' }}
-                    >
-                    {timeLeft[game.player] && `${String(timeLeft[game.player].hours).padStart(2, '0')}:${String(timeLeft[game.player].minutes).padStart(2, '0')}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
-                    </div>
-                    <button 
-                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
-                        style={{ minWidth: '100px' }}
-                    >
-                        Ping
-                    </button>
-                </>
-                ) : (
-                <>
-                    <button 
-                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
-                        style={{ minWidth: '100px' }}
-                    >
-                        {game.action}
-                    </button>
-                    <button 
-                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
-                        style={{ minWidth: '100px' }}
-                    >
-                        Ping
-                    </button>
-                </>
-                )}
+                {renderActionButton()}
             </div>
         </div>
     );

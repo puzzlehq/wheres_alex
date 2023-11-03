@@ -1,5 +1,5 @@
-import PuzzleAccount from './models/account.js';
-import { useState } from 'react';
+// import PuzzleAccount from './models/account.js';
+// import { useState } from 'react';
 import Home from './pages/Home.js';
 import NewGame from './pages/NewGame.js';
 import StartWager from './pages/StartWager.js';
@@ -10,9 +10,13 @@ import ConfirmStartGame from './pages/ConfirmStartGame.js';
 import PendingConfirmStartGame from './pages/PendingConfirmStartGame.js';
 
 import GameStarted from './pages/GameStarted.js';
-import { Header } from './components/header.js';
+import { Header } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
+import AcceptGame from './pages/AcceptGame.js';
+import FinishGame from './pages/FinishGame.js';
+import FinishGameClaim from './pages/FinishGameClaim.js';
+
 
 
 function App() {
@@ -43,6 +47,9 @@ function App() {
               <Route path="/confirm-start-game" element={<ConfirmStartGame account={account}/>} />
               <Route path='/game-started' element={<GameStarted />} />
               <Route path="/pending-confirm-start-game" element={<PendingConfirmStartGame />} />
+              <Route path='/accept-game' element={<AcceptGame />} />
+              <Route path='/finish-game' element={<FinishGame />} />
+              <Route path='/finish-game-claim' element={<FinishGameClaim />} />
               <Route
                 path="/"
                 element={ !loading && isConnected ? <Home /> : <Welcome /> }
