@@ -5,15 +5,20 @@ import { useNavigate } from 'react-router-dom';
 
 function TotalWinnings() {
     return (
-      <section className="border-[color:var(--Green,#4EC331)] self-stretch flex flex-col mt-8 pr-2.5 pt-3.5 border-2 border-solid">
-        <div className="text-lime-600 text-right text-base font-bold">
-          000000000010 <br /> Puzzle Pieces
+      <section className="border-[color:var(--Green,#4EC331)] self-stretch flex flex-col mt-8 px-2.5 pt-3.5 border-2 border-solid text-[#4EC331]">
+        <div className="text-right font-bold text-4xl tabular-nums overflow-hidden" style={{direction:'rtl'}}>
+            0000000001234567898765432
         </div>
-        <div className="bg-green-500 flex max-w-full flex-col px-5 py-2 self-start">
-          <div className="text-neutral-900 text-left text-xs font-extrabold leading-3 self-center whitespace-nowrap">
-            TOTAL WINNINGS
-          </div>
+        <div className='w-full flex'>
+            <div className="bg-[#4EC331] flex max-w-full flex-col px-5 -ml-2.5 py-2 self-start">
+                <div className="text-neutral-900 text-left text-xs font-extrabold leading-3 self-center whitespace-nowrap">
+                    TOTAL WINNINGS
+                </div>
+                </div>
+                <div className='flex flex-grow' />
+                <p className='font-bold'>Puzzle Pieces</p>
         </div>
+
       </section>
     );
 }
@@ -215,7 +220,7 @@ function Home() {
 
     return (
         <div className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
-            <div className="w-full bg-netural-900 pl-1">
+            <div className="w-full bg-netural-900 px-1">
             <TotalWinnings />
             <NewGame />
             <Notifications notifications={notifications} />
