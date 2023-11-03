@@ -4,7 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import PuzzleAccount from '../models/account';
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
-  
+import { useRequestCreateEvent } from "@puzzlehq/sdk";
+
 function Section() {
     return (
       <section className="justify-center items-center bg-pink-300 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
@@ -16,10 +17,10 @@ function Section() {
 function OpponentSection() {
     const location = useLocation();
     const opponent = location.state?.opponent || "N/A";
-    
+
     // Shorten the opponent string
-    const displayOpponent = 
-        opponent.length > 9 
+    const displayOpponent =
+        opponent.length > 9
         ? opponent.slice(0, 5) + "..." + opponent.slice(-4)
         : opponent;
 
@@ -69,12 +70,12 @@ function AnswerSection() {
                     <img
                         loading="lazy"
                         src={inWeedsImg}
-                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%] 
+                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%]
                         ${answer === "In Weeds" ? "" : "opacity-40"}`}
                         alt="In Weeds"
                     />
-                    <div 
-                        className={`text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap 
+                    <div
+                        className={`text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap
                         ${answer === "In Weeds" ? "" : "opacity-40"}
                         ${answer === "In Weeds" ? "text-lime-600" : "text-white"}`}>
                         In Weeds
@@ -84,12 +85,12 @@ function AnswerSection() {
                     <img
                         loading="lazy"
                         src={behindBuildingImg}
-                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%] 
+                        className={`aspect-square object-cover object-center w-full overflow-hidden self-stretch rounded-[50%]
                         ${answer === "Behind Building" ? "" : "opacity-40"}`}
                         alt="Behind Building"
                     />
-                    <div 
-                        className={`text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap 
+                    <div
+                        className={`text-center text-sm font-extrabold tracking-tight self-center mt-2.5 whitespace-nowrap
                         ${answer === "Behind Building" ? "" : "opacity-40"}
                         ${answer === "Behind Building" ? "text-lime-600" : "text-white"}`}>
                         Behind Building
@@ -117,6 +118,13 @@ function KickoffButton({account}: Props) {
     const [gameMultisig, setGameMultisig] = useState<string>("");
     const [eventID, setEventID] = useState<string>("");
     const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
+    // const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
+    //     type: ,
+    //     programId: ,
+    //     functionId: ,
+    //     fee: ,
+    //     inputs: ,
+    // })
 
     useEffect(() => {
         function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
@@ -146,7 +154,7 @@ function KickoffButton({account}: Props) {
         setEventID(result);
     }
     return (
-        <button 
+        <button
             onClick={() => proposeGame(
                 opponent,
                 player_account,
@@ -155,10 +163,10 @@ function KickoffButton({account}: Props) {
                 amount,
                 answer
             )}
-            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
+            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap
                         bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
-        > 
-            KICKOFF GAME! 
+        >
+            KICKOFF GAME!
         </button>
     );
 }
@@ -176,12 +184,12 @@ function BackButton() {
         });  // Navigate to the start-wager page
     }
     return (
-        <button 
+        <button
             onClick={navigateBackToStartWager}
-            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
+            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap
                 bg-zinc-500 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
-            > 
-            BACK 
+            >
+            BACK
         </button>
     );
 }
