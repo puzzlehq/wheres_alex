@@ -10,7 +10,7 @@ function Navigation() {
     return (
       <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
         <a href="#"
-        onClick={() => navigate('/new-game')}  
+        onClick={() => navigate('/new-game')}
         className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
             1. CHALLENGE
         </a>
@@ -27,7 +27,7 @@ function Navigation() {
       </nav>
     );
 }
-  
+
 function Section() {
     return (
       <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
@@ -109,17 +109,17 @@ function NextButton({isDisabled, answer, opponent}: NextButtonProps) {
         console.log(answer);
         navigate('/start-wager', {
             state: {...location.state, opponent, answer}
-        });  
+        });
     }
     return (
-        <button 
+        <button
             onClick={navigateToStartWager}
             disabled={isDisabled}
-            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
-                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-[#4EC331]'} 
+            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap
+                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-[#4EC331]'}
                         bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
-        > 
-            NEXT 
+        >
+            NEXT
         </button>
     );
 }
