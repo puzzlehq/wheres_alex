@@ -121,9 +121,20 @@ function KickoffButton ( { account }: Props ) {
     const [gameMultisig, setGameMultisig] = useState<string>("");
     const [eventID, setEventID] = useState<string>("");
     const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
-    const { records, request } = useRecords({
-        filter: { programId: 'cflip_gm_aleo_testing_123.aleo', type: 'unspent' }
+    // const { records, requestRecords } = useRecords({
+    //     filter: { programId: 'cflip_gm_aleo_testing_123.aleo', type: 'unspent' }
+    // });
+    const { fetchPage, records, loading, error, pageCount } = useRecords({
+        filter: {
+            programId: 'cflip_gm_aleo_testing_123.aleo',
+            type: 'unspent',
+        },
+        page: 1
     });
+
+    useEffect(() => {
+        fetchPage();
+    }, [0]);
 
     const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent({
         type: EventType.Execute,
@@ -137,9 +148,9 @@ function KickoffButton ( { account }: Props ) {
     //     request();
     // }, []);
 
-    // if (records) {
-    //     console.log(records);
-    // }
+    if (records) {
+        console.log(records);
+    }
 
 
     //     inputs: ["{
@@ -172,12 +183,11 @@ function KickoffButton ( { account }: Props ) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
         const result = opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer;
-        // requestCreateEvent()
         setEventID(result);
     }
     return (
         <button
-            onClick={() => console.log('kickoff')}
+            onClick={requestCreateEvent}
             className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap
                         bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
         >
