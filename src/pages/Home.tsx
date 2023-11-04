@@ -48,7 +48,7 @@ function NotificationItem({ notification }: NotificationProps) {
                 {notification.wager}
             </div>
             <div className="flex justify-end">
-                <button 
+                <button
                     className={`text-black text-center text-xs font-extrabold self-stretch max-w-full px-5 py-3 rounded-[200px] max-sm:ml-24 ${notification.action === 'Delete' ? 'bg-zinc-500' : 'bg-yellow-300'}`}
                     style={{ minWidth: '100px' }}
                 >
@@ -97,13 +97,13 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
             <div className="flex justify-end">
                 {game.action === 'Claim' ? (
                 <>
-                    <div 
+                    <div
                         className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
                         style={{ minWidth: '100px' }}
                     >
                     {timeLeft[game.player] && `${String(timeLeft[game.player].hours).padStart(2, '0')}:${String(timeLeft[game.player].minutes).padStart(2, '0')}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
                     </div>
-                    <button 
+                    <button
                         className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
                         style={{ minWidth: '100px' }}
                     >
@@ -112,13 +112,13 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
                 </>
                 ) : (
                 <>
-                    <button 
+                    <button
                         className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
                         style={{ minWidth: '100px' }}
                     >
                         {game.action}
                     </button>
-                    <button 
+                    <button
                         className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
                         style={{ minWidth: '100px' }}
                     >
@@ -154,7 +154,7 @@ function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
 }
 
 
-  
+
 function Home() {
     const gameStates: GameState[] = [
         { player: "Alice", wager: "10 P", action: "Start" },
@@ -194,22 +194,22 @@ function Home() {
         const timer = setInterval(() => {
             setTimeLeft(prevTime => {
                 const newTime: { [key: string]: any } = {};
-    
+
                 // eslint-disable-next-line prefer-const
                 for (let player in prevTime) {
                     let { hours, minutes, seconds } = prevTime[player];
-    
+
                     if (seconds < 59) seconds++;
                     else if (minutes < 59) { minutes++; seconds = 0; }
                     else { hours++; minutes = 0; seconds = 0; }
-    
+
                     newTime[player] = { hours, minutes, seconds };
                 }
-    
+
                 return newTime;
             });
         }, 1000);
-    
+
         return () => clearInterval(timer);
     }, []);
 

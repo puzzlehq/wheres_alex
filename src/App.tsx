@@ -37,7 +37,7 @@ function App() {
         <Router>
           <div className="max-w-screen-sm w-full h-[calc(100vh-4rem)]">
             <Routes>
-              <Route path="/new-game" element={<NewGame />} />
+              <Route path="/new-game" element={<NewGame account={account} />} />
               <Route path="/start-wager" element={<StartWager />} />
               <Route path="/hide-alex" element={<HideAlex />} />
               <Route path="/confirm-start-game" element={<ConfirmStartGame account={account}/>} />

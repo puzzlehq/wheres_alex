@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import PuzzleAccount from '../models/account';
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
-import { useRequestCreateEvent } from "@puzzlehq/sdk";
+import { useAccount, useRequestCreateEvent, useRecords } from "@puzzlehq/sdk";
 import { EventType } from '@puzzlehq/types';
 
 function Section() {
@@ -109,23 +109,38 @@ type Props = {
     account: PuzzleAccount;
 };
 
-function KickoffButton({account}: Props) {
+function KickoffButton ( { account }: Props ) {
+
+
     const navigate = useNavigate();
     const location = useLocation();
-    const player_account = account.address;
+    // const player_account = account.address;
     const opponent = location.state?.opponent || "N/A";
     const amount = location.state?.amount || 0;
     const answer = location.state?.answer || "N/A";
     const [gameMultisig, setGameMultisig] = useState<string>("");
     const [eventID, setEventID] = useState<string>("");
     const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
-    const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
+    const { records, request } = useRecords({
+        filter: { programId: 'cflip_gm_aleo_testing_123.aleo', type: 'unspent' }
+    });
+
+    const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent({
         type: EventType.Execute,
         programId: 'cflip_gm_aleo_testing_123.aleo',
         functionId: 'mint',
         fee: 10000,
         inputs: ["10u64", "aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls"]
-    })
+    });
+
+    // useEffect(() => {
+    //     request();
+    // }, []);
+
+    // if (records) {
+    //     console.log(records);
+    // }
+
 
     //     inputs: ["{
 //   owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
@@ -133,26 +148,26 @@ function KickoffButton({account}: Props) {
 //   _nonce: 5625235871236005310515293264000494952576041125138106701418752227259843614760group.public
 // }",
 
-    useEffect(() => {
-        function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
-            // Our logic to generate gameMultisig and seed using hooks to wallet wasm
-            return {
-                gameMultisig: "ms_" + opponent + player_account, // example outputs
-                seed: new Uint8Array(),
-            };
-        }
-        const result = generateGameMultisig(opponent, player_account);
-        setGameMultisig(result.gameMultisig);
-        setSeed(result.seed);
-    }, [opponent, player_account]);
+    // useEffect(() => {
+    //     function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
+    //         // Our logic to generate gameMultisig and seed using hooks to wallet wasm
+    //         return {
+    //             gameMultisig: "ms_" + opponent + player_account, // example outputs
+    //             seed: new Uint8Array(),
+    //         };
+    //     }
+    //     const result = generateGameMultisig(opponent, player_account);
+    //     setGameMultisig(result.gameMultisig);
+    //     setSeed(result.seed);
+    // }, [opponent, player_account]);
 
-    useEffect(() => {
-        if (eventID) {
-            navigate("/game-started", {
-                state: { gameMultisig, eventID }
-            });
-        }
-    }, [eventID, navigate, gameMultisig]);
+    // useEffect(() => {
+    //     if (eventID) {
+    //         navigate("/game-started", {
+    //             state: { gameMultisig, eventID }
+    //         });
+    //     }
+    // }, [eventID, navigate, gameMultisig]);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
@@ -162,7 +177,7 @@ function KickoffButton({account}: Props) {
     }
     return (
         <button
-            onClick={requestCreateEvent}
+            onClick={() => console.log('kickoff')}
             className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap
                         bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
         >
@@ -194,14 +209,8 @@ function BackButton() {
     );
 }
 
-function ConfirmStartGame({account}: Props) {
-    // const account: PuzzleAccount = {
-    //     network: 'aleo',
-    //     chainId: '1',
-    //     address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
-    //     shortenedAddress: '123456'
-    // };
-    const player = account;
+function ConfirmStartGame ( { account }: Props) {
+    console.log(account)
 
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
@@ -210,7 +219,7 @@ function ConfirmStartGame({account}: Props) {
                 <OpponentSection />
                 <WagerSection />
                 <AnswerSection />
-                <KickoffButton account={player} />
+                <KickoffButton account={account}/>
                 <BackButton />
             </div>
         </main>
