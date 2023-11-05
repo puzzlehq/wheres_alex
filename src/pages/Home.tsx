@@ -5,11 +5,13 @@ import { useNavigate, Route, Routes  } from 'react-router-dom';
 import AcceptGame from '../pages/AcceptGame';
 import FinishGame from './FinishGame';
 import FinishGameClaim from './FinishGameClaim';
+import RenegUnacceptedGame from './RenegUnacceptedGame';
 
 <Routes>
   <Route path='/accept-game' element={<AcceptGame />} />
   <Route path='/finish-game' element={<FinishGame />} />
   <Route path='/finish-game-claim' element={<FinishGameClaim />} />
+  <Route path='/reneg-unaccepted-game' element={<RenegUnacceptedGame />} />
 </Routes>
 
 function TotalWinnings() {
@@ -161,23 +163,25 @@ type LiveGameProps = {
 function LiveGameItem({ game, timeLeft }: LiveGameProps) {
     const navigate = useNavigate(); // Hook to navigate
 
-    const handleStartClick = () => {
+    const handleRenegClick = () => {
         // Navigate to accept-game and pass the challenger and wager as state
-        navigate('/accept-game', { state: { challenger: game.player, wager: game.wager } });
+        navigate('/reneg-unaccepted-game', { state: { challenger: game.player, wager: game.wager } });
     };
+
+    // Function to handle the ping button click
+    const handlePingClick = () => {
+        // You might want to replace 'ENTER_PHONE_NUMBER' with the actual number if needed
+        const phoneNumber = 'ENTER_PHONE_NUMBER'; // Leave this as is if you want the user to enter the number.
+        const message = `I'm betting you ${game.wager} that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
+        const encodedMessage = encodeURIComponent(message);
+        const smsHref = `sms:${phoneNumber}?&body=${encodedMessage}`;
+        
+        window.location.href = smsHref;
+    };
+
 
     const renderActionButton = () => {
         switch (game.action) {
-            case 'Start':
-                return (
-                    <button 
-                        onClick={handleStartClick}
-                        className="text-black flex items-center justify-center text-xs font-extrabold bg-yellow-300 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
-                        style={{ minWidth: '100px' }}
-                    >
-                        {game.action}
-                    </button>
-                );
             case 'Claim':
                 // Assuming 'Claim' needs a special button not shown in this snippet
                 // This is just an example
@@ -189,12 +193,14 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
                         >
                         {timeLeft[game.player] && `${String(timeLeft[game.player].hours).padStart(2, '0')}:${String(timeLeft[game.player].minutes).padStart(2, '0')}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
                         </div>
-                        <button 
+                        <a
+                            href="#"
+                            onClick={handlePingClick}
                             className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
                             style={{ minWidth: '100px' }}
                         >
                             Ping
-                        </button>
+                        </a>
                     </>
                 );
             default:
@@ -202,17 +208,20 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
                 return (
                     <>
                         <button 
-                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
-                        style={{ minWidth: '100px' }}
+                            onClick={handleRenegClick}
+                            className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
+                            style={{ minWidth: '100px' }}
                         >
                             {game.action}
                         </button>
-                        <button 
+                        <a
+                            href="#"
+                            onClick={handlePingClick} 
                             className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content]"
                             style={{ minWidth: '100px' }}
                         >
                             Ping
-                        </button>
+                        </a>
                     </>
                 );
         }

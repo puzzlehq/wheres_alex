@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import PuzzleAccount from '../models/account';
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
-import { useRequestCreateEvent } from "@puzzlehq/sdk";
+// import { useRequestCreateEvent } from "@puzzlehq/sdk";
 
 function Section() {
     return (

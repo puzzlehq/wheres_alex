@@ -52,6 +52,9 @@ devDependencies:
   postcss:
     specifier: ^8.4.29
     version: 8.4.29
+  sdk:
+    specifier: link:@types/puzzlehq/sdk
+    version: link:@types/puzzlehq/sdk
   tailwindcss:
     specifier: ^3.3.3
     version: 3.3.3

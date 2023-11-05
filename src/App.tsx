@@ -16,6 +16,7 @@ import { useAccount, useConnect } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame.js';
 import FinishGame from './pages/FinishGame.js';
 import FinishGameClaim from './pages/FinishGameClaim.js';
+import RenegUnacceptedGame from './pages/RenegUnacceptedGame.js';
 
 
 
@@ -50,6 +51,7 @@ function App() {
               <Route path='/accept-game' element={<AcceptGame />} />
               <Route path='/finish-game' element={<FinishGame />} />
               <Route path='/finish-game-claim' element={<FinishGameClaim />} />
+              <Route path='/reneg-unaccepted-game' element={<RenegUnacceptedGame />} />
               <Route
                 path="/"
                 element={ !loading && isConnected ? <Home /> : <Welcome /> }
