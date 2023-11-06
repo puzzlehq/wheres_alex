@@ -212,6 +212,7 @@ claim_total_pot (
     private revealed_answer_record: RevealedAnswer,
     private puzz_record: puzzle_token.leo/Puzz.record,
 )
+```
 
 
 ```
