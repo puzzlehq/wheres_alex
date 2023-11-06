@@ -7,6 +7,12 @@ import inWeedsImg from '../assets/in_weeds.svg';
 import { useAccount, useRequestCreateEvent, useRecords } from "@puzzlehq/sdk";
 import { EventType } from '@puzzlehq/types';
 
+export enum RecordType {
+  unspent = 'unspent',
+  spent = 'spent',
+  all = 'all',
+}
+
 function Section() {
     return (
       <section className="justify-center items-center bg-pink-300 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
@@ -121,20 +127,20 @@ function KickoffButton ( { account }: Props ) {
     const [gameMultisig, setGameMultisig] = useState<string>("");
     const [eventID, setEventID] = useState<string>("");
     const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
+    // const [records, setRecords] = useState([]);
     // const { records, requestRecords } = useRecords({
     //     filter: { programId: 'cflip_gm_aleo_testing_123.aleo', type: 'unspent' }
     // });
     const { fetchPage, records, loading, error, pageCount } = useRecords({
         filter: {
-            programId: 'cflip_gm_aleo_testing_123.aleo',
-            type: 'unspent',
+            programId: 'cflip_testing_123_token.aleo',
+            type: RecordType.unspent,
         },
-        page: 1
     });
 
     useEffect(() => {
         fetchPage();
-    }, [0]);
+    }, []);
 
     const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent({
         type: EventType.Execute,
@@ -143,10 +149,6 @@ function KickoffButton ( { account }: Props ) {
         fee: 10000,
         inputs: ["10u64", "aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls"]
     });
-
-    // useEffect(() => {
-    //     request();
-    // }, []);
 
     if (records) {
         console.log(records);
