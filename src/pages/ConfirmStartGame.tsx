@@ -6,6 +6,7 @@ import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
 import { useAccount, useRequestCreateEvent, useRecords, CreateEventRequestData } from "@puzzlehq/sdk";
 import { EventType, Record } from '@puzzlehq/types';
+import { PrivateKey } from '@puzzlehq/aleo-wasm-web';
 
 export enum RecordType {
   unspent = 'unspent',
@@ -132,6 +133,9 @@ function KickoffButton ( { account }: Props ) {
     const [msg, setMsg] = useState<string>("1field");
     const [mOfN, setMofN] = useState<string>("1u8");
     const [nonce, setNonce] = useState<string>("1field");
+    const [msPrivKey, setMsPrivKey] = useState<string>("");
+    const [msViewKey, setMsViewKey] = useState<string>("");
+    const [msAddr, setMsAddr] = useState<string>("");
 
     const { fetchPage, records, loading, error, pageCount } = useRecords({
         filter: {
@@ -144,6 +148,27 @@ function KickoffButton ( { account }: Props ) {
         fetchPage();
     }, []);
 
+    const generateRandomSeed = (length = 32) => {
+        const array = new Uint8Array(length);
+        crypto.getRandomValues(array);
+        return array;
+    }
+
+    const genPrivateKey = () => {
+        // todo: probably store this somewhere/send off to wallet?
+
+        try {
+            const seed = generateRandomSeed();
+            const msPk = PrivateKey.from_seed_unchecked(seed);
+            const msVk = msPk.to_view_key();
+            const msAddr = msPk.to_address();
+
+            return [msPk, msVk, msAddr];
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const eventRequestData: CreateEventRequestData = {
         type: eventType,
         programId: programId,
@@ -155,6 +180,7 @@ function KickoffButton ( { account }: Props ) {
     const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent(eventRequestData);
 
     const extractAmountFromRecord = (amountStr: string): number => {
+        genPrivateKey()
         const u64Index = amountStr.indexOf("u64");
 
         if (u64Index !== -1) {
@@ -164,7 +190,6 @@ function KickoffButton ( { account }: Props ) {
         // todo: return you can't play, need puzz credits amounting to wager!
         return 0;
     }
-
     // get PuzzRecord >= wager
     useEffect(() => {
         if (records && !wagerRecord) {
@@ -187,9 +212,22 @@ function KickoffButton ( { account }: Props ) {
         }
     }, [eventId, navigate, gameMultisig]);
 
+    const propose_game = () => {
+        const [msPrivKey, msViewKey, msAddr] = genPrivateKey();
+        if (msPrivKey && msViewKey && msAddr) {
+            setMsPrivKey(msPrivKey.to_string());
+            setMsViewKey(msViewKey.to_string());
+            setMsAddr(msAddr.to_string());
+            requestCreateEvent();
+        }
+        else {
+            console.error("Failed to create ms keys");
+        }
+    }
+
     return (
         <button
-            onClick={requestCreateEvent}
+            onClick={propose_game}
             className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap
                         bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
         >

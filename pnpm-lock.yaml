@@ -4,6 +4,9 @@ dependencies:
   '@aleohq/sdk':
     specifier: ^0.6.6
     version: 0.6.6
+  '@puzzlehq/aleo-wasm-web':
+    specifier: ^0.6.1
+    version: 0.6.1
   '@puzzlehq/sdk':
     specifier: 0.1.0
     version: 0.1.0(@types/react@18.2.21)(react-dom@18.2.0)
@@ -689,6 +692,10 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
+
+  /@puzzlehq/aleo-wasm-web@0.6.1:
+    resolution: {integrity: sha512-R4qIHg8ftLi1FTN7lzcRXcMEsB3OGgjXNob7AA+zFNFIVw3WB7tR1xr6l3AY/6c4GywLSgwWZZX6QWGuQN6iZQ==}
+    dev: false
 
   /@puzzlehq/sdk@0.1.0(@types/react@18.2.21)(react-dom@18.2.0):
     resolution: {integrity: sha512-GIZkCTPt1o50ugIei2ETh6PGsvA0oT/0H2EDgeppcPox2nMjuEVNpwZeaf/XMLFtYYKjWj56GZ34nQjD1rokTw==}

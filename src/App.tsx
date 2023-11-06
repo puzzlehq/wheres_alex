@@ -13,6 +13,7 @@ import GameStarted from './pages/GameStarted.js';
 import { Header } from './components/header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
+import initWasm, {init_panic_hook}  from "@puzzlehq/aleo-wasm-web";
 
 
 function App() {
@@ -27,6 +28,22 @@ function App() {
   //   address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
   //   shortenedAddress: 'aleo1as..tuvr6'
   // };
+
+  // Initialize wasm
+  async function setup() {
+    try {
+      console.log('trying to initiate wasm...');
+      console.log(initWasm);
+      // todo: figure out a better solution here?
+      await initWasm('../node_modules/@puzzlehq/aleo-wasm-web/aleo_wasm_bg.wasm');
+      console.log('wasm initiated...');
+      init_panic_hook();
+    } catch (error) {
+      console.error('Error initializing wasm:', error);
+    }
+  }
+
+  setup()
 
   return (
     <div className="App min-h-screen bg-yellow-500 flex justify-center">
