@@ -127,7 +127,7 @@ function KickoffButton ( { account }: Props ) {
     const [gameMultisig, setGameMultisig] = useState<string>("");
     const [eventID, setEventID] = useState<string>("");
     const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
-    // const [records, setRecords] = useState([]);
+    const [wagerRecord, setWagerRecord] = useState([]);
     // const { records, requestRecords } = useRecords({
     //     filter: { programId: 'cflip_gm_aleo_testing_123.aleo', type: 'unspent' }
     // });
@@ -150,10 +150,27 @@ function KickoffButton ( { account }: Props ) {
         inputs: ["10u64", "aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls"]
     });
 
-    if (records) {
-        console.log(records);
+    const extractAmountFromRecord = (amountStr: string): number => {
+        if (amountStr.endsWith("u64.private")) {
+            const numericPart = amountStr.slice(0, -11); // Remove "u64.private" from the end
+            return parseInt(numericPart, 10);
+        }
+        return 0;
     }
 
+
+    // logic to get puzz record with enough amount to wager
+    useEffect(() => {
+        if (records) {
+            for (let record of records) {
+                let recordAmount = extractAmountFromRecord(record.data.amount);
+                if (recordAmount >= amount) {
+                    setWagerRecord(record);
+                    break;  // Exit the loop once a matching record is found
+                }
+            }
+        }
+    }, [records, amount]);
 
     //     inputs: ["{
 //   owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
@@ -222,7 +239,6 @@ function BackButton() {
 }
 
 function ConfirmStartGame ( { account }: Props) {
-    console.log(account)
 
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
