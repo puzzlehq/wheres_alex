@@ -116,18 +116,15 @@ type Props = {
 };
 
 function KickoffButton ( { account }: Props ) {
-
-
     const navigate = useNavigate();
     const location = useLocation();
-    const opponent = location.state?.opponent || "aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww";
-    const amount = location.state?.amount || 1;
-    const answer = location.state?.answer || "1field";
+    const opponent = "aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww";
+    const amount = 10;
+    const answer = location.state?.answer === "In Weeds" ? "0field" : "1field";
     const [msSeed, setMsSeed] = useState<string>("1field")
     const [gameMultisig, setGameMultisig] = useState<string>("aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu");
     const [programId, setProgramId] = useState<string>("cflip_gm_aleo_testing_123.aleo");
     const [functionId, setFunctionId] = useState("propose_game");
-    const [eventID, setEventID] = useState<string>("");
     const [wagerRecord, setWagerRecord] = useState<string>("");
     const [eventType, setEventType] = useState(
         EventType.Execute
@@ -152,10 +149,10 @@ function KickoffButton ( { account }: Props ) {
         programId: programId,
         functionId: functionId,
         fee: 1.5,
-        inputs: [msSeed, gameMultisig, opponent, wagerRecord, amount + "u64", answer, "sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg", msg, mOfN, nonce]
+        inputs: [msSeed, gameMultisig, opponent, wagerRecord, amount + "u64", "1field", "sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg", msg, mOfN, nonce]
     };
 
-    const { requestCreateEvent, reqEventId, requestEventError, requestEventLoading } = useRequestCreateEvent(eventRequestData);
+    const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent(eventRequestData);
 
     const extractAmountFromRecord = (amountStr: string): number => {
         const u64Index = amountStr.indexOf("u64");
@@ -182,32 +179,13 @@ function KickoffButton ( { account }: Props ) {
         }
     }, [records, amount, wagerRecord]);
 
-    // useEffect(() => {
-    //     function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
-    //         // Our logic to generate gameMultisig and seed using hooks to wallet wasm
-    //         return {
-    //             gameMultisig: "ms_" + opponent + player_account, // example outputs
-    //             seed: new Uint8Array(),
-    //         };
-    //     }
-    //     const result = generateGameMultisig(opponent, player_account);
-    //     setGameMultisig(result.gameMultisig);
-    //     setSeed(result.seed);
-    // }, [opponent, player_account]);
-
-    // useEffect(() => {
-    //     if (eventID) {
-    //         navigate("/game-started", {
-    //             state: { gameMultisig, eventID }
-    //         });
-    //     }
-    // }, [eventID, navigate, gameMultisig]);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    function proposeGame(opponent: string, player_account: string, gameMultisig: string, seed: Uint8Array, amount: number, answer: string) {
-        const result = opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer;
-        setEventID(result);
-    }
+    useEffect(() => {
+        if (eventId) {
+            navigate("/game-started", {
+                state: { gameMultisig, eventId }
+            });
+        }
+    }, [eventId, navigate, gameMultisig]);
 
     return (
         <button
