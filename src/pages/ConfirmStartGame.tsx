@@ -4,8 +4,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import PuzzleAccount from '../models/account';
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
-import { useAccount, useRequestCreateEvent, useRecords } from "@puzzlehq/sdk";
-import { EventType } from '@puzzlehq/types';
+import { useAccount, useRequestCreateEvent, useRecords, CreateEventRequestData } from "@puzzlehq/sdk";
+import { EventType, Record } from '@puzzlehq/types';
 
 export enum RecordType {
   unspent = 'unspent',
@@ -120,63 +120,67 @@ function KickoffButton ( { account }: Props ) {
 
     const navigate = useNavigate();
     const location = useLocation();
-    // const player_account = account.address;
-    const opponent = location.state?.opponent || "N/A";
-    const amount = location.state?.amount || 0;
-    const answer = location.state?.answer || "N/A";
-    const [gameMultisig, setGameMultisig] = useState<string>("");
+    const opponent = location.state?.opponent || "aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww";
+    const amount = location.state?.amount || 1;
+    const answer = location.state?.answer || "1field";
+    const [msSeed, setMsSeed] = useState<string>("1field")
+    const [gameMultisig, setGameMultisig] = useState<string>("aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu");
+    const [programId, setProgramId] = useState<string>("cflip_gm_aleo_testing_123.aleo");
+    const [functionId, setFunctionId] = useState("propose_game");
     const [eventID, setEventID] = useState<string>("");
-    const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
-    const [wagerRecord, setWagerRecord] = useState([]);
-    // const { records, requestRecords } = useRecords({
-    //     filter: { programId: 'cflip_gm_aleo_testing_123.aleo', type: 'unspent' }
-    // });
+    const [wagerRecord, setWagerRecord] = useState<string>("");
+    const [eventType, setEventType] = useState(
+        EventType.Execute
+    );
+    const [msg, setMsg] = useState<string>("1field");
+    const [mOfN, setMofN] = useState<string>("1u8");
+    const [nonce, setNonce] = useState<string>("1field");
+
     const { fetchPage, records, loading, error, pageCount } = useRecords({
         filter: {
             programId: 'cflip_testing_123_token.aleo',
             type: RecordType.unspent,
         },
-    });
+    }) as { fetchPage: () => void, records: Record[], loading: boolean, error: string, pageCount: number };
 
     useEffect(() => {
         fetchPage();
     }, []);
 
-    const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent({
-        type: EventType.Execute,
-        programId: 'cflip_gm_aleo_testing_123.aleo',
-        functionId: 'mint',
-        fee: 10000,
-        inputs: ["10u64", "aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls"]
-    });
+    const eventRequestData: CreateEventRequestData = {
+        type: eventType,
+        programId: programId,
+        functionId: functionId,
+        fee: 1.5,
+        inputs: [msSeed, gameMultisig, opponent, wagerRecord, amount + "u64", answer, "sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg", msg, mOfN, nonce]
+    };
+
+    const { requestCreateEvent, reqEventId, requestEventError, requestEventLoading } = useRequestCreateEvent(eventRequestData);
 
     const extractAmountFromRecord = (amountStr: string): number => {
-        if (amountStr.endsWith("u64.private")) {
-            const numericPart = amountStr.slice(0, -11); // Remove "u64.private" from the end
+        const u64Index = amountStr.indexOf("u64");
+
+        if (u64Index !== -1) {
+            const numericPart = amountStr.slice(0, u64Index);
             return parseInt(numericPart, 10);
         }
+        // todo: return you can't play, need puzz credits amounting to wager!
         return 0;
     }
 
-
-    // logic to get puzz record with enough amount to wager
+    // get PuzzRecord >= wager
     useEffect(() => {
-        if (records) {
-            for (let record of records) {
-                let recordAmount = extractAmountFromRecord(record.data.amount);
+        if (records && !wagerRecord) {
+            for (const record of records) {
+                const recordAmount = extractAmountFromRecord(record.data.amount);
                 if (recordAmount >= amount) {
-                    setWagerRecord(record);
-                    break;  // Exit the loop once a matching record is found
+                    const recordString = record.plaintext;
+                    setWagerRecord(recordString);
+                    break;
                 }
             }
         }
-    }, [records, amount]);
-
-    //     inputs: ["{
-//   owner: aleo16hf8hfpwasnn9cf7k2c0dllc56nn7qt547qxgvgwu6pznw4trvqsx68kls.private,
-//   amount: 10u64.private,
-//   _nonce: 5625235871236005310515293264000494952576041125138106701418752227259843614760group.public
-// }",
+    }, [records, amount, wagerRecord]);
 
     // useEffect(() => {
     //     function generateGameMultisig(opponent: string, player_account: string): { gameMultisig: string; seed: Uint8Array; } {
@@ -204,6 +208,7 @@ function KickoffButton ( { account }: Props ) {
         const result = opponent + player_account + gameMultisig + seed.toString() + amount.toString() + answer;
         setEventID(result);
     }
+
     return (
         <button
             onClick={requestCreateEvent}
