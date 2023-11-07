@@ -1,3 +1,4 @@
+import Wager from "../components/Wager";
 
 type AcceptGameProps = {
   challenger: string;
@@ -6,39 +7,23 @@ type AcceptGameProps = {
 
 const AcceptGame = ({ challenger, wager }: AcceptGameProps) => {
   return (
-    <div className="flex flex-col gap-4 justify-center">
-      <div className="p-4 w-full font-extrabold text-3xl text-center bg-[#FFAED5]">
+    <div className="flex flex-col gap-4 justify-center h-full w-full">
+      <div className="p-4 w-full font-extrabold text-5xl text-center bg-[#FFAED5] text-black">
         YOU'VE BEEN CHALLENGED!
       </div>
-      <div className="flex flex-col gap-1 justify-center">
-        <div className="rounded-full bg-[#FCFCFC] font-semibold text-xs">
-          {challenger}
+      <div className="flex flex-col gap-1 items-center">
+        <div className="rounded-full bg-[#FCFCFC] font-bold text-md px-4 py-2 text-black">
+          {challenger ?? 'Jonathan'}
         </div>
-        <p className="text-white">is betting you can't find Alex!</p>
+        <p className="text-white font-bold">is betting you can't find Alex!</p>
       </div>
-      <div className="flex flex-col gap-0">
-        <div className="bg-[#4EC331] text-xs">
-          WAGER
-        </div>
-        <div className="flex border-[3px] border-[#4EC331] p-1 items-center">
-          <p className="text-3xl text-[#4EC331]">
-            {wager}
-          </p>
-          <div className="flex flex-col gap-0">
-            <p className="text-sm text-[#4EC331]">
-              Puzzle
-              </p>
-            <p className="text-sm text-[#4EC331]">
-              Pieces
-            </p>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col w-full">
-        <button className="w-full rounded-full bg-[#4EC331] text-3xl p-1">
+      <Wager wagerAmount={wager ?? 5000}/>
+      <div className="flex flex-col flex-grow"/>
+      <div className="flex flex-col w-full gap-2">
+        <button className="w-full rounded-full bg-[#4EC331] text-4xl font-extrabold p-3 text-black">
           ACCEPT WAGER
         </button>
-        <button className="w-full rounded-full bg-[#868686] text-3xl p-1">
+        <button className="w-full rounded-full bg-[#868686] text-4xl font-extrabold p-3 text-black">
           REJECT
         </button>
       </div>

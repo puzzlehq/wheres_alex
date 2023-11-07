@@ -41,7 +41,7 @@ function App() {
         {isConnected && account?.address && <Header isConnected={isConnected} address={account?.address} />}
 
         <Router>
-          <div className="max-w-screen-sm w-full h-[calc(100vh-4rem)]">
+          <div className="max-w-screen-sm w-full h-full p-4">
             <Routes>
               <Route path="/new-game" element={<NewGame />} />
               <Route path="/start-wager" element={<StartWager />} />
