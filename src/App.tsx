@@ -33,7 +33,6 @@ function App() {
   async function setup() {
     try {
       console.log('trying to initiate wasm...');
-      console.log(initWasm);
       // todo: figure out a better solution here?
       await initWasm('../node_modules/@puzzlehq/aleo-wasm-web/aleo_wasm_bg.wasm');
       console.log('wasm initiated...');

@@ -145,7 +145,11 @@ function KickoffButton ( { account }: Props ) {
     }) as { fetchPage: () => void, records: Record[], loading: boolean, error: string, pageCount: number };
 
     useEffect(() => {
-        fetchPage();
+        try {
+            fetchPage();
+        } catch (e) {
+            console.log(e);
+        }
     }, []);
 
     const generateRandomSeed = (length = 32) => {
@@ -160,6 +164,7 @@ function KickoffButton ( { account }: Props ) {
         try {
             const seed = generateRandomSeed();
             const msPk = PrivateKey.from_seed_unchecked(seed);
+            console.log(msPk.to_string())
             const msVk = msPk.to_view_key();
             const msAddr = msPk.to_address();
 
@@ -180,7 +185,6 @@ function KickoffButton ( { account }: Props ) {
     const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent(eventRequestData);
 
     const extractAmountFromRecord = (amountStr: string): number => {
-        genPrivateKey()
         const u64Index = amountStr.indexOf("u64");
 
         if (u64Index !== -1) {
@@ -193,13 +197,18 @@ function KickoffButton ( { account }: Props ) {
     // get PuzzRecord >= wager
     useEffect(() => {
         if (records && !wagerRecord) {
-            for (const record of records) {
-                const recordAmount = extractAmountFromRecord(record.data.amount);
-                if (recordAmount >= amount) {
-                    const recordString = record.plaintext;
-                    setWagerRecord(recordString);
-                    break;
+            try {
+                for (const record of records) {
+                    const recordAmount = extractAmountFromRecord(record.data.amount);
+                    if (recordAmount >= amount) {
+                        const recordString = record.plaintext;
+                        console.log(recordString);
+                        setWagerRecord(recordString);
+                        break;
+                    }
                 }
+            } catch (error) {
+                console.log(error);
             }
         }
     }, [records, amount, wagerRecord]);
