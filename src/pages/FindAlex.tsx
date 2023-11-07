@@ -31,7 +31,7 @@ function Navigation() {
 function Section() {
     return (
       <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
-        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> HIDE ALEX </h1>
+        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> FIND ALEX </h1>
       </section>
     );
 }
