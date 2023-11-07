@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       dAppName='Build-A-Token'
       dAppDescription='Create and manage your own custom token.'
       dAppUrl='http://localhost:5173'
-      dAppIconURL='http://link.to/assets/your_logo.png'
+      dAppIconURL='https://i.imgur.com/Vf6MDw9.png'
     />
   </div>
 );
