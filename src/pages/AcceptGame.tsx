@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+=======
+import Wager from "../components/Wager";
+>>>>>>> 9104b1eaa5c833c176adc136fe7a9f43523e08d3
 
 
 // type AcceptGameProps = {
@@ -26,6 +30,7 @@ function OpponentSection() {
       : opponent;
 
   return (
+<<<<<<< HEAD
     <div className="text-white text-center text-xs font-bold self-center mt-5 whitespace-nowrap">
       You are challenging
       <div className="border-[color:var(--White,#FCFCFC)] bg-zinc-50 self-center flex w-[155px] max-w-full flex-col mt-1.5 mb-1.5 px-5 py-4 rounded-[200px] border-2 border-solid">
@@ -54,6 +59,27 @@ function WagerSection() {
         <div className="text-lime-600 text-center text-base font-bold leading-4 self-stretch">
           Puzzle Pieces
         </div>
+=======
+    <div className="flex flex-col gap-4 justify-center h-full w-full">
+      <div className="p-4 w-full font-extrabold text-5xl text-center bg-[#FFAED5] text-black">
+        YOU'VE BEEN CHALLENGED!
+      </div>
+      <div className="flex flex-col gap-1 items-center">
+        <div className="rounded-full bg-[#FCFCFC] font-bold text-md px-4 py-2 text-black">
+          {challenger ?? 'Jonathan'}
+        </div>
+        <p className="text-white font-bold">is betting you can't find Alex!</p>
+      </div>
+      <Wager wagerAmount={wager ?? 5000}/>
+      <div className="flex flex-col flex-grow"/>
+      <div className="flex flex-col w-full gap-2">
+        <button className="w-full rounded-full bg-[#4EC331] text-4xl font-extrabold p-3 text-black">
+          ACCEPT WAGER
+        </button>
+        <button className="w-full rounded-full bg-[#868686] text-4xl font-extrabold p-3 text-black">
+          REJECT
+        </button>
+>>>>>>> 9104b1eaa5c833c176adc136fe7a9f43523e08d3
       </div>
     </div>
   );
