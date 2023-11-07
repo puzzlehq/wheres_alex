@@ -17,6 +17,7 @@ import AcceptGame from './pages/AcceptGame.js';
 import FinishGame from './pages/FinishGame.js';
 import FinishGameClaim from './pages/FinishGameClaim.js';
 import RenegUnacceptedGame from './pages/RenegUnacceptedGame.js';
+import FindAlex from './pages/FindAlex.js';
 
 
 
@@ -52,6 +53,7 @@ function App() {
               <Route path='/finish-game' element={<FinishGame />} />
               <Route path='/finish-game-claim' element={<FinishGameClaim />} />
               <Route path='/reneg-unaccepted-game' element={<RenegUnacceptedGame />} />
+              <Route path='/find-alex' element={<FindAlex />} />
               <Route
                 path="/"
                 element={ !loading && isConnected ? <Home /> : <Welcome /> }

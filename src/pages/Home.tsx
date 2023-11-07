@@ -58,17 +58,17 @@ function NotificationItem({ notification }: NotificationProps) {
 
     const handleStartClick = () => {
         // Navigate to accept-game and pass the challenger and wager as state
-        navigate('/accept-game', { state: { challenger: notification.player, wager: notification.wager } });
+        navigate('/accept-game', { state: { gameMultisig: notification.gameMultisig, opponent: notification.player, amount: notification.wager } });
     };
 
     const handleFinishClick = () => {
         // Navigate to accept-game and pass the challenger and wager as state
-        navigate('/finish-game', { state: { challenger: notification.player, wager: notification.wager } });
+        navigate('/finish-game', { state: { gameMultisig: notification.gameMultisig, opponent: notification.player, amount: notification.wager } });
     };
 
     const handleFinishClaimClick = () => {
         // Navigate to accept-game and pass the challenger and wager as state
-        navigate('/finish-game-claim', { state: { challenger: notification.player, wager: notification.wager } });
+        navigate('/finish-game-claim', { state: { gameMultisig: notification.gameMultisig, opponent: notification.player, amount: notification.wager } });
     };
 
     const renderActionButton = () => {
@@ -165,7 +165,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
 
     const handleRenegClick = () => {
         // Navigate to accept-game and pass the challenger and wager as state
-        navigate('/reneg-unaccepted-game', { state: { challenger: game.player, wager: game.wager } });
+        navigate('/reneg-unaccepted-game', { state: { gameMultisig: game.gameMultisig, opponent: game.player, amount: game.wager } });
     };
 
     // Function to handle the ping button click
@@ -269,12 +269,12 @@ function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
   
 function Home() {
     const gameStates: GameState[] = [
-        { player: "Alice", wager: "10 P", action: "Start" },
-        { player: "Bob", wager: "20 P", action: "Finish" },
-        { player: "Charlie", wager: "30 P", action: "Reneg" },
-        { player: "David", wager: "40 P", action: "Delete" },
-        { player: "Eva", blockheight: 10500, wager: "50 P", action: "Claim" },
-        { player: "Frank", blockheight: 105000, wager: "60 P", action: "Claim" }
+        { gameMultisig: "aleo1", player: "Alice", wager: "10 P", action: "Start" },
+        { gameMultisig: "aleo2", player: "Bob", wager: "20 P", action: "Finish" },
+        { gameMultisig: "aleo3", player: "Charlie", wager: "30 P", action: "Reneg" },
+        { gameMultisig: "aleo4", player: "David", wager: "40 P", action: "Delete" },
+        { gameMultisig: "aleo5", player: "Eva", blockheight: 10500, wager: "50 P", action: "Claim" },
+        { gameMultisig: "aleo6", player: "Frank", blockheight: 105000, wager: "60 P", action: "Claim" }
     ];
 
     const aleo_blockheight: number = 50000;
