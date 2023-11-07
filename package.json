@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@aleohq/sdk": "^0.6.6",
-    "@puzzlehq/aleo-wasm-web": "^0.6.1",
+    "@puzzlehq/aleo-wasm-web": "../../sdk/wasm/pkg/web-wasm",
     "@puzzlehq/sdk": "0.1.0",
     "@puzzlehq/types": "^1.0.3",
     "html5-qrcode": "^2.3.8",

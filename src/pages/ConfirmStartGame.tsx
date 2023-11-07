@@ -14,6 +14,8 @@ export enum RecordType {
   all = 'all',
 }
 
+const textEncoder = new TextEncoder();
+
 function Section() {
     return (
       <section className="justify-center items-center bg-pink-300 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
@@ -164,7 +166,36 @@ function KickoffButton ( { account }: Props ) {
         try {
             const seed = generateRandomSeed();
             const msPk = PrivateKey.from_seed_unchecked(seed);
-            console.log(msPk.to_string())
+            console.log(msPk.to_string(), "BEFORE TO SEED");
+            const msSeed = msPk.to_seed();
+            console.log(msSeed, "original ms Seed");
+            const bigNumberString = "8001202823281487421551309151316182048026650507186430279913233551596160478554";
+            // In JavaScript, you convert it to a BigInt since it's too large for standard Number types.
+            const bigInt = BigInt(bigNumberString);
+
+            // Convert the BigInt to a byte array (Uint8Array).
+            // Note: You need to determine the correct byte length for your specific case.
+            const byteLength = 32; // Assuming a 256-bit field, change this to your field size.
+            const byteArray = new Uint8Array(byteLength);
+
+            // Fill the byte array with the value from the BigInt.
+            // Fill the byte array with the value from the BigInt in big-endian order.
+            for (let i = 0; i < byteLength; i++) {
+                byteArray[byteLength - i - 1] = Number((bigInt >> BigInt(8 * i)) & BigInt(0xFF));
+            }
+
+            console.log(byteArray)
+            console.log(seed)
+
+            const arraysAreEqual = (a, b) => a.length === b.length && a.every((value, index) => value === b[index]);
+
+            console.log(arraysAreEqual(byteArray, seed));
+
+            const newPk = PrivateKey.from_seed_unchecked(byteArray);
+            console.log(newPk.to_string(), 'pk after');
+
+
+
             const msVk = msPk.to_view_key();
             const msAddr = msPk.to_address();
 
