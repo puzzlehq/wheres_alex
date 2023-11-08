@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { Html5Qrcode } from 'html5-qrcode';
 import qrImg from '../assets/qrscanner.svg';
 import { useAccount } from '@puzzlehq/sdk';
-import Nav from '../components/Nav';
-import PageHeader from '../components/PageHeader';
+import Nav from '../../components/Nav';
+import PageHeader from '../../components/PageHeader';
 
 interface PasteyQRProps {
   setOpponent: (address: string) => void;
@@ -63,7 +63,7 @@ function PasteyQR({ setOpponent, opponent }: PasteyQRProps) {
     <div className='flex w-full flex-col items-center'>
       <input
         type='text'
-        className='mt-5 w-full self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] py-7 pl-3.5 pr-5 text-sm font-semibold leading-4 text-white max-md:mr-px'
+        className='mt-5 w-full self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] py-7 pl-3.5 pr-5 text-sm font-semibold leading-4 text-primary-white max-md:mr-px'
         placeholder='Enter Wallet Address'
         id='opponent'
         value={opponent}
@@ -74,7 +74,7 @@ function PasteyQR({ setOpponent, opponent }: PasteyQRProps) {
         {/* Use flex container here */}
         <button
           onClick={handlePasteFromClipboard}
-          className='mt-3 w-[197px] max-w-full self-center rounded-[200px] bg-gray px-5 py-3 text-center text-xs font-extrabold text-black'
+          className='mt-3 w-[197px] max-w-full self-center rounded-[200px] bg-primary-gray px-5 py-3 text-center text-xs font-extrabold text-primary-black'
         >
           PASTE FROM CLIPBOARD
         </button>
@@ -127,11 +127,11 @@ function NextButton({ opponent }: NextButtonProps) {
   return (
     <button
       onClick={navigateToHideAlex}
-      className={`mt-24 w-full self-center self-stretch whitespace-nowrap rounded-[200px] p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10
+      className={`mt-24 w-full self-center self-stretch whitespace-nowrap rounded-[200px] p-5 text-center text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px max-md:mt-10
           ${
             opponent
-              ? 'bg-green hover:bg-green'
-              : 'cursor-not-allowed bg-green bg-opacity-20'
+              ? 'bg-primary-green hover:bg-primary-green'
+              : 'cursor-not-allowed bg-primary-green bg-opacity-20'
           }
           `}
       disabled={!opponent}
@@ -151,7 +151,7 @@ function NewGame() {
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
         <Nav step={1} opponent={opponent} answer='' />
-        <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-blue' />
+        <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
         <PasteyQR setOpponent={setOpponent} opponent={opponent} />
         <NextButton opponent={opponent} />
       </div>

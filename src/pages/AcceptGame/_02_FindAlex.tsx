@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, SetStateAction } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import PageHeader from '../components/PageHeader';
-import Nav from '../components/Nav';
-import ChooseAlexLocation from '../components/ChooseAlexLocation';
+import PageHeader from '../../components/PageHeader';
+import Nav from '../../components/Nav';
+import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 
 function FindAlex() {
   const location = useLocation();
@@ -37,7 +37,7 @@ function FindAlex() {
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex h-full w-full flex-col items-center bg-neutral-900 px-5'>
         <Nav step={2} answer={answer} opponent={opponent} />
-        <PageHeader bg='bg-blue' text='FIND ALEX' />
+        <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
         <ChooseAlexLocation
           handleButtonClick={handleButtonClick}
           opponent={opponent}
@@ -47,9 +47,9 @@ function FindAlex() {
         <button
           onClick={navigateToStartWager}
           disabled={!answer}
-          className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-black
-            ${!answer ? 'bg-opacity-40' : 'hover:bg-green'}
-            w-full self-stretch rounded-[200px] bg-green p-5 max-md:ml-px max-md:mt-10`}
+          className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-primary-black
+            ${!answer ? 'bg-opacity-40' : 'hover:bg-primary-green'}
+            w-full self-stretch rounded-[200px] bg-primary-green p-5 max-md:ml-px max-md:mt-10`}
         >
           NEXT
         </button>

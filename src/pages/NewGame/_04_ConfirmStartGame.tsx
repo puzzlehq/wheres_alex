@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import PuzzleAccount from '../models/account';
-import Opponent from '../components/Opponent';
-import PageHeader from '../components/PageHeader';
-import Wager from '../components/Wager';
-import SelectedAlexLocation from '../components/SelectedAlexLocation';
+import PuzzleAccount from '../../models/account';
+import Opponent from '../../components/Opponent';
+import PageHeader from '../../components/PageHeader';
+import Wager from '../../components/Wager';
+import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 // import { useRequestCreateEvent } from "@puzzlehq/sdk";
 
 type Props = {
@@ -88,12 +88,12 @@ function ConfirmStartGame({ account }: Props) {
 
   return (
     <main className='flex h-full w-full flex-col justify-center gap-8'>
-      <PageHeader bg='bg-pink' text='REVIEW AND KICKOFF GAME' />
+      <PageHeader bg='bg-primary-pink' text='REVIEW AND KICKOFF GAME' />
       <Opponent opponent={opponent} />
       <Wager wagerAmount={amount} />
       <div className='flex flex-col gap-2'>
         <SelectedAlexLocation answer={answer} win={undefined} />
-        <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green'>
+        <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           You chose to hide Alex {answer}!
         </div>
       </div>
@@ -110,15 +110,15 @@ function ConfirmStartGame({ account }: Props) {
               answer
             )
           }
-          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-green
-                            p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10`}
+          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-green
+                            p-5 text-center text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px max-md:mt-10`}
         >
           KICKOFF GAME!
         </button>
         <button
           onClick={navigateBackToStartWager}
-          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-gray
-                    p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10`}
+          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-gray
+                    p-5 text-center text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px max-md:mt-10`}
         >
           BACK
         </button>

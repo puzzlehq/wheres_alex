@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useLocation, useNavigate } from 'react-router-dom';
-import GameInfo from '../components/GameInfo';
+import GameInfo from '../../components/GameInfo';
 
 function NotifyOtherPlayerSection() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ function NotifyOtherPlayerSection() {
   return (
     <button
       onClick={navigateBackToHome}
-      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-pink px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-black'
+      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-primary-black'
     >
       NOTIFY OTHER PLAYER
     </button>
@@ -27,7 +27,7 @@ function StartAnotherGameSection() {
   return (
     <button
       onClick={navigateBackToNewGame}
-      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-yellow px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-black'
+      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-yellow px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-primary-black'
     >
       START ANOTHER GAME
     </button>
@@ -40,7 +40,7 @@ function TakeHomeSection() {
     <a
       href='/'
       onClick={() => navigate('/')}
-      className='mt-7 self-center whitespace-nowrap text-base font-extrabold text-gray'
+      className='mt-7 self-center whitespace-nowrap text-base font-extrabold text-primary-gray'
     >
       TAKE ME BACK HOME
     </a>

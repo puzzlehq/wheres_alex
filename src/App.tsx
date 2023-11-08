@@ -1,23 +1,23 @@
 // import PuzzleAccount from './models/account.js';
 // import { useState } from 'react';
 import Home from './pages/Home.js';
-import NewGame from './pages/NewGame.js';
-import StartWager from './pages/StartWager.js';
+import NewGame from './pages/NewGame/_01_NewGame.js';
+import StartWager from './pages/NewGame/_03_StartWager.js';
 // import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HideAlex from './pages/HideAlex.js';
-import ConfirmStartGame from './pages/ConfirmStartGame.js';
-import PendingConfirmStartGame from './pages/PendingConfirmStartGame.js';
+import HideAlex from './pages/NewGame/_02_HideAlex.js';
+import ConfirmStartGame from './pages/NewGame/_04_ConfirmStartGame.js';
+import PendingConfirmStartGame from './pages/tbd/PendingConfirmStartGame.js';
 
-import GameStarted from './pages/GameStarted.js';
+import GameStarted from './pages/NewGame/_05_GameStarted.js';
 import { Header } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
-import AcceptGame from './pages/AcceptGame.js';
+import AcceptGame from './pages/AcceptGame/_01_AcceptGame.js';
 import FinishGame from './pages/FinishGame.js';
-import FinishGameClaim from './pages/FinishGameWinClaim.js';
-import RenegeUnacceptedGame from './pages/RenegeUnacceptedGame.js';
-import FindAlex from './pages/FindAlex.js';
+import FinishGameClaim from './pages/ClaimPrize/FinishGameWinClaim.js';
+import RenegeUnacceptedGame from './pages/Renege/_01_Renege.js';
+import FindAlex from './pages/AcceptGame/_02_FindAlex.js';
 
 function App() {
   // const [isConnected, setIsConnected] = useState<boolean>(false);

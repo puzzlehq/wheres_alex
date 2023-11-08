@@ -12,14 +12,14 @@ const FinishGame = () => {
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
       <PageHeader
-        bg='bg-blue'
+        bg='bg-primary-blue'
         text={(win as boolean) ? 'CONGRATS WINNER!' : 'BETTER LUCK NEXT TIME'}
       />
       {win && (
         <div className='flex flex-col items-center gap-2'>
           <Wager wagerAmount={getNumberAmount(wager)} winnings />
           <a
-            className={`font-extrabold text-green hover:text-green hover:underline`}
+            className={`font-extrabold text-primary-green hover:text-primary-green hover:underline`}
             href='/'
           >
             Payout Confirmation
@@ -29,19 +29,19 @@ const FinishGame = () => {
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-2'>
         <button
-          className='w-full rounded-full bg-green p-3 text-4xl font-extrabold text-black'
+          className='w-full rounded-full bg-primary-green p-3 text-4xl font-extrabold text-primary-black'
           onClick={() => navigate('/')}
         >
           REFER A PLAYER
         </button>
         <button
-          className='w-full rounded-full bg-[#868686] p-3 text-4xl font-extrabold text-black'
+          className='w-full rounded-full bg-[#868686] p-3 text-4xl font-extrabold text-primary-black'
           onClick={() => navigate('/new-game')}
         >
           START ANOTHER GAME
         </button>
         <button
-          className='w-full bg-transparent text-gray'
+          className='w-full bg-transparent text-primary-gray'
           onClick={() => navigate('/')}
         >
           TAKE ME BACK HOME

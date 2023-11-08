@@ -37,8 +37,8 @@ function ChooseAlexLocation({ handleButtonClick, opponent, hiding }: HideAlexPro
             <div
               className={`mt-2.5 whitespace-nowrap text-center text-sm font-extrabold ${
                 answer === 'In the Weeds'
-                  ? 'text-green'
-                  : 'text-white opacity-40 hover:text-green'
+                  ? 'text-primary-green'
+                  : 'text-primary-white opacity-40 hover:text-primary-green'
               }`}
             >
               In the Weeds
@@ -61,8 +61,8 @@ function ChooseAlexLocation({ handleButtonClick, opponent, hiding }: HideAlexPro
             <div
               className={`mt-2.5 whitespace-nowrap text-center text-sm font-extrabold ${
                 answer === 'Behind the Building'
-                  ? 'text-green'
-                  : 'text-white opacity-40 hover:text-green'
+                  ? 'text-primary-green'
+                  : 'text-primary-white opacity-40 hover:text-primary-green'
               }`}
             >
               Behind the Building
@@ -71,7 +71,7 @@ function ChooseAlexLocation({ handleButtonClick, opponent, hiding }: HideAlexPro
         </div>
       </div>
       {answer && (
-        <p className='mt-20 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green'>
+        <p className='mt-20 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           {hiding ? `You chose to hide Alex ${answer}!` : `You think Alex is ${answer}`}
         </p>
       )}

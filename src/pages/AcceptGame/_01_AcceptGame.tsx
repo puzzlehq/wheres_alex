@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Wager from '../components/Wager';
-import PageHeader from '../components/PageHeader';
-import Opponent from '../components/Opponent';
-import { getNumberAmount } from '../utils';
+import Wager from '../../components/Wager';
+import PageHeader from '../../components/PageHeader';
+import Opponent from '../../components/Opponent';
+import { getNumberAmount } from '../../utils';
 
 const AcceptGame = () => {
   const location = useLocation();
@@ -39,22 +39,22 @@ const AcceptGame = () => {
 
   return (
     <main className='flex h-full w-full flex-col justify-center gap-8'>
-      <PageHeader bg='bg-pink' text={`YOU'VE BEEN CHALLENGED!`} />
+      <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
       <Opponent opponent={opponent} />
       <Wager wagerAmount={amount} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
         <button
           onClick={acceptGame}
-          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-green p-5 text-center
-                      text-3xl font-extrabold tracking-tight text-black max-md:ml-px`}
+          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-primary-green p-5 text-center
+                      text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px`}
         >
           ACCEPT WAGER
         </button>
         <button
           onClick={rejectGame}
           className={`w-full self-center whitespace-nowrap rounded-[200px] bg-[#868686] p-5 text-center
-              text-3xl font-extrabold tracking-tight text-black max-md:ml-px`}
+              text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px`}
         >
           REJECT
         </button>

@@ -34,16 +34,16 @@ export const Welcome = () => {
           className='absolute left-0 top-1/4 z-0 h-full max-h-[20rem] w-3/5 max-w-[80%] -translate-x-1/4 -translate-y-20 transform object-contain'
         />
 
-        <h1 className='z-5 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-white'>
+        <h1 className='z-5 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white'>
           WHERE <br /> IS ALEX?{' '}
         </h1>
-        <p className='z-10 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight text-white'>
+        <p className='z-10 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
           A thrilling game showcasing the power of Aleo and the Puzzle
           multiparty privacy stack through a wager between friends!
         </p>
         <button
           onClick={connect}
-          className='hover:bg-yellow-400 z-10 mt-7 flex w-1/2 items-center justify-center rounded-[200px] bg-yellow px-5 py-8 text-4xl font-extrabold text-black'
+          className='hover:bg-primary-yellow-400 z-10 mt-7 flex w-1/2 items-center justify-center rounded-[200px] bg-primary-yellow px-5 py-8 text-4xl font-extrabold text-primary-black'
         >
           Play!
         </button>

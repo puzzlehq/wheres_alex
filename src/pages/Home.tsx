@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function TotalWinnings() {
   return (
-    <section className='mt-8 flex flex-col self-stretch border-2 border-solid border-[color:var(--Green,#4EC331)] px-2.5 pt-3.5 text-green'>
+    <section className='mt-8 flex flex-col self-stretch border-2 border-solid border-[color:var(--primary-green,#4EC331)] px-2.5 pt-3.5 text-primary-green'>
       <div
         className='overflow-hidden text-right text-4xl font-bold tabular-nums'
         style={{ direction: 'rtl' }}
@@ -13,7 +13,7 @@ function TotalWinnings() {
         0000000001234567898765432
       </div>
       <div className='flex w-full'>
-        <div className='-ml-2.5 flex max-w-full flex-col self-start bg-green px-5 py-2'>
+        <div className='-ml-2.5 flex max-w-full flex-col self-start bg-primary-green px-5 py-2'>
           <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
             TOTAL WINNINGS
           </div>
@@ -34,7 +34,7 @@ function NewGame() {
   return (
     <button
       onClick={navigateToNewGame}
-      className='hover:bg-yellow-400 mt-7 flex w-full items-center justify-center rounded-[200px] bg-yellow px-5 py-8 text-4xl font-extrabold text-black'
+      className='hover:bg-primary-yellow-400 mt-7 flex w-full items-center justify-center rounded-[200px] bg-primary-yellow px-5 py-8 text-4xl font-extrabold text-primary-black'
     >
       NEW GAME
     </button>
@@ -88,7 +88,7 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <button
             onClick={handleStartClick}
-            className='max-w-full self-stretch rounded-[200px] bg-yellow px-5 py-3 text-center text-xs font-extrabold text-black max-sm:ml-24'
+            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
             style={{ minWidth: '100px' }}
           >
             {notification.action}
@@ -98,7 +98,7 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <button
             onClick={handleFinishClick}
-            className='max-w-full self-stretch rounded-[200px] bg-yellow px-5 py-3 text-center text-xs font-extrabold text-black max-sm:ml-24'
+            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
             style={{ minWidth: '100px' }}
           >
             {notification.action}
@@ -108,7 +108,7 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <button
             onClick={handleFinishClaimClick}
-            className='max-w-full self-stretch rounded-[200px] bg-yellow px-5 py-3 text-center text-xs font-extrabold text-black max-sm:ml-24'
+            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
             style={{ minWidth: '100px' }}
           >
             {notification.action}
@@ -119,8 +119,8 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <>
             <button
-              className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-black max-sm:ml-24 ${
-                notification.action === 'Delete' ? 'bg-gray' : 'bg-yellow'
+              className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24 ${
+                notification.action === 'Delete' ? 'bg-primary-gray' : 'bg-primary-yellow'
               }`}
               style={{ minWidth: '100px' }}
             >
@@ -133,10 +133,10 @@ function NotificationItem({ notification }: NotificationProps) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-pink max-sm:ml-2'>
+      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
         {notification.player}
       </div>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-pink max-sm:ml-2'>
+      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
         {notification.wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -150,8 +150,8 @@ type NotificationsProps = {
 
 function Notifications({ notifications }: NotificationsProps) {
   return (
-    <section className='mt-8 flex grow flex-col self-stretch border-2 border-solid border-pink pb-6 pr-4'>
-      <div className='flex max-w-full flex-col self-start bg-pink px-5 py-2'>
+    <section className='mt-8 flex grow flex-col self-stretch border-2 border-solid border-primary-pink pb-6 pr-4'>
+      <div className='flex max-w-full flex-col self-start bg-primary-pink px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           NOTIFICATIONS
         </div>
@@ -206,7 +206,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
         return (
           <>
             <div
-              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-gray px-5 py-3 text-xs font-extrabold tabular-nums text-black max-sm:w-[78px]'
+              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               {timeLeft[game.player] &&
@@ -221,7 +221,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
             <a
               href='#'
               onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-pink px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
+              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               PING
@@ -234,7 +234,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
           <>
             <button
               onClick={handleRenegeClick}
-              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-gray px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
+              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               {game.action}
@@ -242,7 +242,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
             <a
               href='#'
               onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-pink px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
+              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               PING
@@ -254,10 +254,10 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold text-red max-sm:mr-auto'>
+      <div className='my-auto self-center text-left text-xs font-bold text-primary-red max-sm:mr-auto'>
         {game.player}
       </div>
-      <div className='my-auto self-center text-left text-xs font-bold text-red max-sm:mr-auto'>
+      <div className='my-auto self-center text-left text-xs font-bold text-primary-red max-sm:mr-auto'>
         {game.wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -272,8 +272,8 @@ type LiveGamesProps = {
 
 function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
   return (
-    <section className='mt-7 flex grow flex-col self-stretch border-2 border-solid border-red pb-8 pr-5'>
-      <div className='flex max-w-full flex-col self-start bg-red px-5 py-2'>
+    <section className='mt-7 flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-8 pr-5'>
+      <div className='flex max-w-full flex-col self-start bg-primary-red px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           LIVE GAMES
         </div>

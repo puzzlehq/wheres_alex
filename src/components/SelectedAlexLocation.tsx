@@ -22,7 +22,7 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
           <div
             className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
                         ${answer === 'In the Weeds' ? '' : 'opacity-40'}
-                        ${answer === 'In the Weeds' ? 'text-green' : 'text-white'}`}
+                        ${answer === 'In the Weeds' ? 'text-primary-green' : 'text-primary-white'}`}
           >
             In the Weeds
           </div>
@@ -47,8 +47,8 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
                         ${answer === 'Behind the Building' ? '' : 'opacity-40'}
                         ${
                           answer === 'Behind the Building'
-                            ? 'text-green'
-                            : 'text-white'
+                            ? 'text-primary-green'
+                            : 'text-primary-white'
                         }`}
           >
             Behind the Building
@@ -61,7 +61,7 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
   const WinText = () => {
     return (
       <div className='z-10 w-1/2'>
-        <p className="text-center text-green text-6xl font-black">YOU<br />WON!</p>
+        <p className="text-center text-primary-green text-6xl font-black">YOU<br />WON!</p>
       </div>
     )
 
@@ -70,7 +70,7 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
   const LoseText = () => {
     return (
       <div className='z-10 w-1/2'>
-        <p className="text-center text-red text-6xl font-black">YOU<br />LOST!</p>
+        <p className="text-center text-primary-red text-6xl font-black">YOU<br />LOST!</p>
       </div>
     )
   }

@@ -4,14 +4,14 @@ export default {
   theme: {
     extend: {
       colors: {
-        green: '#4EC330',
-        pink: '#FFAED5',
-        black: '#141010',
-        white: '#FCFCFC',
-        yellow: '#F8FC3E',
-        blue: '#45B1ED',
-        red: '#F63B3B',
-        gray: '#868686',
+        'primary-green': '#4EC330',
+        'primary-pink': '#FFAED5',
+        'primary-black': '#141010',
+        'primary-white': '#FCFCFC',
+        'primary-yellow': '#F8FC3E',
+        'primary-blue': '#45B1ED',
+        'primary-red': '#F63B3B',
+        'primary-gray': '#868686',
       },
     },
   },
