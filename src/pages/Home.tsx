@@ -146,7 +146,7 @@ function Notifications({ notifications }: NotificationsProps) {
                     NOTIFICATIONS
                 </div>
             </div>
-            <div className="items-start self-stretch flex grow flex-col ml-5 mt-4 pl-px self-start">
+            <div className="items-start self-stretch flex grow flex-col ml-5 mt-4 pl-px">
                 {notifications.map(notification => (
                 <NotificationItem key={notification.player} notification={notification} />
                 ))}
@@ -188,7 +188,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
                 return (
                     <>
                         <div 
-                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2"
+                        className="text-black flex items-center justify-center text-xs font-extrabold bg-zinc-500 rounded-[200px] whitespace-nowrap max-sm:w-[78px] px-5 py-3 w-[fit-content] mr-2 tabular-nums"
                         style={{ minWidth: '100px' }}
                         >
                         {timeLeft[game.player] && `${String(timeLeft[game.player].hours).padStart(2, '0')}:${String(timeLeft[game.player].minutes).padStart(2, '0')}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}

@@ -4,39 +4,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import PuzzleAccount from '../models/account';
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
+import Opponent from '../components/Opponent';
+import PageHeader from '../components/PageHeader';
 // import { useRequestCreateEvent } from "@puzzlehq/sdk";
-
-function Section() {
-    return (
-      <section className="justify-center items-center bg-pink-300 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
-        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> REVIEW AND KICKOFF GAME </h1>
-      </section>
-    );
-}
-
-function OpponentSection() {
-    const location = useLocation();
-    const opponent = location.state?.opponent || "N/A";
-
-    // Shorten the opponent string
-    const displayOpponent =
-        opponent.length > 9
-        ? opponent.slice(0, 5) + "..." + opponent.slice(-4)
-        : opponent;
-
-    return (
-      <div className="text-white text-center text-xs font-bold self-center mt-5 whitespace-nowrap">
-        You are challenging
-        <div className="border-[color:var(--White,#FCFCFC)] bg-zinc-50 self-center flex w-[155px] max-w-full flex-col mt-1.5 mb-1.5 px-5 py-4 rounded-[200px] border-2 border-solid">
-          <div className="text-neutral-900 text-center text-xs font-bold self-center whitespace-nowrap">
-            {displayOpponent}
-          </div>
-        </div>
-        to find where you hid Alex!
-      </div>
-    );
-}
-
 
 function WagerSection() {
     const location = useLocation();
@@ -206,8 +176,8 @@ function ConfirmStartGame({account}: Props) {
     return (
         <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
             <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
-                <Section />
-                <OpponentSection />
+                <PageHeader bg='bg-pink-300' text='REVIEW AND KICKOFF GAME'/>
+                <Opponent  />
                 <WagerSection />
                 <AnswerSection />
                 <KickoffButton account={player} />
