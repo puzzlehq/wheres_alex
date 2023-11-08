@@ -2,4 +2,4 @@
 *.avm
 *.prover
 *.verifier
-outputs/
+/program/outputs/
