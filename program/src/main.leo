@@ -412,8 +412,6 @@ program cflip_gm_aleo_testing_123.aleo {
         else {
             // transfer all funds to winner
             let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, player_claim_record, game_record.player_one_address, game_record.total_pot);
-            // let (receiver_puzz_record, puzz_change): (Puzz, Puzz) =
-            // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_one_address,
