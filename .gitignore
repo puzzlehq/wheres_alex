@@ -24,3 +24,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.avm
+*.prover
+*.verifier
+/program/outputs/
