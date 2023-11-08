@@ -1,8 +1,8 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import Wager from '../components/Wager';
-import PageHeader from '../components/PageHeader';
-import { getNumberAmount } from '../utils';
-import Button from '../components/Button';
+import Wager from '../../../components/Wager';
+import PageHeader from '../../../components/PageHeader';
+import { getNumberAmount } from '../../../utils';
+import Button from '../../../components/Button';
 
 const FinishGame = () => {
   const location = useLocation();

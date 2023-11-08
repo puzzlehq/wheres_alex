@@ -3,7 +3,7 @@ import AcceptGamePage from "./_01_AcceptGame";
 import FindAlex from "./_02_FindAlex";
 
 const AcceptGame = () => {
-  const { step } = useAcceptGameStore((state) => [state.step]);
+  const [step] = useAcceptGameStore((state) => [state.step]);
 
   return (
     <div className="flex flex-col w-full h-full">

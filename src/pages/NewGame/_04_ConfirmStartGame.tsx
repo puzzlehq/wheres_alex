@@ -7,13 +7,8 @@ import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Button from '../../components/Button';
-// import { useRequestCreateEvent } from "@puzzlehq/sdk";
 
-type Props = {
-  account: PuzzleAccount;
-};
-
-function ConfirmStartGame({ account }: Props) {
+function ConfirmStartGame() {
   // const account: PuzzleAccount = {
   //     network: 'aleo',
   //     chainId: '1',
@@ -25,7 +20,7 @@ function ConfirmStartGame({ account }: Props) {
   const opponent = location.state?.opponent ?? 'N/A';
   const answer = location.state?.answer ?? 'N/A';
   const amount = location.state?.amount ?? 'N/A';
-  const player_account = account.address;
+  const player_account = '';
   const [gameMultisig, setGameMultisig] = useState<string>('');
   const [eventID, setEventID] = useState<string>('');
   const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
