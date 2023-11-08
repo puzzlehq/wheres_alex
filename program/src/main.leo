@@ -447,7 +447,7 @@ program cflip_gm_aleo_testing_123.aleo {
         // private token_owner_rules: cflip_testing_123_token.leo/TokenOwnerRules.record,
         // private sig: signature,
         // private msg: field,
-    ) -> (cflip_testing_123_token.leo/Puzz.record, cflip_testing_123_token.leo/Puzz.record)
+    ) -> (cflip_testing_123_token.leo/Puzz.record, cflip_testing_123_token.leo/Puzz.record, NotifyGameOver, NotifyGameOver)
     {
         // todo: if alice never reveals answer than bob gets to claim total pot
         // limit calls to only users
@@ -457,6 +457,20 @@ program cflip_gm_aleo_testing_123.aleo {
         // let (receiver_puzz_record, puzz_change): (Puzz, Puzz) =
             // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
         let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, player_claim_record, self.caller, game_record.total_pot);
+
+        let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
+                owner: game_record.player_one_address,
+                winner: game_record.player_two_address,
+                total_pot: game_record.total_pot,
+                game_address: game_record.owner,
+            };
+
+        let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
+            owner: game_record.player_two_address,
+            winner: game_record.player_two_address,
+            total_pot: game_record.total_pot,
+            game_address: game_record.owner,
+        };
 
         return (receiver_puzz_record, puzz_change) then finalize(game_record.owner);
     }
