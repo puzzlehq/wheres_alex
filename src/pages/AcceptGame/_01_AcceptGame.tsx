@@ -4,6 +4,7 @@ import Wager from '../../components/Wager';
 import PageHeader from '../../components/PageHeader';
 import Opponent from '../../components/Opponent';
 import { getNumberAmount } from '../../utils';
+import Button from '../../components/Button';
 
 const AcceptGame = () => {
   const location = useLocation();
@@ -44,20 +45,18 @@ const AcceptGame = () => {
       <Wager wagerAmount={amount} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
-        <button
+        <Button
+          color='green'
           onClick={acceptGame}
-          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-primary-green p-5 text-center
-                      text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px`}
         >
           ACCEPT WAGER
-        </button>
-        <button
+        </Button>
+        <Button
+          color='gray'
           onClick={rejectGame}
-          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-[#868686] p-5 text-center
-              text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px`}
         >
           REJECT
-        </button>
+        </Button>
       </div>
     </main>
   );

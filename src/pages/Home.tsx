@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import GameState, { NotifyFinish } from '../models/game_states';
 import { useNavigate } from 'react-router-dom';
+import Button from '../components/Button';
 
 function TotalWinnings() {
   return (
@@ -32,12 +33,12 @@ function NewGame() {
     navigate('/new-game'); // Navigate to the NewGame page
   };
   return (
-    <button
+    <Button
+      color='yellow'
       onClick={navigateToNewGame}
-      className='hover:bg-primary-yellow-400 mt-7 flex w-full items-center justify-center rounded-[200px] bg-primary-yellow px-5 py-8 text-4xl font-extrabold text-primary-black'
     >
       NEW GAME
-    </button>
+    </Button>
   );
 }
 

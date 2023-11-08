@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useLocation, useNavigate } from 'react-router-dom';
 import GameInfo from '../../components/GameInfo';
+import Button from '../../components/Button';
 
 function NotifyOtherPlayerSection() {
   const navigate = useNavigate();
@@ -9,12 +10,12 @@ function NotifyOtherPlayerSection() {
   };
 
   return (
-    <button
+    <Button
       onClick={navigateBackToHome}
-      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-primary-black'
+      color='pink'
     >
       NOTIFY OTHER PLAYER
-    </button>
+    </Button>
   );
 }
 
@@ -25,12 +26,12 @@ function StartAnotherGameSection() {
   };
 
   return (
-    <button
+    <Button
       onClick={navigateBackToNewGame}
-      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-yellow px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-primary-black'
+      color='yellow'
     >
       START ANOTHER GAME
-    </button>
+    </Button>
   );
 }
 

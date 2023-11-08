@@ -1,120 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Html5Qrcode } from 'html5-qrcode';
-import qrImg from '../assets/qrscanner.svg';
 import { useAccount } from '@puzzlehq/sdk';
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
+import Button from '../../components/Button';
+import PasteyQR from '../../components/PasteyQR';
 
-interface PasteyQRProps {
-  setOpponent: (address: string) => void;
-  opponent: string;
-}
-
-function PasteyQR({ setOpponent, opponent }: PasteyQRProps) {
-  const [isScanning, setIsScanning] = useState<boolean>(false);
-  const scannerRef = useRef<Html5Qrcode | null>(null);
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-  const startScanner = async () => {
-    setIsScanning(true);
-
-    if (!scannerRef.current) {
-      scannerRef.current = new Html5Qrcode('qr-code-scanner');
-    }
-
-    const cameraFacingMode = isMobile ? 'environment' : 'user';
-
-    try {
-      await scannerRef.current.start(
-        { facingMode: cameraFacingMode },
-        { fps: 10, qrbox: 250 },
-        handleScanSuccess,
-        handleScanError
-      );
-    } catch (err) {
-      console.error('Unable to start scanning', err);
-    }
-  };
-
-  const handleScanSuccess = (decodedText: string) => {
-    setIsScanning(false);
-    setOpponent(decodedText);
-    console.log(opponent);
-    if (scannerRef.current) {
-      scannerRef.current
-        .stop()
-        .catch((err) => console.error('Failed to stop the scanner', err));
-    }
-  };
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleScanError = (error: any) => {
-    console.info(`QR Code scan error: ${error}`);
-  };
-
-  const handlePasteFromClipboard = async () => {
-    const clipboardData = await navigator.clipboard.readText();
-    setOpponent(clipboardData);
-    console.log(opponent);
-  };
-  return (
-    <div className='flex w-full flex-col items-center'>
-      <input
-        type='text'
-        className='mt-5 w-full self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] py-7 pl-3.5 pr-5 text-sm font-semibold leading-4 text-primary-white max-md:mr-px'
-        placeholder='Enter Wallet Address'
-        id='opponent'
-        value={opponent}
-        onChange={(e) => setOpponent(e.target.value)}
-      />
-      <div className='flex items-center'>
-        {' '}
-        {/* Use flex container here */}
-        <button
-          onClick={handlePasteFromClipboard}
-          className='mt-3 w-[197px] max-w-full self-center rounded-[200px] bg-primary-gray px-5 py-3 text-center text-xs font-extrabold text-primary-black'
-        >
-          PASTE FROM CLIPBOARD
-        </button>
-        <button onClick={startScanner}>
-          <img src={qrImg} alt='QR Scanner' className='ml-5 mt-3 h-full' />
-        </button>
-      </div>
-      <div
-        id='qr-code-scanner'
-        className='relative mb-2 w-full'
-        style={{ height: '240px' }}
-      >
-        {isScanning && (
-          <style>
-            {`
-                            #qr-code-scanner::before {
-                                content: "";
-                                position: absolute;
-                                top: 12.5%;
-                                left: 12.5%;
-                                width: 75%;
-                                height: 75%;
-                                border: 3px solid lightgreen;
-                                background-color: rgba(255, 255, 255, 0.3); /* semi-transparent fill */
-                                box-sizing: border-box;
-                            }
-                        `}
-          </style>
-        )}
-      </div>
-    </div>
-  );
-}
-
-interface NextButtonProps {
-  opponent: string;
-}
-
-function NextButton({ opponent }: NextButtonProps) {
+function NewGame() {
+  const [opponent, setOpponent] = useState<string>('');
+  const { account } = useAccount();
   const navigate = useNavigate();
+
+  console.log(account);
 
   const navigateToHideAlex = () => {
     if (opponent) {
@@ -125,35 +23,18 @@ function NextButton({ opponent }: NextButtonProps) {
   };
 
   return (
-    <button
-      onClick={navigateToHideAlex}
-      className={`mt-24 w-full self-center self-stretch whitespace-nowrap rounded-[200px] p-5 text-center text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px max-md:mt-10
-          ${
-            opponent
-              ? 'bg-primary-green hover:bg-primary-green'
-              : 'cursor-not-allowed bg-primary-green bg-opacity-20'
-          }
-          `}
-      disabled={!opponent}
-    >
-      NEXT
-    </button>
-  );
-}
-
-function NewGame() {
-  const [opponent, setOpponent] = useState<string>('');
-  const { account } = useAccount();
-
-  console.log(account);
-
-  return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
         <Nav step={1} opponent={opponent} answer='' />
         <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
         <PasteyQR setOpponent={setOpponent} opponent={opponent} />
-        <NextButton opponent={opponent} />
+        <Button
+          onClick={navigateToHideAlex}
+          color='green'
+          disabled={!opponent}
+        >
+          NEXT
+        </Button>
       </div>
     </main>
   );

@@ -1,23 +1,13 @@
 // import PuzzleAccount from './models/account.js';
 // import { useState } from 'react';
 import Home from './pages/Home.js';
-import NewGame from './pages/NewGame/_01_NewGame.js';
-import StartWager from './pages/NewGame/_03_StartWager.js';
+import NewGame from './pages/NewGame/index.js';
 // import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HideAlex from './pages/NewGame/_02_HideAlex.js';
-import ConfirmStartGame from './pages/NewGame/_04_ConfirmStartGame.js';
-import PendingConfirmStartGame from './pages/tbd/PendingConfirmStartGame.js';
-
-import GameStarted from './pages/NewGame/_05_GameStarted.js';
 import { Header } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
-import AcceptGame from './pages/AcceptGame/_01_AcceptGame.js';
-import FinishGame from './pages/FinishGame.js';
-import FinishGameClaim from './pages/ClaimPrize/FinishGameWinClaim.js';
-import RenegeUnacceptedGame from './pages/Renege/_01_Renege.js';
-import FindAlex from './pages/AcceptGame/_02_FindAlex.js';
+import AcceptGame from './pages/AcceptGame/index.js';
 
 function App() {
   // const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -43,25 +33,10 @@ function App() {
           <div className='h-full w-full max-w-screen-sm p-4'>
             <Routes>
               <Route path='/new-game' element={<NewGame />} />
-              <Route path='/start-wager' element={<StartWager />} />
-              <Route path='/hide-alex' element={<HideAlex />} />
-              <Route
-                path='/confirm-start-game'
-                element={<ConfirmStartGame account={account} />}
-              />
-              <Route path='/game-started' element={<GameStarted />} />
-              <Route
-                path='/pending-confirm-start-game'
-                element={<PendingConfirmStartGame />}
-              />
-              <Route path='/accept-game' element={<AcceptGame />} />
-              <Route path='/finish-game' element={<FinishGame />} />
-              <Route path='/finish-game-claim' element={<FinishGameClaim />} />
-              <Route
-                path='/Renege-unaccepted-game'
-                element={<RenegeUnacceptedGame />}
-              />
-              <Route path='/find-alex' element={<FindAlex />} />
+              <Route path='/accept-game' element={<AcceptGame/>}/>
+              <Route path='/claim-prize'>
+                
+              </Route>
               <Route
                 path='/'
                 element={!loading && isConnected ? <Home /> : <Welcome />}

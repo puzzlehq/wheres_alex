@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import Opponent from '../../components/Opponent';
 import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
+import Button from '../../components/Button';
 
 type RenegeGameProps = {
   challenger: string;
@@ -18,19 +19,17 @@ const RenegeGame = ({ challenger, wager }: RenegeGameProps) => {
       <Wager wagerAmount={wager ?? '0'} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
-        <button
-          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-primary-red p-5 text-center
-                      text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px`}
+        <Button
+          color='red'  
         >
           Renege
-        </button>
-        <button
-          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-primary-gray p-5 text-center
-                      text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px`}
+        </Button>
+        <Button
+          color='gray'
           onClick={() => navigate('/')}
         >
           CANCEL
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
+import Button from '../../components/Button';
 
 type ChooseWagerAmountProps = {
   setAmount: (number: number) => void;
@@ -64,15 +65,16 @@ function StartWager() {
         <Nav step={3} opponent={opponent} answer={answer} />
         <PageHeader bg='bg-primary-blue' text='MAKE YOUR WAGER' />
         <ChooseWagerAmount setAmount={setAmount} />
-        <button
+        <Button
           onClick={navigateToStartWager}
           disabled={isDisabled}
+          color='green'
           className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-primary-black 
                         ${isDisabled ? 'bg-opacity-40' : 'hover:bg-primary-green'} 
                         w-full self-stretch rounded-[200px] bg-primary-green p-5 max-md:ml-px max-md:mt-10`}
         >
           NEXT
-        </button>
+        </Button>
       </div>
     </main>
   );

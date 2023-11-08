@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Wager from '../components/Wager';
 import PageHeader from '../components/PageHeader';
 import { getNumberAmount } from '../utils';
+import Button from '../components/Button';
 
 const FinishGame = () => {
   const location = useLocation();
@@ -28,24 +29,26 @@ const FinishGame = () => {
       )}
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-2'>
-        <button
-          className='w-full rounded-full bg-primary-green p-3 text-4xl font-extrabold text-primary-black'
+        <Button
+          color='green'
           onClick={() => navigate('/')}
         >
           REFER A PLAYER
-        </button>
-        <button
+        </Button>
+        <Button
+          color='gray'
           className='w-full rounded-full bg-[#868686] p-3 text-4xl font-extrabold text-primary-black'
           onClick={() => navigate('/new-game')}
         >
           START ANOTHER GAME
-        </button>
-        <button
-          className='w-full bg-transparent text-primary-gray'
+        </Button>
+        <Button
+          color='transparent'
+          className=' text-primary-gray'
           onClick={() => navigate('/')}
         >
           TAKE ME BACK HOME
-        </button>
+        </Button>
       </div>
     </div>
   );

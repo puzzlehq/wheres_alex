@@ -6,6 +6,7 @@ import Opponent from '../../components/Opponent';
 import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
+import Button from '../../components/Button';
 // import { useRequestCreateEvent } from "@puzzlehq/sdk";
 
 type Props = {
@@ -99,7 +100,7 @@ function ConfirmStartGame({ account }: Props) {
       </div>
       <div className='flex flex-col flex-grow'/>
       <div className='flex flex-col gap-4'>
-        <button
+        <Button
           onClick={() =>
             proposeGame(
               opponent,
@@ -110,18 +111,16 @@ function ConfirmStartGame({ account }: Props) {
               answer
             )
           }
-          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-green
-                            p-5 text-center text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px max-md:mt-10`}
+          color='green'  
         >
           KICKOFF GAME!
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={navigateBackToStartWager}
-          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-primary-gray
-                    p-5 text-center text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px max-md:mt-10`}
+          color='gray'
         >
           BACK
-        </button>
+        </Button>
       </div>
     </main>
   );

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import PageHeader from '../../components/PageHeader';
 import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
+import Button from '../../components/Button';
 
 function FindAlex() {
   const location = useLocation();
@@ -44,15 +45,13 @@ function FindAlex() {
           hiding={false}
         />
         <div className='flex flex-grow flex-col' />
-        <button
+        <Button
           onClick={navigateToStartWager}
           disabled={!answer}
-          className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-primary-black
-            ${!answer ? 'bg-opacity-40' : 'hover:bg-primary-green'}
-            w-full self-stretch rounded-[200px] bg-primary-green p-5 max-md:ml-px max-md:mt-10`}
+          color='green'
         >
           NEXT
-        </button>
+        </Button>
       </div>
     </main>
   );
