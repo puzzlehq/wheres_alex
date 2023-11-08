@@ -4,7 +4,7 @@ import './index.css';
 import { PuzzleWalletProvider, PuzzleWeb3Modal } from '@puzzlehq/sdk';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <div className='w-screen h-screen'>
+  <div className='h-screen w-screen'>
     <PuzzleWalletProvider>
       <App />
     </PuzzleWalletProvider>

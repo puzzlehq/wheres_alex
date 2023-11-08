@@ -1,31 +1,29 @@
 type WagerProps = {
-  wagerAmount: number,
-  winnings?: boolean
-}
+  wagerAmount: number;
+  winnings?: boolean;
+};
 
 const Wager = ({ wagerAmount, winnings = false }: WagerProps) => {
   return (
-    <div className="w-fit self-center">
-      <div className="flex flex-col gap-0 w-full items-center">
-        <div className="w-full bg-[#4EC331] text-lg font-extrabold text-black text-center">
+    <div className='w-fit self-center'>
+      <div className='flex w-full flex-col items-center gap-0'>
+        <div className='w-full bg-[#4EC331] text-center text-lg font-extrabold text-black'>
           {winnings ? 'WINNINGS' : 'WAGER'}
         </div>
-        <div className="w-full border-[3px] border-[#4EC331] p-1 gap-2 items-center flex">
-          <p className="text-3xl text-[#4EC331] font-bold flex-1">
+        <div className='flex w-full items-center gap-2 border-[3px] border-[#4EC331] p-1'>
+          <p className='flex-1 text-3xl font-bold text-[#4EC331]'>
             {wagerAmount}
           </p>
-          <div className="flex-col gap-0 flex">
-            <p className="text-base leading-[16px] text-[#4EC331] font-bold flex-1">
+          <div className='flex flex-col gap-0'>
+            <p className='flex-1 text-base font-bold leading-[16px] text-[#4EC331]'>
               Puzzle
             </p>
-            <p className="text-base text-[#4EC331] font-bold flex-1">
-              Pieces
-            </p>
+            <p className='flex-1 text-base font-bold text-[#4EC331]'>Pieces</p>
           </div>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Wager
+export default Wager;

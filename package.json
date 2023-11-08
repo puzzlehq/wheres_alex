@@ -12,6 +12,7 @@
   "dependencies": {
     "@puzzlehq/sdk": "0.1.0",
     "html5-qrcode": "^2.3.8",
+    "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0"
@@ -27,6 +28,7 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
     "postcss": "^8.4.29",
+    "prettier-plugin-tailwindcss": "^0.5.6",
     "sdk": "link:@types/puzzlehq/sdk",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",

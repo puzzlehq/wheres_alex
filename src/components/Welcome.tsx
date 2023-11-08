@@ -14,36 +14,46 @@ export const Welcome = () => {
   useEffect(() => {
     console.log('connecting');
     if (isConnected) {
-    console.log('connecting...');
+      console.log('connecting...');
       navigate('/');
     }
   }, [isConnected, loading, navigate]);
 
   return (
-    <div className="h-screen flex w-full justify-between items-stretch">
-      <div className="relative flex w-full flex-col justify-center items-center h-full">
+    <div className='flex h-screen w-full items-stretch justify-between'>
+      <div className='relative flex h-full w-full flex-col items-center justify-center'>
+        <img
+          src={rightImageSrc}
+          alt='Right top decoration'
+          className='absolute right-0 top-0 z-0 h-full max-h-[18rem] max-w-[50%] object-contain'
+        />
 
-        <img src={rightImageSrc} alt="Right top decoration" className="absolute top-0 right-0 h-full max-w-[50%] max-h-[18rem] object-contain z-0" />
+        <img
+          src={leftImageSrc}
+          alt='Left decoration'
+          className='absolute left-0 top-1/4 z-0 h-full max-h-[20rem] w-3/5 max-w-[80%] -translate-x-1/4 -translate-y-20 transform object-contain'
+        />
 
-        <img src={leftImageSrc} alt="Left decoration" className="absolute top-1/4 left-0 h-full max-w-[80%] max-h-[20rem] object-contain transform -translate-x-1/4 -translate-y-20 w-3/5 z-0" />
-
-        <h1 className="z-5 text-white text-center text-24xl font-extrabold leading-[40.56px] tracking-tight whitespace-nowrap max-w-full overflow-visible">
-            WHERE <br /> IS ALEX?{" "}
+        <h1 className='z-5 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-white'>
+          WHERE <br /> IS ALEX?{' '}
         </h1>
-        <p
-          className="z-10 text-white text-center text-base font-bold tracking-tight max-w-[400px] mt-8"
-        >
-            A thrilling game showcasing the power of Aleo and the Puzzle multiparty privacy stack through a wager between friends!
+        <p className='z-10 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight text-white'>
+          A thrilling game showcasing the power of Aleo and the Puzzle
+          multiparty privacy stack through a wager between friends!
         </p>
         <button
-            onClick={connect}
-            className="z-10 bg-yellow-300 flex justify-center items-center mt-7 px-5 py-8 rounded-[200px] text-black text-4xl font-extrabold w-1/2 hover:bg-yellow-400"
+          onClick={connect}
+          className='z-10 mt-7 flex w-1/2 items-center justify-center rounded-[200px] bg-yellow-300 px-5 py-8 text-4xl font-extrabold text-black hover:bg-yellow-400'
         >
-            Play!
+          Play!
         </button>
 
-        <img src={bottomImageSrc} alt="bottom decoration" className="absolute bottom-0 center h-full max-w-[35%] max-h-[12rem] object-contain transform -translate-y-100 w-3/5 z-0" />
+        <img
+          src={bottomImageSrc}
+          alt='bottom decoration'
+          className='center -translate-y-100 absolute bottom-0 z-0 h-full max-h-[12rem] w-3/5 max-w-[35%] transform object-contain'
+        />
       </div>
     </div>
   );
-}
+};

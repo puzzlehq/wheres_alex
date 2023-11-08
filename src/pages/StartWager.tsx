@@ -1,134 +1,81 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
-type NavigationProps = {
-    opponent: string,
-    answer: string
-}
-
-function Navigation({opponent, answer}: NavigationProps) {
-    const navigate = useNavigate();
-
-    return (
-      <nav className="justify-between items-start self-stretch flex w-full gap-5 mt-11 max-md:justify-center max-md:mr-px max-md:mt-10">
-        <a href="#" className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
-            1. CHALLENGE
-        </a>
-        <div className="text-white text-center text-xs font-extrabold tracking-tight self-stretch">
-          <a href="#" 
-            onClick={() => navigate('/hide-alex', {
-                state: {opponent, answer}
-            })} 
-            className="text-white text-center text-xs font-extrabold tracking-tight self-stretch"
-            >
-            2. HIDE ALEX
-          </a>
-        </div>
-        <div className="text-white text-opacity-40 text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
-          <a href="#" className="text-white underline text-center text-xs font-extrabold tracking-tight self-stretch whitespace-nowrap">
-            3.WAGER
-          </a>
-        </div>
-      </nav>
-    );
-}
-  
-function Section() {
-    return (
-      <section className="justify-center items-center bg-sky-400 self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px">
-        <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]"> MAKE YOUR WAGER</h1>
-      </section>
-    );
-}
+import Nav from '../components/Nav';
+import PageHeader from '../components/PageHeader';
 
 type ChooseWagerAmountProps = {
-    setAmount: (number: number) => void;
-}
+  setAmount: (number: number) => void;
+};
 
 function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
-    const [localAmount, setLocalAmount] = useState<string>("0");
+  const [localAmount, setLocalAmount] = useState<string>('0');
 
-    const handleAmountChange = (e: { target: { value: any; }; }) => {
-        const newAmount = e.target.value;
-        setLocalAmount(newAmount);
-        setAmount(Number(newAmount));
-        console.log(localAmount);
-    };
+  const handleAmountChange = (e: { target: { value: any } }) => {
+    const newAmount = e.target.value;
+    setLocalAmount(newAmount);
+    setAmount(Number(newAmount));
+    console.log(localAmount);
+  };
 
-    // Determine input text color based on localAmount value
-    const inputTextColor = localAmount !== "0" ? "text-lime-600" : "";
+  // Determine input text color based on localAmount value
+  const inputTextColor = localAmount !== '0' ? 'text-lime-600' : '';
 
-    // Determine input opacity based on localAmount value
-    const inputOpacity = localAmount === "0" ? "opacity-40" : "";
+  // Determine input opacity based on localAmount value
+  const inputOpacity = localAmount === '0' ? 'opacity-40' : '';
 
-    return (
-        <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
-          <input 
-            type="number" 
-            value={localAmount === "0" ? "" : localAmount}
-            onChange={handleAmountChange}
-            className={`border-[color:var(--Grey,#868686)] self-stretch flex w-full flex-col mt-14 px-5 py-7 border-[3px] border-solid max-md:mt-10 ${inputTextColor} ${inputOpacity} text-center text-3xl font-bold self-center w-full`}
-            placeholder="Enter amount"
-          />
-          <div className="text-lime-600 text-center text-base font-bold self-center mt-3 whitespace-nowrap mb-24">
-            Puzzle Pieces
-          </div>
-        </div>
-    );
-}
-
-
-type NextButtonProps = {
-    isDisabled: boolean;
-    amount: number;
-}
-
-
-function NextButton({isDisabled, amount}: NextButtonProps) {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const opponent = location.state?.opponent || "N/A";
-    console.log(opponent);
-    const answer = location.state?.answer || "N/A";
-    console.log(answer);
-
-    const navigateToStartWager = () => {
-        navigate('/confirm-start-game', {
-            state: {opponent, answer, amount}
-        });  // Navigate to the confirm-start-game page
-    }
-    return (
-        <button 
-            onClick={navigateToStartWager}
-            disabled={isDisabled}
-            className={`text-black text-center text-3xl font-extrabold tracking-tight self-center whitespace-nowrap 
-                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-[#4EC331]'} 
-                        bg-lime-600 self-stretch w-full mt-4 p-5 rounded-[200px] max-md:ml-px max-md:mt-10`}
-        > 
-            NEXT 
-        </button>
-    );
+  return (
+    <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+      <input
+        type='number'
+        value={localAmount === '0' ? '' : localAmount}
+        onChange={handleAmountChange}
+        className={`mt-14 flex w-full flex-col self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} w-full self-center text-center text-3xl font-bold`}
+        placeholder='Enter amount'
+      />
+      <div className='mb-24 mt-3 self-center whitespace-nowrap text-center text-base font-bold text-lime-600'>
+        Puzzle Pieces
+      </div>
+    </div>
+  );
 }
 
 function StartWager() {
-    const [amount, setAmount] = useState<number>(0);
-    const location = useLocation();
-    const opponent = location.state?.opponent || "N/A";
-    console.log(opponent);
-    const answer = location.state?.answer || "N/A";
-    console.log(answer);
+  const [amount, setAmount] = useState<number>(0);
+  const location = useLocation();
+  const opponent = location.state?.opponent || 'N/A';
+  console.log(opponent);
+  const answer = location.state?.answer || 'N/A';
+  console.log(answer);
 
-    return (
-        <main className="h-[calc(100vh-4rem)] flex flex-col justify-between bg-neutral-900">
-            <div className="items-center bg-neutral-900 flex w-full flex-col px-5">
-                <Navigation opponent={opponent} answer={answer} />
-                <Section />
-                <ChooseWagerAmount setAmount={setAmount} />
-                <NextButton isDisabled={amount <= 0} amount={amount}/>
-            </div>
-        </main>
-    );
+  const navigate = useNavigate();
+
+  const navigateToStartWager = () => {
+    navigate('/confirm-start-game', {
+      state: { opponent, answer, amount },
+    }); // Navigate to the confirm-start-game page
+  };
+
+  const isDisabled = amount <= 0;
+
+  return (
+    <main className='flex h-full flex-col justify-between bg-neutral-900'>
+      <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+        <Nav step={1} opponent={opponent} answer={answer} />
+        <PageHeader bg='bg-sky-400' text='MAKE YOUR WAGER' />
+        <ChooseWagerAmount setAmount={setAmount} />
+        <button
+          onClick={navigateToStartWager}
+          disabled={isDisabled}
+          className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-black 
+                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-[#4EC331]'} 
+                        mt-4 w-full self-stretch rounded-[200px] bg-lime-600 p-5 max-md:ml-px max-md:mt-10`}
+        >
+          NEXT
+        </button>
+      </div>
+    </main>
+  );
 }
 
 export default StartWager;

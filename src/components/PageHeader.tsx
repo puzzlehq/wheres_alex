@@ -1,14 +1,18 @@
 type PageHeaderProps = {
-  text: string,
-  bg: string,
-}
+  text: string;
+  bg: string;
+};
 
-function PageHeader({text, bg}: PageHeaderProps) {
+function PageHeader({ text, bg }: PageHeaderProps) {
   return (
-    <section className={`justify-center items-center self-stretch flex w-full flex-col mt-2 px-5 py-4 max-md:mr-px ${bg}`}>
-      <h1 className="text-black text-center text-3xl font-extrabold leading-8 self-center max-w-[274px]">{text}</h1>
+    <section
+      className={`mt-2 flex w-full flex-col items-center justify-center self-stretch px-5 py-4 max-md:mr-px ${bg}`}
+    >
+      <h1 className='max-w-[274px] self-center text-center text-3xl font-extrabold leading-8 text-black'>
+        {text}
+      </h1>
     </section>
   );
 }
 
-export default PageHeader
+export default PageHeader;

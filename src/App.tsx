@@ -19,8 +19,6 @@ import FinishGameClaim from './pages/FinishGameClaim.js';
 import RenegUnacceptedGame from './pages/RenegUnacceptedGame.js';
 import FindAlex from './pages/FindAlex.js';
 
-
-
 function App() {
   // const [isConnected, setIsConnected] = useState<boolean>(false);
   // const { isConnected, loading } = useConnect();
@@ -35,28 +33,38 @@ function App() {
   // };
 
   return (
-    <div className="App min-h-screen bg-yellow-500 flex justify-center">
-      <div className="max-w-screen-sm w-full bg-neutral-900 shadow-md overflow-y-auto flex flex-col">
-
-        {isConnected && account?.address && <Header isConnected={isConnected} address={account?.address} />}
+    <div className='App flex min-h-screen justify-center bg-yellow-500'>
+      <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto bg-neutral-900 shadow-md'>
+        {isConnected && account?.address && (
+          <Header isConnected={isConnected} address={account?.address} />
+        )}
 
         <Router>
-          <div className="max-w-screen-sm w-full h-full p-4">
+          <div className='h-full w-full max-w-screen-sm p-4'>
             <Routes>
-              <Route path="/new-game" element={<NewGame />} />
-              <Route path="/start-wager" element={<StartWager />} />
-              <Route path="/hide-alex" element={<HideAlex />} />
-              <Route path="/confirm-start-game" element={<ConfirmStartGame account={account}/>} />
+              <Route path='/new-game' element={<NewGame />} />
+              <Route path='/start-wager' element={<StartWager />} />
+              <Route path='/hide-alex' element={<HideAlex />} />
+              <Route
+                path='/confirm-start-game'
+                element={<ConfirmStartGame account={account} />}
+              />
               <Route path='/game-started' element={<GameStarted />} />
-              <Route path="/pending-confirm-start-game" element={<PendingConfirmStartGame />} />
+              <Route
+                path='/pending-confirm-start-game'
+                element={<PendingConfirmStartGame />}
+              />
               <Route path='/accept-game' element={<AcceptGame />} />
               <Route path='/finish-game' element={<FinishGame />} />
               <Route path='/finish-game-claim' element={<FinishGameClaim />} />
-              <Route path='/reneg-unaccepted-game' element={<RenegUnacceptedGame />} />
+              <Route
+                path='/reneg-unaccepted-game'
+                element={<RenegUnacceptedGame />}
+              />
               <Route path='/find-alex' element={<FindAlex />} />
               <Route
-                path="/"
-                element={ !loading && isConnected ? <Home /> : <Welcome /> }
+                path='/'
+                element={!loading && isConnected ? <Home /> : <Welcome />}
               />
             </Routes>
           </div>
