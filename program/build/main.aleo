@@ -23,6 +23,11 @@ record NotifyGameOver:
     total_pot as u64.private;
     game_address as address.private;
 
+record NotifyAcceptGame:
+    owner as address.private;
+    total_pot as u64.private;
+    game_address as address.private;
+
 record Key:
     owner as address.private;
     keys as field.private;
@@ -157,9 +162,11 @@ function accept_game:
     or r2 r3 into r4;
     assert.eq r4 true;
     cast r0.owner r0.player_one_comm r1 r0.total_pot r0.player_one_address r0.player_two_address 1field into r5 as Game.record;
-    async accept_game r0.owner into r6;
+    cast r0.player_one_address r0.total_pot r0.owner into r6 as NotifyAcceptGame.record;
+    async accept_game r0.owner into r7;
     output r5 as Game.record;
-    output r6 as cflip_gm_aleo_testing_123.aleo/accept_game.future;
+    output r6 as NotifyAcceptGame.record;
+    output r7 as cflip_gm_aleo_testing_123.aleo/accept_game.future;
 
 finalize accept_game:
     input r0 as address.public;

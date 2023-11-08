@@ -31,6 +31,12 @@ program cflip_gm_aleo_testing_123.aleo {
         private game_address: address,
     }
 
+    record NotifyAcceptGame {
+        private owner: address,
+        private total_pot: u64,
+        private game_address: address,
+    }
+
     record Key {
         private owner: address,
         private keys: field,
@@ -281,7 +287,7 @@ program cflip_gm_aleo_testing_123.aleo {
         // private player_two_signature: signature,
         // todo: adjust msg type here
         // private leo_message: field,
-    ) -> (Game)
+    ) -> (Game, NotifyAcceptGame)
     {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
@@ -311,6 +317,13 @@ program cflip_gm_aleo_testing_123.aleo {
             game_state: 1field, // update to game accepted
         };
 
+        // notify player 1 that the game has been accepted
+        let notify_accept_game_record: NotifyAcceptGame = NotifyAcceptGame {
+            owner: game_record.player_one_address,
+            total_pot: game_record.total_pot,
+            game_address: game_record.owner,
+        };
+
         // note: will need to tweak owner rules structure likely to include sig to lock next turn
         // let new_owner_rules: OwnerRules =
         // puzz_testing_acct_123.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
@@ -318,7 +331,7 @@ program cflip_gm_aleo_testing_123.aleo {
         // todo: tweak for notify records
         // output owner rules record to ms so bob can claim later on
         // return (game_record_new, new_owner_rules) then finalize(game_record.owner);
-        return (game_record_new) then finalize(game_record.owner);
+        return (game_record_new, notify_accept_game_record) then finalize(game_record.owner);
     }
 
     finalize accept_game (game_address: address) {
@@ -358,7 +371,6 @@ program cflip_gm_aleo_testing_123.aleo {
             game_address: game_address,
         };
 
-        // todo: tweak for notify records
         return (revealed_answer, notify_reveal_answer_p1, notify_reveal_answer_p2);
     }
 
