@@ -11,6 +11,9 @@ program cflip_testing_123_token.aleo {
     record PuzzClaim {
         private owner: address,
         private amount: u64,
+        private claimer: address,
+        private msg: field,
+        private sig: signature,
     }
 
     record TokenOwnerRules {
@@ -99,17 +102,21 @@ program cflip_testing_123_token.aleo {
         private puzz_token: Puzz,
         private sender: address, // can't use self.caller as this is ref coinflip addr
         private to: address,
-        private amount: u64
-    ) -> (Puzz, Puzz)
+        private amount: u64,
+        private msg: field,
+        private sig: signature,
+    ) -> (PuzzClaim, Puzz, Puzz)
     {
 
         // note: commenting out puzz_claim for now
 
-        // todo: do we need this? since we renege and transfer out with ms key
-        // let puzz_claim_record: PuzzClaim = PuzzClaim {
-        //     owner: to,
-        //     amount: amount,
-        // };
+        let puzz_claim_record: PuzzClaim = PuzzClaim {
+            owner: to,
+            amount: amount,
+            claimer: sender,
+            msg: msg,
+            sig: sig,
+        };
 
         // todo: add address field to Puzz Claim token and signature
         // todo: then to stake out, need to present claim token and signature
@@ -128,7 +135,7 @@ program cflip_testing_123_token.aleo {
 
         // puzz_stake_record,
         // return ( puzz_claim_record, receiver_new_record, sender_new_record);
-        return (receiver_new_record, sender_new_record);
+        return (puzz_claim_record, receiver_new_record, sender_new_record);
 
     }
 
@@ -136,7 +143,7 @@ program cflip_testing_123_token.aleo {
     transition stake_transfer_private_out (
         private puzz_token: Puzz,
         // private token_owner_rules: TokenOwnerRules,
-        // private puzz_claim: PuzzClaim,
+        private puzz_claim: PuzzClaim,
         private to: address,
         // private sig: signature,
         // private msg: field,
@@ -151,8 +158,9 @@ program cflip_testing_123_token.aleo {
         // todo: address check on claim?
 
         // validate if sig on puzz_claim is valid
-        // let is_verified: bool = sig.verify(puzz_claim.owner, msg);
-        // assert_eq(is_verified, true);
+        // todo: add in additional logic to verify signatures...
+        let is_verified: bool = puzz_claim.sig.verify(puzz_claim.claimer, puzz_claim.msg);
+        assert_eq(is_verified, true);
 
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {

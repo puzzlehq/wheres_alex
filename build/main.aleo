@@ -86,22 +86,24 @@ function propose_game:
     commit.bhp256 r5 r13 into r14 as field;
     gt r4 0u64 into r15;
     assert.eq r15 true;
-    assert.eq r4 r3.amount;
-    cast r2 r0 self.caller into r16 as Key.record;
-    cast self.caller r1 r9 r5 into r17 as Answer.record;
-    cast r1 r14 1field r4 self.caller r2 0field into r18 as Game.record;
-    call puzz_testing_acct_123.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r19;
-    call cflip_testing_123_token.aleo/mint_token_owner_rules_record r1 self.caller r2 r6 r6 into r20;
-    call cflip_testing_123_token.aleo/stake_transfer_private_in r3 self.caller r1 r4 into r21 r22;
-    async propose_game r1 into r23;
-    output r17 as Answer.record;
-    output r16 as Key.record;
-    output r18 as Game.record;
-    output r19 as puzz_testing_acct_123.aleo/OwnerRules.record;
-    output r20 as cflip_testing_123_token.aleo/TokenOwnerRules.record;
-    output r21 as cflip_testing_123_token.aleo/Puzz.record;
-    output r22 as cflip_testing_123_token.aleo/Puzz.record;
-    output r23 as cflip_gm_aleo_testing_123.aleo/propose_game.future;
+    gte r3.amount r4 into r16;
+    assert.eq r16 true;
+    cast r2 r0 self.caller into r17 as Key.record;
+    cast self.caller r1 r9 r5 into r18 as Answer.record;
+    cast r1 r14 1field r4 self.caller r2 0field into r19 as Game.record;
+    call puzz_testing_acct_123.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r20;
+    call cflip_testing_123_token.aleo/mint_token_owner_rules_record r1 self.caller r2 r6 r6 into r21;
+    call cflip_testing_123_token.aleo/stake_transfer_private_in r3 self.caller r1 r4 r7 r6 into r22 r23 r24;
+    async propose_game r1 into r25;
+    output r18 as Answer.record;
+    output r17 as Key.record;
+    output r19 as Game.record;
+    output r20 as puzz_testing_acct_123.aleo/OwnerRules.record;
+    output r21 as cflip_testing_123_token.aleo/TokenOwnerRules.record;
+    output r22 as cflip_testing_123_token.aleo/PuzzClaim.record;
+    output r23 as cflip_testing_123_token.aleo/Puzz.record;
+    output r24 as cflip_testing_123_token.aleo/Puzz.record;
+    output r25 as cflip_gm_aleo_testing_123.aleo/propose_game.future;
 
 finalize propose_game:
     input r0 as address.public;
@@ -111,12 +113,13 @@ finalize propose_game:
 function player_one_renege_proposal:
     input r0 as Game.record;
     input r1 as cflip_testing_123_token.aleo/TokenOwnerRules.record;
-    input r2 as cflip_testing_123_token.aleo/Puzz.record;
-    input r3 as u64.private;
+    input r2 as cflip_testing_123_token.aleo/PuzzClaim.record;
+    input r3 as cflip_testing_123_token.aleo/Puzz.record;
+    input r4 as u64.private;
     assert.eq self.caller self.signer;
-    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 self.caller r3 into r4 r5;
-    output r4 as cflip_testing_123_token.aleo/Puzz.record;
-    output r2 as cflip_testing_123_token.aleo/Puzz.record;
+    call cflip_testing_123_token.aleo/stake_transfer_private_out r3 r2 self.caller r4 into r5 r6;
+    output r5 as cflip_testing_123_token.aleo/Puzz.record;
+    output r3 as cflip_testing_123_token.aleo/Puzz.record;
 
 
 function submit_wager:
@@ -124,22 +127,24 @@ function submit_wager:
     input r1 as address.private;
     input r2 as cflip_testing_123_token.aleo/Puzz.record;
     input r3 as u64.private;
-    input r4 as signature.private;
-    call cflip_testing_123_token.aleo/stake_transfer_private_in r2 self.caller r0 r3 into r5 r6;
-    call cflip_testing_123_token.aleo/mint_token_owner_rules_record r0 self.caller r1 r4 r4 into r7;
-    output r7 as cflip_testing_123_token.aleo/TokenOwnerRules.record;
-    output r5 as cflip_testing_123_token.aleo/Puzz.record;
-    output r6 as cflip_testing_123_token.aleo/Puzz.record;
+    input r4 as field.private;
+    input r5 as signature.private;
+    call cflip_testing_123_token.aleo/stake_transfer_private_in r2 self.caller r0 r3 r4 r5 into r6 r7 r8;
+    call cflip_testing_123_token.aleo/mint_token_owner_rules_record r0 self.caller r1 r5 r5 into r9;
+    output r9 as cflip_testing_123_token.aleo/TokenOwnerRules.record;
+    output r7 as cflip_testing_123_token.aleo/Puzz.record;
+    output r8 as cflip_testing_123_token.aleo/Puzz.record;
 
 
 function player_two_renege_proposal:
     input r0 as Game.record;
-    input r1 as cflip_testing_123_token.aleo/Puzz.record;
-    input r2 as u64.private;
+    input r1 as cflip_testing_123_token.aleo/PuzzClaim.record;
+    input r2 as cflip_testing_123_token.aleo/Puzz.record;
+    input r3 as u64.private;
     assert.eq self.caller self.signer;
-    call cflip_testing_123_token.aleo/stake_transfer_private_out r1 self.caller r2 into r3 r4;
-    output r3 as cflip_testing_123_token.aleo/Puzz.record;
+    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 r1 self.caller r3 into r4 r5;
     output r4 as cflip_testing_123_token.aleo/Puzz.record;
+    output r5 as cflip_testing_123_token.aleo/Puzz.record;
 
 
 function accept_game:
@@ -181,30 +186,31 @@ function finish_game:
     input r0 as Game.record;
     input r1 as RevealedAnswer.record;
     input r2 as cflip_testing_123_token.aleo/Puzz.record;
+    input r3 as cflip_testing_123_token.aleo/PuzzClaim.record;
     assert.eq self.caller self.signer;
     assert.eq r0.game_state 1field;
-    is.neq r1.answer r0.player_two_answer into r3;
-    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 self.caller r0.total_pot into r4 r5;
-    cast self.caller self.caller r0.total_pot r0.owner into r6 as NotifyGameOver.record;
-    cast r0.player_two_address self.caller r0.total_pot r0.owner into r7 as NotifyGameOver.record;
-    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 self.caller r0.total_pot into r8 r9;
-    cast self.caller r0.player_two_address r0.total_pot r0.owner into r10 as NotifyGameOver.record;
-    cast r0.player_two_address r0.player_two_address r0.total_pot r0.owner into r11 as NotifyGameOver.record;
-    ternary r3 r6.owner r10.owner into r12;
-    ternary r3 r6.winner r10.winner into r13;
-    ternary r3 r6.total_pot r10.total_pot into r14;
-    ternary r3 r6.game_address r10.game_address into r15;
-    cast r12 r13 r14 r15 into r16 as NotifyGameOver.record;
-    ternary r3 r7.owner r11.owner into r17;
-    ternary r3 r7.winner r11.winner into r18;
-    ternary r3 r7.total_pot r11.total_pot into r19;
-    ternary r3 r7.game_address r11.game_address into r20;
-    cast r17 r18 r19 r20 into r21 as NotifyGameOver.record;
-    ternary r3 r0.owner r0.owner into r22;
-    async finish_game r22 into r23;
-    output r16 as NotifyGameOver.record;
-    output r21 as NotifyGameOver.record;
-    output r23 as cflip_gm_aleo_testing_123.aleo/finish_game.future;
+    is.neq r1.answer r0.player_two_answer into r4;
+    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 r3 self.caller r0.total_pot into r5 r6;
+    cast self.caller self.caller r0.total_pot r0.owner into r7 as NotifyGameOver.record;
+    cast r0.player_two_address self.caller r0.total_pot r0.owner into r8 as NotifyGameOver.record;
+    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 r3 self.caller r0.total_pot into r9 r10;
+    cast self.caller r0.player_two_address r0.total_pot r0.owner into r11 as NotifyGameOver.record;
+    cast r0.player_two_address r0.player_two_address r0.total_pot r0.owner into r12 as NotifyGameOver.record;
+    ternary r4 r7.owner r11.owner into r13;
+    ternary r4 r7.winner r11.winner into r14;
+    ternary r4 r7.total_pot r11.total_pot into r15;
+    ternary r4 r7.game_address r11.game_address into r16;
+    cast r13 r14 r15 r16 into r17 as NotifyGameOver.record;
+    ternary r4 r8.owner r12.owner into r18;
+    ternary r4 r8.winner r12.winner into r19;
+    ternary r4 r8.total_pot r12.total_pot into r20;
+    ternary r4 r8.game_address r12.game_address into r21;
+    cast r18 r19 r20 r21 into r22 as NotifyGameOver.record;
+    ternary r4 r0.owner r0.owner into r23;
+    async finish_game r23 into r24;
+    output r17 as NotifyGameOver.record;
+    output r22 as NotifyGameOver.record;
+    output r24 as cflip_gm_aleo_testing_123.aleo/finish_game.future;
 
 finalize finish_game:
     input r0 as address.public;
@@ -218,12 +224,13 @@ function claim_total_pot:
     input r0 as Game.record;
     input r1 as RevealedAnswer.record;
     input r2 as cflip_testing_123_token.aleo/Puzz.record;
+    input r3 as cflip_testing_123_token.aleo/PuzzClaim.record;
     assert.eq self.caller self.signer;
-    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 self.caller r0.total_pot into r3 r4;
-    async claim_total_pot r0.owner into r5;
-    output r3 as cflip_testing_123_token.aleo/Puzz.record;
+    call cflip_testing_123_token.aleo/stake_transfer_private_out r2 r3 self.caller r0.total_pot into r4 r5;
+    async claim_total_pot r0.owner into r6;
     output r4 as cflip_testing_123_token.aleo/Puzz.record;
-    output r5 as cflip_gm_aleo_testing_123.aleo/claim_total_pot.future;
+    output r5 as cflip_testing_123_token.aleo/Puzz.record;
+    output r6 as cflip_gm_aleo_testing_123.aleo/claim_total_pot.future;
 
 finalize claim_total_pot:
     input r0 as address.public;
