@@ -227,10 +227,14 @@ function claim_total_pot:
     input r3 as cflip_testing_123_token.aleo/PuzzClaim.record;
     assert.eq self.caller self.signer;
     call cflip_testing_123_token.aleo/stake_transfer_private_out r2 r3 self.caller r0.total_pot into r4 r5;
-    async claim_total_pot r0.owner into r6;
+    cast r0.player_one_address r0.player_two_address r0.total_pot r0.owner into r6 as NotifyGameOver.record;
+    cast r0.player_two_address r0.player_two_address r0.total_pot r0.owner into r7 as NotifyGameOver.record;
+    async claim_total_pot r0.owner into r8;
     output r4 as cflip_testing_123_token.aleo/Puzz.record;
     output r5 as cflip_testing_123_token.aleo/Puzz.record;
-    output r6 as cflip_gm_aleo_testing_123.aleo/claim_total_pot.future;
+    output r6 as NotifyGameOver.record;
+    output r7 as NotifyGameOver.record;
+    output r8 as cflip_gm_aleo_testing_123.aleo/claim_total_pot.future;
 
 finalize claim_total_pot:
     input r0 as address.public;

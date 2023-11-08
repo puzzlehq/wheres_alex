@@ -472,7 +472,7 @@ program cflip_gm_aleo_testing_123.aleo {
             game_address: game_record.owner,
         };
 
-        return (receiver_puzz_record, puzz_change) then finalize(game_record.owner);
+        return (receiver_puzz_record, puzz_change, notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
     }
 
     finalize claim_total_pot (game_address: address) -> () {
