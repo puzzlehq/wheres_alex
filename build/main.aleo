@@ -15,11 +15,13 @@ program cflip_gm_aleo_testing_123.aleo;
 record NotifyRevealedAnswer:
     owner as address.private;
     answer as field.private;
+    game_address as address.private;
 
 record NotifyGameOver:
     owner as address.private;
     winner as address.private;
     total_pot as u64.private;
+    game_address as address.private;
 
 record Key:
     owner as address.private;
@@ -168,8 +170,8 @@ function reveal_answer:
     input r2 as address.private;
     assert.eq self.caller self.signer;
     cast r1 r0.answer r0.nonce into r3 as RevealedAnswer.record;
-    cast r0.owner r0.answer into r4 as NotifyRevealedAnswer.record;
-    cast r2 r0.answer into r5 as NotifyRevealedAnswer.record;
+    cast r0.owner r0.answer r1 into r4 as NotifyRevealedAnswer.record;
+    cast r2 r0.answer r1 into r5 as NotifyRevealedAnswer.record;
     output r3 as RevealedAnswer.record;
     output r4 as NotifyRevealedAnswer.record;
     output r5 as NotifyRevealedAnswer.record;
@@ -183,24 +185,26 @@ function finish_game:
     assert.eq r0.game_state 1field;
     is.neq r1.answer r0.player_two_answer into r3;
     call cflip_testing_123_token.aleo/stake_transfer_private_out r2 self.caller r0.total_pot into r4 r5;
-    cast self.caller self.caller r0.total_pot into r6 as NotifyGameOver.record;
-    cast r0.player_two_address self.caller r0.total_pot into r7 as NotifyGameOver.record;
+    cast self.caller self.caller r0.total_pot r0.owner into r6 as NotifyGameOver.record;
+    cast r0.player_two_address self.caller r0.total_pot r0.owner into r7 as NotifyGameOver.record;
     call cflip_testing_123_token.aleo/stake_transfer_private_out r2 self.caller r0.total_pot into r8 r9;
-    cast self.caller r0.player_two_address r0.total_pot into r10 as NotifyGameOver.record;
-    cast r0.player_two_address r0.player_two_address r0.total_pot into r11 as NotifyGameOver.record;
+    cast self.caller r0.player_two_address r0.total_pot r0.owner into r10 as NotifyGameOver.record;
+    cast r0.player_two_address r0.player_two_address r0.total_pot r0.owner into r11 as NotifyGameOver.record;
     ternary r3 r6.owner r10.owner into r12;
     ternary r3 r6.winner r10.winner into r13;
     ternary r3 r6.total_pot r10.total_pot into r14;
-    cast r12 r13 r14 into r15 as NotifyGameOver.record;
-    ternary r3 r7.owner r11.owner into r16;
-    ternary r3 r7.winner r11.winner into r17;
-    ternary r3 r7.total_pot r11.total_pot into r18;
-    cast r16 r17 r18 into r19 as NotifyGameOver.record;
-    ternary r3 r0.owner r0.owner into r20;
-    async finish_game r20 into r21;
-    output r15 as NotifyGameOver.record;
-    output r19 as NotifyGameOver.record;
-    output r21 as cflip_gm_aleo_testing_123.aleo/finish_game.future;
+    ternary r3 r6.game_address r10.game_address into r15;
+    cast r12 r13 r14 r15 into r16 as NotifyGameOver.record;
+    ternary r3 r7.owner r11.owner into r17;
+    ternary r3 r7.winner r11.winner into r18;
+    ternary r3 r7.total_pot r11.total_pot into r19;
+    ternary r3 r7.game_address r11.game_address into r20;
+    cast r17 r18 r19 r20 into r21 as NotifyGameOver.record;
+    ternary r3 r0.owner r0.owner into r22;
+    async finish_game r22 into r23;
+    output r16 as NotifyGameOver.record;
+    output r21 as NotifyGameOver.record;
+    output r23 as cflip_gm_aleo_testing_123.aleo/finish_game.future;
 
 finalize finish_game:
     input r0 as address.public;

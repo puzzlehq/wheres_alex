@@ -21,12 +21,14 @@ program cflip_gm_aleo_testing_123.aleo {
     record NotifyRevealedAnswer {
         private owner: address,
         private answer: field,
+        private game_address: address,
     }
 
     record NotifyGameOver {
         private owner: address,
         private winner: address,
         private total_pot: u64,
+        private game_address: address,
     }
 
     record Key {
@@ -345,12 +347,14 @@ program cflip_gm_aleo_testing_123.aleo {
         let notify_reveal_answer_p1: NotifyRevealedAnswer = NotifyRevealedAnswer {
             owner: answer_record.owner,
             answer: answer_record.answer,
+            game_address: game_address,
         };
 
         // send notify reveal record answer to player 2
         let notify_reveal_answer_p2: NotifyRevealedAnswer = NotifyRevealedAnswer {
             owner: opponent_address,
             answer: answer_record.answer,
+            game_address: game_address,
         };
 
         // todo: tweak for notify records
@@ -392,12 +396,14 @@ program cflip_gm_aleo_testing_123.aleo {
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,
                 winner: self.caller,
-                total_pot: game_record.total_pot
+                total_pot: game_record.total_pot,
+                game_address: game_record.owner,
             };
             let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_two_address,
                 winner: self.caller,
-                total_pot: game_record.total_pot
+                total_pot: game_record.total_pot,
+                game_address: game_record.owner,
             };
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
@@ -411,12 +417,14 @@ program cflip_gm_aleo_testing_123.aleo {
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: self.caller,
                 winner: game_record.player_two_address,
-                total_pot: game_record.total_pot
+                total_pot: game_record.total_pot,
+                game_address: game_record.owner,
             };
             let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_two_address,
                 winner: game_record.player_two_address,
-                total_pot: game_record.total_pot
+                total_pot: game_record.total_pot,
+                game_address: game_record.owner,
             };
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
