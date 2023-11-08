@@ -16,7 +16,7 @@ import { useAccount, useConnect } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame.js';
 import FinishGame from './pages/FinishGame.js';
 import FinishGameClaim from './pages/FinishGameWinClaim.js';
-import RenegUnacceptedGame from './pages/RenegUnacceptedGame.js';
+import RenegeUnacceptedGame from './pages/RenegeUnacceptedGame.js';
 import FindAlex from './pages/FindAlex.js';
 
 function App() {
@@ -58,8 +58,8 @@ function App() {
               <Route path='/finish-game' element={<FinishGame />} />
               <Route path='/finish-game-claim' element={<FinishGameClaim />} />
               <Route
-                path='/reneg-unaccepted-game'
-                element={<RenegUnacceptedGame />}
+                path='/Renege-unaccepted-game'
+                element={<RenegeUnacceptedGame />}
               />
               <Route path='/find-alex' element={<FindAlex />} />
               <Route

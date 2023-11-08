@@ -176,9 +176,9 @@ type LiveGameProps = {
 function LiveGameItem({ game, timeLeft }: LiveGameProps) {
   const navigate = useNavigate(); // Hook to navigate
 
-  const handleRenegClick = () => {
+  const handleRenegeClick = () => {
     // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/reneg-unaccepted-game', {
+    navigate('/Renege-unaccepted-game', {
       state: {
         gameMultisig: game.gameMultisig,
         opponent: game.player,
@@ -233,7 +233,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
         return (
           <>
             <button
-              onClick={handleRenegClick}
+              onClick={handleRenegeClick}
               className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-gray px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
@@ -301,7 +301,7 @@ function Home() {
       gameMultisig: 'aleo3',
       player: 'Charlie',
       wager: '30 P',
-      action: 'Reneg',
+      action: 'Renege',
     },
     { gameMultisig: 'aleo4', player: 'David', wager: '40 P', action: 'Delete' },
     {
@@ -327,7 +327,7 @@ function Home() {
 
   const liveGames = gameStates.filter(
     (game) =>
-      game.action === 'Reneg' ||
+      game.action === 'Renege' ||
       (game.action === 'Claim' && game.blockheight <= aleo_blockheight)
   );
   const notifications = gameStates.filter(

@@ -40,6 +40,7 @@ function HideAlex() {
         <ChooseAlexLocation
           handleButtonClick={handleButtonClick}
           opponent={opponent}
+          hiding={true}
         />
         <div className='flex flex-grow flex-col' />
 

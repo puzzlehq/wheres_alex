@@ -17,10 +17,10 @@ export type NotifyPendingAccept = {
   gameMultisig: string;
   player: string;
   wager: string;
-  action: 'Reneg';
+  action: 'Renege';
 };
 
-export type NotifyRenegStart = {
+export type NotifyRenegeStart = {
   gameMultisig: string;
   player: string;
   wager: string;
@@ -40,7 +40,7 @@ type GameState =
   | NotifyGameStart
   | NotifyFinish
   | NotifyPendingAccept
-  | NotifyRenegStart
+  | NotifyRenegeStart
   | NotifyClaimFinish;
 
 export default GameState;

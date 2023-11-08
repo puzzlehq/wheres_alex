@@ -41,6 +41,7 @@ function FindAlex() {
         <ChooseAlexLocation
           handleButtonClick={handleButtonClick}
           opponent={opponent}
+          hiding={false}
         />
         <div className='flex flex-grow flex-col' />
         <button
