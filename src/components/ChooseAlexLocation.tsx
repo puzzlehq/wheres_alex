@@ -36,8 +36,8 @@ function ChooseAlexLocation({ handleButtonClick, opponent }: HideAlexProps) {
             <div
               className={`mt-2.5 whitespace-nowrap text-center text-sm font-extrabold ${
                 answer === 'In Weeds'
-                  ? 'text-lime-600'
-                  : 'text-white opacity-40 hover:text-lime-600'
+                  ? 'text-green'
+                  : 'text-white opacity-40 hover:text-green'
               }`}
             >
               In Weeds
@@ -60,8 +60,8 @@ function ChooseAlexLocation({ handleButtonClick, opponent }: HideAlexProps) {
             <div
               className={`mt-2.5 whitespace-nowrap text-center text-sm font-extrabold ${
                 answer === 'Behind Building'
-                  ? 'text-lime-600'
-                  : 'text-white opacity-40 hover:text-lime-600'
+                  ? 'text-green'
+                  : 'text-white opacity-40 hover:text-green'
               }`}
             >
               Behind Building
@@ -70,7 +70,7 @@ function ChooseAlexLocation({ handleButtonClick, opponent }: HideAlexProps) {
         </div>
       </section>
       {answer && (
-        <p className='mt-20 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-lime-600 max-md:mt-10'>
+        <p className='mt-20 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green max-md:mt-10'>
           You chose to hide Alex {answer}!
         </p>
       )}

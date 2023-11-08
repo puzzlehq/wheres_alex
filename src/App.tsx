@@ -33,7 +33,7 @@ function App() {
   // };
 
   return (
-    <div className='App flex min-h-screen justify-center bg-yellow-500'>
+    <div className='App flex min-h-screen justify-center bg-amber-400'>
       <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto bg-neutral-900 shadow-md'>
         {isConnected && account?.address && (
           <Header isConnected={isConnected} address={account?.address} />

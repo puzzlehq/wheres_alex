@@ -5,17 +5,7 @@ import { Html5Qrcode } from 'html5-qrcode';
 import qrImg from '../assets/qrscanner.svg';
 import { useAccount } from '@puzzlehq/sdk';
 import Nav from '../components/Nav';
-
-function Section() {
-  return (
-    <section className='mt-2 flex w-full flex-col items-center justify-center self-stretch bg-sky-400 px-5 py-4 max-md:mr-px'>
-      <h1 className='max-w-[274px] self-center text-center text-3xl font-extrabold leading-8 text-black'>
-        {' '}
-        WHO WOULD YOU LIKE TO CHALLENGE?{' '}
-      </h1>
-    </section>
-  );
-}
+import PageHeader from '../components/PageHeader';
 
 interface PasteyQRProps {
   setOpponent: (address: string) => void;
@@ -77,14 +67,14 @@ function PasteyQR({ setOpponent, opponent }: PasteyQRProps) {
         placeholder='Enter Wallet Address'
         id='opponent'
         value={opponent}
-        readOnly
+        onChange={(e) => setOpponent(e.target.value)}
       />
       <div className='flex items-center'>
         {' '}
         {/* Use flex container here */}
         <button
           onClick={handlePasteFromClipboard}
-          className='mt-3 w-[197px] max-w-full self-center rounded-[200px] bg-zinc-500 px-5 py-3 text-center text-xs font-extrabold text-black'
+          className='mt-3 w-[197px] max-w-full self-center rounded-[200px] bg-gray px-5 py-3 text-center text-xs font-extrabold text-black'
         >
           PASTE FROM CLIPBOARD
         </button>
@@ -140,8 +130,8 @@ function NextButton({ opponent }: NextButtonProps) {
       className={`mt-24 w-full self-center self-stretch whitespace-nowrap rounded-[200px] p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10
           ${
             opponent
-              ? 'bg-lime-600 hover:bg-[#4EC331]'
-              : 'cursor-not-allowed bg-lime-600 bg-opacity-20'
+              ? 'bg-green hover:bg-green'
+              : 'cursor-not-allowed bg-green bg-opacity-20'
           }
           `}
       disabled={!opponent}
@@ -160,8 +150,8 @@ function NewGame() {
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
-        <Nav />
-        <Section />
+        <Nav step={1} opponent={opponent} answer=''/>
+        <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-blue'/>
         <PasteyQR setOpponent={setOpponent} opponent={opponent} />
         <NextButton opponent={opponent} />
       </div>

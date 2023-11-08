@@ -1,36 +1,38 @@
-type NotifyGameStart = {
+export type NotifyGameStart = {
   gameMultisig: string;
   player: string;
   wager: string;
   action: 'Start';
 };
 
-type NotifyFinish = {
+export type NotifyFinish = {
   gameMultisig: string;
   player: string;
   wager: string;
+  win: boolean;
   action: 'Finish';
 };
 
-type NotifyPendingAccept = {
+export type NotifyPendingAccept = {
   gameMultisig: string;
   player: string;
   wager: string;
   action: 'Reneg';
 };
 
-type NotifyRenegStart = {
+export type NotifyRenegStart = {
   gameMultisig: string;
   player: string;
   wager: string;
   action: 'Delete';
 };
 
-type NotifyClaimFinish = {
+export type NotifyClaimFinish = {
   gameMultisig: string;
   player: string;
   blockheight: number;
   wager: string;
+  win: boolean;
   action: 'Claim';
 };
 

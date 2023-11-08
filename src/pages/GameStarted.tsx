@@ -27,7 +27,7 @@ function StartAnotherGameSection() {
   return (
     <button
       onClick={navigateBackToNewGame}
-      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-yellow-300 px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-black'
+      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-yellow px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-black'
     >
       START ANOTHER GAME
     </button>
@@ -40,7 +40,7 @@ function TakeHomeSection() {
     <a
       href='/'
       onClick={() => navigate('/')}
-      className='mt-7 self-center whitespace-nowrap text-base font-extrabold text-zinc-500'
+      className='mt-7 self-center whitespace-nowrap text-base font-extrabold text-gray'
     >
       TAKE ME BACK HOME
     </a>

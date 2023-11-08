@@ -19,7 +19,7 @@ function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
   };
 
   // Determine input text color based on localAmount value
-  const inputTextColor = localAmount !== '0' ? 'text-lime-600' : '';
+  const inputTextColor = localAmount !== '0' ? 'text-green' : '';
 
   // Determine input opacity based on localAmount value
   const inputOpacity = localAmount === '0' ? 'opacity-40' : '';
@@ -33,7 +33,7 @@ function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
         className={`mt-14 flex w-full flex-col self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} w-full self-center text-center text-3xl font-bold`}
         placeholder='Enter amount'
       />
-      <div className='mb-24 mt-3 self-center whitespace-nowrap text-center text-base font-bold text-lime-600'>
+      <div className='mb-24 mt-3 self-center whitespace-nowrap text-center text-base font-bold text-green'>
         Puzzle Pieces
       </div>
     </div>
@@ -61,15 +61,15 @@ function StartWager() {
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
-        <Nav step={1} opponent={opponent} answer={answer} />
-        <PageHeader bg='bg-sky-400' text='MAKE YOUR WAGER' />
+        <Nav step={3} opponent={opponent} answer={answer} />
+        <PageHeader bg='bg-blue' text='MAKE YOUR WAGER' />
         <ChooseWagerAmount setAmount={setAmount} />
         <button
           onClick={navigateToStartWager}
           disabled={isDisabled}
           className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-black 
-                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-[#4EC331]'} 
-                        mt-4 w-full self-stretch rounded-[200px] bg-lime-600 p-5 max-md:ml-px max-md:mt-10`}
+                        ${isDisabled ? 'bg-opacity-40' : 'hover:bg-green'} 
+                        mt-4 w-full self-stretch rounded-[200px] bg-green p-5 max-md:ml-px max-md:mt-10`}
         >
           NEXT
         </button>

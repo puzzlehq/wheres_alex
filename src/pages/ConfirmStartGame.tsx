@@ -28,7 +28,7 @@ function AnswerSection() {
             className={`mt-2.5 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
                         ${answer === 'In Weeds' ? '' : 'opacity-40'}
                         ${
-                          answer === 'In Weeds' ? 'text-lime-600' : 'text-white'
+                          answer === 'In Weeds' ? 'text-green' : 'text-white'
                         }`}
           >
             In Weeds
@@ -47,7 +47,7 @@ function AnswerSection() {
                         ${answer === 'Behind Building' ? '' : 'opacity-40'}
                         ${
                           answer === 'Behind Building'
-                            ? 'text-lime-600'
+                            ? 'text-green'
                             : 'text-white'
                         }`}
           >
@@ -55,7 +55,7 @@ function AnswerSection() {
           </div>
         </div>
       </div>
-      <div className='mt-8 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-lime-600'>
+      <div className='mt-8 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green'>
         You chose to hide Alex {answer}!
       </div>
     </div>
@@ -142,7 +142,7 @@ function ConfirmStartGame({ account }: Props) {
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+      <div className='flex w-full flex-col items-center bg-neutral-900 px-5 gap-8'>
         <PageHeader bg='bg-pink-300' text='REVIEW AND KICKOFF GAME' />
         <Opponent opponent={opponent} />
         <Wager wagerAmount={amount} />
@@ -160,14 +160,14 @@ function ConfirmStartGame({ account }: Props) {
               answer
             )
           }
-          className={`mt-4 w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-lime-600
+          className={`mt-4 w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-green
                             p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10`}
         >
           KICKOFF GAME!
         </button>
         <button
           onClick={navigateBackToStartWager}
-          className={`mt-4 w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-zinc-500
+          className={`mt-4 w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-gray
                     p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10`}
         >
           BACK

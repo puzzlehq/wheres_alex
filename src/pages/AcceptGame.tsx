@@ -46,7 +46,7 @@ const AcceptGame = () => {
       <div className='flex w-full flex-col gap-4'>
         <button
           onClick={acceptGame}
-          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-[#4EC331] p-5 text-center
+          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-green p-5 text-center
                       text-3xl font-extrabold tracking-tight text-black max-md:ml-px`}
         >
           ACCEPT WAGER

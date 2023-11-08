@@ -14,7 +14,7 @@ function NotifyOtherPlayerSection() {
 
 function StartAnotherGameSection() {
   return (
-    <section className='mt-5 flex w-full flex-col self-stretch rounded-[200px] bg-yellow-300 px-5 py-6'>
+    <section className='mt-5 flex w-full flex-col self-stretch rounded-[200px] bg-yellow px-5 py-6'>
       <h2 className='self-center whitespace-nowrap text-center text-2xl font-extrabold tracking-tight text-black'>
         START ANOTHER GAME
       </h2>
@@ -24,7 +24,7 @@ function StartAnotherGameSection() {
 
 function TakeHomeSection() {
   return (
-    <p className='mt-7 self-center whitespace-nowrap text-base font-extrabold text-zinc-500'>
+    <p className='mt-7 self-center whitespace-nowrap text-base font-extrabold text-gray'>
       TAKE ME BACK HOME
     </p>
   );

@@ -16,17 +16,17 @@ const AcceptGame = ({ challenger, wager }: AcceptGameProps) => {
         <p className='text-white'>is betting you can't find Alex!</p>
       </div>
       <div className='flex flex-col gap-0'>
-        <div className='bg-[#4EC331] text-xs'>WAGER</div>
-        <div className='flex items-center border-[3px] border-[#4EC331] p-1'>
-          <p className='text-3xl text-[#4EC331]'>{wager}</p>
+        <div className='bg-green text-xs'>WAGER</div>
+        <div className='flex items-center border-[3px] border-green p-1'>
+          <p className='text-3xl text-green'>{wager}</p>
           <div className='flex flex-col gap-0'>
-            <p className='text-sm text-[#4EC331]'>Puzzle</p>
-            <p className='text-sm text-[#4EC331]'>Pieces</p>
+            <p className='text-sm text-green'>Puzzle</p>
+            <p className='text-sm text-green'>Pieces</p>
           </div>
         </div>
       </div>
       <div className='flex w-full flex-col'>
-        <button className='w-full rounded-full bg-[#4EC331] p-1 text-3xl'>
+        <button className='w-full rounded-full bg-green p-1 text-3xl'>
           ACCEPT WAGER
         </button>
         <button className='w-full rounded-full bg-[#868686] p-1 text-3xl'>

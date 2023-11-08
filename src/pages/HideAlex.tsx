@@ -36,7 +36,7 @@ function HideAlex() {
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
         <Nav step={2} answer={answer} opponent={opponent} />
-        <PageHeader text='HIDE ALEX' bg='bg-sky-400' />
+        <PageHeader text='HIDE ALEX' bg='bg-blue' />
         <ChooseAlexLocation
           handleButtonClick={handleButtonClick}
           opponent={opponent}
@@ -45,12 +45,12 @@ function HideAlex() {
           onClick={navigateToStartWager}
           disabled={!answer}
           className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-black
-                                ${
-                                  !answer
-                                    ? 'bg-opacity-40'
-                                    : 'hover:bg-[#4EC331]'
-                                }
-                                mt-4 w-full self-stretch rounded-[200px] bg-lime-600 p-5 max-md:ml-px max-md:mt-10`}
+            ${
+                !answer
+                ? 'bg-opacity-40'
+                : 'hover:bg-green'
+            }
+            mt-4 w-full self-stretch rounded-[200px] bg-green p-5 max-md:ml-px max-md:mt-10`}
         >
           NEXT
         </button>

@@ -43,7 +43,7 @@ export const Welcome = () => {
         </p>
         <button
           onClick={connect}
-          className='z-10 mt-7 flex w-1/2 items-center justify-center rounded-[200px] bg-yellow-300 px-5 py-8 text-4xl font-extrabold text-black hover:bg-yellow-400'
+          className='z-10 mt-7 flex w-1/2 items-center justify-center rounded-[200px] bg-yellow px-5 py-8 text-4xl font-extrabold text-black hover:bg-yellow-400'
         >
           Play!
         </button>
