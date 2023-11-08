@@ -8,11 +8,11 @@ export default {
         pink: '#FFAED5',
         black: '#141010',
         white: '#FCFCFC',
-        'yellow': '#F8FC3E',
+        yellow: '#F8FC3E',
         blue: '#45B1ED',
         red: '#F63B3B',
-        gray: '#868686'
-      }
+        gray: '#868686',
+      },
     },
   },
   plugins: [],

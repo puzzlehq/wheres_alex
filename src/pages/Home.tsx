@@ -34,7 +34,7 @@ function NewGame() {
   return (
     <button
       onClick={navigateToNewGame}
-      className='mt-7 flex w-full items-center justify-center rounded-[200px] bg-yellow px-5 py-8 text-4xl font-extrabold text-black hover:bg-yellow-400'
+      className='hover:bg-yellow-400 mt-7 flex w-full items-center justify-center rounded-[200px] bg-yellow px-5 py-8 text-4xl font-extrabold text-black'
     >
       NEW GAME
     </button>
@@ -120,9 +120,7 @@ function NotificationItem({ notification }: NotificationProps) {
           <>
             <button
               className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-black max-sm:ml-24 ${
-                notification.action === 'Delete'
-                  ? 'bg-gray'
-                  : 'bg-yellow'
+                notification.action === 'Delete' ? 'bg-gray' : 'bg-yellow'
               }`}
               style={{ minWidth: '100px' }}
             >
@@ -135,10 +133,10 @@ function NotificationItem({ notification }: NotificationProps) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-pink-300 max-sm:ml-2'>
+      <div className='text-pink-300 my-auto self-center text-left text-xs font-bold tracking-tight max-sm:ml-2'>
         {notification.player}
       </div>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-pink-300 max-sm:ml-2'>
+      <div className='text-pink-300 my-auto self-center text-left text-xs font-bold tracking-tight max-sm:ml-2'>
         {notification.wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -153,7 +151,7 @@ type NotificationsProps = {
 function Notifications({ notifications }: NotificationsProps) {
   return (
     <section className='mt-8 flex grow flex-col self-stretch border-2 border-solid border-pink pb-6 pr-4'>
-      <div className='flex max-w-full flex-col self-start bg-pink-300 px-5 py-2'>
+      <div className='bg-pink-300 flex max-w-full flex-col self-start px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           NOTIFICATIONS
         </div>
@@ -256,10 +254,10 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold text-red-500 max-sm:mr-auto'>
+      <div className='text-red-500 my-auto self-center text-left text-xs font-bold max-sm:mr-auto'>
         {game.player}
       </div>
-      <div className='my-auto self-center text-left text-xs font-bold text-red-500 max-sm:mr-auto'>
+      <div className='text-red-500 my-auto self-center text-left text-xs font-bold max-sm:mr-auto'>
         {game.wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -275,7 +273,7 @@ type LiveGamesProps = {
 function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
   return (
     <section className='mt-7 flex grow flex-col self-stretch border-2 border-solid border-red pb-8 pr-5'>
-      <div className='flex max-w-full flex-col self-start bg-red-500 px-5 py-2'>
+      <div className='bg-red-500 flex max-w-full flex-col self-start px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           LIVE GAMES
         </div>
@@ -292,7 +290,13 @@ function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
 function Home() {
   const gameStates: GameState[] = [
     { gameMultisig: 'aleo1', player: 'Alice', wager: '10 P', action: 'Start' },
-    { gameMultisig: 'aleo2', player: 'Bob', wager: '20 P', action: 'Finish', win: true } as NotifyFinish,
+    {
+      gameMultisig: 'aleo2',
+      player: 'Bob',
+      wager: '20 P',
+      action: 'Finish',
+      win: true,
+    } as NotifyFinish,
     {
       gameMultisig: 'aleo3',
       player: 'Charlie',
@@ -306,7 +310,7 @@ function Home() {
       blockheight: 10500,
       wager: '50 P',
       action: 'Claim',
-      win: false
+      win: false,
     },
     {
       gameMultisig: 'aleo6',
@@ -314,8 +318,8 @@ function Home() {
       blockheight: 105000,
       wager: '60 P',
       action: 'Claim',
-      win: true
-    } ,
+      win: true,
+    },
   ];
 
   const aleo_blockheight: number = 50000;

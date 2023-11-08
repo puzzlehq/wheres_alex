@@ -4,7 +4,7 @@ import GameInfo from '../components/GameInfo';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function NotifyOtherPlayerSection() {
   return (
-    <section className='mt-24 flex w-full flex-col self-stretch rounded-[200px] bg-pink-300 px-5 py-6 max-md:mt-10'>
+    <section className='bg-pink-300 mt-24 flex w-full flex-col self-stretch rounded-[200px] px-5 py-6 max-md:mt-10'>
       <h2 className='self-center whitespace-nowrap text-center text-2xl font-extrabold tracking-tight text-black'>
         NOTIFY OTHER PLAYER
       </h2>

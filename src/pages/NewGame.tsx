@@ -150,8 +150,8 @@ function NewGame() {
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
-        <Nav step={1} opponent={opponent} answer=''/>
-        <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-blue'/>
+        <Nav step={1} opponent={opponent} answer='' />
+        <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-blue' />
         <PasteyQR setOpponent={setOpponent} opponent={opponent} />
         <NextButton opponent={opponent} />
       </div>

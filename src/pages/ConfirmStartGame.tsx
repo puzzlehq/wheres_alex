@@ -27,9 +27,7 @@ function AnswerSection() {
           <div
             className={`mt-2.5 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
                         ${answer === 'In Weeds' ? '' : 'opacity-40'}
-                        ${
-                          answer === 'In Weeds' ? 'text-green' : 'text-white'
-                        }`}
+                        ${answer === 'In Weeds' ? 'text-green' : 'text-white'}`}
           >
             In Weeds
           </div>
@@ -142,8 +140,8 @@ function ConfirmStartGame({ account }: Props) {
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex w-full flex-col items-center bg-neutral-900 px-5 gap-8'>
-        <PageHeader bg='bg-pink-300' text='REVIEW AND KICKOFF GAME' />
+      <div className='flex w-full flex-col items-center gap-8 bg-neutral-900 px-5'>
+        <PageHeader bg='bg-pink' text='REVIEW AND KICKOFF GAME' />
         <Opponent opponent={opponent} />
         <Wager wagerAmount={amount} />
         <AnswerSection />

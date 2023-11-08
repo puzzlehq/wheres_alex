@@ -13,7 +13,9 @@ function Nav({ step, opponent, answer }: NavProps) {
     <nav className='mt-11 flex w-full items-start justify-between gap-5 self-stretch max-md:mr-px max-md:mt-10 max-md:justify-center'>
       <a
         href='#'
-        className={`self-stretch text-center text-xs font-extrabold tracking-tight text-white ${step === 1 ? 'underline' : ''}`}
+        className={`self-stretch text-center text-xs font-extrabold tracking-tight text-white ${
+          step === 1 ? 'underline' : ''
+        }`}
       >
         1. CHALLENGE
       </a>
@@ -21,20 +23,25 @@ function Nav({ step, opponent, answer }: NavProps) {
         <a
           href='#'
           onClick={() =>
-            step > 2 && navigate('/hide-alex', {
+            step > 2 &&
+            navigate('/hide-alex', {
               state: { opponent, answer },
             })
           }
-          className={`self-stretch text-center text-xs font-extrabold tracking-tight text-white ${step === 2 ? 'underline' : ''}`}
-          >
+          className={`self-stretch text-center text-xs font-extrabold tracking-tight ${
+            step >= 2 ? 'text-white' : 'text-gray'
+          } ${step === 2 ? 'underline' : ''}`}
+        >
           2. HIDE ALEX
         </a>
       </div>
       <div className='self-stretch whitespace-nowrap text-center text-xs font-extrabold tracking-tight text-white text-opacity-40'>
         <a
           href='#'
-          className={`self-stretch text-center text-xs font-extrabold tracking-tight text-white ${step === 3 ? 'underline' : ''}`}
-          >
+          className={`self-stretch text-center text-xs font-extrabold tracking-tight  ${
+            step >= 3 ? 'text-white' : 'text-gray'
+          } ${step === 3 ? 'underline' : ''}`}
+        >
           3.WAGER
         </a>
       </div>
