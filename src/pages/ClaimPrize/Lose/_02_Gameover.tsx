@@ -3,10 +3,11 @@ import Wager from '../../../components/Wager';
 import PageHeader from '../../../components/PageHeader';
 import { getNumberAmount } from '../../../utils';
 import Button from '../../../components/Button';
-import { useClaimPrizeWinStore } from './store';
+import { useClaimPrizeLoseStore } from './store';
 
 const GameOver = () => {
-  const [wager] = useClaimPrizeWinStore((state) => [state.wager]);
+
+  const [wager] = useClaimPrizeLoseStore((state) => [state.wager]);
   const navigate = useNavigate();
 
   return (

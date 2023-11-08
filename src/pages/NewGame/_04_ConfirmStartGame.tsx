@@ -1,28 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import Opponent from '../../components/Opponent';
 import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Button from '../../components/Button';
+import { Step, useNewGameStore } from './store';
+import { useAccount } from '@puzzlehq/sdk';
 
 function ConfirmStartGame() {
-  // const account: PuzzleAccount = {
-  //     network: 'aleo',
-  //     chainId: '1',
-  //     address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
-  //     shortenedAddress: '123456'
-  // };
-  const navigate = useNavigate();
-  const location = useLocation();
-  const opponent = location.state?.opponent ?? 'N/A';
-  const answer = location.state?.answer ?? 'N/A';
-  const amount = location.state?.amount ?? 'N/A';
-  const player_account = '';
-  const [gameMultisig, setGameMultisig] = useState<string>('');
-  const [eventID, setEventID] = useState<string>('');
+
+  const [answer, wager, opponent, multisig, setStep, setMultisig, setEventId] = useNewGameStore((state) => [state.answer, state.wager, state.opponent, state.multisig, state.setStep, state.setMultisig, state.setEventId])
+
+  const player_account = useAccount().account.address;
+
   const [seed, setSeed] = useState<Uint8Array>(new Uint8Array());
+
   // const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
   //     type: 'Execute',
   //     programId: 'cflip_gm_aleo_testing_123.aleo',
@@ -43,17 +36,9 @@ function ConfirmStartGame() {
       };
     }
     const result = generateGameMultisig(opponent, player_account);
-    setGameMultisig(result.gameMultisig);
+    setMultisig(result.gameMultisig);
     setSeed(result.seed);
   }, [opponent, player_account]);
-
-  useEffect(() => {
-    if (eventID) {
-      navigate('/game-started', {
-        state: { gameMultisig, eventID },
-      });
-    }
-  }, [eventID, navigate, gameMultisig]);
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const proposeGame = (
@@ -72,45 +57,41 @@ function ConfirmStartGame() {
       amount.toString() +
       answer;
     // requestCreateEvent()
-    setEventID(result);
-  };
-
-  const navigateBackToStartWager = () => {
-    navigate('/start-wager', {
-      state: { opponent, answer, amount },
-    }); // Navigate to the start-wager page
+    setEventId(result);
   };
 
   return (
     <main className='flex h-full w-full flex-col justify-center gap-8'>
       <PageHeader bg='bg-primary-pink' text='REVIEW AND KICKOFF GAME' />
       <Opponent opponent={opponent} />
-      <Wager wagerAmount={amount} />
-      <div className='flex flex-col gap-2'>
+      <Wager wagerAmount={wager} />
+      {answer && <div className='flex flex-col gap-2'>
         <SelectedAlexLocation answer={answer} win={undefined} />
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           You chose to hide Alex {answer}!
         </div>
-      </div>
+      </div>}
       <div className='flex flex-col flex-grow'/>
       <div className='flex flex-col gap-4'>
+        {answer && multisig &&
+          <Button
+            onClick={() =>
+              proposeGame(
+                opponent,
+                player_account,
+                multisig,
+                seed,
+                wager,
+                answer
+              )
+            }
+            color='green'  
+          >
+            KICKOFF GAME!
+          </Button>
+        }
         <Button
-          onClick={() =>
-            proposeGame(
-              opponent,
-              player_account,
-              gameMultisig,
-              seed,
-              amount,
-              answer
-            )
-          }
-          color='green'  
-        >
-          KICKOFF GAME!
-        </Button>
-        <Button
-          onClick={navigateBackToStartWager}
+          onClick={() => setStep(Step._03_StartWager)}
           color='gray'
         >
           BACK

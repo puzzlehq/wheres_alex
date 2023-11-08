@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.svg';
+import { Answer } from '../models/game_states';
 
 type SelectedAlexLocationProps = {
-  answer: string,
+  answer: Answer,
   win?: boolean
 }
 
@@ -15,14 +16,14 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
           loading='lazy'
           src={inWeedsImg}
           className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                      ${answer === 'In the Weeds' ? '' : 'opacity-40'}`}
-          alt='In the Weeds'
+                      ${answer === Answer.InTheWeeds ? '' : 'opacity-40'}`}
+          alt={Answer.InTheWeeds}
         />
         {win === undefined &&
           <div
             className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer === 'In the Weeds' ? '' : 'opacity-40'}
-                        ${answer === 'In the Weeds' ? 'text-primary-green' : 'text-primary-white'}`}
+                        ${answer === Answer.InTheWeeds ? '' : 'opacity-40'}
+                        ${answer === Answer.InTheWeeds ? 'text-primary-green' : 'text-primary-white'}`}
           >
             In the Weeds
           </div>
@@ -38,15 +39,15 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
           loading='lazy'
           src={behindBuildingImg}
           className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                      ${answer === 'Behind the Building' ? '' : 'opacity-40'}`}
-          alt='Behind the Building'
+                      ${answer ===  Answer.BehindTheBuilding ? '' : 'opacity-40'}`}
+          alt={Answer.BehindTheBuilding}
         />
         {win === undefined &&
           <div
             className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer === 'Behind the Building' ? '' : 'opacity-40'}
+                        ${answer ===  Answer.BehindTheBuilding ? '' : 'opacity-40'}
                         ${
-                          answer === 'Behind the Building'
+                          answer ===  Answer.BehindTheBuilding
                             ? 'text-primary-green'
                             : 'text-primary-white'
                         }`}
@@ -84,25 +85,25 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
             <RightAlex/>
           </> : 
           <>
-            {win === true && answer === 'In the Weeds' &&
+            {win === true && answer === Answer.InTheWeeds &&
               <>
                 <LeftAlex />
                 <WinText/>
               </>
             }
-            {win === true && answer === 'Behind the Building' &&
+            {win === true && answer === Answer.BehindTheBuilding &&
               <>
                 <WinText/>
                 <RightAlex />
               </>
             }
-            {win === false && answer === 'In the Weeds' &&
+            {win === false && answer === Answer.InTheWeeds &&
               <>
                 <LeftAlex />
                 <LoseText/>
               </>
             }
-            {win === false && answer === 'Behind the Building' &&
+            {win === false && answer === Answer.BehindTheBuilding &&
               <>
                 <LoseText/>
                 <RightAlex />

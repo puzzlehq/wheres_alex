@@ -44,3 +44,8 @@ type GameState =
   | NotifyClaimFinish;
 
 export default GameState;
+
+export enum Answer {
+  InTheWeeds = 'In the Weeds',
+  BehindTheBuilding = 'Behind the Building'
+}

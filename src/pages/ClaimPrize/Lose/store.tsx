@@ -2,28 +2,29 @@ import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 
 export enum Step {
-  _01_AcceptGame,
-  _02_FindAlex,
-  _03_Confirmed,
+  _01_Claim,
+  _02_Gameover,
 }
 
-type AcceptGameStore = {
+type ClaimPrizeLoseStore = {
   step: Step;
   opponent: string;
   wager: number;
+  answer: string;
   setStep: (step: Step) => void;
   setOpponent: (opponent: string) => void;
-  setAnswer: () => void;
   setWager: (wager: number) => void;
-  createGame: () => Promise<void>;
+  setAnswer: (answer: string) => void;
+  claimPrize: () => Promise<void>;
   close: () => void;
 };
 
-export const useAcceptGameStore = create<AcceptGameStore>()(
+export const useClaimPrizeLoseStore = create<ClaimPrizeLoseStore>()(
   immer((set) => ({
-    step: Step._01_AcceptGame,
+    step: Step._01_Claim,
     opponent: '',
     wager: 0,
+    answer: '',
     setStep: (step: Step) => {
       set({ step });
     },
@@ -33,12 +34,15 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
     setWager: (wager: number) => {
       set({ wager });
     },
-    createGame: async () => {
+    setAnswer: (answer: string) => {
+      set({ answer });
+    },
+    claimPrize: async () => {
       
     },
     close: () => {
       set({
-        step: Step._01_AcceptGame,
+        step: Step._01_Claim,
         opponent: '',
         wager: 0,
       });

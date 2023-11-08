@@ -1,11 +1,12 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Wager from '../../../components/Wager';
 import PageHeader from '../../../components/PageHeader';
 import { getNumberAmount } from '../../../utils';
 import Button from '../../../components/Button';
 import { useClaimPrizeWinStore } from './store';
 
-const GameOver = () => {
+const FinishGame = () => {
+  const location = useLocation();
   const [wager] = useClaimPrizeWinStore((state) => [state.wager]);
   const navigate = useNavigate();
 
@@ -51,4 +52,4 @@ const GameOver = () => {
   );
 };
 
-export default GameOver;
+export default FinishGame;

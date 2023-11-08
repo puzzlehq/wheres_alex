@@ -6,32 +6,25 @@ export enum Step {
   _02_Gameover,
 }
 
-export enum State {
-  Lose,
-  Win,
-  NoShow,
-  Tie
-}
-
-type ClaimPrizeStore = {
+type ClaimPrizeWinStore = {
   step: Step;
   opponent: string;
   wager: number;
-  state: State.Lose,
+  answer: string;
   setStep: (step: Step) => void;
   setOpponent: (opponent: string) => void;
   setWager: (wager: number) => void;
-  setState: (state: State) => void;
+  setAnswer: (answer: string) => void;
   claimPrize: () => Promise<void>;
   close: () => void;
 };
 
-export const useClaimPrizeStore = create<ClaimPrizeStore>()(
+export const useClaimPrizeWinStore = create<ClaimPrizeWinStore>()(
   immer((set) => ({
     step: Step._01_Claim,
     opponent: '',
     wager: 0,
-    state: State.Lose,
+    answer: '',
     setStep: (step: Step) => {
       set({ step });
     },
@@ -41,8 +34,8 @@ export const useClaimPrizeStore = create<ClaimPrizeStore>()(
     setWager: (wager: number) => {
       set({ wager });
     },
-    setState: (state: State) => {
-      console.log(state)
+    setAnswer: (answer: string) => {
+      set({ answer });
     },
     claimPrize: async () => {
       

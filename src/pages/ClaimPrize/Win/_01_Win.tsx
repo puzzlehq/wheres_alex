@@ -1,24 +1,19 @@
-import { useLocation, useNavigate } from "react-router-dom";
 import PageHeader from "../../../components/PageHeader";
 import SelectedAlexLocation from "../../../components/SelectedAlexLocation";
 import Wager from "../../../components/Wager";
 import Button from "../../../components/Button";
+import { Answer } from "../../../models/game_states";
+import { Step, useClaimPrizeWinStore } from "./store";
 
-type AcceptGameProps = {
-  challenger: string;
-  wager: number; // in puzzle pieces
-};
-
-const FinishGameWinClaim = ({ wager }: AcceptGameProps) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const answer = location.state?.answer ?? 'N/A';
+const Win = () => {
+  const [answer, wager, setStep, claim] = useClaimPrizeWinStore((state) => [state.answer, state.wager, state.setStep, state.claimPrize]);
+  
   return (
     <div className='flex flex-col w-full h-full justify-center gap-4'>
       <Wager wagerAmount={wager} winnings/>
       <PageHeader text="WHERE IS ALEX" bg='bg-primary-blue' />
       <div className="flex flex-col gap-2">
-        <SelectedAlexLocation answer={'Behind the Building'} win={false} />
+        <SelectedAlexLocation answer={Answer.BehindTheBuilding} win={false} />
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           Alex was {answer}!
         </div>
@@ -26,7 +21,10 @@ const FinishGameWinClaim = ({ wager }: AcceptGameProps) => {
       <div className="flex flex-col flex-grow"/>
       <Button
         color="green"
-        onClick={() => navigate('/')}
+        onClick={async () => {
+          await claim();
+          setStep(Step._02_Gameover)
+        }}
       >
         CLAIM WINNINGS
       </Button>
@@ -34,4 +32,4 @@ const FinishGameWinClaim = ({ wager }: AcceptGameProps) => {
   );
 };
 
-export default FinishGameWinClaim;
+export default Win;

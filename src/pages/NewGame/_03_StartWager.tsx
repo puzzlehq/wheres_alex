@@ -1,72 +1,39 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
-
-type ChooseWagerAmountProps = {
-  setAmount: (number: number) => void;
-};
-
-function ChooseWagerAmount({ setAmount }: ChooseWagerAmountProps) {
-  const [localAmount, setLocalAmount] = useState<string>('0');
-
-  const handleAmountChange = (e: { target: { value: any } }) => {
-    const newAmount = e.target.value;
-    setLocalAmount(newAmount);
-    setAmount(Number(newAmount));
-    console.log(localAmount);
-  };
-
-  // Determine input text color based on localAmount value
-  const inputTextColor = localAmount !== '0' ? 'text-primary-green' : '';
-
-  // Determine input opacity based on localAmount value
-  const inputOpacity = localAmount === '0' ? 'opacity-40' : '';
-
-  return (
-    <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
-      <input
-        type='number'
-        value={localAmount === '0' ? '' : localAmount}
-        onChange={handleAmountChange}
-        className={`mt-14 flex w-full flex-col self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} w-full self-center text-center text-3xl font-bold`}
-        placeholder='Enter amount'
-      />
-      <div className='mb-24 mt-3 self-center whitespace-nowrap text-center text-base font-bold text-primary-green'>
-        Puzzle Pieces
-      </div>
-    </div>
-  );
-}
+import { Step, useNewGameStore } from './store';
 
 function StartWager() {
-  const [amount, setAmount] = useState<number>(0);
-  const location = useLocation();
-  const opponent = location.state?.opponent || 'N/A';
-  console.log(opponent);
-  const answer = location.state?.answer || 'N/A';
-  console.log(answer);
+  const [wager, setWager, setStep] = useNewGameStore((state) => [state.wager, state.setWager, state.setStep])
 
-  const navigate = useNavigate();
+  // Determine input text color based on localAmount value
+  const inputTextColor = wager !== 0 ? 'text-primary-green' : '';
 
-  const navigateToStartWager = () => {
-    navigate('/confirm-start-game', {
-      state: { opponent, answer, amount },
-    }); // Navigate to the confirm-start-game page
-  };
+  // Determine input opacity based on localAmount value
+  const inputOpacity = wager === 0 ? 'opacity-40' : '';
 
-  const isDisabled = amount <= 0;
+  const isDisabled = wager <= 0;
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
-        <Nav step={3} opponent={opponent} answer={answer} />
+        <Nav step={3} />
         <PageHeader bg='bg-primary-blue' text='MAKE YOUR WAGER' />
-        <ChooseWagerAmount setAmount={setAmount} />
+        <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+          <input
+            type='number'
+            value={wager === 0 ? undefined : wager}
+            onChange={(e) => setWager(Number(e.target.value))}
+            className={`mt-14 flex w-full flex-col self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} w-full self-center text-center text-3xl font-bold`}
+            placeholder='Enter amount'
+          />
+          <div className='mb-24 mt-3 self-center whitespace-nowrap text-center text-base font-bold text-primary-green'>
+            Puzzle Pieces
+          </div>
+        </div>
         <Button
-          onClick={navigateToStartWager}
+          onClick={() => setStep(Step._04_ConfirmStartGame)}
           disabled={isDisabled}
           color='green'
           className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-primary-black 

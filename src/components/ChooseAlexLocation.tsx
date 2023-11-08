@@ -1,42 +1,34 @@
-import { useState } from 'react';
 import inWeedsImg from '../assets/in_weeds.svg';
 import behindBuildingImg from '../assets/behind_building.svg';
+import { Answer } from '../models/game_states';
 
 type HideAlexProps = {
-  handleButtonClick: (text: string, opponent: string) => void;
-  opponent: string;
+  onClick: (answer: Answer) => void;
+  answer?: Answer;
   hiding: boolean;
 };
 
-function ChooseAlexLocation({ handleButtonClick, opponent, hiding }: HideAlexProps) {
-  const [answer, setAnswer] = useState('');
-
-  const onButtonClick = (text: string) => {
-    handleButtonClick(text, opponent); // Use the prop here
-    setAnswer(text);
-    console.log(answer);
-    console.log(opponent);
-  };
+function ChooseAlexLocation({ onClick, answer, hiding }: HideAlexProps) {
 
   return (
     <section className='flex max-w-full flex-col gap-2'>
       <div className='flex gap-5'>
         <div className='flex flex-col self-center'>
           <button
-            onClick={() => onButtonClick('In the Weeds')}
+            onClick={() => onClick(Answer.InTheWeeds)}
             className='flex w-[150px] flex-col gap-2 items-center hover:opacity-100'
           >
             <img
               loading='lazy'
               src={inWeedsImg}
               className={`aspect-square h-[100px] w-[100px] overflow-hidden rounded-[50%] object-cover object-center ${
-                answer === 'In the Weeds' ? '' : 'opacity-40'
+                answer === Answer.InTheWeeds ? '' : 'opacity-40'
               }`}
-              alt='In the Weeds'
+              alt={Answer.InTheWeeds}
             />
             <div
               className={`mt-2.5 whitespace-nowrap text-center text-sm font-extrabold ${
-                answer === 'In the Weeds'
+                answer === Answer.InTheWeeds
                   ? 'text-primary-green'
                   : 'text-primary-white opacity-40 hover:text-primary-green'
               }`}
@@ -47,20 +39,20 @@ function ChooseAlexLocation({ handleButtonClick, opponent, hiding }: HideAlexPro
         </div>
         <div className='flex flex-col self-start'>
           <button
-            onClick={() => onButtonClick('Behind the Building')}
+            onClick={() => onClick(Answer.BehindTheBuilding)}
             className='flex w-[150px] flex-col gap-2 items-center hover:opacity-100'
           >
             <img
               loading='lazy'
               src={behindBuildingImg}
               className={`aspect-square h-[100px] w-[100px] overflow-hidden rounded-[50%] object-cover object-center ${
-                answer === 'Behind the Building' ? '' : 'opacity-40'
+                answer === Answer.BehindTheBuilding ? '' : 'opacity-40'
               }`}
-              alt='Behind the Building'
+              alt={Answer.BehindTheBuilding}
             />
             <div
               className={`mt-2.5 whitespace-nowrap text-center text-sm font-extrabold ${
-                answer === 'Behind the Building'
+                answer === Answer.BehindTheBuilding
                   ? 'text-primary-green'
                   : 'text-primary-white opacity-40 hover:text-primary-green'
               }`}
