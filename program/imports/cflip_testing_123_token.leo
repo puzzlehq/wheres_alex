@@ -162,6 +162,9 @@ program cflip_testing_123_token.aleo {
         let is_verified: bool = puzz_claim.sig.verify(puzz_claim.claimer, puzz_claim.msg);
         assert_eq(is_verified, true);
 
+        // assert that the claim is >= transfer amount
+        assert(puzz_claim.amount >= amount_to_transfer);
+
         // new puzz record to receiver
         let receiver_new_record: Puzz = Puzz {
             owner: to,
