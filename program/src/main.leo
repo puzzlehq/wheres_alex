@@ -387,43 +387,43 @@ program cflip_gm_aleo_testing_123.aleo {
         // assert that the game has been accepted
         assert_eq(game_record.game_state, 1field);
 
-        // player 1 wins, player 2 loses
-        if (revealed_answer_record.answer != game_record.player_two_answer) {
+        // player 1 loses, player 2 wins
+        if (revealed_answer_record.answer == game_record.player_two_answer) {
             // transfer all funds to winner
-            let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, player_claim_record, self.caller, game_record.total_pot);
+            let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, player_claim_record, game_record.player_two_address, game_record.total_pot);
             // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
 
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
-                owner: self.caller,
-                winner: self.caller,
+                owner: game_record.player_one_address,
+                winner: game_record.player_two_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
             };
             let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_two_address,
-                winner: self.caller,
+                winner: game_record.player_two_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
             };
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
-        // player 1 loses, player 2 wins
+        // player 1 wins, player 2 loses
         else {
             // transfer all funds to winner
-            let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, player_claim_record, self.caller, game_record.total_pot);
+            let (receiver_puzz_record, puzz_change): (Puzz, Puzz) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, player_claim_record, game_record.player_one_address, game_record.total_pot);
             // let (receiver_puzz_record, puzz_change): (Puzz, Puzz) =
             // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
-                owner: self.caller,
-                winner: game_record.player_two_address,
+                owner: game_record.player_one_address,
+                winner: game_record.player_one_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
             };
             let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_two_address,
-                winner: game_record.player_two_address,
+                winner: game_record.player_one_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
             };
