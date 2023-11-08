@@ -4,7 +4,7 @@ import GameInfo from '../components/GameInfo';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 function NotifyOtherPlayerSection() {
   return (
-    <section className='bg-pink-300 mt-24 flex w-full flex-col self-stretch rounded-[200px] px-5 py-6 max-md:mt-10'>
+    <section className='mt-24 flex w-full flex-col self-stretch rounded-[200px] bg-pink px-5 py-6 max-md:mt-10'>
       <h2 className='self-center whitespace-nowrap text-center text-2xl font-extrabold tracking-tight text-black'>
         NOTIFY OTHER PLAYER
       </h2>
@@ -39,8 +39,9 @@ function PendingConfirmStartGame() {
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+      <div className='flex w-full h-full flex-col items-center bg-neutral-900 px-5'>
         <GameInfo gameMultisig={gameMultisig} eventID={eventID} />
+        <div className='flex flex-col flex-grow'/>
         <NotifyOtherPlayerSection />
         <StartAnotherGameSection />
         <TakeHomeSection />

@@ -10,7 +10,7 @@ const FinishGame = () => {
   const navigate = useNavigate();
 
   return (
-    <div className='flex h-full w-full flex-col justify-center gap-4'>
+    <div className='flex h-full w-full flex-col justify-center gap-8'>
       <PageHeader
         bg='bg-blue'
         text={(win as boolean) ? 'CONGRATS WINNER!' : 'BETTER LUCK NEXT TIME'}

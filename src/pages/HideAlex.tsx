@@ -48,7 +48,7 @@ function HideAlex() {
           disabled={!answer}
           className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-black
             ${!answer ? 'bg-opacity-40' : 'hover:bg-green'}
-            mt-4 w-full self-stretch rounded-[200px] bg-green p-5 max-md:ml-px max-md:mt-10`}
+            w-full self-stretch rounded-[200px] bg-green p-5 max-md:ml-px max-md:mt-10`}
         >
           NEXT
         </button>

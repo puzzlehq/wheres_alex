@@ -1,40 +1,39 @@
-type AcceptGameProps = {
+import { useNavigate } from 'react-router-dom';
+import Opponent from '../components/Opponent';
+import PageHeader from '../components/PageHeader';
+import Wager from '../components/Wager';
+
+type RenegGameProps = {
   challenger: string;
   wager: number; // in puzzle pieces
 };
 
-const AcceptGame = ({ challenger, wager }: AcceptGameProps) => {
+const RenegGame = ({ challenger, wager }: RenegGameProps) => {
+  const navigate = useNavigate();
+
   return (
-    <div className='flex flex-col justify-center gap-4'>
-      <div className='w-full bg-[#FFAED5] p-4 text-center text-3xl font-extrabold'>
-        YOU'VE BEEN CHALLENGED!
-      </div>
-      <div className='flex flex-col justify-center gap-1'>
-        <div className='rounded-full bg-[#FCFCFC] text-xs font-semibold'>
-          {challenger}
-        </div>
-        <p className='text-white'>is betting you can't find Alex!</p>
-      </div>
-      <div className='flex flex-col gap-0'>
-        <div className='bg-green text-xs'>WAGER</div>
-        <div className='flex items-center border-[3px] border-green p-1'>
-          <p className='text-3xl text-green'>{wager}</p>
-          <div className='flex flex-col gap-0'>
-            <p className='text-sm text-green'>Puzzle</p>
-            <p className='text-sm text-green'>Pieces</p>
-          </div>
-        </div>
-      </div>
-      <div className='flex w-full flex-col'>
-        <button className='w-full rounded-full bg-green p-1 text-3xl'>
-          ACCEPT WAGER
+    <div className='flex h-full w-full flex-col justify-center gap-8'>
+      <PageHeader bg='bg-red' text='RENEG CHALLENGE' />
+      <Opponent opponent={challenger ?? 'alice'}/>
+      <Wager wagerAmount={wager ?? '0'} />
+      <div className='flex flex-grow flex-col' />
+      <div className='flex w-full flex-col gap-4'>
+        <button
+          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-red p-5 text-center
+                      text-3xl font-extrabold tracking-tight text-black max-md:ml-px`}
+        >
+          RENEG
         </button>
-        <button className='w-full rounded-full bg-[#868686] p-1 text-3xl'>
-          REJECT
+        <button
+          className={`w-full self-center whitespace-nowrap rounded-[200px] bg-gray p-5 text-center
+                      text-3xl font-extrabold tracking-tight text-black max-md:ml-px`}
+          onClick={() => navigate('/')}
+        >
+          CANCEL
         </button>
       </div>
     </div>
   );
 };
 
-export default AcceptGame;
+export default RenegGame;

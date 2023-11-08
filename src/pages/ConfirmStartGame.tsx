@@ -14,46 +14,46 @@ function AnswerSection() {
   const answer = location.state?.answer ?? 'N/A';
 
   return (
-    <div className='flex w-full flex-col items-center'>
-      <div className='mt-9 flex w-[298px] max-w-full items-start justify-between gap-5 self-center'>
-        <div className='flex flex-col self-start'>
+    <div className='flex w-full flex-col gap-8 items-center'>
+      <div className='flex w-[298px] max-w-full items-start justify-between gap-5 self-center'>
+        <div className='flex flex-col gap-2 self-start w-1/2'>
           <img
             loading='lazy'
             src={inWeedsImg}
             className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                        ${answer === 'In Weeds' ? '' : 'opacity-40'}`}
-            alt='In Weeds'
+                        ${answer === 'In the Weeds' ? '' : 'opacity-40'}`}
+            alt='In the Weeds'
           />
           <div
-            className={`mt-2.5 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer === 'In Weeds' ? '' : 'opacity-40'}
-                        ${answer === 'In Weeds' ? 'text-green' : 'text-white'}`}
+            className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
+                        ${answer === 'In the Weeds' ? '' : 'opacity-40'}
+                        ${answer === 'In the Weeds' ? 'text-green' : 'text-white'}`}
           >
-            In Weeds
+            In the Weeds
           </div>
         </div>
-        <div className='flex flex-col self-start'>
+        <div className='flex flex-col gap-2 self-start w-1/2'>
           <img
             loading='lazy'
             src={behindBuildingImg}
             className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                        ${answer === 'Behind Building' ? '' : 'opacity-40'}`}
-            alt='Behind Building'
+                        ${answer === 'Behind the Building' ? '' : 'opacity-40'}`}
+            alt='Behind the Building'
           />
           <div
-            className={`mt-2.5 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer === 'Behind Building' ? '' : 'opacity-40'}
+            className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
+                        ${answer === 'Behind the Building' ? '' : 'opacity-40'}
                         ${
-                          answer === 'Behind Building'
+                          answer === 'Behind the Building'
                             ? 'text-green'
                             : 'text-white'
                         }`}
           >
-            Behind Building
+            Behind the Building
           </div>
         </div>
       </div>
-      <div className='mt-8 self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green'>
+      <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green'>
         You chose to hide Alex {answer}!
       </div>
     </div>
@@ -139,14 +139,13 @@ function ConfirmStartGame({ account }: Props) {
   };
 
   return (
-    <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex w-full flex-col items-center gap-8 bg-neutral-900 px-5'>
-        <PageHeader bg='bg-pink' text='REVIEW AND KICKOFF GAME' />
-        <Opponent opponent={opponent} />
-        <Wager wagerAmount={amount} />
-        <AnswerSection />
-      </div>
-      <div>
+    <main className='flex h-full w-full flex-col justify-center gap-8'>
+      <PageHeader bg='bg-pink' text='REVIEW AND KICKOFF GAME' />
+      <Opponent opponent={opponent} />
+      <Wager wagerAmount={amount} />
+      <AnswerSection />
+      <div className='flex flex-col flex-grow'/>
+      <div className='flex flex-col gap-4'>
         <button
           onClick={() =>
             proposeGame(
@@ -158,14 +157,14 @@ function ConfirmStartGame({ account }: Props) {
               answer
             )
           }
-          className={`mt-4 w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-green
+          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-green
                             p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10`}
         >
           KICKOFF GAME!
         </button>
         <button
           onClick={navigateBackToStartWager}
-          className={`mt-4 w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-gray
+          className={`w-full self-center self-stretch whitespace-nowrap rounded-[200px] bg-gray
                     p-5 text-center text-3xl font-extrabold tracking-tight text-black max-md:ml-px max-md:mt-10`}
         >
           BACK

@@ -11,7 +11,7 @@ function NotifyOtherPlayerSection() {
   return (
     <button
       onClick={navigateBackToHome}
-      className='bg-pink-300 mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-black'
+      className='mt-5 self-center self-stretch whitespace-nowrap rounded-[200px] bg-pink px-5 py-6 text-center text-2xl font-extrabold tracking-tight text-black'
     >
       NOTIFY OTHER PLAYER
     </button>
@@ -56,8 +56,9 @@ function GameStarted() {
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+      <div className='flex w-full h-full flex-col items-center bg-neutral-900 px-5'>
         <GameInfo gameMultisig={gameMultisig} eventID={eventID} />
+        <div className='flex flex-col flex-grow'/>
         <NotifyOtherPlayerSection />
         <StartAnotherGameSection />
         <TakeHomeSection />

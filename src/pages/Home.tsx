@@ -133,10 +133,10 @@ function NotificationItem({ notification }: NotificationProps) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='text-pink-300 my-auto self-center text-left text-xs font-bold tracking-tight max-sm:ml-2'>
+      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-pink max-sm:ml-2'>
         {notification.player}
       </div>
-      <div className='text-pink-300 my-auto self-center text-left text-xs font-bold tracking-tight max-sm:ml-2'>
+      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-pink max-sm:ml-2'>
         {notification.wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -151,7 +151,7 @@ type NotificationsProps = {
 function Notifications({ notifications }: NotificationsProps) {
   return (
     <section className='mt-8 flex grow flex-col self-stretch border-2 border-solid border-pink pb-6 pr-4'>
-      <div className='bg-pink-300 flex max-w-full flex-col self-start px-5 py-2'>
+      <div className='flex max-w-full flex-col self-start bg-pink px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           NOTIFICATIONS
         </div>
@@ -221,10 +221,10 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
             <a
               href='#'
               onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-gray px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
+              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-pink px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
-              Ping
+              PING
             </a>
           </>
         );
@@ -242,10 +242,10 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
             <a
               href='#'
               onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-gray px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
+              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-pink px-5 py-3 text-xs font-extrabold text-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
-              Ping
+              PING
             </a>
           </>
         );
@@ -254,10 +254,10 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='text-red-500 my-auto self-center text-left text-xs font-bold max-sm:mr-auto'>
+      <div className='my-auto self-center text-left text-xs font-bold text-red max-sm:mr-auto'>
         {game.player}
       </div>
-      <div className='text-red-500 my-auto self-center text-left text-xs font-bold max-sm:mr-auto'>
+      <div className='my-auto self-center text-left text-xs font-bold text-red max-sm:mr-auto'>
         {game.wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -273,7 +273,7 @@ type LiveGamesProps = {
 function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
   return (
     <section className='mt-7 flex grow flex-col self-stretch border-2 border-solid border-red pb-8 pr-5'>
-      <div className='bg-red-500 flex max-w-full flex-col self-start px-5 py-2'>
+      <div className='flex max-w-full flex-col self-start bg-red px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           LIVE GAMES
         </div>
@@ -391,7 +391,7 @@ function Home() {
 
   return (
     <div className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='bg-netural-900 w-full px-1'>
+      <div className='w-full bg-neutral-900 px-1'>
         <TotalWinnings />
         <NewGame />
         <Notifications notifications={notifications} />

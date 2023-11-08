@@ -38,8 +38,8 @@ const AcceptGame = () => {
   };
 
   return (
-    <main className='flex h-full w-full flex-col justify-between gap-8 bg-neutral-900'>
-      <PageHeader bg='bg-pink-300' text={`YOU'VE BEEN CHALLENGED!`} />
+    <main className='flex h-full w-full flex-col justify-center gap-8'>
+      <PageHeader bg='bg-pink' text={`YOU'VE BEEN CHALLENGED!`} />
       <Opponent opponent={opponent} />
       <Wager wagerAmount={amount} />
       <div className='flex flex-grow flex-col' />
