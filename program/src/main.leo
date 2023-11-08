@@ -406,6 +406,7 @@ program cflip_gm_aleo_testing_123.aleo {
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
             };
+            // todo: return puzz records, some weird puzz undefined bug popping up
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
         // player 1 wins, player 2 loses
@@ -425,6 +426,7 @@ program cflip_gm_aleo_testing_123.aleo {
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
             };
+            // todo: return puzz records, some weird puzz undefined bug popping up
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
     }
