@@ -124,7 +124,6 @@ function KickoffButton ( { account }: Props ) {
     const opponent = "aleo1muq22xpnzgaeqez0mgkdcau6kcjpk6ztey0u8yv34zcupk3hpczsmxeaww";
     const amount = 10;
     const answer = location.state?.answer === "In Weeds" ? "0field" : "1field";
-    const [msSeed, setMsSeed] = useState<string>("1field")
     const [gameMultisig, setGameMultisig] = useState<string>("aleo1eqkje8cvr0twm07w4m5n356pju7njtfx75xp5zzvpg8yhgrnr58snq9kyu");
     const [programId, setProgramId] = useState<string>("cflip_gm_aleo_testing_123.aleo");
     const [functionId, setFunctionId] = useState("propose_game");
@@ -135,9 +134,10 @@ function KickoffButton ( { account }: Props ) {
     const [msg, setMsg] = useState<string>("1field");
     const [mOfN, setMofN] = useState<string>("1u8");
     const [nonce, setNonce] = useState<string>("1field");
-    const [msPrivKey, setMsPrivKey] = useState<string>("");
-    const [msViewKey, setMsViewKey] = useState<string>("");
-    const [msAddr, setMsAddr] = useState<string>("");
+    // const [msPrivKey, setMsPrivKey] = useState<string>("");
+    // const [msViewKey, setMsViewKey] = useState<string>("");
+    // const [msSeed, setMsSeed] = useState<string>("");
+    // const [msAddr, setMsAddr] = useState<string>("");
 
     const { fetchPage, records, loading, error, pageCount } = useRecords({
         filter: {
@@ -160,46 +160,41 @@ function KickoffButton ( { account }: Props ) {
         return array;
     }
 
-    const genPrivateKey = () => {
+    const seedToPk = (msSeed: string) => {
+        try {
+            const numericPart = msSeed.match(/^\d+/)[0];
+            const bigInt = BigInt(numericPart);
+
+            const byteLength = 32;
+            const byteArray = new Uint8Array(byteLength);
+
+            for (let i = 0; i < byteLength; i++) {
+                byteArray[i] = Number((bigInt >> BigInt(8 * i)) & BigInt(0xFF));
+            }
+
+            const newPk = PrivateKey.from_seed_unchecked(byteArray);
+
+            return newPk.to_string()
+        } catch (e) {
+            console.log(error)
+        }
+    }
+
+    const genPrivateKey = async () => {
         // todo: probably store this somewhere/send off to wallet?
 
         try {
             const seed = generateRandomSeed();
-            const msPk = PrivateKey.from_seed_unchecked(seed);
-            console.log(msPk.to_string(), "BEFORE TO SEED");
-            const msSeed = msPk.to_seed();
-            console.log(msSeed, "original ms Seed");
-            const bigNumberString = "8001202823281487421551309151316182048026650507186430279913233551596160478554";
-            // In JavaScript, you convert it to a BigInt since it's too large for standard Number types.
-            const bigInt = BigInt(bigNumberString);
+            const msPk = await PrivateKey.from_seed_unchecked(seed);
+            // todo: call importPkToWallet createSharedStateAccount() -> game_address, wallet logic to fill in seed
+            const msSeed = await msPk.to_seed();
+            // for demonstrating that we can recover pk from seed
+            // const newPk = seedToPk(newMsSeed)
 
-            // Convert the BigInt to a byte array (Uint8Array).
-            // Note: You need to determine the correct byte length for your specific case.
-            const byteLength = 32; // Assuming a 256-bit field, change this to your field size.
-            const byteArray = new Uint8Array(byteLength);
+            const msVk = await msPk.to_view_key().to_string();
+            const msAddr = await msPk.to_address().to_string();
 
-            // Fill the byte array with the value from the BigInt.
-            // Fill the byte array with the value from the BigInt in big-endian order.
-            for (let i = 0; i < byteLength; i++) {
-                byteArray[byteLength - i - 1] = Number((bigInt >> BigInt(8 * i)) & BigInt(0xFF));
-            }
-
-            console.log(byteArray)
-            console.log(seed)
-
-            const arraysAreEqual = (a, b) => a.length === b.length && a.every((value, index) => value === b[index]);
-
-            console.log(arraysAreEqual(byteArray, seed));
-
-            const newPk = PrivateKey.from_seed_unchecked(byteArray);
-            console.log(newPk.to_string(), 'pk after');
-
-
-
-            const msVk = msPk.to_view_key();
-            const msAddr = msPk.to_address();
-
-            return [msPk, msVk, msAddr];
+            return [msPk, msSeed, msVk, msAddr];
         } catch (error) {
             console.log(error)
         }
@@ -210,8 +205,10 @@ function KickoffButton ( { account }: Props ) {
         programId: programId,
         functionId: functionId,
         fee: 1.5,
-        inputs: [msSeed, gameMultisig, opponent, wagerRecord, amount + "u64", "1field", "sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg", msg, mOfN, nonce]
+        inputs: ["field", "asdadre", opponent, wagerRecord, amount + "u64", "1field", "sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg", msg, mOfN, nonce]
     };
+
+
 
     const { requestCreateEvent, eventId, requestEventError, requestEventLoading } = useRequestCreateEvent(eventRequestData);
 
@@ -252,13 +249,23 @@ function KickoffButton ( { account }: Props ) {
         }
     }, [eventId, navigate, gameMultisig]);
 
-    const propose_game = () => {
-        const [msPrivKey, msViewKey, msAddr] = genPrivateKey();
-        if (msPrivKey && msViewKey && msAddr) {
-            setMsPrivKey(msPrivKey.to_string());
-            setMsViewKey(msViewKey.to_string());
-            setMsAddr(msAddr.to_string());
-            requestCreateEvent();
+    const propose_game = async () => {
+        const [msPrivKey, msSeed, msViewKey, msAddr] = await genPrivateKey();
+        // console.log(msPrivKey, msSeed, msViewKey, msAddr)
+        console.log(msSeed, msAddr, msPrivKey, msViewKey)
+        if (msPrivKey && msSeed && msViewKey && msAddr) {
+            const eventRequestData: CreateEventRequestData = {
+                type: eventType,
+                programId: programId,
+                functionId: functionId,
+                fee: 1.5,
+                inputs: [msSeed, gameMultisig, opponent, wagerRecord, `${amount}u64`, "1field", "sign1qnhgv5vd5xrjvend63pgw2qj8f6zxhz5yk36r3nsxkgjz6285cp9gz332p7uyu6upujg0f4qf4cyqqamp5hh6kfg2nxhyfkk3lkrvpxlam644zwcpzuhnjsc08k76c40xc23gzdpsx8fkzgz6c02qs89q93j76sqw5svpfpe4yqtpa9g6zwsqs6y3r5pfamwk89hjveu44mqzxzltvg", msg, mOfN, nonce]
+            };
+            try {
+                requestCreateEvent();
+            } catch (e) {
+                console.log(e);
+            }
         }
         else {
             console.error("Failed to create ms keys");
