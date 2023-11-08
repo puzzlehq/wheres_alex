@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import PuzzleAccount from '../../models/account';
 import Opponent from '../../components/Opponent';
 import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';

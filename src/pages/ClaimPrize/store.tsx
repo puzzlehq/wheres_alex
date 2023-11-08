@@ -27,7 +27,7 @@ type ClaimPrizeStore = {
 };
 
 export const useClaimPrizeStore = create<ClaimPrizeStore>()(
-  immer((set, get) => ({
+  immer((set) => ({
     step: Step._01_Claim,
     opponent: '',
     wager: 0,
@@ -42,7 +42,7 @@ export const useClaimPrizeStore = create<ClaimPrizeStore>()(
       set({ wager });
     },
     setState: (state: State) => {
-  
+      console.log(state)
     },
     claimPrize: async () => {
       

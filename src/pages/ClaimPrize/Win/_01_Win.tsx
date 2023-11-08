@@ -9,7 +9,7 @@ type AcceptGameProps = {
   wager: number; // in puzzle pieces
 };
 
-const FinishGameWinClaim = ({ challenger, wager }: AcceptGameProps) => {
+const FinishGameWinClaim = ({ wager }: AcceptGameProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const answer = location.state?.answer ?? 'N/A';

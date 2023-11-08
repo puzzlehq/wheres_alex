@@ -19,7 +19,7 @@ type AcceptGameStore = {
 };
 
 export const useAcceptGameStore = create<AcceptGameStore>()(
-  immer((set, get) => ({
+  immer((set) => ({
     step: Step._01_AcceptGame,
     opponent: '',
     wager: 0,
