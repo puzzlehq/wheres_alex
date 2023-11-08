@@ -15,7 +15,7 @@ import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame.js';
 import FinishGame from './pages/FinishGame.js';
-import FinishGameClaim from './pages/FinishGameClaim.js';
+import FinishGameClaim from './pages/FinishGameWinClaim.js';
 import RenegUnacceptedGame from './pages/RenegUnacceptedGame.js';
 import FindAlex from './pages/FindAlex.js';
 

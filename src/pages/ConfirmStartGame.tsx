@@ -2,63 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import PuzzleAccount from '../models/account';
-import behindBuildingImg from '../assets/behind_building.svg';
-import inWeedsImg from '../assets/in_weeds.svg';
 import Opponent from '../components/Opponent';
 import PageHeader from '../components/PageHeader';
 import Wager from '../components/Wager';
+import SelectedAlexLocation from '../components/SelectedAlexLocation';
 // import { useRequestCreateEvent } from "@puzzlehq/sdk";
-
-function AnswerSection() {
-  const location = useLocation();
-  const answer = location.state?.answer ?? 'N/A';
-
-  return (
-    <div className='flex w-full flex-col gap-8 items-center'>
-      <div className='flex w-[298px] max-w-full items-start justify-between gap-5 self-center'>
-        <div className='flex flex-col gap-2 self-start w-1/2'>
-          <img
-            loading='lazy'
-            src={inWeedsImg}
-            className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                        ${answer === 'In the Weeds' ? '' : 'opacity-40'}`}
-            alt='In the Weeds'
-          />
-          <div
-            className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer === 'In the Weeds' ? '' : 'opacity-40'}
-                        ${answer === 'In the Weeds' ? 'text-green' : 'text-white'}`}
-          >
-            In the Weeds
-          </div>
-        </div>
-        <div className='flex flex-col gap-2 self-start w-1/2'>
-          <img
-            loading='lazy'
-            src={behindBuildingImg}
-            className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                        ${answer === 'Behind the Building' ? '' : 'opacity-40'}`}
-            alt='Behind the Building'
-          />
-          <div
-            className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer === 'Behind the Building' ? '' : 'opacity-40'}
-                        ${
-                          answer === 'Behind the Building'
-                            ? 'text-green'
-                            : 'text-white'
-                        }`}
-          >
-            Behind the Building
-          </div>
-        </div>
-      </div>
-      <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green'>
-        You chose to hide Alex {answer}!
-      </div>
-    </div>
-  );
-}
 
 type Props = {
   account: PuzzleAccount;
@@ -143,7 +91,12 @@ function ConfirmStartGame({ account }: Props) {
       <PageHeader bg='bg-pink' text='REVIEW AND KICKOFF GAME' />
       <Opponent opponent={opponent} />
       <Wager wagerAmount={amount} />
-      <AnswerSection />
+      <div className='flex flex-col gap-2'>
+        <SelectedAlexLocation answer={answer} win={undefined} />
+        <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-green'>
+          You chose to hide Alex {answer}!
+        </div>
+      </div>
       <div className='flex flex-col flex-grow'/>
       <div className='flex flex-col gap-4'>
         <button
