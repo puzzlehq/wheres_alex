@@ -1,5 +1,6 @@
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
+import { Answer } from '../../models/game_states';
+import { persist } from 'zustand/middleware'
 
 export enum Step {
   _01_AcceptGame,
@@ -10,30 +11,43 @@ export enum Step {
 type AcceptGameStore = {
   step: Step;
   opponent: string;
+  answer?: Answer;
   wager: number;
+  multisig?: string;
+  eventId?: string;
   setStep: (step: Step) => void;
-  setOpponent: (opponent: string) => void;
-  setWager: (wager: number) => void;
-  createGame: () => Promise<void>;
+  setAnswer: (answer: Answer) => void;
+  submit: () => Promise<void>;
+  initialize: (opponent: string, wager: number, multisig: string) => void,
+  acceptGame: () => Promise<void>;
+  rejectGame: () => Promise<void>;
   close: () => void;
 };
 
 export const useAcceptGameStore = create<AcceptGameStore>()(
-  immer((set) => ({
+  persist((set, get) => ({
     step: Step._01_AcceptGame,
-    opponent: '',
     wager: 0,
+    opponent: '',
+    answer: undefined,
+    multisig: undefined,
     setStep: (step: Step) => {
       set({ step });
     },
-    setOpponent: (opponent: string) => {
-      set({ opponent });
+    setAnswer: (answer: Answer) => {
+      set({ answer });
     },
-    setWager: (wager: number) => {
-      set({ wager });
+    submit: async () => {
+      set({ eventId: '1234532' });
     },
-    createGame: async () => {
-      
+    initialize: (opponent: string, wager: number, multisig: string) => {
+      set({ opponent, wager, multisig, step: Step._01_AcceptGame });
+    },
+    acceptGame: async () => {
+      set({ step: Step._02_FindAlex });
+    },
+    rejectGame: async () => {
+      get().close()
     },
     close: () => {
       set({
@@ -42,5 +56,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
         wager: 0,
       });
     },
-  }))
+  }), {
+    name: 'accept-game'
+  })
 );

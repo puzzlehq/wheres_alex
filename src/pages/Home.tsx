@@ -1,325 +1,46 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import GameState, { NotifyFinish } from '../models/game_states';
+import GameState, { Answer } from '../models/game_states';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
-
-function TotalWinnings() {
-  return (
-    <section className='mt-8 flex flex-col self-stretch border-2 border-solid border-[color:var(--primary-green,#4EC331)] px-2.5 pt-3.5 text-primary-green'>
-      <div
-        className='overflow-hidden text-right text-4xl font-bold tabular-nums'
-        style={{ direction: 'rtl' }}
-      >
-        0000000001234567898765432
-      </div>
-      <div className='flex w-full'>
-        <div className='-ml-2.5 flex max-w-full flex-col self-start bg-primary-green px-5 py-2'>
-          <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
-            TOTAL WINNINGS
-          </div>
-        </div>
-        <div className='flex flex-grow' />
-        <p className='font-bold'>Puzzle Pieces</p>
-      </div>
-    </section>
-  );
-}
-
-function NewGame() {
-  const navigate = useNavigate(); // Get the history object
-
-  const navigateToNewGame = () => {
-    navigate('/new-game'); // Navigate to the NewGame page
-  };
-  return (
-    <Button
-      color='yellow'
-      onClick={navigateToNewGame}
-    >
-      NEW GAME
-    </Button>
-  );
-}
-
-type NotificationProps = {
-  notification: GameState;
-};
-
-function NotificationItem({ notification }: NotificationProps) {
-  const navigate = useNavigate(); // Hook to navigate
-
-  const handleStartClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/accept-game', {
-      state: {
-        gameMultisig: notification.gameMultisig,
-        opponent: notification.player,
-        amount: notification.wager,
-      },
-    });
-  };
-
-  const handleFinishClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/finish-game', {
-      state: {
-        gameMultisig: notification.gameMultisig,
-        opponent: notification.player,
-        amount: notification.wager,
-        win: true,
-      },
-    });
-  };
-
-  const handleFinishClaimClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/finish-game-claim', {
-      state: {
-        gameMultisig: notification.gameMultisig,
-        opponent: notification.player,
-        amount: notification.wager,
-      },
-    });
-  };
-
-  const renderActionButton = () => {
-    switch (notification.action) {
-      case 'Start':
-        return (
-          <button
-            onClick={handleStartClick}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
-            style={{ minWidth: '100px' }}
-          >
-            {notification.action}
-          </button>
-        );
-      case 'Finish':
-        return (
-          <button
-            onClick={handleFinishClick}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
-            style={{ minWidth: '100px' }}
-          >
-            {notification.action}
-          </button>
-        );
-      case 'Claim':
-        return (
-          <button
-            onClick={handleFinishClaimClick}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
-            style={{ minWidth: '100px' }}
-          >
-            {notification.action}
-          </button>
-        );
-      default:
-        // The 'else' part for '... other buttons'
-        return (
-          <>
-            <button
-              className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24 ${
-                notification.action === 'Delete' ? 'bg-primary-gray' : 'bg-primary-yellow'
-              }`}
-              style={{ minWidth: '100px' }}
-            >
-              {notification.action}
-            </button>
-          </>
-        );
-    }
-  };
-
-  return (
-    <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {notification.player}
-      </div>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {notification.wager}
-      </div>
-      <div className='flex justify-end'>{renderActionButton()}</div>
-    </div>
-  );
-}
-
-type NotificationsProps = {
-  notifications: GameState[];
-};
-
-function Notifications({ notifications }: NotificationsProps) {
-  return (
-    <section className='mt-8 flex grow flex-col self-stretch border-2 border-solid border-primary-pink pb-6 pr-4'>
-      <div className='flex max-w-full flex-col self-start bg-primary-pink px-5 py-2'>
-        <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
-          NOTIFICATIONS
-        </div>
-      </div>
-      <div className='ml-5 mt-4 flex grow flex-col items-start self-stretch pl-px'>
-        {notifications.map((notification) => (
-          <NotificationItem
-            key={notification.player}
-            notification={notification}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
-
-type LiveGameProps = {
-  game: GameState;
-  timeLeft: { [key: string]: any };
-};
-
-function LiveGameItem({ game, timeLeft }: LiveGameProps) {
-  const navigate = useNavigate(); // Hook to navigate
-
-  const handleRenegeClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/Renege-unaccepted-game', {
-      state: {
-        gameMultisig: game.gameMultisig,
-        opponent: game.player,
-        amount: game.wager,
-      },
-    });
-  };
-
-  // Function to handle the ping button click
-  const handlePingClick = () => {
-    // You might want to replace 'ENTER_PHONE_NUMBER' with the actual number if needed
-    const phoneNumber = 'ENTER_PHONE_NUMBER'; // Leave this as is if you want the user to enter the number.
-    const message = `I'm betting you ${game.wager} that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
-    const encodedMessage = encodeURIComponent(message);
-    const smsHref = `sms:${phoneNumber}?&body=${encodedMessage}`;
-
-    window.location.href = smsHref;
-  };
-
-  const renderActionButton = () => {
-    switch (game.action) {
-      case 'Claim':
-        // Assuming 'Claim' needs a special button not shown in this snippet
-        // This is just an example
-        return (
-          <>
-            <div
-              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
-              style={{ minWidth: '100px' }}
-            >
-              {timeLeft[game.player] &&
-                `${String(timeLeft[game.player].hours).padStart(
-                  2,
-                  '0'
-                )}:${String(timeLeft[game.player].minutes).padStart(
-                  2,
-                  '0'
-                )}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
-            </div>
-            <a
-              href='#'
-              onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-              style={{ minWidth: '100px' }}
-            >
-              PING
-            </a>
-          </>
-        );
-      default:
-        // The 'else' part for '... other buttons'
-        return (
-          <>
-            <button
-              onClick={handleRenegeClick}
-              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-              style={{ minWidth: '100px' }}
-            >
-              {game.action}
-            </button>
-            <a
-              href='#'
-              onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-              style={{ minWidth: '100px' }}
-            >
-              PING
-            </a>
-          </>
-        );
-    }
-  };
-
-  return (
-    <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold text-primary-red max-sm:mr-auto'>
-        {game.player}
-      </div>
-      <div className='my-auto self-center text-left text-xs font-bold text-primary-red max-sm:mr-auto'>
-        {game.wager}
-      </div>
-      <div className='flex justify-end'>{renderActionButton()}</div>
-    </div>
-  );
-}
-
-type LiveGamesProps = {
-  liveGames: GameState[];
-  timeLeft: { [key: string]: any };
-};
-
-function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
-  return (
-    <section className='mt-7 flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-8 pr-5'>
-      <div className='flex max-w-full flex-col self-start bg-primary-red px-5 py-2'>
-        <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
-          LIVE GAMES
-        </div>
-      </div>
-      <div className='ml-5 mt-3.5 flex grow flex-col items-start self-start self-stretch'>
-        {liveGames.map((game) => (
-          <LiveGameItem key={game.player} game={game} timeLeft={timeLeft} />
-        ))}
-      </div>
-    </section>
-  );
-}
+import TotalWinnings from '../components/TotalWinnings';
+import LiveGames from '../components/LiveGames';
+import Notifications from '../components/Notifications';
 
 function Home() {
   const gameStates: GameState[] = [
-    { gameMultisig: 'aleo1', player: 'Alice', wager: '10 P', action: 'Start' },
+    { multisig: 'aleo1', opponent: 'Alice', wager: 10, action: 'Start' },
     {
-      gameMultisig: 'aleo2',
-      player: 'Bob',
-      wager: '20 P',
+      multisig: 'aleo2',
+      opponent: 'Bob',
+      wager: 20,
       action: 'Finish',
-      win: true,
-    } as NotifyFinish,
+      answer: Answer.InTheWeeds
+    },
     {
-      gameMultisig: 'aleo3',
-      player: 'Charlie',
-      wager: '30 P',
+      multisig: 'aleo3',
+      opponent: 'Charlie',
+      wager: 30,
       action: 'Renege',
     },
-    { gameMultisig: 'aleo4', player: 'David', wager: '40 P', action: 'Delete' },
+    { multisig: 'aleo4', opponent: 'David', wager: 40, action: 'Delete' },
     {
-      gameMultisig: 'aleo5',
-      player: 'Eva',
+      multisig: 'aleo5',
+      opponent: 'Eva',
       blockheight: 10500,
-      wager: '50 P',
+      wager: 50,
       action: 'Claim',
       win: false,
+      answer: Answer.InTheWeeds
     },
     {
-      gameMultisig: 'aleo6',
-      player: 'Frank',
+      multisig: 'aleo6',
+      opponent: 'Frank',
       blockheight: 105000,
-      wager: '60 P',
+      wager: 60,
       action: 'Claim',
       win: true,
+      answer: Answer.BehindTheBuilding
     },
   ];
 
@@ -350,7 +71,7 @@ function Home() {
   const initialTimeLeft = liveGames.reduce<{ [key: string]: any }>(
     (acc, game) => {
       if (game.action === 'Claim') {
-        acc[game.player] = calculateTimeLeft(game.blockheight);
+        acc[game.opponent] = calculateTimeLeft(game.blockheight);
       }
       return acc;
     },
@@ -367,8 +88,8 @@ function Home() {
         const newTime: { [key: string]: any } = {};
 
         // eslint-disable-next-line prefer-const
-        for (let player in prevTime) {
-          let { hours, minutes, seconds } = prevTime[player];
+        for (let opponent in prevTime) {
+          let { hours, minutes, seconds } = prevTime[opponent];
 
           if (seconds < 59) seconds++;
           else if (minutes < 59) {
@@ -380,7 +101,7 @@ function Home() {
             seconds = 0;
           }
 
-          newTime[player] = { hours, minutes, seconds };
+          newTime[opponent] = { hours, minutes, seconds };
         }
 
         return newTime;
@@ -389,12 +110,19 @@ function Home() {
 
     return () => clearInterval(timer);
   }, []);
+  
+  const navigate = useNavigate();
 
   return (
     <div className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='w-full bg-neutral-900 px-1'>
-        <TotalWinnings />
-        <NewGame />
+      <div className='flex flex-col w-full bg-neutral-900 px-1 gap-4'>
+        <TotalWinnings amount={1234567890} />
+        <Button
+          color='yellow'
+          onClick={() => navigate('/new-game')}
+        >
+          NEW GAME
+        </Button>
         <Notifications notifications={notifications} />
         <LiveGames liveGames={liveGames} timeLeft={timeLeft} />
       </div>

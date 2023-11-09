@@ -4,10 +4,14 @@ import Home from './pages/Home.js';
 import NewGame from './pages/NewGame/index.js';
 // import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Header } from './components/Header.js';
+import { AppHeader } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
+import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
+import WinRoute from './pages/ClaimPrize/Win/index.js';
+import RenegeGame from './pages/Renege/_01_Renege.js';
+import Reveal from './pages/FinishGame/_01_Reveal.js';
 
 function App() {
   // const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -26,7 +30,7 @@ function App() {
     <div className='App flex min-h-screen justify-center bg-amber-400'>
       <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto bg-neutral-900 shadow-md'>
         {isConnected && account?.address && (
-          <Header isConnected={isConnected} address={account?.address} />
+          <AppHeader />
         )}
 
         <Router>
@@ -35,8 +39,11 @@ function App() {
               <Route path='/new-game' element={<NewGame />} />
               <Route path='/accept-game' element={<AcceptGame/>}/>
               <Route path='/claim-prize'>
-                
+                <Route path='win' element={<WinRoute/>}/>
+                <Route path='lose' element={<LoseRoute/>}/>
               </Route>
+              <Route path='/renege-game' element={<RenegeGame/>} />
+              <Route path='/finish-game' element={<Reveal/>} />
               <Route
                 path='/'
                 element={!loading && isConnected ? <Home /> : <Welcome />}

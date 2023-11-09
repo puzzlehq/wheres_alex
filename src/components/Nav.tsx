@@ -1,13 +1,8 @@
-import { useNavigate } from 'react-router-dom';
-
 type NavProps = {
   step: number;
-  opponent: string;
-  answer: string;
 };
 
-function Nav({ step, opponent, answer }: NavProps) {
-  const navigate = useNavigate();
+function Nav({ step }: NavProps) {
 
   return (
     <nav className='mt-11 flex w-full items-start justify-between gap-5 self-stretch max-md:mr-px max-md:mt-10 max-md:justify-center'>
@@ -22,12 +17,6 @@ function Nav({ step, opponent, answer }: NavProps) {
       <div className='self-stretch text-center text-xs font-extrabold tracking-tight text-primary-white'>
         <a
           href='#'
-          onClick={() =>
-            step > 2 &&
-            navigate('/hide-alex', {
-              state: { opponent, answer },
-            })
-          }
           className={`self-stretch text-center text-xs font-extrabold tracking-tight ${
             step >= 2 ? 'text-primary-white' : 'text-primary-gray'
           } ${step === 2 ? 'underline' : ''}`}

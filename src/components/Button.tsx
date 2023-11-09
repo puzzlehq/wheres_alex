@@ -11,7 +11,7 @@ const Button = ({ className, color = 'green', ...props }: ButtonProps) => {
   return (
     <button
       className={`${className ?? ''} ${props.disabled && 'opacity-40'} w-full self-center whitespace-nowrap rounded-[200px] ${bgColor} p-5 text-center
-      text-3xl font-extrabold tracking-tight text-primary-black max-md:ml-px`}
+      text-3xl font-extrabold tracking-tight ${color === 'transparent' ? 'text-primary-white' :'text-primary-black'} max-md:ml-px`}
       {...props}
     />
   );
