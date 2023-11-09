@@ -11,7 +11,7 @@ const Win = () => {
   return (
     <div className='flex flex-col w-full h-full justify-center gap-4'>
       <Wager wagerAmount={wager} winnings/>
-      <PageHeader text="WHERE IS ALEX" bg='bg-primary-blue' />
+      <PageHeader text="WHERE'S ALEX" bg='bg-primary-blue' />
       <div className="flex flex-col gap-2">
         <SelectedAlexLocation answer={Answer.BehindTheBuilding} win={false} />
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>

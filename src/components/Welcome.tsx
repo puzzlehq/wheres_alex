@@ -9,12 +9,8 @@ export const Welcome = () => {
   const navigate = useNavigate();
   const { connect, isConnected, loading } = useConnect();
 
-  console.log(isConnected);
-
   useEffect(() => {
-    console.log('connecting');
     if (isConnected) {
-      console.log('connecting...');
       navigate('/');
     }
   }, [isConnected, loading, navigate]);
@@ -35,7 +31,7 @@ export const Welcome = () => {
         />
 
         <h1 className='z-5 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white'>
-          WHERE <br /> IS ALEX?{' '}
+          WHERE'S<br />ALEX?{' '}
         </h1>
         <p className='z-10 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
           A thrilling game showcasing the power of Aleo and the Puzzle
