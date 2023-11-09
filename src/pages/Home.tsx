@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import GameState, { NotifyFinish } from '../models/game_states';
+import GameState, { Answer } from '../models/game_states';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
@@ -15,8 +15,8 @@ function Home() {
       opponent: 'Bob',
       wager: 20,
       action: 'Finish',
-      win: true,
-    } as NotifyFinish,
+      answer: Answer.InTheWeeds
+    },
     {
       multisig: 'aleo3',
       opponent: 'Charlie',
@@ -31,6 +31,7 @@ function Home() {
       wager: 50,
       action: 'Claim',
       win: false,
+      answer: Answer.InTheWeeds
     },
     {
       multisig: 'aleo6',
@@ -39,6 +40,7 @@ function Home() {
       wager: 60,
       action: 'Claim',
       win: true,
+      answer: Answer.BehindTheBuilding
     },
   ];
 

@@ -1,43 +1,36 @@
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
+import { persist } from 'zustand/middleware';
+import { Answer } from '../../../models/game_states';
 
 export enum Step {
   _01_Claim,
-  _02_Gameover,
+  _02_GameOver,
 }
 
 type ClaimPrizeLoseStore = {
   step: Step;
   opponent: string;
   wager: number;
-  answer: string;
+  answer?: Answer;
   setStep: (step: Step) => void;
-  setOpponent: (opponent: string) => void;
-  setWager: (wager: number) => void;
-  setAnswer: (answer: string) => void;
-  claimPrize: () => Promise<void>;
+  initialize: (opponent: string, wager: number, answer: Answer) => void;
+  claimLosePrize: () => Promise<void>;
   close: () => void;
 };
 
 export const useClaimPrizeLoseStore = create<ClaimPrizeLoseStore>()(
-  immer((set) => ({
+  persist((set) => ({
     step: Step._01_Claim,
     opponent: '',
     wager: 0,
-    answer: '',
+    answer: undefined,
     setStep: (step: Step) => {
       set({ step });
     },
-    setOpponent: (opponent: string) => {
-      set({ opponent });
+    initialize: (opponent: string, wager: number, answer: Answer) => {
+      set({ opponent, answer, wager, step: Step._01_Claim });
     },
-    setWager: (wager: number) => {
-      set({ wager });
-    },
-    setAnswer: (answer: string) => {
-      set({ answer });
-    },
-    claimPrize: async () => {
+    claimLosePrize: async () => {
       
     },
     close: () => {
@@ -47,5 +40,7 @@ export const useClaimPrizeLoseStore = create<ClaimPrizeLoseStore>()(
         wager: 0,
       });
     },
-  }))
+  }), {
+    name: 'claim-prize-lose'
+  })
 );

@@ -14,7 +14,8 @@ function HideAlex() {
         <Nav step={2} />
         <PageHeader text='HIDE ALEX' bg='bg-primary-blue' />
         <ChooseAlexLocation
-          onClick={setAnswer}
+          setAnswer={setAnswer}
+          answer={answer}
           hiding={true}
         />
         <div className='flex flex-grow flex-col' />

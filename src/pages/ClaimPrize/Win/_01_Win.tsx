@@ -6,7 +6,7 @@ import { Answer } from "../../../models/game_states";
 import { Step, useClaimPrizeWinStore } from "./store";
 
 const Win = () => {
-  const [answer, wager, setStep, claim] = useClaimPrizeWinStore((state) => [state.answer, state.wager, state.setStep, state.claimPrize]);
+  const [answer, wager, setStep, claim] = useClaimPrizeWinStore((state) => [state.answer, state.wager, state.setStep, state.claimWinPrize]);
   
   return (
     <div className='flex flex-col w-full h-full justify-center gap-4'>
@@ -23,7 +23,7 @@ const Win = () => {
         color="green"
         onClick={async () => {
           await claim();
-          setStep(Step._02_Gameover)
+          setStep(Step._02_GameOver)
         }}
       >
         CLAIM WINNINGS

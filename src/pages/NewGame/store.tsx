@@ -1,6 +1,6 @@
 import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 import { Answer } from '../../models/game_states';
+import { persist } from 'zustand/middleware'
 
 export enum Step {
   _01_NewGame,
@@ -39,7 +39,7 @@ type NewGameStore = {
 };
 
 export const useNewGameStore = create<NewGameStore>()(
-  immer((set, get) => ({
+  persist((set, get) => ({
     step: Step._01_NewGame,
     opponent: '',
     wager: 0,
@@ -90,7 +90,7 @@ export const useNewGameStore = create<NewGameStore>()(
       })
     },
     initialize: (player_address: string) => {
-      set({ player_address });
+      set({ player_address, step: Step._01_NewGame });
     },
     close: () => {
       set({
@@ -102,5 +102,7 @@ export const useNewGameStore = create<NewGameStore>()(
         multisig: undefined,
       });
     },
-  }))
+  }), {
+    name: 'new-game'
+  })
 );

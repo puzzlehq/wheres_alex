@@ -9,7 +9,7 @@ export type NotifyFinish = {
   multisig: string;
   opponent: string;
   wager: number;
-  win: boolean;
+  answer: Answer;
   action: 'Finish';
 };
 
@@ -33,6 +33,7 @@ export type NotifyClaimFinish = {
   blockheight: number;
   wager: number;
   win: boolean;
+  answer: Answer;
   action: 'Claim';
 };
 

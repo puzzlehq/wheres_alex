@@ -1,47 +1,33 @@
 import { useNavigate } from "react-router-dom";
 import GameState from "../models/game_states";
 import { useAcceptGameStore } from "../pages/AcceptGame/store";
+import { useClaimPrizeLoseStore } from "../pages/ClaimPrize/Lose/store";
+import { useClaimPrizeWinStore } from "../pages/ClaimPrize/Win/store";
+import { useFinishGameStore } from "../pages/FinishGame/store";
 
-function NotificationItem({ action, multisig, opponent, wager }: GameState) {
+function NotificationItem({ notification }: { notification: GameState }) {
+  
+  const action = notification.action;
+  const multisig = notification.multisig;
+  const opponent = notification.opponent;
+  const wager = notification.wager;
+
   const navigate = useNavigate();
 
-  const [initializeGame] = useAcceptGameStore((state) => [state.initialize])
-
-  const handleStartClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    initializeGame(opponent, wager, multisig)
-    navigate('/accept-game');
-  };
-
-  const handleFinishClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/finish-game', {
-      state: {
-        multisig: multisig,
-        opponent: opponent,
-        amount: wager,
-        win: true,
-      },
-    });
-  };
-
-  const handleFinishClaimClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/finish-game-claim', {
-      state: {
-        multisig: multisig,
-        opponent: opponent,
-        amount: wager,
-      },
-    });
-  };
+  const [initializeAcceptGame] = useAcceptGameStore((state) => [state.initialize]);
+  const [initializeFinishGame] = useFinishGameStore((state) => [state.initialize]);
+  const [initializeClaimLose] = useClaimPrizeLoseStore((state) => [state.initialize]);
+  const [initializeClaimWin] = useClaimPrizeWinStore((state) => [state.initialize]);
 
   const renderActionButton = () => {
     switch (action) {
       case 'Start':
         return (
           <button
-            onClick={handleStartClick}
+            onClick={() => {
+              initializeAcceptGame(opponent, wager, multisig)
+              navigate('/accept-game')
+            }}
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
@@ -51,7 +37,10 @@ function NotificationItem({ action, multisig, opponent, wager }: GameState) {
       case 'Finish':
         return (
           <button
-            onClick={handleFinishClick}
+            onClick={() => {
+              initializeFinishGame(opponent, wager, notification.answer)
+              navigate('/finish-game');
+            }}
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
@@ -61,7 +50,15 @@ function NotificationItem({ action, multisig, opponent, wager }: GameState) {
       case 'Claim':
         return (
           <button
-            onClick={handleFinishClaimClick}
+            onClick={() => {
+              if (notification.win) {
+                initializeClaimWin(opponent, wager, notification.answer);
+                navigate('/claim-prize/win');
+              } else {
+                initializeClaimLose(opponent, wager, notification.answer);
+                navigate('/claim-prize/lose');
+              }
+            }}
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
@@ -114,7 +111,7 @@ function Notifications({ notifications }: NotificationsProps) {
         {notifications.map((notification) => (
           <NotificationItem
             key={notification.opponent}
-            {...notification}
+            notification={notification}
           />
         ))}
       </div>

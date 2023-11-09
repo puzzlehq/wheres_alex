@@ -10,11 +10,14 @@ function FindAlex() {
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex h-full w-full flex-col items-center bg-neutral-900 px-5'>
-        <Nav step={2} />
-        <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
+      <div className='flex h-full w-full flex-col items-center bg-neutral-900 px-5 gap-6'>
+        <div className='w-full flex flex-col gap-2'>
+          <Nav step={2} />
+          <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
+        </div>
         <ChooseAlexLocation
-          onClick={setAnswer}
+          setAnswer={setAnswer}
+          answer={answer}
           hiding={false}
         />
         <div className='flex flex-grow flex-col' />

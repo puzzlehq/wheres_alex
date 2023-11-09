@@ -8,14 +8,14 @@ import { useNavigate } from "react-router-dom";
 const Lose = () => {
   const navigate = useNavigate();
 
-  const [answer, wager, setStep, claim] = useClaimPrizeLoseStore((state) => [state.answer, state.wager, state.setStep, state.claimPrize]);
+  const [answer, wager, setStep, claim] = useClaimPrizeLoseStore((state) => [state.answer, state.wager, state.setStep, state.claimLosePrize]);
 
   return (
     <div className='flex flex-col w-full h-full justify-center gap-4'>
       <Wager wagerAmount={wager} winnings/>
       <PageHeader text="WHERE IS ALEX" bg='bg-primary-blue' />
       <div className="flex flex-col gap-2">
-        <SelectedAlexLocation answer={answer} win={false} />
+        {answer && <SelectedAlexLocation answer={answer} win={false} />}
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           Alex was {answer}!
         </div>
@@ -25,7 +25,7 @@ const Lose = () => {
         color='green'
         onClick={async () => {
           await claim();
-          setStep(Step._02_Gameover)
+          setStep(Step._02_GameOver)
         }}
       >
         CLAIM CONSOLATION PRIZE

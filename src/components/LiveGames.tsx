@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import GameState from "../models/game_states";
+import { useRenegeStore } from "../pages/Renege/store";
 
 type LiveGameProps = {
   game: GameState;
@@ -8,16 +9,12 @@ type LiveGameProps = {
 
 function LiveGameItem({ game, timeLeft }: LiveGameProps) {
   const navigate = useNavigate(); // Hook to navigate
+  const [initializeRenege] = useRenegeStore((state) => [state.initialize]);
 
   const handleRenegeClick = () => {
     // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/Renege-unaccepted-game', {
-      state: {
-        multisig: game.multisig,
-        opponent: game.opponent,
-        amount: game.wager,
-      },
-    });
+    initializeRenege(game.opponent, game.wager);
+    navigate('/renege-game');
   };
 
   // Function to handle the ping button click
