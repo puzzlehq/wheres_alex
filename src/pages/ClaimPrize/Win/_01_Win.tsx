@@ -13,7 +13,7 @@ const Win = () => {
       <Wager wagerAmount={wager} winnings/>
       <PageHeader text="WHERE IS ALEX" bg='bg-primary-blue' />
       <div className="flex flex-col gap-2">
-        <SelectedAlexLocation answer={Answer.BehindTheBuilding} win={false} />
+        <SelectedAlexLocation answer={Answer.BehindTheBuilding} win={true} />
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           Alex was {answer}!
         </div>
