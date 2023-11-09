@@ -110,6 +110,60 @@ program cflip_testing_123_token.aleo {
 
     }
 
+    transition stake_transfer_in_alt (
+        private piece_token: Piece,
+        private sender: address, // can't use self.caller as this is ref coinflip program addr
+        private to: address,
+        private amount: u64,
+        private msg: field,
+        private sig: signature,
+    ) -> (PieceClaim, PieceStake, Piece, Piece)
+    {
+
+        let piece_claim_record: PieceClaim = PieceClaim {
+            owner: to,
+            amount: amount,
+            claimer: sender,
+            msg: msg,
+            sig: sig,
+        };
+
+        let piece_stake: PieceStake = PieceStake {
+            owner: to,
+            amount: amount,
+        };
+
+        // new puzz record to receiver
+        let receiver_new_record: Piece = Piece {
+            owner: to,
+            amount: amount
+        };
+
+        // puzz record with change for sender
+        let sender_new_record: Piece = Piece {
+            owner: sender,
+            amount: piece_token.amount - amount
+        };
+
+        // puzz_stake_record,
+        // return ( puzz_claim_record, receiver_new_record, sender_new_record);
+        return (piece_claim_record, piece_stake, receiver_new_record, sender_new_record);
+    }
+
+
+
+    // used for reneges
+    transition retrieve_stake_in (
+        private piece_stake: PieceStake,
+        private piece_claim: PieceClaim,
+        private sender: address,
+        private to: address,
+        private sig: signature,
+    ) {
+
+
+    }
+
     // todo: change to take in amount
     transition stake_transfer_private_out (
         private piece_token: Piece,

@@ -52,17 +52,6 @@ function mint_token_owner_rules_record:
     output r5 as TokenOwnerRules.record;
 
 
-function piece_transfer_private:
-    input r0 as Piece.record;
-    input r1 as address.private;
-    input r2 as u64.private;
-    cast r1 r2 into r3 as Piece.record;
-    sub r0.amount r2 into r4;
-    cast self.caller r4 into r5 as Piece.record;
-    output r3 as Piece.record;
-    output r5 as Piece.record;
-
-
 function stake_transfer_private_in:
     input r0 as Piece.record;
     input r1 as address.private;
@@ -79,17 +68,45 @@ function stake_transfer_private_in:
     output r9 as Piece.record;
 
 
+function stake_transfer_in_alt:
+    input r0 as Piece.record;
+    input r1 as address.private;
+    input r2 as address.private;
+    input r3 as u64.private;
+    input r4 as field.private;
+    input r5 as signature.private;
+    cast r2 r3 r1 r4 r5 into r6 as PieceClaim.record;
+    cast r2 r3 into r7 as PieceStake.record;
+    cast r2 r3 into r8 as Piece.record;
+    sub r0.amount r3 into r9;
+    cast r1 r9 into r10 as Piece.record;
+    output r6 as PieceClaim.record;
+    output r7 as PieceStake.record;
+    output r8 as Piece.record;
+    output r10 as Piece.record;
+
+
+function retrieve_stake_in:
+    input r0 as PieceStake.record;
+    input r1 as PieceClaim.record;
+    input r2 as address.private;
+    input r3 as address.private;
+    input r4 as signature.private;
+
+
 function stake_transfer_private_out:
     input r0 as Piece.record;
     input r1 as PieceClaim.record;
     input r2 as address.private;
     input r3 as u64.private;
-    gte r1.amount r3 into r4;
+    sign.verify r1.sig r1.claimer r1.msg into r4;
     assert.eq r4 true;
+    gte r1.amount r3 into r5;
+    assert.eq r5 true;
     assert.eq r1.claimer r2;
     assert.eq r0.owner r1.owner;
-    cast r2 r3 into r5 as Piece.record;
-    sub r0.amount r3 into r6;
-    cast r0.owner r6 into r7 as Piece.record;
-    output r5 as Piece.record;
-    output r7 as Piece.record;
+    cast r2 r3 into r6 as Piece.record;
+    sub r0.amount r3 into r7;
+    cast r0.owner r7 into r8 as Piece.record;
+    output r6 as Piece.record;
+    output r8 as Piece.record;
