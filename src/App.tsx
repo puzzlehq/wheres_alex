@@ -4,7 +4,7 @@ import Home from './pages/Home.js';
 import NewGame from './pages/NewGame/index.js';
 // import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { Header } from './components/Header.js';
+import { AppHeader } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
@@ -26,7 +26,7 @@ function App() {
     <div className='App flex min-h-screen justify-center bg-amber-400'>
       <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto bg-neutral-900 shadow-md'>
         {isConnected && account?.address && (
-          <Header isConnected={isConnected} address={account?.address} />
+          <AppHeader />
         )}
 
         <Router>
