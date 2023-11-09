@@ -107,18 +107,16 @@ function propose_game:
     cast self.caller r1 r9 r5 into r18 as Answer.record;
     cast r1 r14 1field r4 self.caller r2 0field into r19 as Game.record;
     call puzz_testing_acct_123.aleo/mint_owner_rules_record r1 self.caller r2 r6 r6 into r20;
-    call cflip_testing_123_token.aleo/mint_token_owner_rules_record r1 self.caller r2 r6 r6 into r21;
-    call cflip_testing_123_token.aleo/stake_transfer_private_in r3 self.caller r1 r4 r7 r6 into r22 r23 r24;
-    async propose_game r1 into r25;
+    call cflip_testing_123_token.aleo/stake_transfer_private_in r3 self.caller r1 r4 r7 r6 into r21 r22 r23;
+    async propose_game r1 into r24;
     output r18 as Answer.record;
     output r17 as NotifyKeyRecord.record;
     output r19 as Game.record;
     output r20 as puzz_testing_acct_123.aleo/OwnerRules.record;
-    output r21 as cflip_testing_123_token.aleo/TokenOwnerRules.record;
-    output r22 as cflip_testing_123_token.aleo/PieceClaim.record;
+    output r21 as cflip_testing_123_token.aleo/PieceClaim.record;
+    output r22 as cflip_testing_123_token.aleo/Piece.record;
     output r23 as cflip_testing_123_token.aleo/Piece.record;
-    output r24 as cflip_testing_123_token.aleo/Piece.record;
-    output r25 as cflip_gm_aleo_testing_123.aleo/propose_game.future;
+    output r24 as cflip_gm_aleo_testing_123.aleo/propose_game.future;
 
 finalize propose_game:
     input r0 as address.public;
@@ -145,8 +143,6 @@ function submit_wager:
     input r4 as field.private;
     input r5 as signature.private;
     call cflip_testing_123_token.aleo/stake_transfer_private_in r2 self.caller r0 r3 r4 r5 into r6 r7 r8;
-    call cflip_testing_123_token.aleo/mint_token_owner_rules_record r0 self.caller r1 r5 r5 into r9;
-    output r9 as cflip_testing_123_token.aleo/TokenOwnerRules.record;
     output r6 as cflip_testing_123_token.aleo/PieceClaim.record;
     output r7 as cflip_testing_123_token.aleo/Piece.record;
     output r8 as cflip_testing_123_token.aleo/Piece.record;

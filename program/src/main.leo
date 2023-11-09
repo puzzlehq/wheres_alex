@@ -126,7 +126,7 @@ program cflip_gm_aleo_testing_123.aleo {
         private msg: field,
         private m_of_n: u8,
         private nonce: field,
-    ) -> (Answer, NotifyKeyRecord, Game, puzz_testing_acct_123.leo/OwnerRules.record, cflip_testing_123_token.leo/TokenOwnerRules.record, cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record)
+    ) -> (Answer, NotifyKeyRecord, Game, puzz_testing_acct_123.leo/OwnerRules.record, cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record)
     {
         // removing puzz_claim record for now
 
@@ -182,10 +182,6 @@ program cflip_gm_aleo_testing_123.aleo {
         // todo: send player 1 sig here and message to verify we can transfer on propose_game?
         let owner_rules_record: OwnerRules = puzz_testing_acct_123.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
-        // mint token owner rules with player 1 sig against nonce, will need to store message and sig on FE
-        // todo: need to add fake signature for second slot here
-        let token_owner_rules_record: TokenOwnerRules = cflip_testing_123_token.leo/mint_token_owner_rules_record(game_address, self.caller, opponent, sig, sig);
-
         // stake puzz token in
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
         // let (puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record): (PuzzClaim, Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_in(wager, self.caller, game_address, wager_amount);
@@ -203,7 +199,7 @@ program cflip_gm_aleo_testing_123.aleo {
 
 
         // return (answer_record, player_two_key_record, game_record, owner_rules_record, token_owner_rules_record, puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record) then finalize(game_address);
-        return (answer_record, notify_key_record, game_record, owner_rules_record, token_owner_rules_record, piece_claim_record, piece_receiver_record, piece_sender_change_record) then finalize(game_address);
+        return (answer_record, notify_key_record, game_record, owner_rules_record, piece_claim_record, piece_receiver_record, piece_sender_change_record) then finalize(game_address);
     }
 
 
@@ -252,21 +248,18 @@ program cflip_gm_aleo_testing_123.aleo {
         // private nonce: field,
         private msg: field,
         private sig: signature,
-    ) -> (cflip_testing_123_token.leo/TokenOwnerRules.record, cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record) {
+    ) -> (cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record) {
 
         // todo: removing claim record for now
         // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
         let (piece_claim_record, piece_receiver_record, piece_sender_change_record): (PieceClaim, Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_in(wager, self.caller, game_address, wager_amount, msg, sig);
-
-        // mint token owner rules with player 2 sig against nonce, will need to store message and sig on FE
-        let token_owner_rules_record: TokenOwnerRules = cflip_testing_123_token.leo/mint_token_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
         // let (receiver_puzz_record, puzz_change): (Piece, Piece) = cflip_testing_123_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
 
         // let player_two_claim_record: Claim = puzz_testing_acct_123.leo/mint_claim_record(game_address, wager_amount);
 
         // return (token_owner_rules_record, puzz_claim_record, puzz_receiver_record, puzz_sender_change_record);
-        return (token_owner_rules_record, piece_claim_record, piece_receiver_record, piece_sender_change_record);
+        return (piece_claim_record, piece_receiver_record, piece_sender_change_record);
 
     }
 

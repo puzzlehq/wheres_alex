@@ -87,11 +87,24 @@ function stake_transfer_in_alt:
 
 
 function retrieve_stake_in:
-    input r0 as PieceStake.record;
-    input r1 as PieceClaim.record;
-    input r2 as address.private;
+    input r0 as Piece.record;
+    input r1 as PieceStake.record;
+    input r2 as PieceClaim.record;
     input r3 as address.private;
-    input r4 as signature.private;
+    input r4 as address.private;
+    input r5 as signature.private;
+    cast r4 r2.amount into r6 as Piece.record;
+    sub r0.amount r2.amount into r7;
+    cast r3 r7 into r8 as Piece.record;
+    output r6 as Piece.record;
+    output r8 as Piece.record;
+
+
+function transfer_joint_stake_timeout:
+    input r0 as PieceStake.record;
+    input r1 as PieceStake.record;
+    input r2 as PieceClaim.record;
+    input r3 as PieceClaim.record;
 
 
 function stake_transfer_private_out:
