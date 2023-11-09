@@ -3,12 +3,12 @@ program cflip_testing_123_token.aleo {
 
     mapping supply: field => u64;
 
-    record Puzz {
+    record Piece {
         private owner: address,
         private amount: u64,
     }
 
-    record PuzzClaim {
+    record PieceClaim {
         private owner: address,
         private amount: u64,
         private claimer: address,
@@ -27,7 +27,7 @@ program cflip_testing_123_token.aleo {
         is_claimable: bool,
     }
 
-    record PuzzStake {
+    record PieceStake {
         private owner: address,
         private amount: u64,
     }
@@ -39,10 +39,10 @@ program cflip_testing_123_token.aleo {
         signer_address: address,
     }
 
-    transition mint (private amount: u64, private to: address) -> Puzz {
-        // todo: address check -> likely only permissioned address can mint puzz
+    transition mint (private amount: u64, private to: address) -> Piece {
+        // todo: address check -> likely only permissioned address can mint Piece
 
-        return Puzz {
+        return Piece {
             owner: to,
             amount: amount,
         };
@@ -76,41 +76,41 @@ program cflip_testing_123_token.aleo {
 
 
     // owner_rules.claim have it return another owner rules bool or claim record that says no
-    transition puzz_transfer_private (
-        private puzz_token: Puzz,
+    transition piece_transfer_private (
+        private piece_token: Piece,
         private to: address,
         private amount: u64
-    ) -> (Puzz, Puzz)
+    ) -> (Piece, Piece)
     {
 
-        // new puzz record to receiver
-        let receiver_new_record: Puzz = Puzz {
+        // new Piece record to receiver
+        let receiver_new_record: Piece = Piece {
             owner: to,
             amount: amount
         };
 
-        // puzz record with change for sender
-        let sender_new_record: Puzz = Puzz {
+        // Piece record with change for sender
+        let sender_new_record: Piece = Piece {
             owner: self.caller,
-            amount: puzz_token.amount - amount
+            amount: piece_token.amount - amount
         };
 
         return (receiver_new_record, sender_new_record);
     }
 
     transition stake_transfer_private_in (
-        private puzz_token: Puzz,
+        private piece_token: Piece,
         private sender: address, // can't use self.caller as this is ref coinflip addr
         private to: address,
         private amount: u64,
         private msg: field,
         private sig: signature,
-    ) -> (PuzzClaim, Puzz, Puzz)
+    ) -> (PieceClaim, Piece, Piece)
     {
 
         // note: commenting out puzz_claim for now
 
-        let puzz_claim_record: PuzzClaim = PuzzClaim {
+        let piece_claim_record: PieceClaim = PieceClaim {
             owner: to,
             amount: amount,
             claimer: sender,
@@ -122,33 +122,33 @@ program cflip_testing_123_token.aleo {
         // todo: then to stake out, need to present claim token and signature
 
         // new puzz record to receiver
-        let receiver_new_record: Puzz = Puzz {
+        let receiver_new_record: Piece = Piece {
             owner: to,
             amount: amount
         };
 
         // puzz record with change for sender
-        let sender_new_record: Puzz = Puzz {
+        let sender_new_record: Piece = Piece {
             owner: sender,
-            amount: puzz_token.amount - amount
+            amount: piece_token.amount - amount
         };
 
         // puzz_stake_record,
         // return ( puzz_claim_record, receiver_new_record, sender_new_record);
-        return (puzz_claim_record, receiver_new_record, sender_new_record);
+        return (piece_claim_record, receiver_new_record, sender_new_record);
 
     }
 
     // todo: change to take in amount
     transition stake_transfer_private_out (
-        private puzz_token: Puzz,
+        private piece_token: Piece,
         // private token_owner_rules: TokenOwnerRules,
-        private puzz_claim: PuzzClaim,
+        private piece_claim: PieceClaim,
         private to: address,
         // private sig: signature,
         // private msg: field,
         private amount_to_transfer: u64,
-    ) -> (Puzz, Puzz)
+    ) -> (Piece, Piece)
     {
 
         // todo: logic to validate that the signature is either player 1 or player 2's signature in order to transfer out ?
@@ -159,22 +159,22 @@ program cflip_testing_123_token.aleo {
 
         // validate if sig on puzz_claim is valid
         // todo: add in additional logic to verify signatures...
-        let is_verified: bool = puzz_claim.sig.verify(puzz_claim.claimer, puzz_claim.msg);
+        let is_verified: bool = piece_claim.sig.verify(piece_claim.claimer, piece_claim.msg);
         assert_eq(is_verified, true);
 
         // assert that the claim is >= transfer amount
-        assert(puzz_claim.amount >= amount_to_transfer);
+        assert(piece_claim.amount >= amount_to_transfer);
 
         // new puzz record to receiver
-        let receiver_new_record: Puzz = Puzz {
+        let receiver_new_record: Piece = Piece {
             owner: to,
             amount: amount_to_transfer,
         };
 
         // puzz record with change for sender
-        let sender_new_record: Puzz = Puzz {
-            owner: puzz_token.owner,
-            amount: puzz_token.amount - amount_to_transfer
+        let sender_new_record: Piece = Piece {
+            owner: piece_token.owner,
+            amount: piece_token.amount - amount_to_transfer
         };
 
         return (receiver_new_record, sender_new_record);

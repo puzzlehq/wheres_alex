@@ -1,10 +1,10 @@
 program cflip_testing_123_token.aleo;
 
-record Puzz:
+record Piece:
     owner as address.private;
     amount as u64.private;
 
-record PuzzClaim:
+record PieceClaim:
     owner as address.private;
     amount as u64.private;
     claimer as address.private;
@@ -21,7 +21,7 @@ record TokenOwnerRules:
     signer_two_signature as signature.private;
     is_claimable as boolean.private;
 
-record PuzzStake:
+record PieceStake:
     owner as address.private;
     amount as u64.private;
 
@@ -39,8 +39,8 @@ mapping supply:
 function mint:
     input r0 as u64.private;
     input r1 as address.private;
-    cast r1 r0 into r2 as Puzz.record;
-    output r2 as Puzz.record;
+    cast r1 r0 into r2 as Piece.record;
+    output r2 as Piece.record;
 
 
 function mint_token_owner_rules_record:
@@ -53,44 +53,44 @@ function mint_token_owner_rules_record:
     output r5 as TokenOwnerRules.record;
 
 
-function puzz_transfer_private:
-    input r0 as Puzz.record;
+function piece_transfer_private:
+    input r0 as Piece.record;
     input r1 as address.private;
     input r2 as u64.private;
-    cast r1 r2 into r3 as Puzz.record;
+    cast r1 r2 into r3 as Piece.record;
     sub r0.amount r2 into r4;
-    cast self.caller r4 into r5 as Puzz.record;
-    output r3 as Puzz.record;
-    output r5 as Puzz.record;
+    cast self.caller r4 into r5 as Piece.record;
+    output r3 as Piece.record;
+    output r5 as Piece.record;
 
 
 function stake_transfer_private_in:
-    input r0 as Puzz.record;
+    input r0 as Piece.record;
     input r1 as address.private;
     input r2 as address.private;
     input r3 as u64.private;
     input r4 as field.private;
     input r5 as signature.private;
-    cast r2 r3 r1 r4 r5 into r6 as PuzzClaim.record;
-    cast r2 r3 into r7 as Puzz.record;
+    cast r2 r3 r1 r4 r5 into r6 as PieceClaim.record;
+    cast r2 r3 into r7 as Piece.record;
     sub r0.amount r3 into r8;
-    cast r1 r8 into r9 as Puzz.record;
-    output r6 as PuzzClaim.record;
-    output r7 as Puzz.record;
-    output r9 as Puzz.record;
+    cast r1 r8 into r9 as Piece.record;
+    output r6 as PieceClaim.record;
+    output r7 as Piece.record;
+    output r9 as Piece.record;
 
 
 function stake_transfer_private_out:
-    input r0 as Puzz.record;
-    input r1 as PuzzClaim.record;
+    input r0 as Piece.record;
+    input r1 as PieceClaim.record;
     input r2 as address.private;
     input r3 as u64.private;
     sign.verify r1.sig r1.claimer r1.msg into r4;
     assert.eq r4 true;
     gte r1.amount r3 into r5;
     assert.eq r5 true;
-    cast r2 r3 into r6 as Puzz.record;
+    cast r2 r3 into r6 as Piece.record;
     sub r0.amount r3 into r7;
-    cast r0.owner r7 into r8 as Puzz.record;
-    output r6 as Puzz.record;
-    output r8 as Puzz.record;
+    cast r0.owner r7 into r8 as Piece.record;
+    output r6 as Piece.record;
+    output r8 as Piece.record;
