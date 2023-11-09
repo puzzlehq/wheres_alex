@@ -5,7 +5,7 @@ import { Answer } from '../models/game_states';
 type HideAlexProps = {
   onClick: (answer: Answer) => void;
   answer?: Answer;
-  hiding: boolean;
+  hiding: boolean; // are we hiding alex? or finding alex?
 };
 
 function ChooseAlexLocation({ onClick, answer, hiding }: HideAlexProps) {

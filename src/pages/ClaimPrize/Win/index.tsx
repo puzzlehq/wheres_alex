@@ -2,7 +2,7 @@ import Win from "./_01_Win";
 import GameOver from "./_02_Gameover";
 import { Step, useClaimPrizeWinStore } from "./store"
 
-export const LoseRoute = () => {
+const WinRoute = () => {
   
   const [step] = useClaimPrizeWinStore((state) => [state.step]);
 
@@ -13,3 +13,5 @@ export const LoseRoute = () => {
     </div>
   )
 }
+
+export default WinRoute;

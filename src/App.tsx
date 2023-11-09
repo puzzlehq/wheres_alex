@@ -8,6 +8,8 @@ import { AppHeader } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
+import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
+import WinRoute from './pages/ClaimPrize/Win/index.js';
 
 function App() {
   // const [isConnected, setIsConnected] = useState<boolean>(false);
@@ -35,7 +37,8 @@ function App() {
               <Route path='/new-game' element={<NewGame />} />
               <Route path='/accept-game' element={<AcceptGame/>}/>
               <Route path='/claim-prize'>
-                
+                <Route path='win' element={<WinRoute/>}/>
+                <Route path='lose' element={<LoseRoute/>}/>
               </Route>
               <Route
                 path='/'

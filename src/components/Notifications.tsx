@@ -1,31 +1,25 @@
 import { useNavigate } from "react-router-dom";
 import GameState from "../models/game_states";
+import { useAcceptGameStore } from "../pages/AcceptGame/store";
 
-type NotificationProps = {
-  notification: GameState;
-};
-
-function NotificationItem({ notification }: NotificationProps) {
+function NotificationItem({ action, multisig, opponent, wager }: GameState) {
   const navigate = useNavigate();
+
+  const [initializeGame] = useAcceptGameStore((state) => [state.initialize])
 
   const handleStartClick = () => {
     // Navigate to accept-game and pass the challenger and wager as state
-    navigate('/accept-game', {
-      state: {
-        gameMultisig: notification.gameMultisig,
-        opponent: notification.player,
-        amount: notification.wager,
-      },
-    });
+    initializeGame(opponent, wager, multisig)
+    navigate('/accept-game');
   };
 
   const handleFinishClick = () => {
     // Navigate to accept-game and pass the challenger and wager as state
     navigate('/finish-game', {
       state: {
-        gameMultisig: notification.gameMultisig,
-        opponent: notification.player,
-        amount: notification.wager,
+        multisig: multisig,
+        opponent: opponent,
+        amount: wager,
         win: true,
       },
     });
@@ -35,15 +29,15 @@ function NotificationItem({ notification }: NotificationProps) {
     // Navigate to accept-game and pass the challenger and wager as state
     navigate('/finish-game-claim', {
       state: {
-        gameMultisig: notification.gameMultisig,
-        opponent: notification.player,
-        amount: notification.wager,
+        multisig: multisig,
+        opponent: opponent,
+        amount: wager,
       },
     });
   };
 
   const renderActionButton = () => {
-    switch (notification.action) {
+    switch (action) {
       case 'Start':
         return (
           <button
@@ -51,7 +45,7 @@ function NotificationItem({ notification }: NotificationProps) {
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
-            {notification.action}
+            {action}
           </button>
         );
       case 'Finish':
@@ -61,7 +55,7 @@ function NotificationItem({ notification }: NotificationProps) {
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
-            {notification.action}
+            {action}
           </button>
         );
       case 'Claim':
@@ -71,7 +65,7 @@ function NotificationItem({ notification }: NotificationProps) {
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
-            {notification.action}
+            {action}
           </button>
         );
       default:
@@ -80,11 +74,11 @@ function NotificationItem({ notification }: NotificationProps) {
           <>
             <button
               className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-primary-black  ${
-                notification.action === 'Delete' ? 'bg-primary-gray' : 'bg-primary-yellow'
+                action === 'Delete' ? 'bg-primary-gray' : 'bg-primary-yellow'
               }`}
               style={{ minWidth: '100px' }}
             >
-              {notification.action}
+              {action}
             </button>
           </>
         );
@@ -94,10 +88,10 @@ function NotificationItem({ notification }: NotificationProps) {
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {notification.player}
+        {opponent}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {notification.wager}
+        {wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>
@@ -119,8 +113,8 @@ function Notifications({ notifications }: NotificationsProps) {
       <div className='px-5 pt-2 flex flex-col'>
         {notifications.map((notification) => (
           <NotificationItem
-            key={notification.player}
-            notification={notification}
+            key={notification.opponent}
+            {...notification}
           />
         ))}
       </div>

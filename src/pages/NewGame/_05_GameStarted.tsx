@@ -4,19 +4,6 @@ import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
 import { useNewGameStore } from './store';
 
-function TakeHomeSection() {
-  const navigate = useNavigate();
-  return (
-    <a
-      href='/'
-      onClick={() => navigate('/')}
-      className='mt-7 self-center whitespace-nowrap text-base font-extrabold text-primary-gray'
-    >
-      TAKE ME BACK HOME
-    </a>
-  );
-}
-
 function GameStarted() { 
   const navigate = useNavigate();
   const [multisig, eventId, close] = useNewGameStore((state) => [state.multisig, state.eventId, state.close]);
@@ -24,26 +11,26 @@ function GameStarted() {
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex w-full h-full flex-col items-center bg-neutral-900 px-5'>
-        {multisig && eventId && <GameInfo gameMultisig={multisig} eventID={eventId} />}
+        {multisig && eventId && <GameInfo multisig={multisig} eventID={eventId} />}
         <div className='flex flex-col flex-grow'/>
         <div className='flex flex-col gap-4'>
-        <Button
+          <Button
             onClick={() => {
               navigate('/')
               close()
             }}
-          color='pink'
-        >
-          NOTIFY OTHER PLAYER
+            color='pink'
+          >
+            NOTIFY OTHER PLAYER
           </Button>
           <Button
             onClick={() => {
               navigate('/new-game')
               close()
             }}
-      color='yellow'
-    >
-      START ANOTHER GAME
+            color='yellow'
+          >
+            START ANOTHER GAME
           </Button>
           <Button
           onClick={() => navigate('/')}
@@ -52,7 +39,6 @@ function GameStarted() {
           TAKE ME BACK HOME
         </Button>
         </div>
-
       </div>
     </main>
   );

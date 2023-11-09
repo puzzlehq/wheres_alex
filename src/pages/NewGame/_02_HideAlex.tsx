@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState, SetStateAction } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import PageHeader from '../../components/PageHeader';
@@ -8,11 +6,7 @@ import Button from '../../components/Button';
 import { Step, useNewGameStore } from './store';
 
 function HideAlex() {
-  const location = useLocation();
   const [answer, setAnswer, setStep] = useNewGameStore((state) => [state.answer, state.setAnswer, state.setStep]);
-
-  const opponentFromLocation = location.state?.opponent ?? 'N/A';
-  console.log(opponentFromLocation);
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>

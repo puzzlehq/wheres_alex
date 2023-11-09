@@ -1,37 +1,37 @@
 export type NotifyGameStart = {
-  gameMultisig: string;
-  player: string;
-  wager: string;
+  multisig: string;
+  opponent: string;
+  wager: number;
   action: 'Start';
 };
 
 export type NotifyFinish = {
-  gameMultisig: string;
-  player: string;
-  wager: string;
+  multisig: string;
+  opponent: string;
+  wager: number;
   win: boolean;
   action: 'Finish';
 };
 
 export type NotifyPendingAccept = {
-  gameMultisig: string;
-  player: string;
-  wager: string;
+  multisig: string;
+  opponent: string;
+  wager: number;
   action: 'Renege';
 };
 
 export type NotifyRenegeStart = {
-  gameMultisig: string;
-  player: string;
-  wager: string;
+  multisig: string;
+  opponent: string;
+  wager: number;
   action: 'Delete';
 };
 
 export type NotifyClaimFinish = {
-  gameMultisig: string;
-  player: string;
+  multisig: string;
+  opponent: string;
   blockheight: number;
-  wager: string;
+  wager: number;
   win: boolean;
   action: 'Claim';
 };
