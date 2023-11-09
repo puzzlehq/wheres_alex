@@ -38,6 +38,7 @@ program cflip_testing_123_token.aleo {
         signer_address: address,
     }
 
+
     transition mint (private amount: u64, private to: address) -> Piece {
         // todo: address check -> likely only permissioned address can mint Piece
 
@@ -110,6 +111,7 @@ program cflip_testing_123_token.aleo {
 
     }
 
+
     transition stake_transfer_in_alt (
         private piece_token: Piece,
         private sender: address, // can't use self.caller as this is ref coinflip program addr
@@ -150,19 +152,41 @@ program cflip_testing_123_token.aleo {
         return (piece_claim_record, piece_stake, receiver_new_record, sender_new_record);
     }
 
-
-
     // used for reneges
     transition retrieve_stake_in (
+        private piece_token: Piece,
         private piece_stake: PieceStake,
         private piece_claim: PieceClaim,
         private sender: address,
         private to: address,
         private sig: signature,
+    ) -> (Piece, Piece) {
+        // new puzz record to receiver
+        let receiver_new_record: Piece = Piece {
+            owner: to,
+            amount: piece_claim.amount,
+        };
+
+        // puzz record with change for sender
+        let sender_new_record: Piece = Piece {
+            owner: sender,
+            amount: piece_token.amount - piece_claim.amount,
+        };
+
+        return (receiver_new_record, sender_new_record);
+    }
+
+
+    transition transfer_joint_stake_timeout
+    (
+        private piece_stake: PieceStake,
+        private piece_stake_two: PieceStake,
+        private piece_claim: PieceClaim,
+        private piece_claim_two: PieceClaim,
     ) {
 
-
     }
+
 
     // todo: change to take in amount
     transition stake_transfer_private_out (
