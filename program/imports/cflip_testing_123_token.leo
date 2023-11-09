@@ -24,7 +24,6 @@ program cflip_testing_123_token.aleo {
         signer_address_two: address,
         signer_signature: signature,
         signer_two_signature: signature,
-        is_claimable: bool,
     }
 
     record PieceStake {
@@ -69,7 +68,6 @@ program cflip_testing_123_token.aleo {
             signer_address_two: signer_address_two,
             signer_signature: signer_one_signature,
             signer_two_signature: signer_two_signature,
-            is_claimable: false,
         };
         return token_new_rules;
     }
@@ -99,16 +97,15 @@ program cflip_testing_123_token.aleo {
     }
 
     transition stake_transfer_private_in (
+        // private token_owner_rules: TokenOwnerRules,
         private piece_token: Piece,
-        private sender: address, // can't use self.caller as this is ref coinflip addr
+        private sender: address, // can't use self.caller as this is ref coinflip program addr
         private to: address,
         private amount: u64,
         private msg: field,
         private sig: signature,
     ) -> (PieceClaim, Piece, Piece)
     {
-
-        // note: commenting out puzz_claim for now
 
         let piece_claim_record: PieceClaim = PieceClaim {
             owner: to,
@@ -117,9 +114,6 @@ program cflip_testing_123_token.aleo {
             msg: msg,
             sig: sig,
         };
-
-        // todo: add address field to Puzz Claim token and signature
-        // todo: then to stake out, need to present claim token and signature
 
         // new puzz record to receiver
         let receiver_new_record: Piece = Piece {
@@ -164,6 +158,9 @@ program cflip_testing_123_token.aleo {
 
         // assert that the claim is >= transfer amount
         assert(piece_claim.amount >= amount_to_transfer);
+
+        // assert that claimer is the one receiving the funds
+        assert_eq(piece_claim.claimer, to);
 
         // new puzz record to receiver
         let receiver_new_record: Piece = Piece {

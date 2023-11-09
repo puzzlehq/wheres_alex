@@ -2,9 +2,7 @@ import cflip_testing_123_token.leo;
 import puzz_testing_acct_123.leo;
 
 // todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
-// todo: ownerrules lock on game state? next turn: address on game_record work?
-// todo: are imports deployed separately to separate addresses? yes looks like it -> https://t.me/c/1766615939/3581
-// todo: how do we transfer puzz into game at the beginning? don't have bobs address and is_claimable false
+// imports deployed to separate address: https://t.me/c/1766615939/3581
 
 // The 'coinflip' program.
 program cflip_gm_aleo_testing_123.aleo {

@@ -19,7 +19,6 @@ record TokenOwnerRules:
     signer_address_two as address.private;
     signer_signature as signature.private;
     signer_two_signature as signature.private;
-    is_claimable as boolean.private;
 
 record PieceStake:
     owner as address.private;
@@ -49,7 +48,7 @@ function mint_token_owner_rules_record:
     input r2 as address.private;
     input r3 as signature.private;
     input r4 as signature.private;
-    cast r0 2u8 2u8 r1 r2 r3 r4 false into r5 as TokenOwnerRules.record;
+    cast r0 2u8 2u8 r1 r2 r3 r4 into r5 as TokenOwnerRules.record;
     output r5 as TokenOwnerRules.record;
 
 
@@ -89,6 +88,7 @@ function stake_transfer_private_out:
     assert.eq r4 true;
     gte r1.amount r3 into r5;
     assert.eq r5 true;
+    assert.eq r1.claimer r2;
     cast r2 r3 into r6 as Piece.record;
     sub r0.amount r3 into r7;
     cast r0.owner r7 into r8 as Piece.record;
