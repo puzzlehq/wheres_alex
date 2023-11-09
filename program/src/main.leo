@@ -5,8 +5,11 @@ import puzz_testing_acct_123.leo;
 // imports deployed to separate address: https://t.me/c/1766615939/3581
 
 // todo: the primary issue is that we need to consume owner rules inside of puzzle transfers but we can't do that?
+// todo: actually does this matter, there is only 1 owner rules record floating?
+// todo: can we consume it inside of this program?
 // todo: since if we do not consume it inside the transfer then someone could rug?
 // todo: also when transferring to winner will need to transfer both records
+// todo: can we do this with inline functions?
 
 // The 'coinflip' program.
 program cflip_gm_aleo_testing_123.aleo {

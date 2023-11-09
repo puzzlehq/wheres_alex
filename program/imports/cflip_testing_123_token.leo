@@ -56,6 +56,7 @@ program cflip_testing_123_token.aleo {
         signer_two_signature: signature
     ) -> TokenOwnerRules
     {
+        // todo: permissioned function that can only be executed by the main leo address?
         // note: just adding signer_address_two here for additional signer
         // add claim bool
         // owner rules.claim (claim record) -> sets bool to true
@@ -70,30 +71,6 @@ program cflip_testing_123_token.aleo {
             signer_two_signature: signer_two_signature,
         };
         return token_new_rules;
-    }
-
-
-    // owner_rules.claim have it return another owner rules bool or claim record that says no
-    transition piece_transfer_private (
-        private piece_token: Piece,
-        private to: address,
-        private amount: u64
-    ) -> (Piece, Piece)
-    {
-
-        // new Piece record to receiver
-        let receiver_new_record: Piece = Piece {
-            owner: to,
-            amount: amount
-        };
-
-        // Piece record with change for sender
-        let sender_new_record: Piece = Piece {
-            owner: self.caller,
-            amount: piece_token.amount - amount
-        };
-
-        return (receiver_new_record, sender_new_record);
     }
 
     transition stake_transfer_private_in (
