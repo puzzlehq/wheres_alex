@@ -56,6 +56,7 @@ program cflip_testing_123_token.aleo {
         private player_two_address: address,
         private player_one_sig: signature,
         private player_two_sig: signature,
+        private winner: address,
     }
 
 
@@ -221,15 +222,56 @@ program cflip_testing_123_token.aleo {
         let piece_state: PieceState = PieceState {
             owner: game_address,
             player_one_address: piece_stake.player_address,
-            player_two_address: piece_stake.player_address,
+            player_two_address: piece_stake_two.player_address,
             player_one_sig: sig,
             player_two_sig: sig,
+            winner: game_address // set winner to game address for now, winner is declared in joint_stake_reveal_answer_update
         };
 
-
-
         return (piece_joint_stake_record, piece_time_claim, piece_state);
+    }
 
+
+    transition joint_stake_reveal_answer_update
+    (
+        private piece_state: PieceState,
+        private sig: signature,
+        private answer: field,
+        private winner: address, // can compute winner in cflip program and pass in here
+    ) -> PieceState
+    {
+        let piece_state_record: PieceState = PieceState {
+            owner: piece_state.owner,
+            player_one_address: piece_state.player_one_address,
+            player_two_address: piece_state.player_two_address,
+            player_one_sig: sig,
+            player_two_sig: sig,
+            winner: winner,
+        };
+
+        return piece_state_record;
+
+    }
+
+
+    transition joint_stake_transfer_out
+    (
+        private piece_token: Piece,
+        private piece_joint_stake: PieceJointStake,
+        private piece_time_stake: PieceTimeClaim,
+        private piece_state: PieceState,
+        private sig: signature,
+    ) -> Piece
+    {
+        // p1 wins
+        if (piece_state.winner === piece_state.player_one_address) {
+
+        }
+        // p2 wins
+        else {
+
+
+        }
 
     }
 
