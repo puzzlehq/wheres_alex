@@ -4,6 +4,10 @@ import puzz_testing_acct_123.leo;
 // todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
 // imports deployed to separate address: https://t.me/c/1766615939/3581
 
+// todo: the primary issue is that we need to consume owner rules inside of puzzle transfers but we can't do that?
+// todo: since if we do not consume it inside the transfer then someone could rug?
+// todo: also when transferring to winner will need to transfer both records
+
 // The 'coinflip' program.
 program cflip_gm_aleo_testing_123.aleo {
 
@@ -16,10 +20,19 @@ program cflip_gm_aleo_testing_123.aleo {
     //     private amount: u64,
     // }
 
+    record NotifyKeyRecord {
+        private owner: address,
+        private keys: field,
+        private game_address: address,
+        private challenge_amount: u64,
+        private opponent: address,
+    }
+
     record NotifyRevealedAnswer {
         private owner: address,
         private answer: field,
         private game_address: address,
+        private opponent: address,
     }
 
     record NotifyGameOver {
@@ -27,12 +40,14 @@ program cflip_gm_aleo_testing_123.aleo {
         private winner: address,
         private total_pot: u64,
         private game_address: address,
+        private opponent: address,
     }
 
     record NotifyAcceptGame {
         private owner: address,
         private total_pot: u64,
         private game_address: address,
+        private opponent: address,
     }
 
     record Key {
@@ -108,7 +123,7 @@ program cflip_gm_aleo_testing_123.aleo {
         private msg: field,
         private m_of_n: u8,
         private nonce: field,
-    ) -> (Answer, Key, Game, puzz_testing_acct_123.leo/OwnerRules.record, cflip_testing_123_token.leo/TokenOwnerRules.record, cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record)
+    ) -> (Answer, NotifyKeyRecord, Game, puzz_testing_acct_123.leo/OwnerRules.record, cflip_testing_123_token.leo/TokenOwnerRules.record, cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record)
     {
         // removing puzz_claim record for now
 
@@ -131,9 +146,12 @@ program cflip_gm_aleo_testing_123.aleo {
 
         // initialize key record with ms_address and seed for p2
         // so p2 can gen multisig locally
-        let player_two_key_record: Key = Key {
+        // todo: we probably don't need address here?
+        let notify_key_record: NotifyKeyRecord = NotifyKeyRecord {
             owner: opponent,
             keys: ms_seed,
+            game_address: game_address,
+            challenge_amount: wager_amount,
             opponent: self.caller,
         };
 
@@ -162,6 +180,7 @@ program cflip_gm_aleo_testing_123.aleo {
         let owner_rules_record: OwnerRules = puzz_testing_acct_123.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
         // mint token owner rules with player 1 sig against nonce, will need to store message and sig on FE
+        // todo: need to add fake signature for second slot here
         let token_owner_rules_record: TokenOwnerRules = cflip_testing_123_token.leo/mint_token_owner_rules_record(game_address, self.caller, opponent, sig, sig);
 
         // stake puzz token in
@@ -181,7 +200,7 @@ program cflip_gm_aleo_testing_123.aleo {
 
 
         // return (answer_record, player_two_key_record, game_record, owner_rules_record, token_owner_rules_record, puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record) then finalize(game_address);
-        return (answer_record, player_two_key_record, game_record, owner_rules_record, token_owner_rules_record, piece_claim_record, piece_receiver_record, piece_sender_change_record) then finalize(game_address);
+        return (answer_record, notify_key_record, game_record, owner_rules_record, token_owner_rules_record, piece_claim_record, piece_receiver_record, piece_sender_change_record) then finalize(game_address);
     }
 
 
@@ -319,6 +338,7 @@ program cflip_gm_aleo_testing_123.aleo {
             owner: game_record.player_one_address,
             total_pot: game_record.total_pot,
             game_address: game_record.owner,
+            opponent: game_record.player_one_address,
         };
 
         // note: will need to tweak owner rules structure likely to include sig to lock next turn
@@ -342,7 +362,7 @@ program cflip_gm_aleo_testing_123.aleo {
         private answer_record: Answer,
         private game_address: address,
         private opponent_address: address,
-    ) -> (RevealedAnswer, NotifyRevealedAnswer, NotifyRevealedAnswer)
+    ) -> (RevealedAnswer, NotifyRevealedAnswer)
     {
 
         // limit calls to only users
@@ -354,21 +374,15 @@ program cflip_gm_aleo_testing_123.aleo {
             nonce: answer_record.nonce,
         };
 
-        // send notify reveal record answer to player 1
-        let notify_reveal_answer_p1: NotifyRevealedAnswer = NotifyRevealedAnswer {
-            owner: answer_record.owner,
-            answer: answer_record.answer,
-            game_address: game_address,
-        };
-
         // send notify reveal record answer to player 2
         let notify_reveal_answer_p2: NotifyRevealedAnswer = NotifyRevealedAnswer {
             owner: opponent_address,
             answer: answer_record.answer,
             game_address: game_address,
+            opponent: answer_record.owner,
         };
 
-        return (revealed_answer, notify_reveal_answer_p1, notify_reveal_answer_p2);
+        return (revealed_answer, notify_reveal_answer_p2);
     }
 
 
@@ -408,12 +422,14 @@ program cflip_gm_aleo_testing_123.aleo {
                 winner: game_record.player_two_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
+                opponent: game_record.player_two_address,
             };
             let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_two_address,
                 winner: game_record.player_two_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
+                opponent: game_record.player_one_address,
             };
             // todo: return puzz records, some weird puzz undefined bug popping up
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
@@ -428,12 +444,14 @@ program cflip_gm_aleo_testing_123.aleo {
                 winner: game_record.player_one_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
+                opponent: game_record.player_two_address,
             };
             let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_two_address,
                 winner: game_record.player_one_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
+                opponent: game_record.player_one_address,
             };
             // todo: return puzz records, some weird puzz undefined bug popping up
             return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
@@ -472,6 +490,7 @@ program cflip_gm_aleo_testing_123.aleo {
                 winner: game_record.player_two_address,
                 total_pot: game_record.total_pot,
                 game_address: game_record.owner,
+                opponent: game_record.player_two_address,
             };
 
         let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
@@ -479,6 +498,7 @@ program cflip_gm_aleo_testing_123.aleo {
             winner: game_record.player_two_address,
             total_pot: game_record.total_pot,
             game_address: game_record.owner,
+            opponent: game_record.player_one_address,
         };
 
         return (receiver_piece_record, piece_change, notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);

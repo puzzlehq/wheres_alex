@@ -162,6 +162,10 @@ program cflip_testing_123_token.aleo {
         // assert that claimer is the one receiving the funds
         assert_eq(piece_claim.claimer, to);
 
+        // make sure that the piece token being claimed is the correct game_address of the token
+        // todo: potential attack vector where loser can still stake_transfer_private out?
+        assert_eq(piece_token.owner, piece_claim.owner);
+
         // new puzz record to receiver
         let receiver_new_record: Piece = Piece {
             owner: to,

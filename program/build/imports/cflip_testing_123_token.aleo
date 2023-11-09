@@ -89,6 +89,7 @@ function stake_transfer_private_out:
     gte r1.amount r3 into r5;
     assert.eq r5 true;
     assert.eq r1.claimer r2;
+    assert.eq r0.owner r1.owner;
     cast r2 r3 into r6 as Piece.record;
     sub r0.amount r3 into r7;
     cast r0.owner r7 into r8 as Piece.record;
