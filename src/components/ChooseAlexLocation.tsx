@@ -1,22 +1,24 @@
-import inWeedsImg from '../assets/in_weeds.svg';
+import inWeedsImg from '../assets/in_weeds.png';
 import behindBuildingImg from '../assets/behind_building.svg';
 import { Answer } from '../models/game_states';
 
 type HideAlexProps = {
-  onClick: (answer: Answer) => void;
+  setAnswer: (answer: Answer) => void;
   answer?: Answer;
-  hiding: boolean;
+  hiding: boolean; // are we hiding alex? or finding alex?
 };
 
-function ChooseAlexLocation({ onClick, answer, hiding }: HideAlexProps) {
+function ChooseAlexLocation({ setAnswer, answer, hiding }: HideAlexProps) {
+
+  console.log(answer);
 
   return (
     <section className='flex max-w-full flex-col gap-2'>
       <div className='flex gap-5'>
-        <div className='flex flex-col self-center'>
+        <div className={`flex flex-col self-center ${answer === Answer.InTheWeeds ? 'border ring-primary-green rounded-lg' : ''}`}>
           <button
-            onClick={() => onClick(Answer.InTheWeeds)}
-            className='flex w-[150px] flex-col gap-2 items-center hover:opacity-100'
+            onClick={() => setAnswer(Answer.InTheWeeds)}
+            className='flex w-[150px] flex-col gap-2 items-center hover:opacity-100 '
           >
             <img
               loading='lazy'
@@ -37,9 +39,9 @@ function ChooseAlexLocation({ onClick, answer, hiding }: HideAlexProps) {
             </div>
           </button>
         </div>
-        <div className='flex flex-col self-start'>
+        <div className={`flex flex-col self-center ${answer === Answer.BehindTheBuilding ? 'border border-primary-green rounded-lg' : ''}`}>
           <button
-            onClick={() => onClick(Answer.BehindTheBuilding)}
+            onClick={() => setAnswer(Answer.BehindTheBuilding)}
             className='flex w-[150px] flex-col gap-2 items-center hover:opacity-100'
           >
             <img

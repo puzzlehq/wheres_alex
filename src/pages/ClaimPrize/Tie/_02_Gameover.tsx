@@ -1,13 +1,12 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Wager from '../../../components/Wager';
 import PageHeader from '../../../components/PageHeader';
 import { getNumberAmount } from '../../../utils';
 import Button from '../../../components/Button';
-import { useClaimPrizeWinStore } from './store';
+import { useClaimPrizeTieStore } from './store.js';
 
 const FinishGame = () => {
-  const location = useLocation();
-  const [wager] = useClaimPrizeWinStore((state) => [state.wager]);
+  const [wager] = useClaimPrizeTieStore((state) => [state.wager]);
   const navigate = useNavigate();
 
   return (

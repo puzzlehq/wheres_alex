@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
-import { useAccount } from '@puzzlehq/sdk';
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
@@ -9,11 +8,7 @@ import { Step, useNewGameStore } from './store';
 
 function NewGame() {
   const [opponent, setOpponent] = useState<string>('');
-  const { account } = useAccount();
-
   const [setStep] = useNewGameStore((state) => [state.setStep]);
-
-  console.log(account);
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>

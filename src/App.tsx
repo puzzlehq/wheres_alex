@@ -5,6 +5,10 @@ import { AppHeader } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
 import { useAccount, useConnect } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
+import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
+import WinRoute from './pages/ClaimPrize/Win/index.js';
+import RenegeGame from './pages/Renege/_01_Renege.js';
+import Reveal from './pages/FinishGame/_01_Reveal.js';
 
 function App() {
   const { isConnected, loading } = useConnect();
@@ -23,8 +27,11 @@ function App() {
               <Route path='/new-game' element={<NewGame />} />
               <Route path='/accept-game' element={<AcceptGame/>}/>
               <Route path='/claim-prize'>
-                
+                <Route path='win' element={<WinRoute/>}/>
+                <Route path='lose' element={<LoseRoute/>}/>
               </Route>
+              <Route path='/renege-game' element={<RenegeGame/>} />
+              <Route path='/finish-game' element={<Reveal/>} />
               <Route
                 path='/'
                 element={!loading && isConnected ? <Home /> : <Welcome />}

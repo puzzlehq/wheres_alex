@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import behindBuildingImg from '../assets/behind_building.svg';
-import inWeedsImg from '../assets/in_weeds.svg';
+import inWeedsImg from '../assets/in_weeds.png';
 import { Answer } from '../models/game_states';
 
 type SelectedAlexLocationProps = {

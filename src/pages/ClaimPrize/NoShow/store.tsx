@@ -7,7 +7,7 @@ export enum Step {
   _02_GameOver,
 }
 
-type ClaimPrizeWinStore = {
+type ClaimPrizeNoShowStore = {
   step: Step;
   opponent: string;
   wager: number;
@@ -18,7 +18,7 @@ type ClaimPrizeWinStore = {
   close: () => void;
 };
 
-export const useClaimPrizeWinStore = create<ClaimPrizeWinStore>()(
+export const useClaimPrizeNoShowStore = create<ClaimPrizeNoShowStore>()(
   persist((set) => ({
     step: Step._01_Claim,
     opponent: '',
@@ -41,6 +41,6 @@ export const useClaimPrizeWinStore = create<ClaimPrizeWinStore>()(
       });
     },
   }), {
-    name: 'claim-game-win'
+    name: 'claim-game-no-show'
   })
 );

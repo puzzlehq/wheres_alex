@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import GameState, { NotifyFinish } from '../models/game_states';
+import GameState, { Answer } from '../models/game_states';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
@@ -9,36 +9,38 @@ import Notifications from '../components/Notifications';
 
 function Home() {
   const gameStates: GameState[] = [
-    { gameMultisig: 'aleo1', player: 'Alice', wager: '10 P', action: 'Start' },
+    { multisig: 'aleo1', opponent: 'Alice', wager: 10, action: 'Start' },
     {
-      gameMultisig: 'aleo2',
-      player: 'Bob',
-      wager: '20 P',
+      multisig: 'aleo2',
+      opponent: 'Bob',
+      wager: 20,
       action: 'Finish',
-      win: true,
-    } as NotifyFinish,
+      answer: Answer.InTheWeeds
+    },
     {
-      gameMultisig: 'aleo3',
-      player: 'Charlie',
-      wager: '30 P',
+      multisig: 'aleo3',
+      opponent: 'Charlie',
+      wager: 30,
       action: 'Renege',
     },
-    { gameMultisig: 'aleo4', player: 'David', wager: '40 P', action: 'Delete' },
+    { multisig: 'aleo4', opponent: 'David', wager: 40, action: 'Delete' },
     {
-      gameMultisig: 'aleo5',
-      player: 'Eva',
+      multisig: 'aleo5',
+      opponent: 'Eva',
       blockheight: 10500,
-      wager: '50 P',
+      wager: 50,
       action: 'Claim',
       win: false,
+      answer: Answer.InTheWeeds
     },
     {
-      gameMultisig: 'aleo6',
-      player: 'Frank',
+      multisig: 'aleo6',
+      opponent: 'Frank',
       blockheight: 105000,
-      wager: '60 P',
+      wager: 60,
       action: 'Claim',
       win: true,
+      answer: Answer.BehindTheBuilding
     },
   ];
 
@@ -69,7 +71,7 @@ function Home() {
   const initialTimeLeft = liveGames.reduce<{ [key: string]: any }>(
     (acc, game) => {
       if (game.action === 'Claim') {
-        acc[game.player] = calculateTimeLeft(game.blockheight);
+        acc[game.opponent] = calculateTimeLeft(game.blockheight);
       }
       return acc;
     },
@@ -86,8 +88,8 @@ function Home() {
         const newTime: { [key: string]: any } = {};
 
         // eslint-disable-next-line prefer-const
-        for (let player in prevTime) {
-          let { hours, minutes, seconds } = prevTime[player];
+        for (let opponent in prevTime) {
+          let { hours, minutes, seconds } = prevTime[opponent];
 
           if (seconds < 59) seconds++;
           else if (minutes < 59) {
@@ -99,7 +101,7 @@ function Home() {
             seconds = 0;
           }
 
-          newTime[player] = { hours, minutes, seconds };
+          newTime[opponent] = { hours, minutes, seconds };
         }
 
         return newTime;
@@ -113,7 +115,7 @@ function Home() {
 
   return (
     <div className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex flex-col w-full bg-neutral-900 px-1 gap-2'>
+      <div className='flex flex-col w-full bg-neutral-900 px-1 gap-4'>
         <TotalWinnings amount={1234567890} />
         <Button
           color='yellow'

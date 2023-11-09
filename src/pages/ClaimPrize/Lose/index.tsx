@@ -10,7 +10,7 @@ export const LoseRoute = () => {
   return (
     <div className="flex flex-col h-full w-full">
       {step === Step._01_Claim && <Lose/>}
-      {step === Step._02_Gameover && <GameOver/>}
+      {step === Step._02_GameOver && <GameOver/>}
     </div>
   )
 }
