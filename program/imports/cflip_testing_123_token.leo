@@ -29,6 +29,7 @@ program cflip_testing_123_token.aleo {
     record PieceStake {
         private owner: address,
         private amount: u64,
+        private player_address: address,
     }
 
     record TokenClaim {
@@ -36,6 +37,25 @@ program cflip_testing_123_token.aleo {
         amount: u64,
         claimable: bool,
         signer_address: address,
+    }
+
+    record PieceTimeClaim {
+        private owner: address,
+        private amount: u64,
+        // private block_ht: u32, // todo: can't store block height on record
+    }
+
+    record PieceJointStake {
+        private owner: address,
+        private amount: u64,
+    }
+
+    record PieceState {
+        private owner: address,
+        private player_one_address: address,
+        private player_two_address: address,
+        private player_one_sig: signature,
+        private player_two_sig: signature,
     }
 
 
@@ -133,6 +153,7 @@ program cflip_testing_123_token.aleo {
         let piece_stake: PieceStake = PieceStake {
             owner: to,
             amount: amount,
+            player_address: sender,
         };
 
         // new puzz record to receiver
@@ -183,7 +204,32 @@ program cflip_testing_123_token.aleo {
         private piece_stake_two: PieceStake,
         private piece_claim: PieceClaim,
         private piece_claim_two: PieceClaim,
-    ) {
+        private game_address: address,
+        private sig: signature,
+    ) -> (PieceJointStake, PieceTimeClaim, PieceState) {
+
+        let piece_joint_stake_record: PieceJointStake = PieceJointStake {
+            owner: game_address,
+            amount: piece_stake.amount + piece_stake_two.amount,
+        };
+
+        let piece_time_claim: PieceTimeClaim = PieceTimeClaim {
+            owner: game_address,
+            amount: piece_stake.amount + piece_stake_two.amount,
+        };
+
+        let piece_state: PieceState = PieceState {
+            owner: game_address,
+            player_one_address: piece_stake.player_address,
+            player_two_address: piece_stake.player_address,
+            player_one_sig: sig,
+            player_two_sig: sig,
+        };
+
+
+
+        return (piece_joint_stake_record, piece_time_claim, piece_state);
+
 
     }
 

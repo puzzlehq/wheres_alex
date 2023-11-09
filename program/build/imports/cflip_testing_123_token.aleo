@@ -23,12 +23,28 @@ record TokenOwnerRules:
 record PieceStake:
     owner as address.private;
     amount as u64.private;
+    player_address as address.private;
 
 record TokenClaim:
     owner as address.private;
     amount as u64.private;
     claimable as boolean.private;
     signer_address as address.private;
+
+record PieceTimeClaim:
+    owner as address.private;
+    amount as u64.private;
+
+record PieceJointStake:
+    owner as address.private;
+    amount as u64.private;
+
+record PieceState:
+    owner as address.private;
+    player_one_address as address.private;
+    player_two_address as address.private;
+    player_one_sig as signature.private;
+    player_two_sig as signature.private;
 
 
 mapping supply:
@@ -76,7 +92,7 @@ function stake_transfer_in_alt:
     input r4 as field.private;
     input r5 as signature.private;
     cast r2 r3 r1 r4 r5 into r6 as PieceClaim.record;
-    cast r2 r3 into r7 as PieceStake.record;
+    cast r2 r3 r1 into r7 as PieceStake.record;
     cast r2 r3 into r8 as Piece.record;
     sub r0.amount r3 into r9;
     cast r1 r9 into r10 as Piece.record;
@@ -105,6 +121,16 @@ function transfer_joint_stake_timeout:
     input r1 as PieceStake.record;
     input r2 as PieceClaim.record;
     input r3 as PieceClaim.record;
+    input r4 as address.private;
+    input r5 as signature.private;
+    add r0.amount r1.amount into r6;
+    cast r4 r6 into r7 as PieceJointStake.record;
+    add r0.amount r1.amount into r8;
+    cast r4 r8 into r9 as PieceTimeClaim.record;
+    cast r4 r0.player_address r0.player_address r5 r5 into r10 as PieceState.record;
+    output r7 as PieceJointStake.record;
+    output r9 as PieceTimeClaim.record;
+    output r10 as PieceState.record;
 
 
 function stake_transfer_private_out:
