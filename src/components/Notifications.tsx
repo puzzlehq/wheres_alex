@@ -48,7 +48,7 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <button
             onClick={handleStartClick}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
+            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
             {notification.action}
@@ -58,7 +58,7 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <button
             onClick={handleFinishClick}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
+            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
             {notification.action}
@@ -68,7 +68,7 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <button
             onClick={handleFinishClaimClick}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24'
+            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
             style={{ minWidth: '100px' }}
           >
             {notification.action}
@@ -79,7 +79,7 @@ function NotificationItem({ notification }: NotificationProps) {
         return (
           <>
             <button
-              className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:ml-24 ${
+              className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-primary-black  ${
                 notification.action === 'Delete' ? 'bg-primary-gray' : 'bg-primary-yellow'
               }`}
               style={{ minWidth: '100px' }}
@@ -110,13 +110,13 @@ type NotificationsProps = {
 
 function Notifications({ notifications }: NotificationsProps) {
   return (
-    <section className='mt-8 flex grow flex-col self-stretch border-2 border-solid border-primary-pink pb-6 pr-4'>
+    <section className='flex grow flex-col border-2 border-solid border-primary-pink pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-pink px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           NOTIFICATIONS
         </div>
       </div>
-      <div className='ml-5 mt-4 flex grow flex-col items-start self-stretch pl-px'>
+      <div className='px-5 pt-2 flex flex-col'>
         {notifications.map((notification) => (
           <NotificationItem
             key={notification.player}

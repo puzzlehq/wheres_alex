@@ -37,9 +37,9 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
         // Assuming 'Claim' needs a special button not shown in this snippet
         // This is just an example
         return (
-          <>
+          <div className="flex gap-2">
             <div
-              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
+              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               {timeLeft[game.player] &&
@@ -59,15 +59,15 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
             >
               PING
             </a>
-          </>
+          </div>
         );
       default:
         // The 'else' part for '... other buttons'
         return (
-          <>
+          <div className="flex gap-2">
             <button
               onClick={handleRenegeClick}
-              className='mr-2 flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
+              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               {game.action}
@@ -80,17 +80,17 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
             >
               PING
             </a>
-          </>
+          </div>
         );
     }
   };
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold text-primary-red max-sm:mr-auto'>
+      <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
         {game.player}
       </div>
-      <div className='my-auto self-center text-left text-xs font-bold text-primary-red max-sm:mr-auto'>
+      <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
         {game.wager}
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -105,13 +105,13 @@ type LiveGamesProps = {
 
 function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
   return (
-    <section className='mt-7 flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-8 pr-5'>
+    <section className='flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-red px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
           LIVE GAMES
         </div>
       </div>
-      <div className='ml-5 mt-3.5 flex grow flex-col items-start self-start self-stretch'>
+      <div className='px-5 pt-2 flex flex-col'>
         {liveGames.map((game) => (
           <LiveGameItem key={game.player} game={game} timeLeft={timeLeft} />
         ))}

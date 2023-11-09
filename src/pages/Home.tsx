@@ -113,7 +113,7 @@ function Home() {
 
   return (
     <div className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='w-full bg-neutral-900 px-1'>
+      <div className='flex flex-col w-full bg-neutral-900 px-1 gap-2'>
         <TotalWinnings amount={1234567890} />
         <Button
           color='yellow'
