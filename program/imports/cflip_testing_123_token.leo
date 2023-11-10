@@ -133,7 +133,7 @@ program cflip_testing_123_token.aleo {
         let claimable: bool = true;
         assert_eq(piece_claim.is_claimable, claimable);
 
-        // verify the caller is also on the claim token
+        // todo: verify the caller is also on the claim token via msg/signature
 
 
         // new puzz record to receiver
@@ -196,10 +196,14 @@ program cflip_testing_123_token.aleo {
         private piece_token: Piece,
         private joint_piece_claim: JointPieceClaim,
         private winner: address,
-    ) -> (Piece, Piece)
+        private game: Game,
+    ) -> (Piece, Piece, JointPieceClaim)
     {
-        let claimable: bool = true;
-        assert_eq(joint_piece_claim.is_claimable, true);
+        // let claimable: bool = true;
+        // assert_eq(joint_piece_claim.is_claimable, true);
+
+        // assert finish_game or claim_total_pot has been called
+        assert_eq(game.game_state, 2field);
 
         // new puzz record to receiver
         let receiver_new_record: Piece = Piece {
@@ -221,7 +225,7 @@ program cflip_testing_123_token.aleo {
             is_claimable: false,
         };
 
-        return (receiver_new_record, sender_new_record);
+        return (receiver_new_record, sender_new_record, spent_joint_piece_claim);
 
     }
 

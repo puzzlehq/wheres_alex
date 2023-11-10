@@ -229,7 +229,7 @@ program cflip_gm_aleo_testing_123.aleo {
 
         // transfer out and check player 1 sig and message that is signed
         // let (receiver_puzz_record, puzz_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_one_claim_record, sig, msg, amount);
-        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_one_claim_record, self.caller, amount);
+        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_renege(piece_record, player_one_claim_record, game_record.owner, game_record.player_one_address, amount);
 
         return (receiver_piece_record, piece_record);
 
@@ -287,7 +287,7 @@ program cflip_gm_aleo_testing_123.aleo {
 
         // transfer out and check player 1 sig and message that is signed
         // let (receiver_puzz_record, puzz_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_two_claim_record, sig, msg, amount);
-        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_two_claim_record, self.caller, amount);
+        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_renege(piece_record, player_two_claim_record, game_record.owner, game_record.player_two_address, amount);
 
         return (receiver_piece_record, piece_change);
         // todo: what clean-up do we need to do here?
@@ -297,8 +297,8 @@ program cflip_gm_aleo_testing_123.aleo {
     // called by ms key
     transition accept_game (
         private game_record: Game,
-        // private player_one_claim_record: puzz_testing_acct_123.leo/Claim.record,
-        // private player_two_claim_record: puzz_testing_acct_123.leo/Claim.record,
+        private player_one_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
+        private player_two_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
         // todo: do we need puzz record here/what for? since puzz record is already transferred to ms
         // private puzz_record: cflip_testing_123_token.leo/Piece.record,
         // private owner_rules_record: puzz_testing_acct_123.leo/OwnerRules.record,
@@ -306,7 +306,7 @@ program cflip_gm_aleo_testing_123.aleo {
         // private player_two_signature: signature,
         // todo: adjust msg type here
         // private leo_message: field,
-    ) -> (Game, NotifyAcceptGame)
+    ) -> (Game, NotifyAcceptGame, cflip_testing_123_token.leo/PieceClaim, cflip_testing_123_token.leo/PieceClaim, cflip_testing_123_token.leo/JointPieceClaim)
     {
         // limit calls to only users
         assert_eq(self.caller, self.signer);
@@ -344,14 +344,15 @@ program cflip_gm_aleo_testing_123.aleo {
             opponent: game_record.player_one_address,
         };
 
+        let (spent_claim_record_one, spent_claim_record_two, joint_piece_claim): (PieceClaim, PieceClaim, JointPieceClaim) = cflip_testing_123_token.leo/consume_claim_mint_joint(player_one_claim_record, player_two_claim_record, game_record.owner, game_record.player_two_address);
+
         // note: will need to tweak owner rules structure likely to include sig to lock next turn
         // let new_owner_rules: OwnerRules =
         // puzz_testing_acct_123.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
 
-        // todo: tweak for notify records
         // output owner rules record to ms so bob can claim later on
         // return (game_record_new, new_owner_rules) then finalize(game_record.owner);
-        return (game_record_new, notify_accept_game_record) then finalize(game_record.owner);
+        return (game_record_new, notify_accept_game_record, spent_claim_record_one, spent_claim_record_two, joint_piece_claim) then finalize(game_record.owner);
     }
 
     finalize accept_game (game_address: address) {
@@ -394,12 +395,12 @@ program cflip_gm_aleo_testing_123.aleo {
         private game_record: Game,
         private revealed_answer_record: RevealedAnswer,
         private piece_record: cflip_testing_123_token.leo/Piece.record,
-        private player_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
+        private joint_piece_claim: cflip_testing_123_token.leo/JointPieceClaim.record,
         // private puzz_stake_two: cflip_testing_123_token.leo/PuzzStake.record,
         // private token_owner_rules: cflip_testing_123_token.leo/TokenOwnerRules.record,
         // private sig: signature,
         // private msg: field,
-    ) -> (NotifyGameOver, NotifyGameOver)
+    ) -> (cflip_testing_123_token.leo/Piece, cflip_testing_123_token.leo/Piece, cflip_testing_123_token.leo/JointPieceClaim, NotifyGameOver, NotifyGameOver)
     {
         // todo: how do we transfer out from ms/game addr to winner
         // todo: do we just mint new tokens to winner?
@@ -416,8 +417,19 @@ program cflip_gm_aleo_testing_123.aleo {
         // player 1 loses, player 2 wins
         if (revealed_answer_record.answer == game_record.player_two_answer) {
             // transfer all funds to winner
-            let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_claim_record, game_record.player_two_address, game_record.total_pot);
-            // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
+
+            // advance game to next game_state
+            let new_game_state_p2_wins: Game = Game {
+                owner: game_record.owner,
+                player_one_comm: game_record.player_one_comm,
+                player_two_answer: game_record.player_two_answer,
+                total_pot: game_record.total_pot,
+                player_one_address: game_record.player_one_address,
+                player_two_address: game_record.player_two_address,
+                game_state: 2field,
+            };
+
+            let (receiver_piece_record, piece_change, joint_piece_claim_spent): (Piece, Piece, JointPieceClaim) = cflip_testing_123_token.leo/transfer_winner(piece_record, joint_piece_claim, game_record.player_two_address, new_game_state_p2_wins);
 
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
@@ -435,12 +447,24 @@ program cflip_gm_aleo_testing_123.aleo {
                 opponent: game_record.player_one_address,
             };
             // todo: return puzz records, some weird puzz undefined bug popping up
-            return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
+            return (receiver_piece_record, piece_change, joint_piece_claim_spent, notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
         // player 1 wins, player 2 loses
         else {
             // transfer all funds to winner
-            let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_claim_record, game_record.player_one_address, game_record.total_pot);
+            // advance game to next game_state
+            let new_game_state_p1_wins: Game = Game {
+                owner: game_record.owner,
+                player_one_comm: game_record.player_one_comm,
+                player_two_answer: game_record.player_two_answer,
+                total_pot: game_record.total_pot,
+                player_one_address: game_record.player_one_address,
+                player_two_address: game_record.player_two_address,
+                game_state: 2field,
+            };
+
+            let (receiver_piece_record, piece_change, joint_piece_claim_spent): (Piece, Piece, JointPieceClaim) = cflip_testing_123_token.leo/transfer_winner(piece_record, joint_piece_claim, game_record.player_one_address, new_game_state_p1_wins);
+
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_one_address,
@@ -457,7 +481,7 @@ program cflip_gm_aleo_testing_123.aleo {
                 opponent: game_record.player_one_address,
             };
             // todo: return puzz records, some weird puzz undefined bug popping up
-            return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
+            return (receiver_piece_record, piece_change, joint_piece_claim_spent, notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
         }
     }
 
@@ -473,6 +497,7 @@ program cflip_gm_aleo_testing_123.aleo {
         private revealed_answer_record: RevealedAnswer,
         private piece_record: cflip_testing_123_token.leo/Piece.record,
         private player_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
+        private joint_piece_claim: cflip_gm_aleo_testing_123.leo/JointPieceClaim.record,
         // private puzz_stake_two: cflip_testing_123_token.leo/PuzzStake.record,
         // private token_owner_rules: cflip_testing_123_token.leo/TokenOwnerRules.record,
         // private sig: signature,
@@ -486,7 +511,17 @@ program cflip_gm_aleo_testing_123.aleo {
         // need to assert that player 2 valid signature and valid message signed here, will validate inside stake transfer private logic
         // let (receiver_puzz_record, puzz_change): (Piece, Piece) =
             // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
-        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_claim_record, self.caller, game_record.total_pot);
+        let new_game_state_p2_wins: Game = Game {
+            owner: game_record.owner,
+            player_one_comm: game_record.player_one_comm,
+            player_two_answer: game_record.player_two_answer,
+            total_pot: game_record.total_pot,
+            player_one_address: game_record.player_one_address,
+            player_two_address: game_record.player_two_address,
+            game_state: 2field,
+        };
+
+        let (receiver_piece_record, piece_change, joint_piece_claim_spent): (Piece, Piece, JointPieceClaim) = cflip_testing_123_token.leo/transfer_winner(piece_record, joint_piece_claim, game_record.player_one_address, new_game_state_p2_wins);
 
         let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
                 owner: game_record.player_one_address,
