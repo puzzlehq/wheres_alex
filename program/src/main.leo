@@ -419,17 +419,22 @@ program cflip_gm_aleo_testing_123.aleo {
             // transfer all funds to winner
 
             // advance game to next game_state
-            let new_game_state_p2_wins: Game = Game {
-                owner: game_record.owner,
-                player_one_comm: game_record.player_one_comm,
-                player_two_answer: game_record.player_two_answer,
-                total_pot: game_record.total_pot,
-                player_one_address: game_record.player_one_address,
-                player_two_address: game_record.player_two_address,
-                game_state: 2field,
-            };
+            // let new_game_state_p2_wins: Game = Game {
+            //     owner: game_record.owner,
+            //     player_one_comm: game_record.player_one_comm,
+            //     player_two_answer: game_record.player_two_answer,
+            //     total_pot: game_record.total_pot,
+            //     player_one_address: game_record.player_one_address,
+            //     player_two_address: game_record.player_two_address,
+            //     game_state: 2field,
+            // };
 
-            let (receiver_piece_record, piece_change, joint_piece_claim_spent): (Piece, Piece, JointPieceClaim) = cflip_testing_123_token.leo/transfer_winner(piece_record, joint_piece_claim, game_record.player_two_address, new_game_state_p2_wins);
+            // todo: tldr: can't do above because we need to actually have a function that returns a new `game` record
+
+            // todo: can I have this function on this program itslef?
+            let new_game_record: (Game) = cflip_testing_123_token.leo/update_game_state_to_final(game_record);
+
+            let (receiver_piece_record, piece_change, joint_piece_claim_spent): (Piece, Piece, JointPieceClaim) = cflip_testing_123_token.leo/transfer_winner(piece_record, joint_piece_claim, game_record.player_two_address, new_game_record);
 
             // notify p1 and p2 the game is over
             let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {

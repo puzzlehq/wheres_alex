@@ -152,6 +152,23 @@ program cflip_testing_123_token.aleo {
 
     }
 
+    transition update_game_state_to_final (
+        private game_record: Game,
+    ) -> (Game)
+    {
+        let new_game_state: Game = Game {
+            owner: game_record.owner,
+            player_one_comm: game_record.player_one_comm,
+            player_two_answer: game_record.player_two_answer,
+            total_pot: game_record.total_pot,
+            player_one_address: game_record.player_one_address,
+            player_two_address: game_record.player_two_address,
+            game_state: 2field,
+        };
+
+        return new_game_state;
+    }
+
     // note: looks like there's a function length limit?
     transition consume_claim_mint_joint
     (
