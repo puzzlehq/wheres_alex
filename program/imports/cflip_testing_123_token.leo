@@ -8,14 +8,6 @@ program cflip_testing_123_token.aleo {
         private amount: u64,
     }
 
-    record PieceClaim {
-        private owner: address,
-        private amount: u64,
-        private claimer: address,
-        private msg: field,
-        private sig: signature,
-    }
-
     record TokenOwnerRules {
         owner: address,
         m: u8,
@@ -29,7 +21,16 @@ program cflip_testing_123_token.aleo {
     record PieceStake {
         private owner: address,
         private amount: u64,
-        private player_address: address,
+        private staker_address_one: address,
+        private staker_address_two: address,
+    }
+
+    record PieceClaim {
+        private owner: address,
+        private amount: u64,
+        private claimer: address,
+        // private msg: field,
+        // private sig: signature,
     }
 
     record TokenClaim {
@@ -42,21 +43,25 @@ program cflip_testing_123_token.aleo {
     record PieceTimeClaim {
         private owner: address,
         private amount: u64,
+        private time_claimer_address: address,
+        // private block_height: u32,
         // private block_ht: u32, // todo: can't store block height on record
     }
 
     record PieceJointStake {
         private owner: address,
         private amount: u64,
+        private time_claimer_address: address,
+        private state_updater_address: address,
+        // private block_ht: u32, // todo: can't store block height on record I think
     }
 
     record PieceState {
         private owner: address,
-        private player_one_address: address,
-        private player_two_address: address,
-        private player_one_sig: signature,
-        private player_two_sig: signature,
-        private winner: address,
+        private amount: u64,
+        private time_claimer_address: address,
+        private state_updater_address: address,
+        private answer: field,
     }
 
 
@@ -110,8 +115,8 @@ program cflip_testing_123_token.aleo {
             owner: to,
             amount: amount,
             claimer: sender,
-            msg: msg,
-            sig: sig,
+            // msg: msg,
+            // sig: sig,
         };
 
         // new puzz record to receiver
@@ -140,6 +145,7 @@ program cflip_testing_123_token.aleo {
         private amount: u64,
         private msg: field,
         private sig: signature,
+        private opponent: address,
     ) -> (PieceClaim, PieceStake, Piece, Piece)
     {
 
@@ -147,14 +153,15 @@ program cflip_testing_123_token.aleo {
             owner: to,
             amount: amount,
             claimer: sender,
-            msg: msg,
-            sig: sig,
+            // msg: msg,
+            // sig: sig,
         };
 
         let piece_stake: PieceStake = PieceStake {
             owner: to,
             amount: amount,
-            player_address: sender,
+            staker_address_one: sender,
+            staker_address_two: opponent,
         };
 
         // new puzz record to receiver
@@ -197,43 +204,75 @@ program cflip_testing_123_token.aleo {
         return (receiver_new_record, sender_new_record);
     }
 
-
-    transition transfer_joint_stake_timeout
+    transition transfer_stake_to_joint
     (
+        private piece_token: Piece,
         private piece_stake: PieceStake,
-        private piece_stake_two: PieceStake,
         private piece_claim: PieceClaim,
+        private piece_stake_two: PieceStake,
         private piece_claim_two: PieceClaim,
-        private game_address: address,
+        private sender: address,
+        private to: address,
         private sig: signature,
-    ) -> (PieceJointStake, PieceTimeClaim, PieceState) {
 
-        let piece_joint_stake_record: PieceJointStake = PieceJointStake {
-            owner: game_address,
+    ) -> (PieceJointStake, PieceTimeClaim, PieceState)
+    {
+        let piece_joint_stake: PieceJointStake = PieceJointStake {
+            owner: piece_stake.owner,
             amount: piece_stake.amount + piece_stake_two.amount,
+            time_claimer_address: piece_stake.staker_address_two,
+            state_updater_address: piece_stake.staker_address_one, // now p1 can update
         };
 
         let piece_time_claim: PieceTimeClaim = PieceTimeClaim {
-            owner: game_address,
+            owner: piece_stake.owner,
             amount: piece_stake.amount + piece_stake_two.amount,
+            time_claimer_address: piece_stake.staker_address_two,
         };
 
         let piece_state: PieceState = PieceState {
-            owner: game_address,
-            player_one_address: piece_stake.player_address,
-            player_two_address: piece_stake_two.player_address,
-            player_one_sig: sig,
-            player_two_sig: sig,
-            winner: game_address // set winner to game address for now, winner is declared in joint_stake_reveal_answer_update
+            owner: piece_stake.owner,
+            amount: piece_stake.amount + piece_stake_two.amount,
+            time_claimer_address: piece_stake.staker_address_two,
+            state_updater_address: piece_stake.staker_address_one,
+            answer: 12321field, // hard code gibberish for now
         };
 
-        return (piece_joint_stake_record, piece_time_claim, piece_state);
+        return (piece_joint_stake, piece_time_claim, piece_state);
+
+
+    }
+
+    transition transfer_joint_stake_timeout
+    (
+        private piece: Piece,
+        private piece_time_claim: PieceTimeClaim,
+        private piece_joint_stake: PieceJointStake,
+        private piece_state: PieceState,
+        private sig: signature,
+    ) -> (Piece, Piece) {
+
+        // new puzz record to receiver
+        let receiver_new_record: Piece = Piece {
+            owner: piece_joint_stake.time_claimer_address,
+            amount: piece_joint_stake.amount,
+        };
+
+        // puzz record with change for sender
+        let sender_new_record: Piece = Piece {
+            owner: piece.owner,
+            amount: piece.amount - piece_joint_stake.amount,
+        };
+
+        return (receiver_new_record, sender_new_record);
+
     }
 
 
-    transition joint_stake_reveal_answer_update
+    transition joint_state_stake_update
     (
         private piece_state: PieceState,
+        private updater: address,
         private sig: signature,
         private answer: field,
         private winner: address, // can compute winner in cflip program and pass in here
@@ -241,11 +280,10 @@ program cflip_testing_123_token.aleo {
     {
         let piece_state_record: PieceState = PieceState {
             owner: piece_state.owner,
-            player_one_address: piece_state.player_one_address,
-            player_two_address: piece_state.player_two_address,
-            player_one_sig: sig,
-            player_two_sig: sig,
-            winner: winner,
+            amount: piece_state.amount,
+            time_claimer_address: piece_state.time_claimer_address,
+            state_updater_address: piece_state.state_updater_address,
+            answer: answer // can't import answer record in
         };
 
         return piece_state_record;
@@ -260,19 +298,22 @@ program cflip_testing_123_token.aleo {
         private piece_time_stake: PieceTimeClaim,
         private piece_state: PieceState,
         private sig: signature,
-    ) -> Piece
+        private to: address,
+    ) -> (Piece, Piece)
     {
         // new puzz record to receiver
         let receiver_new_record: Piece = Piece {
-            owner: piece_state.winner,
+            owner: to,
             amount: piece_joint_stake.amount,
         };
 
         // puzz record with change for sender
         let sender_new_record: Piece = Piece {
-            owner: piece_state.winner,
+            owner: to,
             amount: piece_token.amount - piece_joint_stake.amount,
         };
+
+        return (receiver_new_record, sender_new_record);
     }
 
 
@@ -296,8 +337,8 @@ program cflip_testing_123_token.aleo {
 
         // validate if sig on puzz_claim is valid
         // todo: add in additional logic to verify signatures...
-        let is_verified: bool = piece_claim.sig.verify(piece_claim.claimer, piece_claim.msg);
-        assert_eq(is_verified, true);
+        // let is_verified: bool = piece_claim.sig.verify(piece_claim.claimer, piece_claim.msg);
+        // assert_eq(is_verified, true);
 
         // assert that the claim is >= transfer amount
         assert(piece_claim.amount >= amount_to_transfer);
