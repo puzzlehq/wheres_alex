@@ -26,8 +26,13 @@ export type GameStep =
   | 'reneged';
 
 export type Game = {
-  address: string; /// address of shared state multisig
   step: GameStep;
+  challenger: string; /// address
+  opponent: string; /// address
+  address: string; /// address of shared state multisig
+  wager: number;
+
+  wagerRecord: Record;
 }
 
 type GameState = {
@@ -41,8 +46,8 @@ export const useGameStore = create<GameState>()(
     load: async (records: Record[]) => {
       set({ status: 'loading' });
 
-      /// todo -- fetch game state
-
+      /// todo - process records into `Game` instances
+      
     }
   }))
 );
