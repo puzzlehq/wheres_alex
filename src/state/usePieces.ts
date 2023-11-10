@@ -18,20 +18,27 @@ export const usePieces = () => {
   //   console.log('plaintext', records[0].plaintext);
   // }
 
-  const totalBalance = useMemo(() => {
+  const { totalBalance, availableBalance } = useMemo(() => {
     if (records.length > 0) {
-      return records
+      let availableBalance = 0;
+      const totalBalance = records
         .filter(record => !record.spent)
         .map(record => {
           const amount = record.plaintext.match(/amount:(\d+)u64/);
-          return amount ? parseInt(amount[1]) : 0;
+          if (amount) {
+            const amountInt = parseInt(amount[1]);
+            availableBalance = Math.max(availableBalance, amountInt);
+            return amountInt;
+          }
+          return 0;
         })
         .reduce((total, amount) => {
           return (total ?? 0) + (amount ?? 0);
         })
+      return { totalBalance, availableBalance };
     }
-    return 0;
+    return { totalBalance: 0, availableBalance: 0 };
   }, [records]);
 
-  return { pieces: records, totalBalance, loading, error, refetch };
+  return { pieces: records, totalBalance, availableBalance, loading, error, refetch };
 };
