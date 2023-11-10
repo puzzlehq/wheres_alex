@@ -14,6 +14,14 @@ program cflip_testing_123_token.aleo {
         private claimer: address,
         private msg: field,
         private sig: signature,
+        private is_claimable: bool,
+    }
+
+    record JointPieceClaim {
+        private owner: address,
+        private amount: u64,
+        private time_claimer_address: address,
+        private is_claimable: bool,
     }
 
     record TokenOwnerRules {
@@ -90,6 +98,7 @@ program cflip_testing_123_token.aleo {
             claimer: sender,
             msg: msg,
             sig: sig,
+            is_claimable: true,
         };
 
         // new puzz record to receiver
@@ -107,6 +116,112 @@ program cflip_testing_123_token.aleo {
         // puzz_stake_record,
         // return ( puzz_claim_record, receiver_new_record, sender_new_record);
         return (piece_claim_record, receiver_new_record, sender_new_record);
+
+    }
+
+
+    transition stake_transfer_renege
+    (
+        private piece_token: Piece,
+        private piece_claim: PieceClaim,
+        private sender: address,
+        private to: address,
+        private amount: u64,
+    ) -> (Piece, Piece)
+    {
+        // assert that piece is claimable
+        let claimable: bool = true;
+        assert_eq(piece_claim.is_claimable, claimable);
+
+        // verify the caller is also on the claim token
+
+
+        // new puzz record to receiver
+        let receiver_new_record: Piece = Piece {
+            owner: to,
+            amount: amount
+        };
+
+        // puzz record with change for sender
+        let sender_new_record: Piece = Piece {
+            owner: sender,
+            amount: piece_token.amount - amount
+        };
+
+        return (receiver_new_record, sender_new_record);
+
+    }
+
+    // note: looks like there's a function length limit?
+    transition consume_claim_mint_joint
+    (
+        private piece_claim_one: PieceClaim,
+        private piece_claim_two: PieceClaim,
+        private game_address: address,
+        private player_two_address: address,
+    ) -> (PieceClaim, PieceClaim, JointPieceClaim)
+    {
+
+        let piece_claim_one_spent: PieceClaim = PieceClaim {
+            owner: piece_claim_one.owner,
+            amount: piece_claim_one.amount,
+            claimer: piece_claim_one.claimer,
+            msg: piece_claim_one.msg,
+            sig: piece_claim_one.sig,
+            is_claimable: false,
+        };
+
+        let piece_claim_two_spent: PieceClaim = PieceClaim {
+            owner: piece_claim_two.owner,
+            amount: piece_claim_two.amount,
+            claimer: piece_claim_two.claimer,
+            msg: piece_claim_two.msg,
+            sig: piece_claim_two.sig,
+            is_claimable: false,
+        };
+
+        let joint_piece_claim: JointPieceClaim = JointPieceClaim {
+            owner: game_address,
+            amount: piece_claim_one.amount + piece_claim_two.amount,
+            time_claimer_address: player_two_address,
+            is_claimable: false,
+        };
+
+        return (piece_claim_one_spent, piece_claim_two_spent, joint_piece_claim);
+    }
+
+
+    transition transfer_winner
+    (
+        private piece_token: Piece,
+        private joint_piece_claim: JointPieceClaim,
+        private winner: address,
+    ) -> (Piece, Piece)
+    {
+        let claimable: bool = true;
+        assert_eq(joint_piece_claim.is_claimable, true);
+
+        // new puzz record to receiver
+        let receiver_new_record: Piece = Piece {
+            owner: winner,
+            amount: joint_piece_claim.amount,
+        };
+
+        // puzz record with change for sender
+        let sender_new_record: Piece = Piece {
+            owner: winner,
+            amount: piece_token.amount - joint_piece_claim.amount,
+        };
+
+        // spend joint_piece_claim_record
+        let spent_joint_piece_claim: JointPieceClaim = JointPieceClaim {
+            owner: winner,
+            amount: joint_piece_claim.amount,
+            time_claimer_address: joint_piece_claim.time_claimer_address,
+            is_claimable: false,
+        };
+
+        return (receiver_new_record, sender_new_record);
 
     }
 
