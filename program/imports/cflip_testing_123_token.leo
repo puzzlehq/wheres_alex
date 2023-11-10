@@ -170,7 +170,6 @@ program cflip_testing_123_token.aleo {
         };
 
         // puzz_stake_record,
-        // return ( puzz_claim_record, receiver_new_record, sender_new_record);
         return (piece_claim_record, piece_stake, receiver_new_record, sender_new_record);
     }
 
@@ -263,16 +262,17 @@ program cflip_testing_123_token.aleo {
         private sig: signature,
     ) -> Piece
     {
-        // p1 wins
-        if (piece_state.winner === piece_state.player_one_address) {
+        // new puzz record to receiver
+        let receiver_new_record: Piece = Piece {
+            owner: piece_state.winner,
+            amount: piece_joint_stake.amount,
+        };
 
-        }
-        // p2 wins
-        else {
-
-
-        }
-
+        // puzz record with change for sender
+        let sender_new_record: Piece = Piece {
+            owner: piece_state.winner,
+            amount: piece_token.amount - piece_joint_stake.amount,
+        };
     }
 
 
