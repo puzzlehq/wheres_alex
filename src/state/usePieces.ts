@@ -14,31 +14,33 @@ export const usePieces = () => {
     },
   });
 
-  // if (records.length > 0) {
-  //   console.log('plaintext', records[0].plaintext);
-  // }
-
-  const { totalBalance, availableBalance } = useMemo(() => {
+  const { totalBalance, availableBalance, largestPiece } = useMemo(() => {
     if (records.length > 0) {
       let availableBalance = 0;
+      let largestPiece = records[0];
       const totalBalance = records
         .filter(record => !record.spent)
         .map(record => {
           const amount = record.plaintext.match(/amount:(\d+)u64/);
           if (amount) {
+            /// find largestRecord (and thus availableBalance)
             const amountInt = parseInt(amount[1]);
             availableBalance = Math.max(availableBalance, amountInt);
+            if (availableBalance == amountInt) {
+              largestPiece = record;
+            }
             return amountInt;
           }
           return 0;
         })
         .reduce((total, amount) => {
-          return (total ?? 0) + (amount ?? 0);
+          /// sum up
+          return total + amount;
         })
-      return { totalBalance, availableBalance };
+      return { totalBalance, availableBalance, largestPiece };
     }
-    return { totalBalance: 0, availableBalance: 0 };
+    return { totalBalance: 0, availableBalance: 0, largestPiece: undefined };
   }, [records]);
 
-  return { pieces: records, totalBalance, availableBalance, loading, error, refetch };
+  return { pieces: records, totalBalance, availableBalance, largestPiece, loading, error, refetch };
 };
