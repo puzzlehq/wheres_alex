@@ -9,10 +9,16 @@ import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
 import WinRoute from './pages/ClaimPrize/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
 import Reveal from './pages/FinishGame/_01_Reveal.js';
+import { useState } from 'react';
+import { GameManager, ProposeGameInputs } from './state/manager.js';
 
 function App() {
   const { isConnected, loading } = useConnect();
   const { account } = useAccount();
+  const [gameManager, setGameManager] = useState(new GameManager([]));
+
+  const [proposeGameInputs, setProposeGameInputs] = useState<ProposeGameInputs | undefined>();
+
 
   return (
     <div className='App flex min-h-screen justify-center bg-amber-400'>
@@ -24,7 +30,7 @@ function App() {
         <Router>
           <div className='h-full w-full max-w-screen-sm p-4'>
             <Routes>
-              <Route path='/new-game' element={<NewGame />} />
+              <Route path='/new-game' element={<NewGame create={setProposeGameInputs} />} />
               <Route path='/accept-game' element={<AcceptGame/>}/>
               <Route path='/claim-prize'>
                 <Route path='win' element={<WinRoute/>}/>

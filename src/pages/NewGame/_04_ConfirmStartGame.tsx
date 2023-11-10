@@ -4,11 +4,13 @@ import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Button from '../../components/Button';
-import { Step, useNewGameStore } from './store';
+import { useAtom } from 'jotai';
+import { proposeGameInputsAtom } from "./store"
+import { ProposeGameInputs } from "../../state/manager";
 
 function ConfirmStartGame() {
-
-  const [answer, wager, opponent, multisig, setStep, createGame] = useNewGameStore((state) => [state.answer, state.wager, state.opponent, state.multisig, state.setStep, state.createGame])
+  // const [answer, wager, opponent, multisig, setStep, createGame] = useNewGameStore((state) => [state.answer, state.wager, state.opponent, state.multisig, state.setStep, state.createGame])
+  const [proposeGameInputs, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
 
   // const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
   //     type: 'Execute',

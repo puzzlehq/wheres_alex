@@ -22,8 +22,9 @@ export const usePieces = () => {
         .filter(record => !record.spent)
         .map(record => {
           const amount = record.plaintext.match(/amount:(\d+)u64/);
+          const amt = record.data.amount;
           if (amount) {
-            /// find largestRecord (and thus availableBalance)
+            /// find largestPiece (and thus availableBalance)
             const amountInt = parseInt(amount[1]);
             availableBalance = Math.max(availableBalance, amountInt);
             if (availableBalance == amountInt) {

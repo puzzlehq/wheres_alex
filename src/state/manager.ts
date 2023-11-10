@@ -33,11 +33,48 @@ export type Game = {
   wager: number;
 
   wagerRecord: Record;
+
+  eventIds?: string[];
 }
+
+export class GameManager {
+  status: LoadingStatus = 'idle';
+  games: Game[] = [];
+
+  constructor(records: Record[]) {
+    this.games = this.parseGamesFromRecords(records);
+  }
+
+  parseGamesFromRecords(records: Record[]): Game[] {
+    return [];
+  }
+
+  proposeGame
+}
+
+export type ProposeGameInputs = {
+  challenger: string;
+  opponent: string;
+  address: string;
+  answer: string;
+  seed: string;
+  wager: Record;
+}
+
+/// old stuff below
+
 
 type GameState = {
   status: LoadingStatus;
   load: (records: Record[]) => void;
+  proposeGame: (
+    challenger: string,
+    opponent: string,
+    address: string,
+    answer: string,
+    seed: string,
+    wager: Record,
+  ) => void;
 };
 
 export const useGameStore = create<GameState>()(
@@ -48,6 +85,16 @@ export const useGameStore = create<GameState>()(
 
       /// todo - process records into `Game` instances
       
+    },
+    proposeGame: (
+      challenger,
+      opponent,
+      address,
+      answer,
+      seed,
+      wager
+    ) => {
+
     }
   }))
 );

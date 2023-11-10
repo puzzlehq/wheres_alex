@@ -9,7 +9,10 @@ import Notifications from '../components/Notifications';
 import { usePieces } from '../state/usePieces';
 
 function Home() {
-  const { pieces, totalBalance, loading: loadingPieces, error } = usePieces();
+  const { pieces, totalBalance, availableBalance, largestPiece, loading: loadingPieces, error } = usePieces();
+
+  /// todo - load records for the various programs we need to get
+  ///   pass it to GemaManager constructor
 
   const gameStates: GameState[] = [
     { multisig: 'aleo1', opponent: 'Alice', wager: 10, action: 'Start' },
