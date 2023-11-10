@@ -104,7 +104,7 @@ function Notifications({ notifications }: NotificationsProps) {
     <section className='flex grow flex-col border-2 border-solid border-primary-pink pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-pink px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
-          NOTIFICATIONS
+          YOUR TURN
         </div>
       </div>
       <div className='px-5 pt-2 flex flex-col'>

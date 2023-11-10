@@ -6,8 +6,11 @@ import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
 import LiveGames from '../components/LiveGames';
 import Notifications from '../components/Notifications';
+import { usePieces } from '../state/usePieces';
 
 function Home() {
+  const { pieces, totalBalance, loading: loadingPieces, error } = usePieces();
+
   const gameStates: GameState[] = [
     { multisig: 'aleo1', opponent: 'Alice', wager: 10, action: 'Start' },
     {
@@ -116,7 +119,7 @@ function Home() {
   return (
     <div className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex flex-col w-full bg-neutral-900 px-1 gap-4'>
-        <TotalWinnings amount={1234567890} />
+        <TotalWinnings amount={totalBalance} />
         <Button
           color='yellow'
           onClick={() => navigate('/new-game')}

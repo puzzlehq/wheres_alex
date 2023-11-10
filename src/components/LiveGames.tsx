@@ -105,7 +105,7 @@ function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
     <section className='flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-red px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
-          LIVE GAMES
+          THEIR TURN
         </div>
       </div>
       <div className='px-5 pt-2 flex flex-col'>
