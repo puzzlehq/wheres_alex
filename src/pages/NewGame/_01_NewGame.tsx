@@ -28,10 +28,7 @@ function NewGame() {
         />
         <div className='flex flex-col flex-grow'/>
         <Button
-          onClick={() => setProposeGameInputs({
-            ...proposeGameInputs,
-            step: '2_HideAlex'
-          })}
+          onClick={() => setProposeGameInputs({step: '1_NewGame'})}
           color='green'
           disabled={!aleoAddressRegex.test(proposeGameInputs.opponent ?? '')}
         >

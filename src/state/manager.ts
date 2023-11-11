@@ -15,12 +15,11 @@ export const GAME_FUNCTIONS = {
 
 /// todo - update these
 export const stepFees = {
-  proposed: 1,
-  waitingAccept: 1,
-  accepted: 1,
-  waitingReveal: 1,
-  waitingClaim: 1,
-  reneged: 1,
+  propose_game: 1,
+  accept_game: 1,
+  set_wager: 1,
+  reveal_answer: 1,
+  finish_game: 1,
 };
 
 export type LoadingStatus = 'idle' | 'loading' | 'success' | 'error';
@@ -72,12 +71,15 @@ export type ProposeGameInputs = {
 
 // used for submit wager and accept game
 export type AcceptGameInputs = {
+  eventIdWager: string;
+  eventIdAccept: string;
   gameRecord: Record;
   playerOneClaimRecord: Record;
   playerTwoClaimRecord: Record;
   puzz_piece_stake_one: Record;
   puzz_piece_stake_two: Record;
   player_two_answer: '0field' | '1field';
+  player_two_answer_readable: Answer;
   game_address: string;
   opponent: string;
   wagerAmount: number;

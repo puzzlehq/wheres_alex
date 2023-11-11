@@ -8,7 +8,7 @@ export type Step = '1_AcceptGame' | '2_FindAlex' | '3_Confirmed';
 export const acceptGameInputsAtom = atom<Partial<AcceptGameInputs & {step: Step}>>({step: '1_AcceptGame'});
 
 const AcceptGame = () => {
-  const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
+  const [acceptGameInputs] = useAtom(acceptGameInputsAtom);
 
   const step = acceptGameInputs.step ?? '1_AcceptGame' as Step;
 

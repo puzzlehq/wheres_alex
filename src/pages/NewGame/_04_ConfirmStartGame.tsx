@@ -6,32 +6,51 @@ import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
 import { proposeGameInputsAtom } from "./index"
-import { GAME_FUNCTIONS, GAME_PROGRAM_ID } from '../../state/manager';
-import { useRequestCreateEvent } from '@puzzlehq/sdk';
+import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
+import { useCreateSharedState, useRequestCreateEvent } from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
 import { useEffect } from 'react';
+import { PrivateKey } from '@puzzlehq/aleo-wasm-web';
+
+const enc = new TextEncoder();
 
 function ConfirmStartGame() {
   const [proposeGameInputs, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
 
-  const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
-      type: EventType.Execute,
-      programId: GAME_PROGRAM_ID,
-      functionId: GAME_FUNCTIONS.propose_game,
-      fee: 10000,
-      inputs: ["1"],
+  const opponent = proposeGameInputs.opponent ?? '';
+  const answer = proposeGameInputs.answer;
+  const game_address = proposeGameInputs.game_address;
+  const challenger = proposeGameInputs.challenger;
+  const wagerAmount = proposeGameInputs.wagerAmount ?? 0;
+  const wagerRecord = proposeGameInputs.wagerRecord;
+
+  const { createSharedState, seed, loading: loading_seed } = useCreateSharedState();
+  useEffect(() => {
+    if (seed) {
+      const seed_array = Uint8Array.from(enc.encode(seed.replace('field', '')).subarray(0,32));
+      const multisig_pk = PrivateKey.from_seed_unchecked(seed_array);
+      const game_address = multisig_pk.to_address().to_string();
+      setProposeGameInputs({ seed, game_address, opponent, step: '2_HideAlex' });
+    }
+  }, [seed])
+
+  const { requestCreateEvent, eventId, error, loading: loading_event } = useRequestCreateEvent({
+    type: EventType.Execute,
+    programId: GAME_PROGRAM_ID,
+    functionId: GAME_FUNCTIONS.propose_game,
+    fee: stepFees.propose_game,
+    inputs: ["1"],
   })
 
   useEffect(() => {
     if (eventId) {
-      setProposeGameInputs({...proposeGameInputs, eventId})
+      setProposeGameInputs({...proposeGameInputs, eventId, step: '5_GameStarted'})
     }
   }, [eventId])
 
-  const opponent = proposeGameInputs.opponent ?? '';
-  const wagerAmount = proposeGameInputs.wagerAmount ?? 0;
-  const answer = proposeGameInputs.answer;
-  const game_address = proposeGameInputs.game_address;
+  useEffect(() => {
+    requestCreateEvent()
+  }, [game_address, opponent, ])
 
   const disabled = !answer || !game_address;
   return (
@@ -50,14 +69,14 @@ function ConfirmStartGame() {
       <div className='flex flex-col flex-grow'/>
       <div className='flex flex-col gap-4'>
         <Button
-          onClick={requestCreateEvent}
+          onClick={createSharedState}
           color='green'  
-          disabled={disabled || loading}
+          disabled={disabled || loading_seed || loading_event}
         >
           KICKOFF GAME!
         </Button>
         <Button
-          onClick={() => setProposeGameInputs({ ...proposeGameInputs, step: '3_StartWager' })}
+          onClick={() => setProposeGameInputs({step: '3_StartWager'})}
           color='gray'
         >
           BACK
