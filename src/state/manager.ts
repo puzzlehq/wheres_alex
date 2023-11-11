@@ -85,3 +85,14 @@ export type AcceptGameInputs = {
   wagerAmount: number;
   wagerRecord: string;
 }
+
+export type RevealAnswerInputs = {
+  AnswerRecord: Record;
+  PieceStakeOutcome: string;
+}
+export type FinishGameInputs = {
+  GameStateRevealedFinish: string;
+  GameStateAwaitFinish: string;
+  PieceJointStake: Record;
+  PieceTimeClaim: Record;
+}
