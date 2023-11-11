@@ -19,7 +19,7 @@ function GameStarted() {
         {game_address && eventId && <GameInfo multisig={game_address} eventID={eventId} />}
         <div className='flex flex-col flex-grow'/>
         <div className='flex flex-col gap-4'>
-          <Button
+          {/* <Button
             onClick={() => {
               navigate('/')
               setProposeGameInputs({step: '1_NewGame'})
@@ -27,7 +27,7 @@ function GameStarted() {
             color='pink'
           >
             NOTIFY OTHER PLAYER
-          </Button>
+          </Button> */}
           <Button
             onClick={() => {
               navigate('/new-game')

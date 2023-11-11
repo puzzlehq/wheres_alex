@@ -17,7 +17,7 @@ function StartWager() {
   const wager = proposeGameInputs.wagerAmount;
   const wagerRecord = proposeGameInputs.wagerRecord;
 
-  const onWagerInput = (e) => {
+  const onWagerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = Number(e.target.value);
     if (isNaN(input)) {
       setError('please input a number');
@@ -48,7 +48,7 @@ function StartWager() {
           ) }
           <input
             type='number'
-            value={wager === 0 ? undefined : wager}
+            value={wager}
             onChange={onWagerInput}
             className={`mt-14 flex w-full flex-col self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} w-full self-center text-center text-3xl font-bold`}
             placeholder='Enter amount'

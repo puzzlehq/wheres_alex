@@ -9,7 +9,7 @@ import { proposeGameInputsAtom } from "./index"
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
 import { useCreateSharedState, useRequestCreateEvent } from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { PrivateKey } from '@puzzlehq/aleo-wasm-web';
 
 const enc = new TextEncoder();
@@ -20,37 +20,54 @@ function ConfirmStartGame() {
   const opponent = proposeGameInputs.opponent ?? '';
   const answer = proposeGameInputs.answer;
   const game_address = proposeGameInputs.game_address;
-  const challenger = proposeGameInputs.challenger;
+  // const challenger = proposeGameInputs.challenger;
   const wagerAmount = proposeGameInputs.wagerAmount ?? 0;
   const wagerRecord = proposeGameInputs.wagerRecord;
 
   const { createSharedState, seed, loading: loading_seed } = useCreateSharedState();
   useEffect(() => {
+    console.log('seed', seed);
     if (seed) {
       const seed_array = Uint8Array.from(enc.encode(seed.replace('field', '')).subarray(0,32));
       const multisig_pk = PrivateKey.from_seed_unchecked(seed_array);
       const game_address = multisig_pk.to_address().to_string();
-      setProposeGameInputs({ seed, game_address, opponent, step: '2_HideAlex' });
+      setProposeGameInputs({ ms_seed: seed, game_address });
     }
-  }, [seed])
+  }, [seed]);
+
+  const programInputs = useMemo(() => {
+    const inputs = proposeGameInputs;
+    if (inputs.ms_seed && inputs.game_address && inputs.opponent && inputs.wagerRecord && inputs.wagerAmount && inputs.answer) {
+      return [
+        inputs.ms_seed,
+        inputs.game_address,
+        inputs.opponent,
+        inputs.wagerRecord,
+        inputs.wagerAmount.toString()
+      ]
+    } else {
+      return null;
+    }
+  }, [proposeGameInputs]);
 
   const { requestCreateEvent, eventId, error, loading: loading_event } = useRequestCreateEvent({
     type: EventType.Execute,
     programId: GAME_PROGRAM_ID,
     functionId: GAME_FUNCTIONS.propose_game,
     fee: stepFees.propose_game,
-    inputs: ["1"],
-  })
+    inputs: programInputs ?? []
+  });
+  useEffect(() => {
+    if (programInputs) {
+      requestCreateEvent();
+    }
+  }, [programInputs]);
 
   useEffect(() => {
     if (eventId) {
       setProposeGameInputs({...proposeGameInputs, eventId, step: '5_GameStarted'})
     }
   }, [eventId])
-
-  useEffect(() => {
-    requestCreateEvent()
-  }, [game_address, opponent, ])
 
   const disabled = !answer || !game_address;
   return (
@@ -76,7 +93,7 @@ function ConfirmStartGame() {
           KICKOFF GAME!
         </Button>
         <Button
-          onClick={() => setProposeGameInputs({step: '3_StartWager'})}
+          onClick={() => setProposeGameInputs({step: '5_GameStarted'})}
           color='gray'
         >
           BACK

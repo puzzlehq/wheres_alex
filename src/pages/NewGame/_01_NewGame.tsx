@@ -21,14 +21,14 @@ function NewGame() {
           className='mt-5 w-full self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] py-7 pl-3.5 pr-5 text-sm font-semibold leading-4 text-primary-white max-md:mr-px'
           placeholder='Enter Wallet Address'
           id='opponent'
-          value={opponent}
+          value={opponent ?? ''}
           onChange={(e) => {
             setProposeGameInputs({ ...proposeGameInputs, opponent: e.target.value })
           }}
         />
         <div className='flex flex-col flex-grow'/>
         <Button
-          onClick={() => setProposeGameInputs({step: '1_NewGame'})}
+          onClick={() => setProposeGameInputs({step: '2_HideAlex'})}
           color='green'
           disabled={!aleoAddressRegex.test(proposeGameInputs.opponent ?? '')}
         >

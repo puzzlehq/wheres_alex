@@ -1,5 +1,3 @@
-import { create } from 'zustand';
-import { immer } from 'zustand/middleware/immer';
 import { Record } from '@puzzlehq/sdk';
 import { Answer } from './game_states';
 
@@ -53,20 +51,21 @@ export class GameManager {
     this.games = this.parseGamesFromRecords(records);
   }
 
-  parseGamesFromRecords(records: Record[]): Game[] {
+  parseGamesFromRecords(_: Record[]): Game[] {
     return [];
   }
 }
 
 export type ProposeGameInputs = {
-  eventId: string;
-  challenger: string;
-  opponent: string;
-  answer: Answer;
-  seed: string;
+  ms_seed: string;
   game_address: string;
-  wagerAmount: number;
+  opponent: string;
   wagerRecord: Record;
+  wagerAmount: number;
+  answer: Answer;
+  nonce: string;
+
+  eventId?: string; /// note: not actually part of the program inputs
 }
 
 // used for submit wager and accept game

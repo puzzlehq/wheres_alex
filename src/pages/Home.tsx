@@ -15,38 +15,39 @@ function Home() {
   ///   pass it to GemaManager constructor
 
   const gameStates: GameState[] = [
-    { multisig: 'aleo1', opponent: 'Alice', wager: 10, action: 'Start' },
+    { gameMultisig: 'aleo1', player: 'Alice', wager: "10", action: 'Start' },
     {
-      multisig: 'aleo2',
-      opponent: 'Bob',
-      wager: 20,
+      gameMultisig: 'aleo2',
+      player: 'Bob',
+      wager: "20",
       action: 'Finish',
-      answer: Answer.InTheWeeds
+      win: true
+      // answer: Answer.InTheWeeds
     },
     {
-      multisig: 'aleo3',
-      opponent: 'Charlie',
-      wager: 30,
+      gameMultisig: 'aleo3',
+      player: 'Charlie',
+      wager: "30",
       action: 'Renege',
     },
-    { multisig: 'aleo4', opponent: 'David', wager: 40, action: 'Delete' },
+    { gameMultisig: 'aleo4', player: 'David', wager: "40", action: 'Delete' },
     {
-      multisig: 'aleo5',
-      opponent: 'Eva',
+      gameMultisig: 'aleo5',
+      player: 'Eva',
       blockheight: 10500,
-      wager: 50,
+      wager: "50",
       action: 'Claim',
       win: false,
-      answer: Answer.InTheWeeds
+      // answer: Answer.InTheWeeds
     },
     {
-      multisig: 'aleo6',
-      opponent: 'Frank',
+      gameMultisig: 'aleo6',
+      player: 'Frank',
       blockheight: 105000,
-      wager: 60,
+      wager: "60",
       action: 'Claim',
       win: true,
-      answer: Answer.BehindTheBuilding
+      // answer: Answer.BehindTheBuilding
     },
   ];
 
@@ -77,7 +78,7 @@ function Home() {
   const initialTimeLeft = liveGames.reduce<{ [key: string]: any }>(
     (acc, game) => {
       if (game.action === 'Claim') {
-        acc[game.opponent] = calculateTimeLeft(game.blockheight);
+        acc[game.player] = calculateTimeLeft(game.blockheight);
       }
       return acc;
     },

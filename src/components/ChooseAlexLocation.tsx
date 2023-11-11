@@ -1,4 +1,4 @@
-import inWeedsImg from '../assets/in_weeds.png';
+import inWeedsImg from '../assets/in_weeds.jpg';
 import behindBuildingImg from '../assets/behind_building.svg';
 import { Answer } from '../state/game_states';
 

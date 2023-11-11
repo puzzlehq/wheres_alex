@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import ReactDOM from 'react-dom/client';
 import App from './App.js';
 import './index.css';
@@ -9,6 +10,7 @@ import initWasm, { init_panic_hook } from '@puzzlehq/aleo-wasm-web';
   init_panic_hook();
   ReactDOM.createRoot(document.getElementById('root')!).render(
     <div className='h-screen w-screen'>
+      {/* @ts-ignore */}
       <PuzzleWalletProvider>
         <App />
       </PuzzleWalletProvider>
