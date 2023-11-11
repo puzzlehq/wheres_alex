@@ -49,3 +49,5 @@ export enum Answer {
   InTheWeeds = 'In the Weeds',
   BehindTheBuilding = 'Behind the Building'
 }
+
+export const aleoAddressRegex = /^aleo1.{58}$/i;

@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import GameState from "../models/game_states";
+import GameState from "../state/game_states";
 import { useAcceptGameStore } from "../pages/AcceptGame/store";
 import { useClaimPrizeLoseStore } from "../pages/ClaimPrize/Lose/store";
 import { useClaimPrizeWinStore } from "../pages/ClaimPrize/Win/store";

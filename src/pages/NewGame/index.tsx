@@ -1,64 +1,58 @@
-import { Step, proposeGameInputsAtom } from "./store"
 import NewGamePage from './_01_NewGame';
 import HideAlex from "./_02_HideAlex";
 import StartWager from "./_03_StartWager";
 import ConfirmStartGame from "./_04_ConfirmStartGame";
 import GameStarted from "./_05_GameStarted";
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ProposeGameInputs } from "../../state/manager";
-import { useCreateSharedState, useRequestCreateEvent } from "@puzzlehq/sdk";
-import { useAtom } from 'jotai';
-import { EventType } from "@puzzlehq/types";
+import { useImportSharedState } from "@puzzlehq/sdk";
+import { atom, useAtom } from 'jotai';
+import { PrivateKey } from '@puzzlehq/aleo-wasm-web';
 
-const NewGame = (props: { create: (inputs: ProposeGameInputs) => void } ) => {
-  // const [step] = useNewGameStore((state) => [
-  //   state.step,
-  // ]);
+export type Step = '1_NewGame' | '2_HideAlex' | '3_StartWager' | '4_ConfirmStartGame' | '5_GameStarted';
+export const proposeGameInputsAtom = atom<Partial<ProposeGameInputs & {step: Step}>>({step: '1_NewGame', opponent: ''});
 
+const NewGame = () => {
   const [proposeGameInputs, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
-
-  const { createSharedState, seed } = useCreateSharedState();
-  // export type CreateEventRequestData = {
-  //   address?: string;
-  //   type: EventType;
-  //   programId: string;
-  //   functionId: string;
-  //   fee: number;
-  //   inputs: (Record | string)[];
-  // }
-  const { requestCreateEvent, eventId } = useRequestCreateEvent({
-    type: EventType.Execute,
-    programId: 'cflip_testing_123.aleo',
-    functionId: 'propose_game',
-    fee: 1,
-    inputs: Object.values(proposeGameInputs)
-  });
+  const [seed, setSeed] = useState<string | undefined>();
 
   useEffect(() => {
-    /// validate proposeGameInputs are valid here
-    ///   call requestCreateEvent();
-  }, [proposeGameInputs]);
+    const s = new Uint8Array(32);
+    crypto.getRandomValues(s);
+    const privateKey = PrivateKey.from_seed_unchecked(s);
+    /// get fields of privateKey from WASM
+    setSeed(privateKey.to_seed());
+  }, [])
 
-  const execute = () => {
-    createSharedState();
-    /// seed may not be defined here
-    const inputs = {
-      ...proposeGameInputs,
-      seed,
-    };
-    setProposeGameInputs(inputs);
-    /// proposeGameInputs might not be defined here
-    requestCreateEvent();
-  };
+  const { importSharedState, address } = useImportSharedState(seed ?? '');
+
+  useEffect(() => {
+    if (seed !== undefined) {
+      importSharedState();
+    }
+  }, [seed])
+
+
+  useEffect(() => {
+    console.log('seed 1', seed);
+    console.log('address', address);
+    if (!seed || !address) return;
+    try {
+      setProposeGameInputs({ ...proposeGameInputs, seed: seed, game_address: address });
+    } catch (e) {
+      console.error(e)
+    }
+  }, [seed, address])
+
   const step = proposeGameInputs.step ?? '1_NewGame' as Step;
 
   return (
     <div className="flex flex-col h-full w-full">
       {step === '1_NewGame' && <NewGamePage />}
-      {/* {step === '2_HideAlex' && <HideAlex />}
+      {step === '2_HideAlex' && <HideAlex />}
       {step === '3_StartWager' && <StartWager />}
       {step === '4_ConfirmStartGame' && <ConfirmStartGame />}
-      {step === '5_GameStarted' && <GameStarted />} */}
+      {step === '5_GameStarted' && <GameStarted />} 
     </div>
   )
 }

@@ -2,7 +2,7 @@ import PageHeader from "../../../components/PageHeader";
 import SelectedAlexLocation from "../../../components/SelectedAlexLocation";
 import Wager from "../../../components/Wager";
 import Button from "../../../components/Button";
-import { Answer } from "../../../models/game_states";
+import { Answer } from "../../../state/game_states";
 import { Step, useClaimPrizeWinStore } from "./store";
 
 const Win = () => {

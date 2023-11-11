@@ -1,16 +1,22 @@
-import { Step, useAcceptGameStore } from "./store"
 import AcceptGamePage from "./_01_AcceptGame";
 import FindAlex from "./_02_FindAlex";
 import Confirmed from "./_03_Confirmed";
+import { atom, useAtom } from "jotai";
+import { AcceptGameInputs } from "../../state/manager";
+
+export type Step = '1_AcceptGame' | '2_FindAlex' | '3_Confirmed';
+export const acceptGameInputsAtom = atom<Partial<AcceptGameInputs & {step: Step}>>({step: '1_AcceptGame'});
 
 const AcceptGame = () => {
-  const [step] = useAcceptGameStore((state) => [state.step]);
+  const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
+
+  const step = acceptGameInputs.step ?? '1_AcceptGame' as Step;
 
   return (
     <div className="flex flex-col w-full h-full">
-      {step === Step._01_AcceptGame && <AcceptGamePage/>}
-      {step === Step._02_FindAlex && <FindAlex/>}
-      {step === Step._03_Confirmed && <Confirmed/>}
+      {step === '1_AcceptGame' && <AcceptGamePage/>}
+      {step === '2_FindAlex' && <FindAlex/>}
+      {step === '3_Confirmed' && <Confirmed/>}
     </div>
   )
 }

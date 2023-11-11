@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import GameState, { Answer } from '../models/game_states';
+import GameState, { Answer } from '../state/game_states';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';

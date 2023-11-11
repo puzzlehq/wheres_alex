@@ -1,8 +1,17 @@
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
-import { CreateEventRequest, CreateEventResponse } from '@puzzlehq/sdk';
-import { EventType, Visibility } from '@puzzlehq/types';
 import { Record } from '@puzzlehq/sdk';
+import { Answer } from './game_states';
+
+export const GAME_PROGRAM_ID = 'cflip_gm_aleo_testing_123.aleo';
+
+export const GAME_FUNCTIONS = {
+  propose_game: 'propose_game',
+  accept_game: 'accept_game',
+  set_wager: 'set_wager',
+  reveal_answer: 'reveal_answer',
+  finish_game: 'finish_game',
+} 
 
 /// todo - update these
 export const stepFees = {
@@ -48,55 +57,29 @@ export class GameManager {
   parseGamesFromRecords(records: Record[]): Game[] {
     return [];
   }
-
-  proposeGame
 }
 
 export type ProposeGameInputs = {
+  eventId: string;
   challenger: string;
   opponent: string;
-  address: string;
-  answer: string;
+  answer: Answer;
   seed: string;
-  wager: Record;
+  game_address: string;
+  wagerAmount: number;
+  wagerRecord: Record;
 }
 
-/// old stuff below
-
-
-type GameState = {
-  status: LoadingStatus;
-  load: (records: Record[]) => void;
-  proposeGame: (
-    challenger: string,
-    opponent: string,
-    address: string,
-    answer: string,
-    seed: string,
-    wager: Record,
-  ) => void;
-};
-
-export const useGameStore = create<GameState>()(
-  immer((set, get) => ({
-    status: 'idle',
-    load: async (records: Record[]) => {
-      set({ status: 'loading' });
-
-      /// todo - process records into `Game` instances
-      
-    },
-    proposeGame: (
-      challenger,
-      opponent,
-      address,
-      answer,
-      seed,
-      wager
-    ) => {
-
-    }
-  }))
-);
-
-export default useGameStore;
+// used for submit wager and accept game
+export type AcceptGameInputs = {
+  gameRecord: Record;
+  playerOneClaimRecord: Record;
+  playerTwoClaimRecord: Record;
+  puzz_piece_stake_one: Record;
+  puzz_piece_stake_two: Record;
+  player_two_answer: '0field' | '1field';
+  game_address: string;
+  opponent: string;
+  wagerAmount: number;
+  wagerRecord: string;
+}

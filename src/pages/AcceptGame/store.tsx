@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Answer } from '../../models/game_states';
+import { Answer } from '../../state/game_states';
 import { persist } from 'zustand/middleware'
 
 export enum Step {
