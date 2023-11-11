@@ -52,7 +52,6 @@ function PasteyQR({ setOpponent, opponent }: PasteyQRProps) {
   const handlePasteFromClipboard = async () => {
     const clipboardData = await navigator.clipboard.readText();
     setOpponent(clipboardData);
-    console.log(opponent);
   };
   return (
     <div className='flex w-full flex-col items-center'>

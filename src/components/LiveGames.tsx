@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import GameState from "../models/game_states";
+import GameState from "../state/game_states";
 import { useRenegeStore } from "../pages/Renege/store";
 
 type LiveGameProps = {
@@ -13,7 +13,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
 
   const handleRenegeClick = () => {
     // Navigate to accept-game and pass the challenger and wager as state
-    initializeRenege(game.opponent, game.wager);
+    initializeRenege(game.player, Number(game.wager));
     navigate('/renege-game');
   };
 
@@ -39,14 +39,14 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
               className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
-              {timeLeft[game.opponent] &&
-                `${String(timeLeft[game.opponent].hours).padStart(
+              {timeLeft[game.player] &&
+                `${String(timeLeft[game.player].hours).padStart(
                   2,
                   '0'
-                )}:${String(timeLeft[game.opponent].minutes).padStart(
+                )}:${String(timeLeft[game.player].minutes).padStart(
                   2,
                   '0'
-                )}:${String(timeLeft[game.opponent].seconds).padStart(2, '0')}`}
+                )}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
             </div>
             <a
               href='#'
@@ -85,7 +85,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {game.opponent}
+        {game.player}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
         {game.wager}
@@ -105,12 +105,12 @@ function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
     <section className='flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-red px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
-          LIVE GAMES
+          THEIR TURN
         </div>
       </div>
       <div className='px-5 pt-2 flex flex-col'>
         {liveGames.map((game) => (
-          <LiveGameItem key={game.opponent} game={game} timeLeft={timeLeft} />
+          <LiveGameItem key={game.player} game={game} timeLeft={timeLeft} />
         ))}
       </div>
     </section>

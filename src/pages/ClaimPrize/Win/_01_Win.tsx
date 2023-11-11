@@ -2,7 +2,7 @@ import PageHeader from "../../../components/PageHeader";
 import SelectedAlexLocation from "../../../components/SelectedAlexLocation";
 import Wager from "../../../components/Wager";
 import Button from "../../../components/Button";
-import { Answer } from "../../../models/game_states";
+import { Answer } from "../../../state/game_states";
 import { Step, useClaimPrizeWinStore } from "./store";
 
 const Win = () => {
@@ -11,7 +11,7 @@ const Win = () => {
   return (
     <div className='flex flex-col w-full h-full justify-center gap-4'>
       <Wager wagerAmount={wager} winnings/>
-      <PageHeader text="WHERE IS ALEX" bg='bg-primary-blue' />
+      <PageHeader text="WHERE'S ALEX" bg='bg-primary-blue' />
       <div className="flex flex-col gap-2">
         <SelectedAlexLocation answer={Answer.BehindTheBuilding} win={true} />
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>

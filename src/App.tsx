@@ -1,8 +1,5 @@
-// import PuzzleAccount from './models/account.js';
-// import { useState } from 'react';
 import Home from './pages/Home.js';
 import NewGame from './pages/NewGame/index.js';
-// import mainImg from '../src/assets/alex_behind_wall.png';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AppHeader } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
@@ -12,19 +9,13 @@ import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
 import WinRoute from './pages/ClaimPrize/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
 import Reveal from './pages/FinishGame/_01_Reveal.js';
+import { useState } from 'react';
+import { GameManager, ProposeGameInputs } from './state/manager.js';
 
 function App() {
-  // const [isConnected, setIsConnected] = useState<boolean>(false);
-  // const { isConnected, loading } = useConnect();
   const { isConnected, loading } = useConnect();
   const { account } = useAccount();
-
-  // const account: PuzzleAccount = {
-  //   network: 'Aleo',
-  //   chainId: '1',
-  //   address: 'aleo1asu88azw3uqud282sll23wh3tvmvwjdz5vhvu2jwyrdwtgqn5qgqetuvr6',
-  //   shortenedAddress: 'aleo1as..tuvr6'
-  // };
+  const [gameManager, setGameManager] = useState(new GameManager([]));
 
   return (
     <div className='App flex min-h-screen justify-center bg-amber-400'>
@@ -38,11 +29,11 @@ function App() {
             <Routes>
               <Route path='/new-game' element={<NewGame />} />
               <Route path='/accept-game' element={<AcceptGame/>}/>
-              <Route path='/claim-prize'>
+              {/* <Route path='/claim-prize'>
                 <Route path='win' element={<WinRoute/>}/>
                 <Route path='lose' element={<LoseRoute/>}/>
-              </Route>
-              <Route path='/renege-game' element={<RenegeGame/>} />
+              </Route> */}
+              {/* <Route path='/renege-game' element={<RenegeGame/>} /> */}
               <Route path='/finish-game' element={<Reveal/>} />
               <Route
                 path='/'

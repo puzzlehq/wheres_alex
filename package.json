@@ -1,5 +1,5 @@
 {
-  "name": "build-a-token",
+  "name": "wheres-alex",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -10,9 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@puzzlehq/sdk": "0.1.0",
+    "@puzzlehq/aleo-wasm-web": "0.6.2",
+    "@puzzlehq/sdk": "0.1.2",
+    "@puzzlehq/types": "^1.0.3",
     "html5-qrcode": "^2.3.8",
     "immer": "^10.0.3",
+    "jotai": "^2.5.1",
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -20,6 +23,9 @@
     "zustand": "^4.4.6"
   },
   "devDependencies": {
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
+    "@rollup/plugin-inject": "^5.0.3",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
@@ -31,9 +37,12 @@
     "eslint-plugin-react-refresh": "^0.4.3",
     "postcss": "^8.4.29",
     "prettier-plugin-tailwindcss": "^0.5.6",
+    "rollup-plugin-polyfill-node": "^0.11.0",
     "sdk": "link:@types/puzzlehq/sdk",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-plugin-live-reload": "^3.0.1",
+    "vite-plugin-wasm": "^3.2.2"
   }
 }

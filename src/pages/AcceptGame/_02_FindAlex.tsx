@@ -3,10 +3,32 @@ import PageHeader from '../../components/PageHeader';
 import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import Button from '../../components/Button';
-import { Step, useAcceptGameStore } from './store';
+import { acceptGameInputsAtom } from './index';
+import { useAtom } from 'jotai';
+import { Answer } from '../../state/game_states';
+import { useRequestCreateEvent } from '@puzzlehq/sdk';
+import { EventType } from '@puzzlehq/types';
+import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
+import { useEffect } from 'react';
 
 function FindAlex() {
-  const [answer, setAnswer, setStep, submit] = useAcceptGameStore((state) => [state.answer, state.setAnswer, state.setStep, state.submit])
+  const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
+
+  const answer = acceptGameInputs.player_two_answer_readable;
+
+  const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
+    type: EventType.Execute,
+    programId: GAME_PROGRAM_ID,
+    functionId: GAME_FUNCTIONS.accept_game,
+    fee: stepFees.accept_game,
+    inputs: ["1"],
+  })
+
+  useEffect(() => {
+    if (eventId) { 
+      setAcceptGameInputs({...acceptGameInputs, step: '3_Confirmed'})
+    }
+  }, [eventId])
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
@@ -16,17 +38,19 @@ function FindAlex() {
           <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
         </div>
         <ChooseAlexLocation
-          setAnswer={setAnswer}
+          setAnswer={(answer) => {
+            const newAnswer = answer === Answer.InTheWeeds ? '0field' : '1field' 
+            setAcceptGameInputs({ ...acceptGameInputs, player_two_answer: newAnswer, player_two_answer_readable: answer })
+          }}
           answer={answer}
           hiding={false}
         />
         <div className='flex flex-grow flex-col' />
         <Button
           onClick={async () => {
-            await submit()
-            setStep(Step._03_Confirmed);
+            requestCreateEvent()
           }}
-          disabled={!answer}
+          disabled={!answer || loading}
           color='green'
         >
           NEXT

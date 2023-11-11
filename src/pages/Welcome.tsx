@@ -7,13 +7,14 @@ import { useEffect } from 'react';
 
 export const Welcome = () => {
   const navigate = useNavigate();
-  const { connect, isConnected, loading } = useConnect();
+  const { connect, isConnected, session } = useConnect();
+  console.log('connection', { isConnected, session });
 
   useEffect(() => {
     if (isConnected) {
       navigate('/');
     }
-  }, [isConnected, loading, navigate]);
+  }, [isConnected, navigate]);
 
   return (
     <div className='flex h-screen w-full items-stretch justify-between'>

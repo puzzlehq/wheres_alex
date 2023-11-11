@@ -1,39 +1,38 @@
 export type NotifyGameStart = {
-  multisig: string;
-  opponent: string;
-  wager: number;
+  gameMultisig: string;
+  player: string;
+  wager: string;
   action: 'Start';
 };
 
 export type NotifyFinish = {
-  multisig: string;
-  opponent: string;
-  wager: number;
-  answer: Answer;
+  gameMultisig: string;
+  player: string;
+  wager: string;
+  win: boolean;
   action: 'Finish';
 };
 
 export type NotifyPendingAccept = {
-  multisig: string;
-  opponent: string;
-  wager: number;
+  gameMultisig: string;
+  player: string;
+  wager: string;
   action: 'Renege';
 };
 
 export type NotifyRenegeStart = {
-  multisig: string;
-  opponent: string;
-  wager: number;
+  gameMultisig: string;
+  player: string;
+  wager: string;
   action: 'Delete';
 };
 
 export type NotifyClaimFinish = {
-  multisig: string;
-  opponent: string;
+  gameMultisig: string;
+  player: string;
   blockheight: number;
-  wager: number;
+  wager: string;
   win: boolean;
-  answer: Answer;
   action: 'Claim';
 };
 
@@ -50,3 +49,5 @@ export enum Answer {
   InTheWeeds = 'In the Weeds',
   BehindTheBuilding = 'Behind the Building'
 }
+
+export const aleoAddressRegex = /^aleo1.{58}$/i;

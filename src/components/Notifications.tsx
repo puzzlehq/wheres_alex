@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import GameState from "../models/game_states";
+import GameState, { Answer } from "../state/game_states";
 import { useAcceptGameStore } from "../pages/AcceptGame/store";
 import { useClaimPrizeLoseStore } from "../pages/ClaimPrize/Lose/store";
 import { useClaimPrizeWinStore } from "../pages/ClaimPrize/Win/store";
@@ -8,8 +8,8 @@ import { useFinishGameStore } from "../pages/FinishGame/store";
 function NotificationItem({ notification }: { notification: GameState }) {
   
   const action = notification.action;
-  const multisig = notification.multisig;
-  const opponent = notification.opponent;
+  const multisig = notification.gameMultisig;
+  const opponent = notification.player;
   const wager = notification.wager;
 
   const navigate = useNavigate();
@@ -25,7 +25,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
         return (
           <button
             onClick={() => {
-              initializeAcceptGame(opponent, wager, multisig)
+              initializeAcceptGame(opponent, Number(wager), multisig)
               navigate('/accept-game')
             }}
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
@@ -38,7 +38,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
         return (
           <button
             onClick={() => {
-              initializeFinishGame(opponent, wager, notification.answer)
+              initializeFinishGame(opponent, Number(wager), Answer.InTheWeeds)
               navigate('/finish-game');
             }}
             className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
@@ -52,10 +52,10 @@ function NotificationItem({ notification }: { notification: GameState }) {
           <button
             onClick={() => {
               if (notification.win) {
-                initializeClaimWin(opponent, wager, notification.answer);
+                initializeClaimWin(opponent, Number(wager), Answer.InTheWeeds);
                 navigate('/claim-prize/win');
               } else {
-                initializeClaimLose(opponent, wager, notification.answer);
+                initializeClaimLose(opponent, Number(wager), Answer.BehindTheBuilding);
                 navigate('/claim-prize/lose');
               }
             }}
@@ -104,13 +104,13 @@ function Notifications({ notifications }: NotificationsProps) {
     <section className='flex grow flex-col border-2 border-solid border-primary-pink pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-pink px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
-          NOTIFICATIONS
+          YOUR TURN
         </div>
       </div>
       <div className='px-5 pt-2 flex flex-col'>
         {notifications.map((notification) => (
           <NotificationItem
-            key={notification.opponent}
+            key={notification.player}
             notification={notification}
           />
         ))}

@@ -1,6 +1,6 @@
-import inWeedsImg from '../assets/in_weeds.png';
+import inWeedsImg from '../assets/in_weeds.jpg';
 import behindBuildingImg from '../assets/behind_building.svg';
-import { Answer } from '../models/game_states';
+import { Answer } from '../state/game_states';
 
 type HideAlexProps = {
   setAnswer: (answer: Answer) => void;
@@ -9,8 +9,6 @@ type HideAlexProps = {
 };
 
 function ChooseAlexLocation({ setAnswer, answer, hiding }: HideAlexProps) {
-
-  console.log(answer);
 
   return (
     <section className='flex max-w-full flex-col gap-2'>

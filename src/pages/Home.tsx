@@ -1,46 +1,53 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from 'react';
-import GameState, { Answer } from '../models/game_states';
+import GameState, { Answer } from '../state/game_states';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
 import LiveGames from '../components/LiveGames';
 import Notifications from '../components/Notifications';
+import { usePieces } from '../state/usePieces';
 
 function Home() {
+  const { pieces, totalBalance, availableBalance, largestPiece, loading: loadingPieces, error } = usePieces();
+
+  /// todo - load records for the various programs we need to get
+  ///   pass it to GemaManager constructor
+
   const gameStates: GameState[] = [
-    { multisig: 'aleo1', opponent: 'Alice', wager: 10, action: 'Start' },
+    { gameMultisig: 'aleo1', player: 'Alice', wager: "10", action: 'Start' },
     {
-      multisig: 'aleo2',
-      opponent: 'Bob',
-      wager: 20,
+      gameMultisig: 'aleo2',
+      player: 'Bob',
+      wager: "20",
       action: 'Finish',
-      answer: Answer.InTheWeeds
+      win: true
+      // answer: Answer.InTheWeeds
     },
     {
-      multisig: 'aleo3',
-      opponent: 'Charlie',
-      wager: 30,
+      gameMultisig: 'aleo3',
+      player: 'Charlie',
+      wager: "30",
       action: 'Renege',
     },
-    { multisig: 'aleo4', opponent: 'David', wager: 40, action: 'Delete' },
+    { gameMultisig: 'aleo4', player: 'David', wager: "40", action: 'Delete' },
     {
-      multisig: 'aleo5',
-      opponent: 'Eva',
+      gameMultisig: 'aleo5',
+      player: 'Eva',
       blockheight: 10500,
-      wager: 50,
+      wager: "50",
       action: 'Claim',
       win: false,
-      answer: Answer.InTheWeeds
+      // answer: Answer.InTheWeeds
     },
     {
-      multisig: 'aleo6',
-      opponent: 'Frank',
+      gameMultisig: 'aleo6',
+      player: 'Frank',
       blockheight: 105000,
-      wager: 60,
+      wager: "60",
       action: 'Claim',
       win: true,
-      answer: Answer.BehindTheBuilding
+      // answer: Answer.BehindTheBuilding
     },
   ];
 
@@ -71,7 +78,7 @@ function Home() {
   const initialTimeLeft = liveGames.reduce<{ [key: string]: any }>(
     (acc, game) => {
       if (game.action === 'Claim') {
-        acc[game.opponent] = calculateTimeLeft(game.blockheight);
+        acc[game.player] = calculateTimeLeft(game.blockheight);
       }
       return acc;
     },
@@ -116,7 +123,7 @@ function Home() {
   return (
     <div className='flex h-full flex-col justify-between bg-neutral-900'>
       <div className='flex flex-col w-full bg-neutral-900 px-1 gap-4'>
-        <TotalWinnings amount={1234567890} />
+        <TotalWinnings amount={totalBalance} />
         <Button
           color='yellow'
           onClick={() => navigate('/new-game')}

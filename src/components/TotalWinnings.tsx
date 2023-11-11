@@ -5,7 +5,7 @@ function TotalWinnings({amount}: {amount: number}) {
         className='overflow-hidden text-right text-4xl font-bold tabular-nums'
         style={{ direction: 'rtl' }}
       >
-        00000000000000000{amount}
+        {amount}
       </div>
       <div className='flex w-full'>
         <div className='-ml-2.5 flex max-w-full flex-col self-start bg-primary-green px-5 py-2'>
