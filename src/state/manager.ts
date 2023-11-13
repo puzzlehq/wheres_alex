@@ -64,8 +64,6 @@ export type ProposeGameInputs = {
   wagerAmount: number;
   answer: Answer;
   nonce: string;
-
-  eventId?: string; /// note: not actually part of the program inputs
 }
 
 // used for submit wager and accept game

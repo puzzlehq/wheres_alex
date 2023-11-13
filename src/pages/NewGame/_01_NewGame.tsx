@@ -2,14 +2,15 @@
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
-import { proposeGameInputsAtom } from './index';
+import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { useAtom } from 'jotai';
 import { aleoAddressRegex } from '../../state/game_states';
 
 function NewGame() {
-  const [proposeGameInputs, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
+  const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
+  const [_, setStep] = useAtom(proposeGameStepAtom);
 
-  const opponent = proposeGameInputs.opponent;
+  const opponent = inputs.opponent;
 
   return (
     <main className='flex h-full w-full flex-col justify-between bg-neutral-900'>
@@ -23,14 +24,14 @@ function NewGame() {
           id='opponent'
           value={opponent ?? ''}
           onChange={(e) => {
-            setProposeGameInputs({ ...proposeGameInputs, opponent: e.target.value })
+            setInputs({ ...inputs, opponent: e.target.value })
           }}
         />
         <div className='flex flex-col flex-grow'/>
         <Button
-          onClick={() => setProposeGameInputs({step: '2_HideAlex'})}
+          onClick={() => setStep('2_HideAlex')}
           color='green'
-          disabled={!aleoAddressRegex.test(proposeGameInputs.opponent ?? '')}
+          disabled={!aleoAddressRegex.test(inputs.opponent ?? '')}
         >
           NEXT
         </Button>

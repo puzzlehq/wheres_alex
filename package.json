@@ -10,7 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@puzzlehq/aleo-wasm-web": "0.6.2",
     "@puzzlehq/sdk": "0.1.2",
     "@puzzlehq/types": "^1.0.3",
     "html5-qrcode": "^2.3.8",

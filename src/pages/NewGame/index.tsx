@@ -5,14 +5,22 @@ import ConfirmStartGame from "./_04_ConfirmStartGame";
 import GameStarted from "./_05_GameStarted";
 import { ProposeGameInputs } from "../../state/manager";
 import { atom, useAtom } from 'jotai';
+import { useNavigate } from 'react-router-dom';
 
 export type Step = '1_NewGame' | '2_HideAlex' | '3_StartWager' | '4_ConfirmStartGame' | '5_GameStarted';
-export const proposeGameInputsAtom = atom<Partial<ProposeGameInputs & {step: Step}>>({step: '1_NewGame', opponent: ''});
+export const proposeGameInputsAtom = atom<Partial<ProposeGameInputs>>({opponent: ''});
+export const proposeGameStepAtom = atom<Step>('1_NewGame');
 
 const NewGame = () => {
-  const [proposeGameInputs] = useAtom(proposeGameInputsAtom);
+  const navigate = useNavigate();
+  const [_, setInput] = useAtom(proposeGameInputsAtom);
+  const [step, setStep] = useAtom(proposeGameStepAtom);
 
-  const step = proposeGameInputs.step ?? '1_NewGame' as Step;
+  const done = () => {
+    setInput({});
+    setStep('1_NewGame');
+    navigate('/home');
+  }
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -20,7 +28,7 @@ const NewGame = () => {
       {step === '2_HideAlex' && <HideAlex />}
       {step === '3_StartWager' && <StartWager />}
       {step === '4_ConfirmStartGame' && <ConfirmStartGame />}
-      {step === '5_GameStarted' && <GameStarted />} 
+      {step === '5_GameStarted' && <GameStarted done={done} />} 
     </div>
   )
 }

@@ -2,7 +2,7 @@
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
-import { proposeGameInputsAtom } from './index';
+import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { usePieces } from '../../state/usePieces';
 import { useState } from 'react';
 import { useAtom } from 'jotai';
@@ -12,10 +12,11 @@ function StartWager() {
   const [error, setError] = useState<string | undefined>();
 
   /// todo - validate input based on wager
-  const [proposeGameInputs, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
+  const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
+  const [_, setStep] = useAtom(proposeGameStepAtom);
 
-  const wager = proposeGameInputs.wagerAmount;
-  const wagerRecord = proposeGameInputs.wagerRecord;
+  const wager = inputs.wagerAmount;
+  const wagerRecord = inputs.wagerRecord;
 
   const onWagerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = Number(e.target.value);
@@ -26,7 +27,7 @@ function StartWager() {
     } else {
       setError(undefined);
     }
-    setProposeGameInputs({ ...proposeGameInputs, wagerAmount: input, wagerRecord: largestPiece });
+    setInputs({ ...inputs, wagerAmount: input, wagerRecord: largestPiece });
   };
 
   // Determine input text color based on localAmount value
@@ -59,7 +60,7 @@ function StartWager() {
           </div>
         </div>
         <Button
-          onClick={() => setProposeGameInputs({ ...proposeGameInputs, step: '4_ConfirmStartGame' })}
+          onClick={() => setStep('4_ConfirmStartGame')}
           disabled={isDisabled || !!error}
           color='green'
           className={`self-center whitespace-nowrap text-center text-3xl font-extrabold tracking-tight text-primary-black 

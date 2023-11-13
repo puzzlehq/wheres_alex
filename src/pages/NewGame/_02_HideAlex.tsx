@@ -4,11 +4,12 @@ import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
-import { proposeGameInputsAtom } from './index';
+import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { Answer } from '../../state/game_states';
 
 function HideAlex() {
-  const [proposeGameInputs, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
+  const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
+  const [_, setStep] = useAtom(proposeGameStepAtom);
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
@@ -16,14 +17,14 @@ function HideAlex() {
         <Nav step={2} />
         <PageHeader text='HIDE ALEX' bg='bg-primary-blue' />
         <ChooseAlexLocation
-          setAnswer={(answer: Answer) => setProposeGameInputs({...proposeGameInputs, answer})}
-          answer={proposeGameInputs.answer}
+          setAnswer={(answer: Answer) => setInputs({...inputs, answer})}
+          answer={inputs.answer}
           hiding={true}
         />
         <div className='flex flex-grow flex-col' />
         <Button
-          onClick={() => setProposeGameInputs({...proposeGameInputs, step: '3_StartWager'})}
-          disabled={!proposeGameInputs.answer}
+          onClick={() => setStep('3_StartWager')}
+          disabled={!inputs.answer}
           color='green'
         >
           NEXT

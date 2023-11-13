@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@puzzlehq/aleo-wasm-web':
-    specifier: 0.6.2
-    version: 0.6.2
   '@puzzlehq/sdk':
     specifier: 0.1.2
     version: 0.1.2(@types/react@18.2.37)(react-dom@18.2.0)
@@ -879,10 +876,6 @@ packages:
       '@parcel/watcher-win32-arm64': 2.3.0
       '@parcel/watcher-win32-ia32': 2.3.0
       '@parcel/watcher-win32-x64': 2.3.0
-    dev: false
-
-  /@puzzlehq/aleo-wasm-web@0.6.2:
-    resolution: {integrity: sha512-LvGeEcQqOpwm3HuONr6v/ctz8HcNHtckxwpZRseiJ98MSo1AaMSaRnb+zp425xH9Vaw8NHNrvD/30Obz7PlPfA==}
     dev: false
 
   /@puzzlehq/sdk@0.1.2(@types/react@18.2.37)(react-dom@18.2.0):
