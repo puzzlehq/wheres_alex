@@ -80,7 +80,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
         {game.player}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {game.wager}
+        {game.wager} pieces
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>

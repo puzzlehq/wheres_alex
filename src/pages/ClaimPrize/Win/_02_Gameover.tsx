@@ -34,7 +34,6 @@ const GameOver = () => {
         </Button>
         <Button
           color='gray'
-          className='w-full rounded-full bg-[#868686] p-3 text-4xl font-extrabold text-primary-black'
           onClick={() => navigate('/new-game')}
         >
           START ANOTHER GAME

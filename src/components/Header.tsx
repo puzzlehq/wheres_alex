@@ -1,4 +1,5 @@
 import { shortenAddress, useAccount } from '@puzzlehq/sdk';
+import Button from './Button';
 
 export const AppHeader = () => {
   const { account } = useAccount();
@@ -14,9 +15,13 @@ export const AppHeader = () => {
               className='aspect-[2.95] w-[161px] max-w-full self-stretch overflow-hidden fill-white object-cover object-center'
             />
           </a>
-          <button className='flex w-[155px] max-w-full flex-col items-center justify-center self-stretch whitespace-nowrap rounded-[200px] border-2 border-solid border-[color:var(--White,#FCFCFC)] px-4 py-2 text-center text-xs font-bold text-zinc-50 hover:bg-primary-white'>
+          <Button
+            size='sm'
+            color='white'
+            className='w-fit'
+          >
             {shortenAddress(account.address)}
-          </button>
+          </Button>
         </>
       ) : (
         <div className='w-full self-stretch'/>

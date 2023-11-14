@@ -87,7 +87,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
         {opponent}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {wager}
+        {wager} pieces
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>
