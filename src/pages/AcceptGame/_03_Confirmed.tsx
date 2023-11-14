@@ -11,8 +11,8 @@ function Confirmed(props: { done: () => void }) {
   const eventId = inputs.eventIdAccept;
 
   return (
-    <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex w-full h-full flex-col items-center bg-neutral-900 px-5'>
+    <main className='flex h-full flex-col justify-between'>
+      <div className='flex w-full h-full flex-col items-center px-5'>
         {game_address && eventId && <GameInfo multisig={game_address} eventId={eventId} newGame={false} />}
         <div className='flex flex-col flex-grow'/>
         <div className='flex flex-col gap-4'>

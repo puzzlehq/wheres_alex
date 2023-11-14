@@ -40,10 +40,10 @@ function StartWager() {
   const isDisabled = wager === undefined || wager <= 0 || wager > availableBalance || !largestPiece || !wagerRecord;
 
   return (
-    <main className='flex h-full flex-col justify-between bg-neutral-900 px-5 gap-2'>
+    <main className='flex h-full flex-col justify-between px-5 gap-2'>
       <Nav step={3} />
       <PageHeader bg='bg-primary-blue' text='MAKE YOUR WAGER' />
-      <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+      <div className='flex w-full flex-col items-center px-5'>
         <input
           type='number'
           min={0}

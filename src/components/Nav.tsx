@@ -5,34 +5,27 @@ type NavProps = {
 function Nav({ step }: NavProps) {
 
   return (
-    <nav className='mt-11 flex w-full items-start justify-between gap-5 self-stretch max-md:mr-px max-md:mt-10 max-md:justify-center'>
-      <a
-        href='#'
-        className={`self-stretch text-center text-xs font-extrabold tracking-tight text-primary-white ${
-          step === 1 ? 'underline' : ''
-        }`}
-      >
+    <nav className='mt-11 flex w-full items-start justify-between gap-5 self-stretch text-sm text-center max-md:mr-px max-md:mt-10 max-md:justify-center'>
+      <p className='self-stretch font-extrabold tracking-tight text-primary-white'>
         1. CHALLENGE
-      </a>
-      <div className='self-stretch text-center text-xs font-extrabold tracking-tight text-primary-white'>
-        <a
-          href='#'
-          className={`self-stretch text-center text-xs font-extrabold tracking-tight ${
+      </p>
+      <div className='self-stretch font-extrabold tracking-tight'>
+        <p
+          className={`self-stretch font-extrabold tracking-tight ${
             step >= 2 ? 'text-primary-white' : 'text-primary-gray'
-          } ${step === 2 ? 'underline' : ''}`}
+          }`}
         >
           2. HIDE ALEX
-        </a>
+        </p>
       </div>
-      <div className='self-stretch whitespace-nowrap text-center text-xs font-extrabold tracking-tight text-primary-white text-opacity-40'>
-        <a
-          href='#'
-          className={`self-stretch text-center text-xs font-extrabold tracking-tight  ${
+      <div className='self-stretch whitespace-nowrap font-extrabold tracking-tight'>
+        <p
+          className={`self-stretch font-extrabold tracking-tight  ${
             step >= 3 ? 'text-primary-white' : 'text-primary-gray'
-          } ${step === 3 ? 'underline' : ''}`}
+          }`}
         >
-          3.WAGER
-        </a>
+          3. WAGER
+        </p>
       </div>
     </nav>
   );

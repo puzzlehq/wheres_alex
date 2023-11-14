@@ -54,11 +54,10 @@ function App() {
 
   return (
     <div className='App flex min-h-screen justify-center bg-neutral-900'>
-      <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto bg-neutral-900 shadow-md'>
+      <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
         {account && account?.address && (
           <AppHeader />
         )}
-
         <Router>
           <div className='h-full w-full max-w-screen-sm p-4'>
             <Routes>

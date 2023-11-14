@@ -21,12 +21,12 @@ export const Welcome = () => {
       <div className='relative flex h-full w-full flex-col items-center justify-center'>
         <img
           src={rightImageSrc}
-          alt='Right top decoration'
+          alt='Top-right Alex'
           className='fixed right-0 top-0 h-full max-h-[18rem] max-w-[50%] object-contain'
         />
         <img
           src={leftImageSrc}
-          alt='Left decoration'
+          alt='Left Alex'
           className='fixed left-0 top-1/4 h-full max-h-[20rem] max-w-[50%] -translate-y-20 object-contain'
         />
         <h1 className='z-10 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white'>
@@ -37,6 +37,7 @@ export const Welcome = () => {
           multiparty privacy stack through a wager between friends!
         </p>
         <Button
+          className='max-w-[250px]'
           onClick={connect}
           color='yellow'
         >
@@ -44,7 +45,7 @@ export const Welcome = () => {
         </Button>
         <img
           src={bottomImageSrc}
-          alt='bottom decoration'
+          alt='Bottom Alex'
           className='fixed center -translate-y-100 bottom-0 h-full max-h-[12rem] w-3/5 max-w-[35%] transform object-contain'
         />
       </div>

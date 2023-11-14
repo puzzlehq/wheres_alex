@@ -10,7 +10,7 @@ export const AppHeader = () => {
     setLoading(true);
     await disconnect_sdk();
     setLoading(false);
-  }
+  };
 
   return (
     <div className='flex w-full items-stretch justify-between gap-5  p-4'>

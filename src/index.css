@@ -59,26 +59,23 @@ h1 {
 }
 
 .App {
-  /* Multiple background images for the three images */
   background-image: url('../src/assets/puzzle_upside_down_left.png'),
     url('../src/assets/puzzle_tilt_right.png'),
     url('../src/assets/puzzle_tilt_left.png'),
     url('../src/assets/puzzle_upside_down_right.png');
 
-  /* Position the images as per your requirements */
   background-position:
-    right top,
-    left 25%,
-    right 50%,
-    left 75%;
+    left 10%,
+    right 25%,
+    left 90%,
+    right 75%;
 
   /* Set the size for each image to cover 25% vertically */
   background-size:
-    auto 25%,
-    auto 25%,
-    auto 25%,
-    auto 25%;
+    auto 20%,
+    auto 20%,
+    auto 20%,
+    auto 20%;
 
-  /* Ensure the images don't repeat */
   background-repeat: no-repeat;
 }
