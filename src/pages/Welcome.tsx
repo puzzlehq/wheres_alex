@@ -5,14 +5,17 @@ import bottomImageSrc from '../assets/alexbottom.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 import Button from '../components/Button.js';
+
 export const Welcome = () => {
   const navigate = useNavigate();
   const { account } = useAccount();
+
   useEffect(() => {
     if (account) {
       navigate('/');
     }
   }, [account, navigate]);
+
   return (
     <div className='flex h-full w-full items-stretch justify-between'>
       <div className='relative flex h-full w-full flex-col items-center justify-center'>

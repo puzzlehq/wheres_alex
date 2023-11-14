@@ -3,7 +3,7 @@ import NewGame from './pages/NewGame/index.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AppHeader } from './components/Header.js';
 import { Welcome } from './pages/Welcome.js';
-import { useAccount, Record, getRecords, useOnSessionEvent,  } from '@puzzlehq/sdk';
+import { useAccount, Record, getRecords, useOnSessionEvent } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
 import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
 import WinRoute from './pages/ClaimPrize/Win/index.js';

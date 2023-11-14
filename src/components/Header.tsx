@@ -1,8 +1,16 @@
-import { shortenAddress, useAccount } from '@puzzlehq/sdk';
+import { disconnect as disconnect_sdk, shortenAddress, useAccount } from '@puzzlehq/sdk';
 import Button from './Button';
+import { useState } from 'react';
 
 export const AppHeader = () => {
   const { account } = useAccount();
+
+  const [loading, setLoading] = useState(false);
+  const disconnect = async () => {
+    setLoading(true);
+    await disconnect_sdk();
+    setLoading(false);
+  }
 
   return (
     <div className='flex w-full items-stretch justify-between gap-5  p-4'>
@@ -19,6 +27,8 @@ export const AppHeader = () => {
             size='sm'
             color='white'
             className='w-fit'
+            onClick={disconnect}
+            disabled={loading}
           >
             {shortenAddress(account.address)}
           </Button>
