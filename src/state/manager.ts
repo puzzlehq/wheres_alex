@@ -61,7 +61,7 @@ export type ProposeGameInputs = {
   game_address: string;
   opponent: string;
   wagerRecord: Record;
-  wagerAmount: number;
+  wagerAmount: string;
   answer: Answer;
   nonce: string;
 }
@@ -79,7 +79,7 @@ export type AcceptGameInputs = {
   player_two_answer_readable: Answer;
   game_address: string;
   opponent: string;
-  wagerAmount: number;
+  wagerAmount: string;
   wagerRecord: string;
 }
 

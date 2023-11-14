@@ -1,13 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import alexHeadImg from '../assets/alex_head.png';
 
-type GameInfoProps = {
-  multisig: string;
-  eventID: string;
-  newGame?: boolean
-};
-
-function GameInfo({ multisig, eventID, newGame = true }: GameInfoProps) {
+function GameInfo(props: { multisig: string, eventId: string, newGame: boolean }) {
   const navigate = useNavigate();
 
   return (
@@ -19,17 +13,17 @@ function GameInfo({ multisig, eventID, newGame = true }: GameInfoProps) {
       />
       <div className='flex w-full flex-col items-center justify-center self-stretch bg-primary-green px-5 py-1.5'>
         <h1 className='max-w-[274px] self-center text-center text-3xl font-extrabold leading-8 text-primary-black'>
-          {newGame ? 'GAME BEGUN!' : 'GAME SUBMITTED!'}
+          {props.newGame ? 'GAME BEGUN!' : 'GAME SUBMITTED!'}
         </h1>
         <p className='mt-1.5 max-w-[295px] self-center text-center text-base font-extrabold leading-4 text-primary-black'>
-          GAME ID: {multisig}
+          GAME ID: {props.multisig}
         </p>
         <a
           href='/'
           onClick={() => navigate('/')}
           className='mt-1.5 max-w-[295px] self-center text-center text-base font-extrabold leading-4 text-primary-black underline'
         >
-          View Confirmation: {eventID}
+          View Confirmation: {props.eventId}
         </a>
       </div>
     </section>

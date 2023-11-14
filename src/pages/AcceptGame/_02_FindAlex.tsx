@@ -3,32 +3,39 @@ import PageHeader from '../../components/PageHeader';
 import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import Button from '../../components/Button';
-import { acceptGameInputsAtom } from './index';
+import { acceptGameInputsAtom, acceptGameStepAtom } from './index';
 import { useAtom } from 'jotai';
 import { Answer } from '../../state/game_states';
-import { useRequestCreateEvent } from '@puzzlehq/sdk';
+import { requestCreateEvent } from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
-import { useEffect } from 'react';
+import { useState } from 'react';
 
 function FindAlex() {
   const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
+  const [_, setStep] = useAtom(acceptGameStepAtom);
 
   const answer = acceptGameInputs.player_two_answer_readable;
 
-  const { requestCreateEvent, eventId, error, loading } = useRequestCreateEvent({
-    type: EventType.Execute,
-    programId: GAME_PROGRAM_ID,
-    functionId: GAME_FUNCTIONS.accept_game,
-    fee: stepFees.accept_game,
-    inputs: ["1"],
-  })
-
-  useEffect(() => {
-    if (eventId) { 
-      setAcceptGameInputs({...acceptGameInputs, step: '3_Confirmed'})
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>();
+  const createEvent = async () => {
+    setLoading(true);
+    const response = await requestCreateEvent({
+      type: EventType.Execute,
+      programId: GAME_PROGRAM_ID,
+      functionId: GAME_FUNCTIONS.accept_game,
+      fee: stepFees.accept_game,
+      inputs: Object.values(acceptGameInputs),
+    });
+    if (response.error) {
+      setError(response.error);
+    } else if (response.eventId) {
+      /// todo - other things here?
+      setStep('3_Confirmed');
     }
-  }, [eventId])
+    setLoading(false);
+  };
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
@@ -47,9 +54,7 @@ function FindAlex() {
         />
         <div className='flex flex-grow flex-col' />
         <Button
-          onClick={async () => {
-            requestCreateEvent()
-          }}
+          onClick={createEvent}
           disabled={!answer || loading}
           color='green'
         >

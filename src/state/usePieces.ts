@@ -1,18 +1,28 @@
-import { useRecords } from "@puzzlehq/sdk";
-import { useMemo } from "react";
+import { getRecords, Record } from "@puzzlehq/sdk";
+import { useEffect, useMemo, useState } from "react";
 
 export const usePieces = () => {
-  const {
-    records,
-    error,
-    loading,
-    refetch
-  } = useRecords({
-    filter: {
-      programId: 'cflip_testing_123_token.aleo',
-      type: 'unspent'
-    },
-  });
+  const [loading, setLoading] = useState(true);
+  const [records, setRecords] = useState<Record[]>([]);
+  const [error, setError] = useState<string | undefined>();
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const fetch = async () => {
+    const response = await getRecords({
+      filter: {
+        programId: 'cflip_testing_123_token.aleo',
+        type: 'unspent'
+      },
+    });
+    if (response.error) {
+      setError(response.error);
+    } else if (response.records) {
+      setRecords(response.records);
+    }
+    setLoading(false);
+  };
 
   const { totalBalance, availableBalance, largestPiece } = useMemo(() => {
     if (records.length > 0) {
@@ -42,5 +52,13 @@ export const usePieces = () => {
     return { totalBalance: 0, availableBalance: 0, largestPiece: undefined };
   }, [records]);
 
-  return { pieces: records, totalBalance, availableBalance, largestPiece, loading, error, refetch };
+  return {
+    pieces: records,
+    totalBalance,
+    availableBalance,
+    largestPiece,
+    loading,
+    error,
+    refetch: fetch
+  };
 };

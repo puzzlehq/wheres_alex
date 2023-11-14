@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 export type Step = '1_AcceptGame' | '2_FindAlex' | '3_Confirmed';
 export const acceptGameInputsAtom = atom<Partial<AcceptGameInputs>>({});
 export const acceptGameStepAtom = atom<Step>('1_AcceptGame');
+export const eventIdAtom = atom<string | undefined>(undefined);
 
 const AcceptGame = () => {
   const navigate = useNavigate();

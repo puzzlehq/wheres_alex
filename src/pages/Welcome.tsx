@@ -1,4 +1,4 @@
-import { useConnect } from '@puzzlehq/sdk';
+import { connect, useAccount } from '@puzzlehq/sdk';
 import rightImageSrc from '../assets/alex_mic_left_tilt.png';
 import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 import bottomImageSrc from '../assets/alexbottom.png';
@@ -7,14 +7,13 @@ import { useEffect } from 'react';
 
 export const Welcome = () => {
   const navigate = useNavigate();
-  const { connect, isConnected, session } = useConnect();
-  console.log('connection', { isConnected, session });
+  const { account } = useAccount();
 
   useEffect(() => {
-    if (isConnected) {
+    if (account) {
       navigate('/');
     }
-  }, [isConnected, navigate]);
+  }, [account, navigate]);
 
   return (
     <div className='flex h-screen w-full items-stretch justify-between'>

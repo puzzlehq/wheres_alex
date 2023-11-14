@@ -1,13 +1,11 @@
-import { shortenAddress, useAccount, useConnect } from '@puzzlehq/sdk';
+import { shortenAddress, useAccount } from '@puzzlehq/sdk';
 
 export const AppHeader = () => {
-
-  const address = useAccount().account.address;
-  const { isConnected } = useConnect();
+  const { account } = useAccount();
 
   return (
     <div className='flex w-full items-stretch justify-between gap-5 bg-primary-black p-4'>
-      {isConnected && address ? (
+      {account && account?.address ? (
         <>
           <a href='/'>
             <img
@@ -17,7 +15,7 @@ export const AppHeader = () => {
             />
           </a>
           <button className='flex w-[155px] max-w-full flex-col items-center justify-center self-stretch whitespace-nowrap rounded-[200px] border-2 border-solid border-[color:var(--White,#FCFCFC)] px-4 py-2 text-center text-xs font-bold text-zinc-50 hover:bg-primary-white'>
-            {shortenAddress(address)}
+            {shortenAddress(account.address)}
           </button>
         </>
       ) : (

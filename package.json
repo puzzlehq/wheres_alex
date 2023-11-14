@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@puzzlehq/sdk": "0.1.2",
+    "@puzzlehq/sdk": "../puzzle-sdk",
     "@puzzlehq/types": "^1.0.3",
     "html5-qrcode": "^2.3.8",
     "immer": "^10.0.3",

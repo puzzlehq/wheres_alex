@@ -5,7 +5,7 @@ import Wager from '../../components/Wager';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
-import { proposeGameInputsAtom, proposeGameStepAtom } from "./index"
+import { eventIdAtom, proposeGameInputsAtom, proposeGameStepAtom } from "./index"
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, ProposeGameInputs, stepFees } from '../../state/manager';
 import { createSharedState, requestCreateEvent } from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
@@ -13,7 +13,7 @@ import { useState } from 'react';
 
 function ConfirmStartGame() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
-  const [_, setStep] = useAtom(proposeGameStepAtom);
+  const [_step, setStep] = useAtom(proposeGameStepAtom);
 
   const opponent = inputs.opponent ?? '';
   const answer = inputs.answer;
@@ -23,18 +23,21 @@ function ConfirmStartGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
+  const [_eventId, setEventId] = useAtom(eventIdAtom);
+
   const createProposeGameEvent = async () => {
     setLoading(true);
     const sharedStateResponse = await createSharedState();
     if (sharedStateResponse.error) {
       setError(sharedStateResponse.error);
-    } else {
-
-      setInputs({ ms_seed: sharedStateResponse.seed, game_address: sharedStateResponse.address });
+    } else if (sharedStateResponse.data) {
+      const seed = sharedStateResponse.data.seed;
+      const address = sharedStateResponse.data.address;
+      setInputs({ ms_seed: seed, game_address: address });
       if (inputs.opponent && inputs.wagerRecord && inputs.wagerAmount && inputs.answer) {
         const proposalInputs: ProposeGameInputs = {
-          ms_seed: sharedStateResponse.seed,
-          game_address: sharedStateResponse.address,
+          ms_seed: seed,
+          game_address: address,
           opponent: inputs.opponent,
           wagerRecord: inputs.wagerRecord,
           wagerAmount: inputs.wagerAmount,
@@ -46,13 +49,13 @@ function ConfirmStartGame() {
           programId: GAME_PROGRAM_ID,
           functionId: GAME_FUNCTIONS.propose_game,
           fee: stepFees.propose_game,
-          inputs: proposalInputs
+          inputs: Object.values(proposalInputs)
         });
         if (createEventResponse.error) {
           setError(createEventResponse.error);
         } else {
           console.log('success', createEventResponse.eventId);
-          // setEventId(createEventResponse.eventId);
+          setEventId(createEventResponse.eventId);
           setStep('5_GameStarted');
         }
         setLoading(false);
@@ -65,7 +68,7 @@ function ConfirmStartGame() {
     <main className='flex h-full w-full flex-col justify-center gap-8'>
       <PageHeader bg='bg-primary-pink' text='REVIEW AND KICKOFF GAME' />
       <Opponent opponent={opponent} />
-      <Wager wagerAmount={wagerAmount} />
+      <Wager wagerAmount={Number(wagerAmount)} />
       {answer &&
         <div className='flex flex-col gap-2'>
           <SelectedAlexLocation answer={answer} win={undefined} />

@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 export type Step = '1_NewGame' | '2_HideAlex' | '3_StartWager' | '4_ConfirmStartGame' | '5_GameStarted';
 export const proposeGameInputsAtom = atom<Partial<ProposeGameInputs>>({opponent: ''});
 export const proposeGameStepAtom = atom<Step>('1_NewGame');
+export const eventIdAtom = atom<string | undefined>(undefined);
 
 const NewGame = () => {
   const navigate = useNavigate();
