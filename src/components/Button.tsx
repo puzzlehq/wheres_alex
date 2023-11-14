@@ -15,6 +15,7 @@ const Button = ({ className, color = 'green', size = 'lg', ...props }: ButtonPro
       className={`${className === undefined ? '' : className} ${props.disabled ? 'opacity-40' : ''} ${color === 'transparent' ? 'text-primary-white' :'text-primary-black'} self-center whitespace-nowrap rounded-[200px] ${size === 'lg' ? 'p-5 text-3xl w-full' : 'w-[125px] px-5 py-3 text-xs'} text-center font-extrabold tracking-tight  max-md:ml-px`}
       {...props}
       style={{
+        /* @ts-expect-error-next-line */
         backgroundColor: theme[bgColor]
       }}
     />
