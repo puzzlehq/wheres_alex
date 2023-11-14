@@ -10,8 +10,7 @@ import { usePieces } from '../state/usePieces';
 
 function Home() {
 
-  /// todo - load records for the various programs we need to get
-  ///   pass it to GemaManager constructor
+  const { totalBalance } = usePieces();
 
   const gameStates: GameState[] = [
     { gameMultisig: 'aleo1', player: 'Alice', wager: "10", action: 'Start' },
@@ -120,8 +119,8 @@ function Home() {
   const navigate = useNavigate();
 
   return (
-    <div className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex flex-col w-full bg-neutral-900 px-1 gap-4'>
+    <div className='flex h-full flex-col justify-between '>
+      <div className='flex flex-col w-full px-1 gap-4'>
         <TotalWinnings amount={totalBalance} />
         <Button
           color='yellow'

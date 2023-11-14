@@ -23,13 +23,11 @@ export const Welcome = () => {
           alt='Right top decoration'
           className='absolute right-0 top-0 z-0 h-full max-h-[18rem] max-w-[50%] object-contain'
         />
-
         <img
           src={leftImageSrc}
           alt='Left decoration'
           className='absolute left-0 top-1/4 z-0 h-full max-h-[20rem] w-3/5 max-w-[80%] -translate-x-1/4 -translate-y-20 transform object-contain'
         />
-
         <h1 className='z-5 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white'>
           WHERE'S<br />ALEX?{' '}
         </h1>
@@ -43,7 +41,6 @@ export const Welcome = () => {
         >
           Play!
         </button>
-
         <img
           src={bottomImageSrc}
           alt='bottom decoration'

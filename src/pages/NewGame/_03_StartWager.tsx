@@ -15,7 +15,7 @@ function StartWager() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
   const [_, setStep] = useAtom(proposeGameStepAtom);
 
-  const [wager, setWager] = useState(0);
+  const [wager, setWager] = useState<number | undefined>(undefined);
   const wagerRecord = inputs.wagerRecord;
 
   const onWagerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +41,7 @@ function StartWager() {
 
   return (
     <main className='flex h-full flex-col justify-between bg-neutral-900'>
-      <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
+      <div className='flex w-full flex-col items-center bg-neutral-900 px-5 gap-2'>
         <Nav step={3} />
         <PageHeader bg='bg-primary-blue' text='MAKE YOUR WAGER' />
         <div className='flex w-full flex-col items-center bg-neutral-900 px-5'>
@@ -52,7 +52,7 @@ function StartWager() {
             type='number'
             value={wager}
             onChange={onWagerInput}
-            className={`mt-14 flex w-full flex-col self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} w-full self-center text-center text-3xl font-bold`}
+            className={`mt-14 flex w-full flex-col self-stretch border-[3px] border-primary-gray px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} w-full self-center text-center text-3xl font-bold`}
             placeholder='Enter amount'
           />
           <p>{'Available balance: ' + availableBalance}</p>

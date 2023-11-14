@@ -4,7 +4,7 @@ export const AppHeader = () => {
   const { account } = useAccount();
 
   return (
-    <div className='flex w-full items-stretch justify-between gap-5 bg-primary-black p-4'>
+    <div className='flex w-full items-stretch justify-between gap-5  p-4'>
       {account && account?.address ? (
         <>
           <a href='/'>

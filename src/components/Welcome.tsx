@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 
 export const Welcome = () => {
   const navigate = useNavigate();
-  const { account, loading } = useAccount();
+  const { account } = useAccount();
 
   useEffect(() => {
     if (account) {
@@ -16,18 +16,18 @@ export const Welcome = () => {
   }, [account, navigate]);
 
   return (
-    <div className='flex h-screen w-full items-stretch justify-between'>
+    <div className='flex h-full w-full items-stretch justify-between'>
       <div className='relative flex h-full w-full flex-col items-center justify-center'>
         <img
           src={rightImageSrc}
           alt='Right top decoration'
-          className='absolute right-0 top-0 z-0 h-full max-h-[18rem] max-w-[50%] object-contain'
+          className='fixed right-0 top-0 h-full max-h-[18rem] max-w-[50%] object-contain'
         />
 
         <img
           src={leftImageSrc}
           alt='Left decoration'
-          className='absolute left-0 top-1/4 z-0 h-full max-h-[20rem] w-3/5 max-w-[80%] -translate-x-1/4 -translate-y-20 transform object-contain'
+          className='fixed left-0 top-1/4 h-full max-h-[20rem] max-w-[50%] -translate-y-20 object-contain'
         />
 
         <h1 className='z-5 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white'>
@@ -47,7 +47,7 @@ export const Welcome = () => {
         <img
           src={bottomImageSrc}
           alt='bottom decoration'
-          className='center -translate-y-100 absolute bottom-0 z-0 h-full max-h-[12rem] w-3/5 max-w-[35%] transform object-contain'
+          className='fixed center -translate-y-100 bottom-0 h-full max-h-[12rem] w-3/5 max-w-[35%] transform object-contain'
         />
       </div>
     </div>

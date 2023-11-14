@@ -14,7 +14,7 @@ function NewGame() {
 
   return (
     <main className='flex h-full w-full flex-col justify-between bg-neutral-900'>
-      <div className='flex h-full w-full flex-col items-center bg-neutral-900 px-5'>
+      <div className='flex h-full w-full flex-col items-center bg-neutral-900 px-5 gap-2'>
         <Nav step={1} />
         <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
         <input
