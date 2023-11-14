@@ -15,7 +15,7 @@ type GameStore = {
   close: () => void;
 };
 
-export const useAcceptGameStore = create<GameStore>()(
+export const useGameStore = create<GameStore>()(
   persist((set, get) => ({
     currentGame: undefined,
     games: [],
@@ -28,7 +28,7 @@ export const useAcceptGameStore = create<GameStore>()(
       const utilRecords = records.utilRecords;
       const puzzleRecords = records.puzzleRecords;
       const groupedRecords = _.keyBy(records, 'game_address');
-      
+
     },
     close: () => {
       set({ currentGame: undefined });

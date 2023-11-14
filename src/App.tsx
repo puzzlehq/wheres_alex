@@ -3,20 +3,54 @@ import NewGame from './pages/NewGame/index.js';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { AppHeader } from './components/Header.js';
 import { Welcome } from './components/Welcome.js';
-import { useAccount } from '@puzzlehq/sdk';
+import { useAccount, Record, getRecords, useOnSessionEvent,  } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
 import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
 import WinRoute from './pages/ClaimPrize/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
 import Reveal from './pages/FinishGame/_01_Reveal.js';
-import { useState } from 'react';
-import { GameManager } from './state/manager.js';
+import { useEffect, useState } from 'react';
+import { useGameStore } from './state/store.js';
 
 function App() {
   const { account } = useAccount();
-  const [gameManager, setGameManager] = useState(new GameManager([]));
+  const [gameRecords, setGameRecords] = useState<Record[] | undefined>(undefined);
+  const [puzzleRecords, setPuzzleRecords] = useState<Record[] | undefined>(undefined);
+  const [utilRecords, setUtilRecords] = useState<Record[] | undefined>(undefined);
 
-  useEffect
+  const [setRecords] = useGameStore((state) => [state.setRecords]);
+
+  const fetchRecords = () => {
+    // fetch gameRecords
+    getRecords({ filter: { programId: 'wheres_alex.aleo', type: 'unspent' } }).then((response) => {
+      setGameRecords(response.records ?? [])
+    });
+    // fetch puzzleRecords
+    getRecords({ filter: { programId: 'wheres_alex.aleo', type: 'unspent' } }).then((response) => {
+      setPuzzleRecords(response.records ?? []);
+    });
+    // fetch utilRecords
+    getRecords({ filter: { programId: 'wheres_alex.aleo', type: 'unspent' } }).then((response) => {
+      setUtilRecords(response.records ?? []);
+    });
+  }
+
+  useOnSessionEvent(({ params }) => {
+    const eventName = params.event.name;
+    if (!['accountSelected', 'accountSynced'].includes(eventName)) return;
+    if (!account) return;
+    fetchRecords();
+  });
+
+  useEffect(() => {
+    if (gameRecords !== undefined && puzzleRecords !== undefined && utilRecords !== undefined) {
+      setRecords({ gameRecords, puzzleRecords, utilRecords });
+    }
+  }, [gameRecords, puzzleRecords, utilRecords])
+
+  useEffect(() => {
+    fetchRecords();
+  }, [])
 
   return (
     <div className='App flex min-h-screen justify-center bg-amber-400'>
