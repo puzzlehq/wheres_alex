@@ -19,7 +19,7 @@ function NewGame() {
         <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
         <input
           type='text'
-          className='mt-5 w-full self-stretch border-[3px] border-solid border-[color:var(--Grey,#868686)] py-7 pl-3.5 pr-5 text-sm font-semibold leading-4 text-primary-white max-md:mr-px'
+          className='mt-5 w-full self-stretch border-[3px] border-solid border-primary-gray py-7 pl-3.5 pr-5 text-sm font-semibold leading-4 text-primary-black max-md:mr-px'
           placeholder='Enter Wallet Address'
           id='opponent'
           value={opponent ?? ''}
