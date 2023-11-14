@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import GameState from "../state/game_states";
 import { useRenegeStore } from "../pages/Renege/store";
+import Button from "./Button";
 
 type LiveGameProps = {
   game: GameState;
@@ -36,7 +37,7 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
         return (
           <div className="flex gap-2">
             <div
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
+              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] text-primary-white px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               {timeLeft[game.player] &&
@@ -48,35 +49,26 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
                   '0'
                 )}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
             </div>
-            <a
-              href='#'
+            <Button
               onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-              style={{ minWidth: '100px' }}
+              color="pink"
+              size='sm'
             >
               PING
-            </a>
+            </Button>
           </div>
         );
       default:
         // The 'else' part for '... other buttons'
         return (
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={handleRenegeClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-gray px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-              style={{ minWidth: '100px' }}
+              color="gray"
+              size="sm"
             >
               {game.action}
-            </button>
-            <a
-              href='#'
-              onClick={handlePingClick}
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] bg-primary-pink px-5 py-3 text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-              style={{ minWidth: '100px' }}
-            >
-              PING
-            </a>
+            </Button>
           </div>
         );
     }

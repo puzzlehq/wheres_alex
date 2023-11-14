@@ -4,6 +4,7 @@ import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 import bottomImageSrc from '../assets/alexbottom.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
+import Button from './Button';
 
 export const Welcome = () => {
   const navigate = useNavigate();
@@ -37,12 +38,12 @@ export const Welcome = () => {
           A thrilling game showcasing the power of Aleo and the Puzzle
           multiparty privacy stack through a wager between friends!
         </p>
-        <button
+        <Button
           onClick={connect}
-          className='hover:bg-primary-yellow-400 z-10 mt-7 flex w-1/2 items-center justify-center rounded-[200px] bg-primary-yellow px-5 py-8 text-4xl font-extrabold text-primary-black'
+          color='yellow'
         >
           Play!
-        </button>
+        </Button>
 
         <img
           src={bottomImageSrc}

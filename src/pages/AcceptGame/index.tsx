@@ -18,7 +18,7 @@ const AcceptGame = () => {
   const done = () => {
     setInputs({});
     setStep('1_AcceptGame');
-    navigate('/home');
+    navigate('/');
   };
 
   return (

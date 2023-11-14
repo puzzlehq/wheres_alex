@@ -4,6 +4,7 @@ import { useAcceptGameStore } from "../pages/AcceptGame/store";
 import { useClaimPrizeLoseStore } from "../pages/ClaimPrize/Lose/store";
 import { useClaimPrizeWinStore } from "../pages/ClaimPrize/Win/store";
 import { useFinishGameStore } from "../pages/FinishGame/store";
+import Button from "./Button";
 
 function NotificationItem({ notification }: { notification: GameState }) {
   
@@ -23,33 +24,33 @@ function NotificationItem({ notification }: { notification: GameState }) {
     switch (action) {
       case 'Start':
         return (
-          <button
+          <Button
             onClick={() => {
               initializeAcceptGame(opponent, Number(wager), multisig)
               navigate('/accept-game')
             }}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-            style={{ minWidth: '100px' }}
+            color='yellow'
+            size='sm'
           >
             {action}
-          </button>
+          </Button>
         );
       case 'Finish':
         return (
-          <button
+          <Button
             onClick={() => {
               initializeFinishGame(opponent, Number(wager), Answer.InTheWeeds)
               navigate('/finish-game');
             }}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-            style={{ minWidth: '100px' }}
+            size="sm"
+            color='yellow'
           >
             {action}
-          </button>
+          </Button>
         );
       case 'Claim':
         return (
-          <button
+          <Button
             onClick={() => {
               if (notification.win) {
                 initializeClaimWin(opponent, Number(wager), Answer.InTheWeeds);
@@ -59,24 +60,22 @@ function NotificationItem({ notification }: { notification: GameState }) {
                 navigate('/claim-prize/lose');
               }
             }}
-            className='max-w-full self-stretch rounded-[200px] bg-primary-yellow px-5 py-3 text-center text-xs font-extrabold text-primary-black max-sm:w-[78px]'
-            style={{ minWidth: '100px' }}
+            color="yellow"
+            size='sm'
           >
             {action}
-          </button>
+          </Button>
         );
       default:
         // The 'else' part for '... other buttons'
         return (
           <>
-            <button
-              className={`max-w-full self-stretch rounded-[200px] px-5 py-3 text-center text-xs font-extrabold text-primary-black  ${
-                action === 'Delete' ? 'bg-primary-gray' : 'bg-primary-yellow'
-              }`}
-              style={{ minWidth: '100px' }}
+            <Button
+              color={action === 'Delete' ? 'gray' : 'yellow'}
+              size="sm"
             >
               {action}
-            </button>
+            </Button>
           </>
         );
     }

@@ -134,9 +134,12 @@ function Home() {
       <div className='mt-4 px-4 pb-4 text-center'>
         {' '}
         {/* Adding px-4 back here to maintain padding for the bottom button */}
-        <button className='items-center rounded-full bg-orange-500 p-2 text-xs'>
+        <Button
+          color='blue'
+          size='sm'
+        >
           Past Games
-        </button>
+        </Button>
       </div>
     </div>
   );

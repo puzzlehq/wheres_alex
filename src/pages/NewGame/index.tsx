@@ -20,7 +20,7 @@ const NewGame = () => {
   const done = () => {
     setInput({});
     setStep('1_NewGame');
-    navigate('/home');
+    navigate('/');
   }
 
   return (
