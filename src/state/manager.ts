@@ -1,5 +1,6 @@
 import { Record } from '@puzzlehq/sdk';
 import { Answer } from './game_states';
+import _ from 'lodash'
 
 export const GAME_PROGRAM_ID = 'cflip_gm_aleo_testing_123.aleo';
 
@@ -38,22 +39,7 @@ export type Game = {
   address: string; /// address of shared state multisig
   wager: number;
 
-  wagerRecord: Record;
-
   eventIds?: string[];
-}
-
-export class GameManager {
-  status: LoadingStatus = 'idle';
-  games: Game[] = [];
-
-  constructor(records: Record[]) {
-    this.games = this.parseGamesFromRecords(records);
-  }
-
-  parseGamesFromRecords(_: Record[]): Game[] {
-    return [];
-  }
 }
 
 export type ProposeGameInputs = {

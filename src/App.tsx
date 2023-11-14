@@ -16,6 +16,8 @@ function App() {
   const { account } = useAccount();
   const [gameManager, setGameManager] = useState(new GameManager([]));
 
+  useEffect
+
   return (
     <div className='App flex min-h-screen justify-center bg-amber-400'>
       <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto bg-neutral-900 shadow-md'>
