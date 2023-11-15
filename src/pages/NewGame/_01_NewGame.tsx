@@ -13,30 +13,29 @@ function NewGame() {
   const opponent = inputs.opponent;
 
   return (
-    <main className='flex h-full w-full flex-col justify-between'>
-      <div className='flex h-full w-full flex-col items-center px-5 gap-2'>
-        <Nav step={1} />
-        <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
-        <input
-          type='text'
-          className='mt-5 w-full self-stretch border-[3px] border-solid border-primary-gray py-7 pl-3.5 pr-5 text-sm font-semibold leading-4 text-primary-black max-md:mr-px'
-          placeholder='Enter Wallet Address'
-          id='opponent'
-          value={opponent ?? ''}
-          onChange={(e) => {
-            setInputs({ ...inputs, opponent: e.target.value })
-          }}
-        />
-        <div className='flex flex-col flex-grow'/>
-        <Button
-          onClick={() => setStep('2_HideAlex')}
-          color='green'
-          disabled={!aleoAddressRegex.test(inputs.opponent ?? '')}
-        >
-          NEXT
-        </Button>
-      </div>
-    </main>
+    <div className='flex h-full w-full flex-col justify-between items-center px-5 gap-2'>
+      <Nav step={1} />
+      <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
+      <input
+        type='text'
+        className='mt-5 w-full rounded-lg border-[3px] bg-transparent border-solid border-primary-gray p-4 text-sm font-semibold leading-4 max-md:mr-px'
+        placeholder="Enter Opponent's Address"
+        id='opponent'
+        value={opponent ?? ''}
+        onChange={(e) => {
+          setInputs({ ...inputs, opponent: e.target.value })
+        }}
+      />
+      <div className='flex flex-col flex-grow'/>
+      <Button
+        className='mb-6'
+        onClick={() => setStep('2_HideAlex')}
+        color='green'
+        disabled={!aleoAddressRegex.test(inputs.opponent ?? '')}
+      >
+        NEXT
+      </Button>
+    </div>
   );
 }
 

@@ -9,9 +9,8 @@ type HideAlexProps = {
 };
 
 function ChooseAlexLocation({ setAnswer, answer, hiding }: HideAlexProps) {
-
   return (
-    <section className='flex max-w-full flex-col gap-4'>
+    <section className='flex max-w-full flex-col gap-4 mt-4'>
       <div className='flex gap-5'>
         <AlexButton imgSrc={inWeedsImg} text='In the Weeds' onClick={() => setAnswer(Answer.InTheWeeds)} selected={answer ? answer === Answer.InTheWeeds : undefined} />
         <AlexButton imgSrc={behindBuildingImg} text='Behind the Building' onClick={() => setAnswer(Answer.BehindTheBuilding)} selected={answer ? answer === Answer.BehindTheBuilding : undefined} />

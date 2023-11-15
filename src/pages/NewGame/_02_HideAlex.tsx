@@ -15,8 +15,7 @@ function HideAlex() {
     <main className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5 gap-2'>
         <Nav step={2} />
-        <PageHeader text='HIDE ALEX' bg='bg-primary-blue' />
-        <div className='flex flex-grow flex-col'/>
+        <PageHeader text='WHERE WOULD YOU LIKE TO HIDE ALEX?' bg='bg-primary-blue' />
         <ChooseAlexLocation
           setAnswer={(answer: Answer) => setInputs({...inputs, answer})}
           answer={inputs.answer}
@@ -24,6 +23,7 @@ function HideAlex() {
         />
         <div className='flex flex-grow flex-col' />
         <Button
+          className='mb-6'
           onClick={() => setStep('3_StartWager')}
           disabled={!inputs.answer}
           color='green'

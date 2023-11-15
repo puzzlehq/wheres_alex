@@ -3,18 +3,27 @@ import rightImageSrc from '../assets/alex_mic_left_tilt.png';
 import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 import bottomImageSrc from '../assets/alexbottom.png';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Button from '../components/Button.js';
 
 export const Welcome = () => {
   const navigate = useNavigate();
-  const { account } = useAccount();
+  const { account, loading, error } = useAccount();
+
+  console.log('account, loading, error', { account, loading, error });
 
   useEffect(() => {
     if (account) {
       navigate('/');
     }
   }, [account, navigate]);
+
+  const [connectLoading, setConnectLoading] = useState(false);
+  const startConnect = async () => {
+    setConnectLoading(true);
+    await connect();
+    setConnectLoading(false);
+  };
 
   return (
     <div className='flex h-full w-full items-stretch justify-between'>
@@ -38,10 +47,11 @@ export const Welcome = () => {
         </p>
         <Button
           className='max-w-[250px]'
-          onClick={connect}
+          onClick={startConnect}
           color='yellow'
+          disabled={loading || connectLoading}
         >
-          Play!
+          {loading ? 'Loading...' : connectLoading ? 'Connecting...' : 'Play!'}
         </Button>
         <img
           src={bottomImageSrc}
