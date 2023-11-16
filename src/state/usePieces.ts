@@ -12,7 +12,7 @@ export const usePieces = () => {
   const fetch = async () => {
     const response = await getRecords({
       filter: {
-        programId: 'cflip_testing_123_token.aleo',
+        programId: 'puzzle_pieces_v007.aleo',
         type: 'unspent'
       },
     });

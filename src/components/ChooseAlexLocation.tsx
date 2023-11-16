@@ -41,7 +41,7 @@ const AlexButton = ({ imgSrc, text, selected, onClick }: AlexButtonProps) => {
   return (
     <button
       onClick={onClick}
-      className={`group hover:border flex flex-col self-center rounded-lg border-primary-green ${selected ? 'border' : ''} flex w-[150px] flex-col gap-2 items-center hover:opacity-100 p-4`}
+      className={`group hover:outline flex flex-col self-center rounded-lg outline-primary-green ${selected ? 'outline' : ''} flex w-[150px] flex-col gap-2 items-center hover:opacity-100 p-4`}
     >
       <img
         loading='lazy'

@@ -16,7 +16,7 @@ function StartWager() {
   const [_, setStep] = useAtom(proposeGameStepAtom);
 
   const [wager, setWager] = useState<number | undefined>(undefined);
-  const wagerRecord = inputs.wagerRecord;
+  const wagerRecord = inputs.wager_record;
 
   const onWagerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = Number(e.target.value);
@@ -28,7 +28,7 @@ function StartWager() {
       setError(undefined);
     }
     setWager(input);
-    setInputs({ ...inputs, wagerAmount: input.toString(), wagerRecord: largestPiece });
+    setInputs({ ...inputs, amount: input.toString(), wager_record: largestPiece });
   };
 
   // Determine input text color based on localAmount value
