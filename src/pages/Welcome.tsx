@@ -10,8 +10,6 @@ export const Welcome = () => {
   const navigate = useNavigate();
   const { account, loading, error } = useAccount();
 
-  console.log('account, loading, error', { account, loading, error });
-
   useEffect(() => {
     if (account) {
       navigate('/');
