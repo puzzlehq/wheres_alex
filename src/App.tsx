@@ -11,6 +11,7 @@ import RenegeGame from './pages/Renege/_01_Renege.js';
 import Reveal from './pages/FinishGame/_01_Reveal.js';
 import { useEffect, useState } from 'react';
 import { useGameStore } from './state/store.js';
+import { usePieces } from './state/usePieces.js';
 
 function App() {
   const { account } = useAccount();
@@ -35,11 +36,14 @@ function App() {
     });
   }
 
+  const { refetch: refetchPieces } = usePieces();
+
   useOnSessionEvent(({ params }) => {
     const eventName = params.event.name;
     if (!['accountSelected', 'accountSynced'].includes(eventName)) return;
     if (!account) return;
     fetchRecords();
+    refetchPieces();
   });
 
   useEffect(() => {

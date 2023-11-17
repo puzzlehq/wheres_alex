@@ -1,7 +1,8 @@
-import { getRecords, Record } from "@puzzlehq/sdk";
+import { getRecords, Record, useAccount } from "@puzzlehq/sdk";
 import { useEffect, useMemo, useState } from "react";
 
 export const usePieces = () => {
+  const {account} = useAccount();
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState<Record[]>([]);
   const [error, setError] = useState<string | undefined>();
