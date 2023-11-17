@@ -13,7 +13,7 @@ function StartWager() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
   const [_, setStep] = useAtom(proposeGameStepAtom);
   const [wager, setWager] = useState<number | undefined>(undefined);
-  const wagerRecord = inputs.wagerRecord;
+  const wagerRecord = inputs.wager_record;
 
   const onWagerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = Number(e.target.value);
@@ -23,7 +23,7 @@ function StartWager() {
       setError('You do not have enough Pieces');
     } else {
       setError(undefined);
-      setInputs({ ...inputs, wagerAmount: input.toString(), wagerRecord: largestPiece });
+      setInputs({ ...inputs, amount: input.toString(), wager_record: largestPiece });
     }
     setWager(input);
   };

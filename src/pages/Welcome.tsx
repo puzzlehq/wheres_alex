@@ -37,7 +37,7 @@ export const Welcome = () => {
           className='fixed left-0 top-1/4 h-full max-h-[20rem] max-w-[50%] -translate-y-20 object-contain'
         />
         <h1 className='z-10 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white'>
-          WHERE'S<br />ALEX?{' '}
+          WHERE'S<br />ALEX?
         </h1>
         <p className='z-10 mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
           A thrilling game showcasing the power of Aleo and the Puzzle

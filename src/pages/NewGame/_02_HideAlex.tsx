@@ -18,7 +18,7 @@ function HideAlex() {
         <PageHeader text='WHERE WOULD YOU LIKE TO HIDE ALEX?' bg='bg-primary-blue' />
         <ChooseAlexLocation
           setAnswer={(answer: Answer) => setInputs({...inputs, answer})}
-          answer={inputs.answer}
+          answer={inputs.answer as Answer}
           hiding={true}
         />
         <div className='flex flex-grow flex-col' />

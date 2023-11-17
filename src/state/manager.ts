@@ -2,7 +2,7 @@ import { Record } from '@puzzlehq/sdk';
 import { Answer } from './game_states';
 import _ from 'lodash'
 
-export const GAME_PROGRAM_ID = 'cflip_gm_aleo_testing_123.aleo';
+export const GAME_PROGRAM_ID = 'wheres_alex_v001.aleo';
 
 export const GAME_FUNCTIONS = {
   propose_game: 'propose_game',
@@ -14,7 +14,7 @@ export const GAME_FUNCTIONS = {
 
 /// todo - update these
 export const stepFees = {
-  propose_game: 1,
+  propose_game: 10,
   accept_game: 1,
   set_wager: 1,
   reveal_answer: 1,
@@ -43,13 +43,21 @@ export type Game = {
 }
 
 export type ProposeGameInputs = {
-  ms_seed: string;
-  game_address: string;
+  wager_record: Record;
+  amount: string;
+  sender_address: string;
+  challenger: string;
   opponent: string;
-  wagerRecord: Record;
-  wagerAmount: string;
-  answer: Answer;
+  game_multisig: string;
+  message_1: string;
+  message_2: string;
+  message_3: string;
+  message_4: string;
+  message_5: string;  
+  signature: string;
   nonce: string;
+  answer: string;
+  seed: string;
 }
 
 // used for submit wager and accept game

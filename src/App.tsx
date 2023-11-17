@@ -27,7 +27,7 @@ function App() {
       setGameRecords(response.records ?? [])
     });
     // fetch puzzleRecords
-    getRecords({ filter: { programId: 'wheres_alex.aleo', type: 'unspent' } }).then((response) => {
+    getRecords({ filter: { programId: 'puzzle_pieces_v007.aleo', type: 'unspent' } }).then((response) => {
       setPuzzleRecords(response.records ?? []);
     });
     // fetch utilRecords

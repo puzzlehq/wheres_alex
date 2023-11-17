@@ -2,6 +2,10 @@ import { disconnect as disconnect_sdk, shortenAddress, useAccount } from '@puzzl
 import Button from './Button';
 import { useState } from 'react';
 
+// const clearGameStates = () => {
+//   const 
+// }
+
 export const AppHeader = () => {
   const { account } = useAccount();
 
