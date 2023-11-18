@@ -2,10 +2,10 @@ import { getRecords, Record, useAccount } from "@puzzlehq/sdk";
 import { useEffect, useMemo, useState } from "react";
 
 export const usePieces = () => {
-  const {account} = useAccount();
   const [loading, setLoading] = useState(true);
   const [records, setRecords] = useState<Record[]>([]);
   const [error, setError] = useState<string | undefined>();
+
   useEffect(() => {
     fetch();
   }, []);
@@ -17,7 +17,6 @@ export const usePieces = () => {
         type: 'unspent'
       },
     });
-    console.log('pieces response', response);
     if (response.error) {
       setError(response.error);
     } else if (response.records) {
@@ -49,9 +48,6 @@ export const usePieces = () => {
           /// sum up
           return total + amount;
         })
-      console.log('totalBalance', totalBalance);
-      console.log('availableBalance', availableBalance);
-      console.log('largestPiece', largestPiece);
       return { totalBalance, availableBalance, largestPiece };
     }
     return { totalBalance: 0, availableBalance: 0, largestPiece: undefined };

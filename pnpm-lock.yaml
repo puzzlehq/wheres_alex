@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@puzzlehq/sdk':
-    specifier: 0.1.30
-    version: 0.1.30(@types/react@18.2.37)(react-dom@18.2.0)
+    specifier: 0.1.31
+    version: 0.1.31(@types/react@18.2.37)(react-dom@18.2.0)
   '@puzzlehq/types':
     specifier: ^1.0.3
     version: 1.0.3
@@ -889,8 +889,8 @@ packages:
       '@parcel/watcher-win32-x64': 2.3.0
     dev: false
 
-  /@puzzlehq/sdk@0.1.30(@types/react@18.2.37)(react-dom@18.2.0):
-    resolution: {integrity: sha512-5Nn6XOKBVY7BasKgLI+Q+rwQxyH/JS1q8bUyTOOGUWo+OVAq5VTFzieEkrip7S9G3wwF6OCdMiBjL73hdAbokg==}
+  /@puzzlehq/sdk@0.1.31(@types/react@18.2.37)(react-dom@18.2.0):
+    resolution: {integrity: sha512-+COLYjRmXKm98J+/ixv8bDiAvdpUHoXlrK05Efz8iDbFALHleeTvcaH7OK5pJUGCFoJ7qBo3oCdP0mo0ZC0O+g==}
     dependencies:
       '@tanstack/react-query': 4.36.1(react-dom@18.2.0)(react@18.2.0)
       '@trpc/client': 10.43.6(@trpc/server@10.43.6)
