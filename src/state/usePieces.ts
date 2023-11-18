@@ -17,6 +17,7 @@ export const usePieces = () => {
         type: 'unspent'
       },
     });
+    console.log('pieces response', response);
     if (response.error) {
       setError(response.error);
     } else if (response.records) {
@@ -48,6 +49,9 @@ export const usePieces = () => {
           /// sum up
           return total + amount;
         })
+      console.log('totalBalance', totalBalance);
+      console.log('availableBalance', availableBalance);
+      console.log('largestPiece', largestPiece);
       return { totalBalance, availableBalance, largestPiece };
     }
     return { totalBalance: 0, availableBalance: 0, largestPiece: undefined };
