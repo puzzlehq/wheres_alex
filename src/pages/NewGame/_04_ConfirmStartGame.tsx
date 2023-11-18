@@ -15,9 +15,15 @@ import { Answer } from '../../state/game_states';
 
 const messageToSign = '1234567field';
 
+enum ConfirmStep {
+  Signing,
+  RequestingEvent
+}
+
 function ConfirmStartGame() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
-  const [_step, setStep] = useAtom(proposeGameStepAtom);
+  const [_, setStep] = useAtom(proposeGameStepAtom);
+  const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
   const opponent = inputs.opponent ?? '';
   const answer = inputs.answer;
@@ -32,6 +38,7 @@ function ConfirmStartGame() {
 
   const createProposeGameEvent = async () => {
     setLoading(true);
+    setConfirmStep(ConfirmStep.Signing);
     const sharedStateResponse = await createSharedState();
     if (sharedStateResponse.error) {
       setError(sharedStateResponse.error);
@@ -41,8 +48,10 @@ function ConfirmStartGame() {
 
       const signature = await requestSignature({ message: messageToSign });
       
-      setInputs({ seed, game_multisig: address });
+      setInputs({ ...inputs, seed, game_multisig: address });
       if (inputs.opponent && inputs.wager_record && inputs.amount && inputs.answer && signature && signature.messageFields && signature.signature) {
+        setConfirmStep(ConfirmStep.RequestingEvent);
+        
         const fields = Object(jsyaml.load(signature.messageFields));
 
         const proposalInputs: ProposeGameInputs = {
@@ -76,9 +85,10 @@ function ConfirmStartGame() {
           setEventId(createEventResponse.eventId);
           setStep('5_GameStarted');
         }
-        setLoading(false);
       }
     }
+    setLoading(false);
+    setConfirmStep(ConfirmStep.Signing);
   };
 
   const disabled = [inputs.opponent, inputs.wager_record, inputs.amount, inputs.answer].includes(undefined);
@@ -103,7 +113,7 @@ function ConfirmStartGame() {
           color='green'  
           disabled={disabled || loading}
         >
-          PROPOSE GAME
+          {!loading ? 'PROPOSE GAME' : confirmStep === ConfirmStep.Signing ? 'SIGN MESSAGE' : 'CREATE EVENT'}
         </Button>
         <Button
           onClick={() => setStep('5_GameStarted')}

@@ -5,10 +5,12 @@ import Button from '../../components/Button';
 import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { useAtom } from 'jotai';
 import { aleoAddressRegex } from '../../state/game_states';
+import { useAccount } from '@puzzlehq/sdk';
 
 function NewGame() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
   const [_, setStep] = useAtom(proposeGameStepAtom);
+  const { account } = useAccount();
 
   const opponent = inputs.opponent;
 
@@ -31,7 +33,7 @@ function NewGame() {
         className='mb-6'
         onClick={() => setStep('2_HideAlex')}
         color='green'
-        disabled={!aleoAddressRegex.test(inputs.opponent ?? '')}
+        disabled={!aleoAddressRegex.test(inputs.opponent ?? '') || inputs.opponent === account.address}
       >
         NEXT
       </Button>
