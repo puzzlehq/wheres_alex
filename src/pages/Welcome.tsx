@@ -1,27 +1,21 @@
-import { connect, useAccount } from '@puzzlehq/sdk';
+import { useConnect, useAccount } from '@puzzlehq/sdk';
 import rightImageSrc from '../assets/alex_mic_left_tilt.png';
 import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 import bottomImageSrc from '../assets/alexbottom.png';
 import { useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect,  } from 'react';
 import Button from '../components/Button.js';
 
 export const Welcome = () => {
   const navigate = useNavigate();
-  const { account, loading, error } = useAccount();
+  const { account } = useAccount();
+  const { loading, connect } = useConnect();
 
   useEffect(() => {
     if (account) {
       navigate('/');
     }
   }, [account, navigate]);
-
-  const [connectLoading, setConnectLoading] = useState(false);
-  const startConnect = async () => {
-    setConnectLoading(true);
-    await connect();
-    setConnectLoading(false);
-  };
 
   return (
     <div className='flex h-full w-full items-stretch justify-between'>
@@ -45,11 +39,11 @@ export const Welcome = () => {
         </p>
         <Button
           className='max-w-[250px]'
-          onClick={startConnect}
+          onClick={connect}
           color='yellow'
-          disabled={loading || connectLoading}
+          disabled={loading}
         >
-          {loading ? 'Loading...' : connectLoading ? 'Connecting...' : 'Play!'}
+          {loading ? 'Loading...' : loading ? 'Connecting...' : 'Play!'}
         </Button>
         <img
           src={bottomImageSrc}
