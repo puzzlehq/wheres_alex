@@ -15,7 +15,7 @@ function HideTreasure() {
     <main className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5 gap-2'>
         <Nav step={2} />
-        <PageHeader text='WHERE WOULD YOU LIKE TO HIDE ALEX?' bg='bg-primary-blue' />
+        <PageHeader text='WHERE WOULD YOU LIKE TO HIDE TREASURE?' bg='bg-primary-blue' />
         <ChooseTreasureLocation
           setAnswer={(answer: Answer) => setInputs({...inputs, answer})}
           answer={inputs.answer as Answer}

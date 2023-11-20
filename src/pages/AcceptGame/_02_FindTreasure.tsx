@@ -42,7 +42,7 @@ function FindTreasure() {
       <div className='flex h-full w-full flex-col items-center px-5 gap-6'>
         <div className='w-full flex flex-col gap-2'>
           <Nav step={2} />
-          <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
+          <PageHeader bg='bg-primary-blue' text={`FIND THE TREASURE?`} />
         </div>
         <ChooseTreasureLocation
           setAnswer={(answer) => {

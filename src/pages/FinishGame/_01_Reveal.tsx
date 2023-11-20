@@ -15,7 +15,7 @@ const Reveal = () => {
       </div>
       <PageHeader
         bg="bg-primary-blue"
-        text='WHERE IS ALEX?'
+        text={`WHERE'S THE TREASURE?`}
       />
       {answer &&
         <div className='flex flex-col gap-2'>
