@@ -57,7 +57,7 @@ function App() {
   }, [])
 
   return (
-    <div className='App flex min-h-screen justify-center bg-neutral-900'>
+    <div className='font-body flex min-h-screen justify-center bg-gradient-to-b from-[#7CF7FF] to-[#0DD4FF]'>
       <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
         {account && account?.address && (
           <AppHeader />

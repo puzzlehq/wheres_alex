@@ -9,7 +9,7 @@ import { configureConnection } from '@puzzlehq/sdk';
     dAppName: "Where's Alex?",
     dAppDescription: "A friendly wager between friends",
     dAppUrl: "https://wheresalex.puzzle.online",
-    dAppIconURL: "https://wheresalex.puzzle.online/alex_head.png"
+    dAppIconURL: "https://wheresalex.puzzle.online/swaggers.png"
   });
   return ReactDOM.createRoot(document.getElementById('root')!).render(
     <div className='h-screen w-screen'>
