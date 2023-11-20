@@ -8,8 +8,10 @@ const buttonVariants = cva(
       variant: {
         primary:
           'bg-primary disabled:opacity-40 font-header text-black',
-        secondary: 'bg-bg1 border-bg2 border-[5px] disabled:opacity-40 ',
-        green: 'bg-primary-green disabled:opacity-40 ',
+        secondary: 'bg-bg1 border-bg2 border-[5px] disabled:opacity-40',
+        green: 'bg-primary-green disabled:opacity-40',
+        red: 'bg-primary-red disabled:opacity-40',
+        gray: 'bg-bg2 disabled:opacity-40'
       },
       size: {
         md: 'h-10 rounded-full px-3 py-2 text-[24px]',

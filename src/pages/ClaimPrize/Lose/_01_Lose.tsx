@@ -1,5 +1,5 @@
 import PageHeader from "../../../components/PageHeader";
-import SelectedAlexLocation from "../../../components/SelectedAlexLocation";
+import SelectedTreasureLocation from "../../../components/SelectedTreasureLocation";
 import Wager from "../../../components/Wager";
 import Button from "../../../components/Button";
 import { Step, useClaimPrizeLoseStore } from "./store";
@@ -15,9 +15,9 @@ const Lose = () => {
       <Wager wagerAmount={wager} winnings/>
       <PageHeader text="WHERE'S ALEX" bg='bg-primary-blue' />
       <div className="flex flex-col gap-2">
-        {answer && <SelectedAlexLocation answer={answer} win={false} />}
+        {answer && <SelectedTreasureLocation answer={answer} win={false} />}
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
-          Alex was {answer}!
+          The treasure was {answer}!
         </div>
       </div>
       <div className="flex flex-col flex-grow"/>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import PageHeader from '../../components/PageHeader';
 import Nav from '../../components/Nav';
-import ChooseAlexLocation from '../../components/ChooseAlexLocation';
+import ChooseTreasureLocation from '../../components/ChooseTreasureLocation';
 import Button from '../../components/Button';
 import { acceptGameInputsAtom, acceptGameStepAtom } from './index';
 import { useAtom } from 'jotai';
@@ -11,7 +11,7 @@ import { EventType } from '@puzzlehq/types';
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
 import { useState } from 'react';
 
-function FindAlex() {
+function FindTreasure() {
   const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
   const [_, setStep] = useAtom(acceptGameStepAtom);
 
@@ -44,7 +44,7 @@ function FindAlex() {
           <Nav step={2} />
           <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
         </div>
-        <ChooseAlexLocation
+        <ChooseTreasureLocation
           setAnswer={(answer) => {
             const newAnswer = answer === Answer.InTheWeeds ? '0field' : '1field' 
             setAcceptGameInputs({ ...acceptGameInputs, player_two_answer: newAnswer, player_two_answer_readable: answer })
@@ -65,4 +65,4 @@ function FindAlex() {
   );
 }
 
-export default FindAlex;
+export default FindTreasure;

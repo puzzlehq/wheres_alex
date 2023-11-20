@@ -3,13 +3,13 @@ import behindBuildingImg from '../assets/behind_building.svg';
 import inWeedsImg from '../assets/in_weeds.jpg';
 import { Answer } from '../state/game_states';
 
-type SelectedAlexLocationProps = {
+type SelectedTreasureLocationProps = {
   answer: Answer,
   win?: boolean
 }
 
-function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
-  const LeftAlex = () => {
+function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps) {
+  const LeftTreasure = () => {
     return (
       <div className='flex flex-col gap-2 self-start w-1/2'>
         <img
@@ -25,14 +25,14 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
                         ${answer === Answer.InTheWeeds ? '' : 'opacity-40'}
                         ${answer === Answer.InTheWeeds ? 'text-primary-green' : 'text-primary-white'}`}
           >
-            In the Weeds
+            Left
           </div>
         }
       </div>
     )
   }
 
-  const RightAlex = () => {
+  const RightTreasure = () => {
     return (
       <div className='flex flex-col gap-2 self-start w-1/2'>
         <img
@@ -52,7 +52,7 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
                             : 'text-primary-white'
                         }`}
           >
-            Behind the Building
+            Right
           </div>
         }
       </div>
@@ -81,32 +81,32 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
       <div className='flex w-[298px] max-w-full items-center justify-between gap-5 self-center'>
         {win === undefined ?
           <>
-            <LeftAlex />
-            <RightAlex/>
+            <LeftTreasure />
+            <RightTreasure/>
           </> : 
           <>
             {win === true && answer === Answer.InTheWeeds &&
               <>
-                <LeftAlex />
+                <LeftTreasure />
                 <WinText/>
               </>
             }
             {win === true && answer === Answer.BehindTheBuilding &&
               <>
                 <WinText/>
-                <RightAlex />
+                <RightTreasure />
               </>
             }
             {win === false && answer === Answer.InTheWeeds &&
               <>
-                <LeftAlex />
+                <LeftTreasure />
                 <LoseText/>
               </>
             }
             {win === false && answer === Answer.BehindTheBuilding &&
               <>
                 <LoseText/>
-                <RightAlex />
+                <RightTreasure />
               </>
             }
           </>
@@ -117,4 +117,4 @@ function SelectedAlexLocation({ answer, win }: SelectedAlexLocationProps) {
   );
 }
 
-export default SelectedAlexLocation;
+export default SelectedTreasureLocation;

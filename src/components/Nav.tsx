@@ -15,7 +15,7 @@ function Nav({ step }: NavProps) {
           step == 2 ? 'text-primary-white' : 'text-primary-gray'
         } ${step > 2 ? 'line-through' : ''}`}
       >
-        2. HIDE ALEX
+        2. HIDE TREASURE
       </p>
       <p
         className={`self-stretch font-extrabold tracking-tight  ${

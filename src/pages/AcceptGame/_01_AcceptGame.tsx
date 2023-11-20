@@ -40,7 +40,7 @@ const AcceptGame = () => {
       setError(response.error);
     } else if (response.eventId) {
       /// todo - other things here?
-      setStep('2_FindAlex');
+      setStep('2_FindTreasure');
     }
     setLoading(false);
   }

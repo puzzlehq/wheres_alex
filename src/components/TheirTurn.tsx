@@ -18,17 +18,6 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
     navigate('/renege-game');
   };
 
-  // Function to handle the ping button click
-  const handlePingClick = () => {
-    // You might want to replace 'ENTER_PHONE_NUMBER' with the actual number if needed
-    const phoneNumber = 'ENTER_PHONE_NUMBER'; // Leave this as is if you want the user to enter the number.
-    const message = `I'm betting you ${game.wager} that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
-    const encodedMessage = encodeURIComponent(message);
-    const smsHref = `sms:${phoneNumber}?&body=${encodedMessage}`;
-
-    window.location.href = smsHref;
-  };
-
   const renderActionButton = () => {
     switch (game.action) {
       case 'Claim':
@@ -49,13 +38,6 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
                   '0'
                 )}:${String(timeLeft[game.player].seconds).padStart(2, '0')}`}
             </div>
-            <Button
-              onClick={handlePingClick}
-              color="pink"
-              size='sm'
-            >
-              PING
-            </Button>
           </div>
         );
       default:
@@ -64,8 +46,8 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
           <div className="flex gap-2">
             <Button
               onClick={handleRenegeClick}
-              color="gray"
-              size="sm"
+              variant="red"
+              size="md"
             >
               {game.action}
             </Button>
@@ -76,10 +58,10 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
+      <div className='my-auto self-center text-left text-xs font-bold'>
         {game.player}
       </div>
-      <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
+      <div className='my-auto self-center text-left text-xs font-bold'>
         {game.wager} pieces
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -94,9 +76,9 @@ type LiveGamesProps = {
 
 function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
   return (
-    <section className='flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-6'>
-      <div className='flex max-w-full flex-col self-start bg-primary-red px-5 py-2'>
-        <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
+    <section className='flex grow flex-col self-stretch border-2 border-solid border-bg2 bg-bg1 rounded-b-[5px] pb-6'>
+      <div className='flex max-w-full flex-col self-start bg-bg2 px-5 py-2'>
+        <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3'>
           THEIR TURN
         </div>
       </div>

@@ -29,8 +29,8 @@ function NotificationItem({ notification }: { notification: GameState }) {
               initializeAcceptGame(opponent, Number(wager), multisig)
               navigate('/accept-game')
             }}
-            color='yellow'
-            size='sm'
+            variant='green'
+            size='md'
           >
             {action}
           </Button>
@@ -42,8 +42,8 @@ function NotificationItem({ notification }: { notification: GameState }) {
               initializeFinishGame(opponent, Number(wager), Answer.InTheWeeds)
               navigate('/finish-game');
             }}
-            size="sm"
-            color='yellow'
+            variant='green'
+            size='md'
           >
             {action}
           </Button>
@@ -60,8 +60,8 @@ function NotificationItem({ notification }: { notification: GameState }) {
                 navigate('/claim-prize/lose');
               }
             }}
-            color="yellow"
-            size='sm'
+            variant='green'
+            size='md'
           >
             {action}
           </Button>
@@ -71,8 +71,8 @@ function NotificationItem({ notification }: { notification: GameState }) {
         return (
           <>
             <Button
-              color={action === 'Delete' ? 'gray' : 'yellow'}
-              size="sm"
+              variant={action === 'Delete' ? 'red' : 'gray'}
+              size='md'
             >
               {action}
             </Button>
@@ -83,10 +83,10 @@ function NotificationItem({ notification }: { notification: GameState }) {
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
+      <div className='my-auto self-center text-left text-xs font-bold tracking-tight max-sm:ml-2'>
         {opponent}
       </div>
-      <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
+      <div className='my-auto self-center text-left text-xs font-bold tracking-tight max-sm:ml-2'>
         {wager} pieces
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
@@ -100,9 +100,9 @@ type NotificationsProps = {
 
 function Notifications({ notifications }: NotificationsProps) {
   return (
-    <section className='flex grow flex-col border-2 border-solid border-primary-pink pb-6'>
-      <div className='flex max-w-full flex-col self-start bg-primary-pink px-5 py-2'>
-        <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3 text-neutral-900'>
+    <section className='flex grow flex-col border-2 border-solid border-bg2 pb-6 bg-bg1 rounded-t-[5px]'>
+      <div className='flex max-w-full flex-col self-start bg-bg2 px-5 py-2'>
+        <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3'>
           YOUR TURN
         </div>
       </div>

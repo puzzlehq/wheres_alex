@@ -17,7 +17,7 @@ function Opponent({ opponent }: OpponentProps) {
           {displayOpponent}
         </div>
       </div>
-      to find where you hid Alex!
+      to find where you hid the treasure!
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { configureConnection } from '@puzzlehq/sdk';
 
 (async () => {
   configureConnection({
-    dAppName: "Where's Alex?",
+    dAppName: "Treasure Hunt",
     dAppDescription: "A friendly wager between friends",
     dAppUrl: "https://wheresalex.puzzle.online",
     dAppIconURL: "https://wheresalex.puzzle.online/swaggers.png"

@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware'
 
 export enum Step {
   _01_AcceptGame,
-  _02_FindAlex,
+  _02_FindTreasure,
   _03_Confirmed,
 }
 
@@ -44,7 +44,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
       set({ opponent, wager, multisig, step: Step._01_AcceptGame });
     },
     acceptGame: async () => {
-      set({ step: Step._02_FindAlex });
+      set({ step: Step._02_FindTreasure });
     },
     rejectGame: async () => {
       get().close()

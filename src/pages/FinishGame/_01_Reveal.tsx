@@ -1,6 +1,6 @@
 import Button from "../../components/Button";
 import PageHeader from "../../components/PageHeader";
-import SelectedAlexLocation from "../../components/SelectedAlexLocation";
+import SelectedTreasureLocation from "../../components/SelectedTreasureLocation";
 import Wager from "../../components/Wager";
 import { useFinishGameStore } from "./store"
 
@@ -19,9 +19,9 @@ const Reveal = () => {
       />
       {answer &&
         <div className='flex flex-col gap-2'>
-          <SelectedAlexLocation answer={answer} win={undefined} />
+          <SelectedTreasureLocation answer={answer} win={undefined} />
           <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
-            You chose to hide Alex {answer}!
+            You chose to hide the treasure {answer}!
           </div>
         </div>
       }

@@ -9,7 +9,7 @@ function GameInfo(props: { multisig: string, eventId: string, newGame: boolean }
         className='z-0 h-full max-h-[5rem] max-w-[50%] object-contain'
         alt='Swaggers McPirate head'
       />
-      <div className='flex w-full flex-col items-center rounded-lg justify-center self-stretch bg-primary-green px-5 py-1.5'>
+      <div className='flex w-full flex-col items-center rounded-lg justify-center self-stretch bg-bg1 border-bg2 border-[5px] px-5 py-1.5'>
         <h1 className='max-w-[274px] self-center text-center text-3xl font-extrabold leading-8 text-primary-black'>
           {props.newGame ? 'GAME BEGUN!' : 'GAME SUBMITTED!'}
         </h1>

@@ -4,8 +4,8 @@ import GameState from '../state/game_states';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
-import LiveGames from '../components/LiveGames';
-import Notifications from '../components/Notifications';
+import LiveGames from '../components/TheirTurn';
+import Notifications from '../components/YourTurn';
 import { usePieces } from '../state/usePieces';
 
 function Home() {
@@ -125,6 +125,7 @@ function Home() {
         <Button
           color='yellow'
           onClick={() => navigate('/new-game')}
+          className='w-fit self-center'
         >
           NEW GAME
         </Button>
@@ -135,8 +136,8 @@ function Home() {
         {' '}
         {/* Adding px-4 back here to maintain padding for the bottom button */}
         <Button
-          color='blue'
-          size='sm'
+          variant='gray'
+          size='md'
         >
           Past Games
         </Button>

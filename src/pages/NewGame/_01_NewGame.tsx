@@ -31,7 +31,7 @@ function NewGame() {
       <div className='flex flex-col flex-grow'/>
       <Button
         className='mb-6'
-        onClick={() => setStep('2_HideAlex')}
+        onClick={() => setStep('2_HideTreasure')}
         color='green'
         disabled={!aleoAddressRegex.test(inputs.opponent ?? '') || inputs.opponent === account.address}
       >

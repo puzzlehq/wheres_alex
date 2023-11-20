@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Nav from '../../components/Nav';
-import ChooseAlexLocation from '../../components/ChooseAlexLocation';
+import ChooseTreasureLocation from '../../components/ChooseTreasureLocation';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
 import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { Answer } from '../../state/game_states';
 
-function HideAlex() {
+function HideTreasure() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
   const [_, setStep] = useAtom(proposeGameStepAtom);
 
@@ -16,7 +16,7 @@ function HideAlex() {
       <div className='flex h-full w-full flex-col items-center px-5 gap-2'>
         <Nav step={2} />
         <PageHeader text='WHERE WOULD YOU LIKE TO HIDE ALEX?' bg='bg-primary-blue' />
-        <ChooseAlexLocation
+        <ChooseTreasureLocation
           setAnswer={(answer: Answer) => setInputs({...inputs, answer})}
           answer={inputs.answer as Answer}
           hiding={true}
@@ -35,4 +35,4 @@ function HideAlex() {
   );
 }
 
-export default HideAlex;
+export default HideTreasure;
