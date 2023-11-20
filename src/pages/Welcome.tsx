@@ -31,8 +31,7 @@ export const Welcome = () => {
           TREASURE<br />HUNT
         </h1>
         <p className='mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
-          A thrilling game showcasing the power of Aleo and the Puzzle
-          multiparty privacy stack through a wager between friends!
+          Arhhh! Pirate Leo the Lion hid his Puzzle Piece treasure on Aleo! Use your Puzzle Pieces to try to find the correct chests where he hid his treasure!
         </p>
         <Button
           className='font-header max-w-[250px] font-pirata'

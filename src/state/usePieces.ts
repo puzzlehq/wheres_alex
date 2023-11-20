@@ -1,4 +1,4 @@
-import { getRecords, Record, useAccount } from "@puzzlehq/sdk";
+import { getRecords, Record } from "@puzzlehq/sdk";
 import { useEffect, useMemo, useState } from "react";
 
 export const usePieces = () => {

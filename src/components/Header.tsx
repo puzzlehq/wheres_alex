@@ -4,6 +4,7 @@ import Button from './Button';
 import { useAtom } from 'jotai';
 import { acceptGameInputsAtom, acceptGameStepAtom } from '../pages/AcceptGame';
 import { proposeGameInputsAtom, proposeGameStepAtom } from '../pages/NewGame';
+import { useNavigate } from 'react-router-dom';
 
 export const AppHeader = () => {
   const { account } = useAccount();
@@ -11,7 +12,9 @@ export const AppHeader = () => {
   const [_1, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
   const [_2, setAcceptGameStep]   = useAtom(acceptGameStepAtom);
   const [_3, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
-  const [_4, setProposeGameStep]   = useAtom(proposeGameStepAtom);
+  const [_4, setProposeGameStep] = useAtom(proposeGameStepAtom);
+  
+  const navigate = useNavigate()
 
   return (
     <div className='flex w-full items-center justify-between gap-5  p-4'>
@@ -22,6 +25,7 @@ export const AppHeader = () => {
             src={swaggers}
             className='max-h-[100px] self-stretch overflow-hidden fill-white object-cover object-center'
             onClick={() => {
+              navigate('/')
               setAcceptGameStep('1_AcceptGame');
               setProposeGameStep('1_NewGame');
               setAcceptGameInputs({})
@@ -32,7 +36,9 @@ export const AppHeader = () => {
             size='md'
             variant='secondary'
             className='w-fit'
-            onClick={disconnect}
+            onClick={async () => {
+              disconnect().then(() => navigate('/'));
+            }}
             disabled={loading}
           >
             {shortenAddress(account.address)}

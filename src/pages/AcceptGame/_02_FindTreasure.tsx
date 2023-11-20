@@ -1,15 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import PageHeader from '../../components/PageHeader';
-import Nav from '../../components/Nav';
 import ChooseTreasureLocation from '../../components/ChooseTreasureLocation';
-import Button from '../../components/Button';
-import { acceptGameInputsAtom, acceptGameStepAtom } from './index';
+import { acceptGameInputsAtom, acceptGameStepAtom } from './index.js';
 import { useAtom } from 'jotai';
 import { Answer } from '../../state/game_states';
-import { requestCreateEvent } from '@puzzlehq/sdk';
-import { EventType } from '@puzzlehq/types';
-import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
-import { useState } from 'react';
+import { Banner } from '../../components/Banner';
 
 function FindTreasure() {
   const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
@@ -17,50 +11,38 @@ function FindTreasure() {
 
   const answer = acceptGameInputs.player_two_answer_readable;
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-  const createEvent = async () => {
-    setLoading(true);
-    const response = await requestCreateEvent({
-      type: EventType.Execute,
-      programId: GAME_PROGRAM_ID,
-      functionId: GAME_FUNCTIONS.accept_game,
-      fee: stepFees.accept_game,
-      inputs: Object.values(acceptGameInputs),
-    });
-    if (response.error) {
-      setError(response.error);
-    } else if (response.eventId) {
-      /// todo - other things here?
-      setStep('3_Confirmed');
-    }
-    setLoading(false);
-  };
-
   return (
     <main className='flex h-full flex-col justify-between'>
-      <div className='flex h-full w-full flex-col items-center px-5 gap-6'>
-        <div className='w-full flex flex-col gap-2'>
-          <Nav step={2} />
-          <PageHeader bg='bg-primary-blue' text={`FIND THE TREASURE?`} />
-        </div>
-        <ChooseTreasureLocation
-          setAnswer={(answer) => {
-            const newAnswer = answer === Answer.left ? '0field' : '1field' 
-            setAcceptGameInputs({ ...acceptGameInputs, player_two_answer: newAnswer, player_two_answer_readable: answer })
+      <div className='flex h-full w-full flex-col items-center px-5'>
+        <Banner
+          title={<>Find the<br/>treasure</>}
+          body={
+            <>
+              <p className='mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
+                Choose where you think Pirate Leo hid his treasure. Because of Aleo's privacy, you won't be able to know until after you have submitted your guess.
+              </p>
+              <ChooseTreasureLocation
+                setAnswer={(answer) => {
+                  const newAnswer = answer === Answer.left ? '0field' : '1field' 
+                  setAcceptGameInputs({ ...acceptGameInputs, player_two_answer: newAnswer, player_two_answer_readable: answer })
+                }}
+                answer={answer}
+                hiding={false}
+              />
+            </>
+          }
+          onClickLeft={() => {
+            setStep('1_AcceptGame');
+            setAcceptGameInputs({ ...acceptGameInputs, player_two_answer: undefined, player_two_answer_readable: undefined })
           }}
-          answer={answer}
-          hiding={false}
+          onClickRight={() => 
+            setStep('3_AboutPuzzle')
+          }
+          rightDisabled={acceptGameInputs.player_two_answer === undefined || acceptGameInputs.player_two_answer_readable === undefined}
+          step={1}
+          totalSteps={5}
         />
-        <div className='flex flex-grow flex-col' />
-        <Button
-          onClick={createEvent}
-          disabled={!answer || loading}
-          variant='green'
-        >
-          NEXT
-        </Button>
-      </div>
+        </div>
     </main>
   );
 }

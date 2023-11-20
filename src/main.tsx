@@ -8,8 +8,8 @@ import { configureConnection } from '@puzzlehq/sdk';
   configureConnection({
     dAppName: "Treasure Hunt",
     dAppDescription: "A friendly wager between friends",
-    dAppUrl: "https://wheresalex.puzzle.online",
-    dAppIconURL: "https://wheresalex.puzzle.online/swaggers.png"
+    dAppUrl: "https://treasurehunt.puzzle.online",
+    dAppIconURL: "https://i.imgur.com/TXRCKod.png"
   });
   return ReactDOM.createRoot(document.getElementById('root')!).render(
     <div className='h-screen w-screen'>

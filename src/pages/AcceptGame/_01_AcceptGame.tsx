@@ -1,73 +1,45 @@
-import Wager from '../../components/Wager';
-import PageHeader from '../../components/PageHeader';
-import Opponent from '../../components/Opponent';
-import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
-import { acceptGameInputsAtom, acceptGameStepAtom } from './index';
+import treasure_open_full from '../../assets/treasure_open_full.png'
+import treasure_open_empty from '../../assets/treasure_open_empty.png'
 import { useAtom } from 'jotai';
-import { usePieces } from '../../state/usePieces';
-import { useEffect, useState } from 'react';
-import { requestCreateEvent } from '@puzzlehq/sdk';
-import { EventType } from '@puzzlehq/types';
-import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
+import { acceptGameStepAtom } from './index.js';
+import { Banner } from '../../components/Banner.js';
 
 const AcceptGame = () => {
-  const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
-  const [_, setStep] = useAtom(acceptGameStepAtom);
-  const { largestPiece } = usePieces();
+  const [_, setAcceptGameStep] = useAtom(acceptGameStepAtom);
   const navigate = useNavigate();
 
-  const opponent = acceptGameInputs.opponent ?? '';
-  const wagerAmount = acceptGameInputs.wagerAmount ?? 0;
-  const wagerRecord = largestPiece;
-
-  useEffect(() => {
-    setAcceptGameInputs({ ...acceptGameInputs, wagerRecord: wagerRecord?.plaintext.toString().replace(/\s+/g, '') });
-  }, []);
-  
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-  const createEvent = async () => {
-    setLoading(true);
-    const response = await requestCreateEvent({
-      type: EventType.Execute,
-      programId: GAME_PROGRAM_ID,
-      functionId: GAME_FUNCTIONS.set_wager,
-      fee: stepFees.set_wager,
-      inputs: Object.values(acceptGameInputs),
-    });
-    if (response.error) {
-      setError(response.error);
-    } else if (response.eventId) {
-      /// todo - other things here?
-      setStep('2_FindTreasure');
-    }
-    setLoading(false);
-  }
-
   return (
-    <main className='flex h-full w-full flex-col justify-center gap-8'>
-      <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
-      <Opponent opponent={opponent} />
-      <Wager wagerAmount={Number(wagerAmount)} />
-      <div className='flex flex-grow flex-col' />
-      <div className='flex w-full flex-col gap-4'>
-        <Button
-          variant='green'
-          disabled={loading}
-          onClick={createEvent}
-        >
-          ACCEPT WAGER
-        </Button>
-        <Button
-          variant='gray'
-          onClick={() => {
-            /// todo - way more here
+    <main className='h-full w-full items-stretch justify-between'>
+      <div className='w-full flex flex-col justify-center align-items-center gap-2'>
+        <div className='flex flex-col w-full justify-center'>
+          <div className='flex gap-4 w-full justify-center'>
+            <img
+              src={treasure_open_empty}
+              className='w-1/3'
+              alt={'empty treasure'}
+            />
+            <img
+              src={treasure_open_full}
+              className='w-1/3'
+              alt={'full treasure'}
+            />
+          </div>
+        </div>
+        <Banner
+          title={<>Hidden on<br/>Aleo</>}
+          body={
+            <p className='mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
+              Pirate Leo the Lion hid the location of his Puzzle Piece treasure on Aleo. This is only possible because Aleo is the first blockchain to have private data onchain using zero-knowledge proofs.
+            </p>
+          }
+          onClickLeft={() => {
             navigate('/')
           }}
-        >
-          REJECT
-        </Button>
+          onClickRight={() => setAcceptGameStep('2_FindTreasure')}
+          step={0}
+          totalSteps={5}
+        />
       </div>
     </main>
   );
