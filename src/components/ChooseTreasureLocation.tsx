@@ -12,8 +12,8 @@ function ChooseTreasureLocation({ setAnswer, answer, hiding }: HideTreasureProps
   return (
     <section className='flex max-w-full flex-col gap-4 mt-4'>
       <div className='flex gap-5'>
-        <TreasureButton imgSrc={inWeedsImg} text='In the Weeds' onClick={() => setAnswer(Answer.InTheWeeds)} selected={answer ? answer === Answer.InTheWeeds : undefined} />
-        <TreasureButton imgSrc={behindBuildingImg} text='Behind the Building' onClick={() => setAnswer(Answer.BehindTheBuilding)} selected={answer ? answer === Answer.BehindTheBuilding : undefined} />
+        <TreasureButton imgSrc={inWeedsImg} text='In the Weeds' onClick={() => setAnswer(Answer.left)} selected={answer ? answer === Answer.left : undefined} />
+        <TreasureButton imgSrc={behindBuildingImg} text='Behind the Building' onClick={() => setAnswer(Answer.right)} selected={answer ? answer === Answer.right : undefined} />
       </div>
       <p className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
         {((): string => {

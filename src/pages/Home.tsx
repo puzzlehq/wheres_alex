@@ -20,7 +20,6 @@ function Home() {
       wager: "20",
       action: 'Finish',
       win: true
-      // answer: Answer.InTheWeeds
     },
     {
       gameMultisig: 'aleo3',
@@ -36,7 +35,6 @@ function Home() {
       wager: "50",
       action: 'Claim',
       win: false,
-      // answer: Answer.InTheWeeds
     },
     {
       gameMultisig: 'aleo6',
@@ -45,7 +43,6 @@ function Home() {
       wager: "60",
       action: 'Claim',
       win: true,
-      // answer: Answer.BehindTheBuilding
     },
   ];
 
@@ -123,7 +120,8 @@ function Home() {
       <div className='flex flex-col w-full px-1 gap-4'>
         <TotalWinnings amount={totalBalance} />
         <Button
-          color='yellow'
+          variant='primary'
+          size='lg'
           onClick={() => navigate('/new-game')}
           className='w-fit self-center'
         >

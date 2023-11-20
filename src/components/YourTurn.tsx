@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import GameState, { Answer } from "../state/game_states";
-import { useAcceptGameStore } from "../pages/AcceptGame/store";
 import { useClaimPrizeLoseStore } from "../pages/ClaimPrize/Lose/store";
 import { useClaimPrizeWinStore } from "../pages/ClaimPrize/Win/store";
 import { useFinishGameStore } from "../pages/FinishGame/store";
 import Button from "./Button";
+import { useAtom } from "jotai";
+import { acceptGameInputsAtom } from "../pages/AcceptGame";
 
 function NotificationItem({ notification }: { notification: GameState }) {
   
@@ -15,7 +16,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
 
   const navigate = useNavigate();
 
-  const [initializeAcceptGame] = useAcceptGameStore((state) => [state.initialize]);
+  const [_1, initializeAcceptGame] = useAtom(acceptGameInputsAtom);
   const [initializeFinishGame] = useFinishGameStore((state) => [state.initialize]);
   const [initializeClaimLose] = useClaimPrizeLoseStore((state) => [state.initialize]);
   const [initializeClaimWin] = useClaimPrizeWinStore((state) => [state.initialize]);
@@ -39,7 +40,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
         return (
           <Button
             onClick={() => {
-              initializeFinishGame(opponent, Number(wager), Answer.InTheWeeds)
+              initializeFinishGame(opponent, Number(wager), Answer.left)
               navigate('/finish-game');
             }}
             variant='green'
@@ -53,10 +54,10 @@ function NotificationItem({ notification }: { notification: GameState }) {
           <Button
             onClick={() => {
               if (notification.win) {
-                initializeClaimWin(opponent, Number(wager), Answer.InTheWeeds);
+                initializeClaimWin(opponent, Number(wager), Answer.left);
                 navigate('/claim-prize/win');
               } else {
-                initializeClaimLose(opponent, Number(wager), Answer.BehindTheBuilding);
+                initializeClaimLose(opponent, Number(wager), Answer.right);
                 navigate('/claim-prize/lose');
               }
             }}

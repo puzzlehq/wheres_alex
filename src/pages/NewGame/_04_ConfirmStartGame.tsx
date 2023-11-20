@@ -68,7 +68,7 @@ function ConfirmStartGame() {
           message_5: fields.field_5,
           signature: signature.signature,
           nonce: messageToSign, /// todo - make this random
-          answer: inputs.answer === Answer.InTheWeeds ? '0field' : '1field',
+          answer: inputs.answer === Answer.left ? '0field' : '1field',
           seed,
         };
         const createEventResponse = await requestCreateEvent({

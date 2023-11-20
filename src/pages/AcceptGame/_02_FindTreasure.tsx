@@ -46,7 +46,7 @@ function FindTreasure() {
         </div>
         <ChooseTreasureLocation
           setAnswer={(answer) => {
-            const newAnswer = answer === Answer.InTheWeeds ? '0field' : '1field' 
+            const newAnswer = answer === Answer.left ? '0field' : '1field' 
             setAcceptGameInputs({ ...acceptGameInputs, player_two_answer: newAnswer, player_two_answer_readable: answer })
           }}
           answer={answer}
@@ -56,7 +56,7 @@ function FindTreasure() {
         <Button
           onClick={createEvent}
           disabled={!answer || loading}
-          color='green'
+          variant='green'
         >
           NEXT
         </Button>

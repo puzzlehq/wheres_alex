@@ -46,8 +46,8 @@ type GameState =
 export default GameState;
 
 export enum Answer {
-  InTheWeeds = 'on the left',
-  BehindTheBuilding = 'on the right'
+  left = 'on the left',
+  right = 'on the right'
 }
 
 export const aleoAddressRegex = /^aleo1.{58}$/i;

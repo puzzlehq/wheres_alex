@@ -16,14 +16,14 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
           loading='lazy'
           src={inWeedsImg}
           className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                      ${answer === Answer.InTheWeeds ? '' : 'opacity-40'}`}
-          alt={Answer.InTheWeeds}
+                      ${answer === Answer.left ? '' : 'opacity-40'}`}
+          alt={Answer.left}
         />
         {win === undefined &&
           <div
             className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer === Answer.InTheWeeds ? '' : 'opacity-40'}
-                        ${answer === Answer.InTheWeeds ? 'text-primary-green' : 'text-primary-white'}`}
+                        ${answer === Answer.left ? '' : 'opacity-40'}
+                        ${answer === Answer.left ? 'text-primary-green' : 'text-primary-white'}`}
           >
             Left
           </div>
@@ -39,15 +39,15 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
           loading='lazy'
           src={behindBuildingImg}
           className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
-                      ${answer ===  Answer.BehindTheBuilding ? '' : 'opacity-40'}`}
-          alt={Answer.BehindTheBuilding}
+                      ${answer ===  Answer.right ? '' : 'opacity-40'}`}
+          alt={Answer.right}
         />
         {win === undefined &&
           <div
             className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
-                        ${answer ===  Answer.BehindTheBuilding ? '' : 'opacity-40'}
+                        ${answer ===  Answer.right ? '' : 'opacity-40'}
                         ${
-                          answer ===  Answer.BehindTheBuilding
+                          answer ===  Answer.right
                             ? 'text-primary-green'
                             : 'text-primary-white'
                         }`}
@@ -85,25 +85,25 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
             <RightTreasure/>
           </> : 
           <>
-            {win === true && answer === Answer.InTheWeeds &&
+            {win === true && answer === Answer.left &&
               <>
                 <LeftTreasure />
                 <WinText/>
               </>
             }
-            {win === true && answer === Answer.BehindTheBuilding &&
+            {win === true && answer === Answer.right &&
               <>
                 <WinText/>
                 <RightTreasure />
               </>
             }
-            {win === false && answer === Answer.InTheWeeds &&
+            {win === false && answer === Answer.left &&
               <>
                 <LeftTreasure />
                 <LoseText/>
               </>
             }
-            {win === false && answer === Answer.BehindTheBuilding &&
+            {win === false && answer === Answer.right &&
               <>
                 <LoseText/>
                 <RightTreasure />

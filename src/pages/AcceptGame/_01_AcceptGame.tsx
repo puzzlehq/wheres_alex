@@ -53,14 +53,14 @@ const AcceptGame = () => {
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
         <Button
-          color='green'
+          variant='green'
           disabled={loading}
           onClick={createEvent}
         >
           ACCEPT WAGER
         </Button>
         <Button
-          color='gray'
+          variant='gray'
           onClick={() => {
             /// todo - way more here
             navigate('/')
