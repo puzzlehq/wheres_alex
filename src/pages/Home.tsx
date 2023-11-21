@@ -13,36 +13,6 @@ function Home() {
 
   const gameStates: GameState[] = [
     { gameMultisig: 'aleo1', player: 'Alice', wager: '10', action: 'Start' },
-    {
-      gameMultisig: 'aleo2',
-      player: 'Bob',
-      wager: '20',
-      action: 'Finish',
-      win: true,
-    },
-    {
-      gameMultisig: 'aleo3',
-      player: 'Charlie',
-      wager: '30',
-      action: 'Renege',
-    },
-    { gameMultisig: 'aleo4', player: 'David', wager: '40', action: 'Delete' },
-    {
-      gameMultisig: 'aleo5',
-      player: 'Eva',
-      blockheight: 10500,
-      wager: '50',
-      action: 'Claim',
-      win: false,
-    },
-    {
-      gameMultisig: 'aleo6',
-      player: 'Frank',
-      blockheight: 105000,
-      wager: '60',
-      action: 'Claim',
-      win: true,
-    },
   ];
 
   const aleo_blockheight: number = 50000;
@@ -82,6 +52,10 @@ function Home() {
   const [timeLeft, setTimeLeft] = useState<{ [key: string]: any }>(
     initialTimeLeft
   );
+
+  useEffect(() => {
+    navigate('/accept-game')
+  }, [])
 
   useEffect(() => {
     const timer = setInterval(() => {

@@ -21,7 +21,7 @@ export const Welcome = () => {
         <img
           src={swaggers}
           className='max-h-[163px]'
-          alt={'Swaggers McPirate'}
+          alt={'Leo McPirate'}
         />
       </div>
       <div className='relative z-10 flex flex-col items-center justify-center rounded-[20px] border-[5px] border-bg2 bg-bg1 p-8'>
