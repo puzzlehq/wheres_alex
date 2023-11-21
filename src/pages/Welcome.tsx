@@ -1,5 +1,4 @@
 import { useConnect, useAccount } from '@puzzlehq/sdk';
-import bottomImageSrc from '../assets/treasure_map.png';
 import swaggers from '../assets/swaggers.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect,  } from 'react';
@@ -14,6 +13,7 @@ export const Welcome = () => {
   useEffect(() => {
     if (account) {
       navigate('/');
+      
     }
   }, [account, navigate]);
 
@@ -42,14 +42,6 @@ export const Welcome = () => {
           {loading ? 'Loading...' : loading ? 'Connecting...' : 'Connect Wallet'}
         </Button>
       </div>
-      <img
-        src={bottomImageSrc}
-        alt='Treasure Map'
-        className='fixed justify-center items-center w-screen bottom-0 left-0 object-contain'
-        style={{
-          transformOrigin: 'center bottom'
-        }}
-      />
     </div>
   );
 };

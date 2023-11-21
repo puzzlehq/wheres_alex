@@ -2,7 +2,7 @@ import treasure_closed from '../assets/treasure_closed.png';
 import { Answer } from '../state/game_states';
 
 type HideTreasureProps = {
-  setAnswer: (answer: Answer) => void;
+  setAnswer?: (answer: Answer) => void;
   answer?: Answer;
   hiding: boolean; // are we hiding alex? or finding alex?
 };
@@ -11,8 +11,16 @@ function ChooseTreasureLocation({ setAnswer, answer, hiding }: HideTreasureProps
   return ( 
     <section className='flex max-w-full flex-col gap-4 mt-4 justify-center'>
       <div className='flex gap-5 w-full justify-center'>
-        <TreasureButton imgSrc={treasure_closed} text='Left' onClick={() => setAnswer(Answer.left)} selected={answer ? answer === Answer.left : undefined} />
-        <TreasureButton imgSrc={treasure_closed} text='Right' onClick={() => setAnswer(Answer.right)} selected={answer ? answer === Answer.right : undefined} />
+        <TreasureButton
+          imgSrc={treasure_closed}
+          text='Left'
+          onClick={() => setAnswer && setAnswer(Answer.left)} selected={answer ? answer === Answer.left : undefined}
+        />
+        <TreasureButton
+          imgSrc={treasure_closed}
+          text='Right'
+          onClick={() => setAnswer && setAnswer(Answer.right)} selected={answer ? answer === Answer.right : undefined}
+        />
       </div>
       {/* <p className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary'>
         {((): string => {

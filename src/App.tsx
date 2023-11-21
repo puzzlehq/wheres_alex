@@ -12,6 +12,10 @@ import Reveal from './pages/FinishGame/_01_Reveal.js';
 import { useEffect, useState } from 'react';
 import { useGameStore } from './state/store.js';
 import { usePieces } from './state/usePieces.js';
+import { atom, useAtom } from 'jotai';
+import MapImage from './components/MapImage.js';
+
+export const mapStepAtom = atom<number>(0);
 
 function App() {
   const { account } = useAccount();
@@ -58,7 +62,7 @@ function App() {
 
   return (
     <div className='font-body flex min-h-screen justify-center bg-gradient-to-b from-[#7CF7FF] to-[#0DD4FF]'>
-      <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
+      <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md z-10'>
         <Router>
           {account && account?.address && (
             <AppHeader />
@@ -81,6 +85,7 @@ function App() {
           </div>
         </Router>
       </div>
+      <MapImage/>
     </div>
   );
 }

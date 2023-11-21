@@ -1,39 +1,46 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { acceptGameInputsAtom, acceptGameStepAtom } from './index.js';
 import { useAtom } from 'jotai';
-import { Banner } from '../../components/Banner';
+import { NakedBanner } from '../../components/Banner';
+import Button from '../../components/Button.js';
+import { useNavigate } from 'react-router-dom';
 
-function Wager() {
-  const [acceptGameInputs, _1] = useAtom(acceptGameInputsAtom);
+function Win() {
+  const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
   const [_2, setStep] = useAtom(acceptGameStepAtom);
+
+  const navigate = useNavigate();
 
   return (
     <main className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
-        <Banner
-          title={<>Use Yer<br/>Pieces</>}
+        <NakedBanner
+          title='You Won!'
           body={
             <>
               <p className='mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
-                Puzzle pieces are the keys needed to open the chests and check for the treasure. If you guess right, you win the matching amount of Puzzle Pieces from the treasure! But beware -- Pirate Leo the Lion is a pirate! If you guess wrong, Leo will loot your puzzle pieces!              </p>
+                Aye matey, you found the booty
+              </p>
               <div className='flex flex-col'>
-                <p>Wager Amount</p>
+                <p>Amount won</p>
                 <p className='font-header text-primary text-4xl'>{acceptGameInputs.wagerAmount ?? 10} pieces</p>
               </div>
+              <Button
+                className='w-fit'
+                onClick={() => {
+                  navigate('/')
+                  setStep('1_AcceptGame');
+                  setAcceptGameInputs({});
+                }}
+              >
+                Home
+              </Button>
             </>
           }
-          onClickLeft={() => {
-            setStep('3_AboutPuzzle');
-          }}
-          onClickRight={() => 
-            setStep('5_Submit')
-          }
-          step={3}
-          totalSteps={5}
         />
         </div>
     </main>
   );
 }
 
-export default Wager;
+export default Win;

@@ -5,6 +5,7 @@ import { useAtom } from 'jotai';
 import { acceptGameInputsAtom, acceptGameStepAtom } from '../pages/AcceptGame';
 import { proposeGameInputsAtom, proposeGameStepAtom } from '../pages/NewGame';
 import { useNavigate } from 'react-router-dom';
+import { mapStepAtom } from '../App';
 
 export const AppHeader = () => {
   const { account } = useAccount();
@@ -13,7 +14,8 @@ export const AppHeader = () => {
   const [_2, setAcceptGameStep]   = useAtom(acceptGameStepAtom);
   const [_3, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
   const [_4, setProposeGameStep] = useAtom(proposeGameStepAtom);
-  
+  const [_5, setMapStep] = useAtom(mapStepAtom);
+
   const navigate = useNavigate()
 
   return (
@@ -26,6 +28,7 @@ export const AppHeader = () => {
             className='max-h-[100px] self-stretch overflow-hidden fill-white object-cover object-center'
             onClick={() => {
               navigate('/')
+              setMapStep(0);
               setAcceptGameStep('1_AcceptGame');
               setProposeGameStep('1_NewGame');
               setAcceptGameInputs({})

@@ -26,10 +26,10 @@ function AboutPuzzle() {
             </>
           }
           onClickLeft={() => {
-            setStep('1_AcceptGame');
+            setStep('2_FindTreasure');
           }}
           onClickRight={() => 
-            setStep('3_Confirmed')
+            setStep('4_Wager')
           }
           step={2}
           totalSteps={5}
