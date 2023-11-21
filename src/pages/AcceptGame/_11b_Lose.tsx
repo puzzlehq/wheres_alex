@@ -19,37 +19,36 @@ function Lose() {
           title='You Lose'
           body={
             <div className='flex flex-col gap-4 justify-center items-center'>
-  <p className='mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
-    Better luck next time
-  </p>
-  <div className='flex flex-col items-center'>
-    <p>Amount lost</p>
-    <p className='font-header text-primary text-4xl'>{acceptGameInputs.wagerAmount ?? 10} pieces</p>
-  </div>
-  <div className='flex justify-center'>
-    <img
-      src={treasure_open_empty}
-      className='w-1/3 self-center'
-    />
-  </div>
+              <p className='mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
+                Better luck next time
+              </p>
+              <div className='flex flex-col items-center'>
+                <p>Amount lost</p>
+                <p className='font-header text-primary text-4xl'>{acceptGameInputs.wagerAmount ?? 10} pieces</p>
+              </div>
+              <div className='flex justify-center'>
+                <img
+                  src={treasure_open_empty}
+                  className='w-1/3 self-center'
+                />
+              </div>
 
-  <div className='flex justify-center'>
-    <Button
-      className='w-fit'
-      onClick={() => {
-        navigate('/')
-        setStep('1_AcceptGame');
-        setAcceptGameInputs({});
-      }}
-    >
-      Home
-    </Button>
-  </div>
+              <div className='flex justify-center'>
+                <Button
+                  className='w-fit'
+                  onClick={() => {
+                    navigate('/')
+                    setStep('1_AcceptGame');
+                    setAcceptGameInputs({});
+                  }}
+                >
+                  Home
+                </Button>
+              </div>
             </div>
-            
           }
         />
-        </div>
+      </div>
     </main>
   );
 }

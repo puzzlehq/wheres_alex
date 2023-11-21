@@ -3,11 +3,10 @@ import FindTreasure from "./_02_FindTreasure";
 import AboutPuzzle from './_03_AboutPuzzle';
 import { atom, useAtom } from "jotai";
 import { AcceptGameInputs } from "../../state/manager";
-import { useNavigate } from "react-router-dom";
 import Wager from "./_04_Wager";
 import Submit from "./_05_Submit";
 import { mapStepAtom } from "../../App";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import UpdatingState from "./_06_UpdatingState";
 import CreatingProof from "./_07_CreatingProof";
 import Sending from "./_08_Sending";
@@ -22,24 +21,15 @@ export const acceptGameStepAtom = atom<Step>('1_AcceptGame');
 export const eventIdAtom = atom<string | undefined>(undefined);
 
 const AcceptGame = () => {
-  const navigate = useNavigate();
   const [_, setInputs] = useAtom(acceptGameInputsAtom);
   const [step, setStep] = useAtom(acceptGameStepAtom);
   const [__, setMapStep] = useAtom(mapStepAtom);
-  const [intervalId, setIntervalId] = useState(0);
 
   useEffect(() => {
     if (['6_UpdatingState', '10_Checking'].includes(step)) {
-      let mapStep = 0
-      const interval = setInterval(() => {
-        mapStep += 1;
-        setMapStep(mapStep);
-      }, 1500)
-      setIntervalId(interval);
+      setMapStep(true)
     } else if (['9_Sent', '11a_win', '11b_lose', '1_AcceptGame'].includes(step)) {
-      clearInterval(intervalId);
-      setIntervalId(0);
-      setMapStep(0);
+      setMapStep(false);
     }
   }, [step])
   

@@ -12,10 +12,10 @@ import Reveal from './pages/FinishGame/_01_Reveal.js';
 import { useEffect, useState } from 'react';
 import { useGameStore } from './state/store.js';
 import { usePieces } from './state/usePieces.js';
-import { atom, useAtom } from 'jotai';
+import { atom } from 'jotai';
 import MapImage from './components/MapImage.js';
 
-export const mapStepAtom = atom<number>(0);
+export const mapStepAtom = atom<boolean>(false); // false for image, true for gif
 
 function App() {
   const { account } = useAccount();

@@ -28,7 +28,7 @@ export const AppHeader = () => {
             className='max-h-[100px] self-stretch overflow-hidden fill-white object-cover object-center'
             onClick={() => {
               navigate('/')
-              setMapStep(0);
+              setMapStep(false);
               setAcceptGameStep('1_AcceptGame');
               setProposeGameStep('1_NewGame');
               setAcceptGameInputs({})
