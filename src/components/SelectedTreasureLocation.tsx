@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import behindBuildingImg from '../assets/behind_building.svg';
-import inWeedsImg from '../assets/in_weeds.jpg';
 import { Answer } from '../state/game_states';
+import treasure_closed from '../assets/treasure_closed.png';
 
 type SelectedTreasureLocationProps = {
   answer: Answer,
@@ -14,7 +13,7 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
       <div className='flex flex-col gap-2 self-start w-1/2'>
         <img
           loading='lazy'
-          src={inWeedsImg}
+          src={treasure_closed}
           className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
                       ${answer === Answer.left ? '' : 'opacity-40'}`}
           alt={Answer.left}
@@ -23,7 +22,7 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
           <div
             className={`self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight
                         ${answer === Answer.left ? '' : 'opacity-40'}
-                        ${answer === Answer.left ? 'text-primary-green' : 'text-primary-white'}`}
+                        ${answer === Answer.left ? 'text-primary' : 'text-white'}`}
           >
             Left
           </div>
@@ -37,7 +36,7 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
       <div className='flex flex-col gap-2 self-start w-1/2'>
         <img
           loading='lazy'
-          src={behindBuildingImg}
+          src={treasure_closed}
           className={`aspect-square w-full self-stretch overflow-hidden rounded-[50%] object-cover object-center
                       ${answer ===  Answer.right ? '' : 'opacity-40'}`}
           alt={Answer.right}
@@ -48,8 +47,8 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
                         ${answer ===  Answer.right ? '' : 'opacity-40'}
                         ${
                           answer ===  Answer.right
-                            ? 'text-primary-green'
-                            : 'text-primary-white'
+                            ? 'text-primary'
+                            : 'text-white'
                         }`}
           >
             Right
@@ -62,10 +61,9 @@ function SelectedTreasureLocation({ answer, win }: SelectedTreasureLocationProps
   const WinText = () => {
     return (
       <div className='z-10 w-1/2'>
-        <p className="text-center text-primary-green text-6xl font-black">YOU<br />WON!</p>
+        <p className="text-center text-primary text-6xl font-black">YOU<br />WON!</p>
       </div>
     )
-
   }
 
   const LoseText = () => {

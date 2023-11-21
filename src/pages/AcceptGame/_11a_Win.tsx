@@ -24,7 +24,7 @@ function Win() {
   </p>
   <div className='flex flex-col items-center'>
     <p>Amount won</p>
-    <p className='font-header text-primary text-4xl'>{acceptGameInputs.wagerAmount ?? 10} pieces</p>
+    <p className='font-header text-primary text-4xl'>{acceptGameInputs.wager_amount ?? 10} pieces</p>
   </div>
   <div className='flex justify-center'>
     <img

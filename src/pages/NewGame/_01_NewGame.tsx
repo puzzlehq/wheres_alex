@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Nav from '../../components/Nav';
-import PageHeader from '../../components/PageHeader';
-import Button from '../../components/Button';
 import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { useAtom } from 'jotai';
 import { aleoAddressRegex } from '../../state/game_states';
 import { useAccount } from '@puzzlehq/sdk';
+import { Banner } from '../../components/Banner';
+import { useNavigate } from 'react-router-dom';
 
 function NewGame() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
@@ -14,29 +13,34 @@ function NewGame() {
 
   const opponent = inputs.opponent;
 
+  const navigate = useNavigate()
+
   return (
-    <div className='flex h-full w-full flex-col justify-between items-center px-5 gap-2'>
-      <Nav step={1} />
-      <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
-      <input
-        type='text'
-        className='mt-5 w-full rounded-lg border-[3px] bg-transparent border-solid border-primary-gray p-4 text-sm font-semibold leading-4 max-md:mr-px'
-        placeholder="Enter Opponent's Address"
-        id='opponent'
-        value={opponent ?? ''}
-        onChange={(e) => {
-          setInputs({ ...inputs, opponent: e.target.value })
+    <div className='flex flex-col h-full w-full justify-between items-center px-5'>
+      <Banner
+        title={<>Choose yer<br/>matey</>}
+        body={
+          <div className='w-full'>
+            <input
+              type='text'
+              className='mt-5 w-full rounded-lg border-[3px] bg-transparent border-solid border-bg2 p-4 text-sm font-semibold leading-4 max-md:mr-px focus-visible:outline-primary'
+              placeholder="Enter Opponent's Address"
+              id='opponent'
+              value={opponent ?? ''}
+              onChange={(e) => {
+                setInputs({ ...inputs, opponent: e.target.value })
+              }}
+            />
+          </div>
+        }
+        onClickLeft={() => {
+          navigate('/')
         }}
+        onClickRight={() => setStep('2_HideTreasure')}
+        rightDisabled={!aleoAddressRegex.test(inputs.opponent ?? '') || inputs.opponent === account.address}
+        step={0}
+        totalSteps={5}
       />
-      <div className='flex flex-col flex-grow'/>
-      <Button
-        className='mb-6'
-        onClick={() => setStep('2_HideTreasure')}
-        color='green'
-        disabled={!aleoAddressRegex.test(inputs.opponent ?? '') || inputs.opponent === account.address}
-      >
-        NEXT
-      </Button>
     </div>
   );
 }

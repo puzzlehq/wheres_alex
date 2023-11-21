@@ -115,6 +115,7 @@ function Home() {
   
   const navigate = useNavigate();
 
+
   return (
     <div className='flex h-full flex-col justify-between '>
       <div className='flex flex-col w-full px-1 gap-4'>

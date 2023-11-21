@@ -44,7 +44,7 @@ export type Game = {
 
 export type ProposeGameInputs = {
   wager_record: Record;
-  amount: string;
+  wager_amount: string;
   sender_address: string;
   challenger: string;
   opponent: string;
@@ -56,7 +56,8 @@ export type ProposeGameInputs = {
   message_5: string;  
   signature: string;
   nonce: string;
-  answer: string;
+  player_one_answer: '0field' | '1field';
+  player_one_answer_readable: Answer;
   seed: string;
 }
 
@@ -73,8 +74,8 @@ export type AcceptGameInputs = {
   player_two_answer_readable: Answer;
   game_address: string;
   opponent: string;
-  wagerAmount: string;
-  wagerRecord: string;
+  wager_amount: string;
+  wager_record: string;
 }
 
 export type RevealAnswerInputs = {

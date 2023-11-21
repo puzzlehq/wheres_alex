@@ -18,7 +18,7 @@ function Wager() {
                 Puzzle pieces are the keys needed to open the chests and check for the treasure. If you guess right, you win the matching amount of Puzzle Pieces from the treasure! But beware -- Pirate Leo the Lion is a pirate! If you guess wrong, Leo will loot your puzzle pieces!              </p>
               <div className='flex flex-col'>
                 <p>Wager Amount</p>
-                <p className='font-header text-primary text-4xl'>{acceptGameInputs.wagerAmount ?? 10} pieces</p>
+                <p className='font-header text-primary text-4xl'>{acceptGameInputs.wager_amount ?? 10} pieces</p>
               </div>
             </>
           }

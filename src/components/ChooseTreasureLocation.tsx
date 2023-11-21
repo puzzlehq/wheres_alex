@@ -9,8 +9,8 @@ type HideTreasureProps = {
 
 function ChooseTreasureLocation({ setAnswer, answer, hiding }: HideTreasureProps) {
   return ( 
-    <section className='flex max-w-full flex-col gap-4 mt-4 justify-center'>
-      <div className='flex gap-5 w-full justify-center'>
+    <section className='flex flex-col gap-4 mt-4 justify-center'>
+      <div className='flex gap-5 justify-center'>
         <TreasureButton
           imgSrc={treasure_closed}
           text='Left'

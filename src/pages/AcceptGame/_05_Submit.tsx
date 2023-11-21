@@ -23,7 +23,7 @@ function Submit() {
               </div>
               <div className='flex flex-col'>
                 <p>Wager Amount</p>
-                <p className='font-header text-primary text-4xl'>{acceptGameInputs.wagerAmount ?? 10} pieces</p>
+                <p className='font-header text-primary text-4xl'>{acceptGameInputs.wager_amount ?? 10} pieces</p>
               </div>
             </>
           }

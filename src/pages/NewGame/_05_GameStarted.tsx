@@ -2,29 +2,43 @@
 import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
-import { eventIdAtom, proposeGameInputsAtom } from './index';
+import { eventIdAtom, proposeGameInputsAtom, proposeGameStepAtom } from './index';
+import { NakedBanner } from '../../components/Banner';
+import { useNavigate } from 'react-router-dom';
 
-function GameStarted(props: { done: () => void }) {
-  const [inputs] = useAtom(proposeGameInputsAtom);
+function GameStarted() {
+  const [inputs, setInput] = useAtom(proposeGameInputsAtom);
+  const [step, setStep] = useAtom(proposeGameStepAtom);
+  const navigate = useNavigate();
 
   const game_multisig = inputs.game_multisig;
   const [eventId] = useAtom(eventIdAtom);
 
+  
   return (
-    <main className='flex h-full flex-col justify-between'>
-      <div className='flex w-full h-full flex-col items-center px-5'>
-        {game_multisig && eventId && <GameInfo multisig={game_multisig} eventId={eventId} newGame={true} />}
-        <div className='flex flex-col flex-grow'/>
-        <div className='flex flex-col gap-4'>
-          <Button
-            onClick={props.done}
-            color='transparent'
-          >
-            GO HOME
-          </Button>
-        </div>
-      </div>
-    </main>
+    <div className='flex flex-col h-full w-full justify-between items-center px-5'>
+      <NakedBanner
+        title={<>Game<br/>started</>}
+        body={
+          <>
+            {game_multisig && eventId && <GameInfo multisig={game_multisig} eventId={eventId} newGame={true} />}
+            <div className='flex flex-col flex-grow'/>
+            <div className='flex flex-col items-center'>
+              <Button
+                className='w-fit'
+                onClick={() => {
+                  setInput({});
+                  setStep('1_NewGame');
+                  navigate('/');
+                }}
+              >
+                Go home
+              </Button>
+            </div>
+          </>
+        }
+      />
+    </div>
   );
 }
 
