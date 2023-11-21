@@ -13,7 +13,6 @@ function GameStarted() {
 
   const game_multisig = inputs.game_multisig;
   const [eventId] = useAtom(eventIdAtom);
-
   
   return (
     <div className='flex flex-col h-full w-full justify-between items-center px-5'>
@@ -32,7 +31,7 @@ function GameStarted() {
                   navigate('/');
                 }}
               >
-                Go home
+                Go home 
               </Button>
             </div>
           </>
