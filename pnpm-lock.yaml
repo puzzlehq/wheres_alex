@@ -29,9 +29,6 @@ dependencies:
   lodash:
     specifier: ^4.17.21
     version: 4.17.21
-  prettier:
-    specifier: ^3.0.3
-    version: 3.0.3
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -91,6 +88,9 @@ devDependencies:
   postcss:
     specifier: ^8.4.29
     version: 8.4.31
+  prettier:
+    specifier: ^3.0.3
+    version: 3.0.3
   prettier-plugin-tailwindcss:
     specifier: ^0.5.6
     version: 0.5.7(prettier@3.0.3)
@@ -3271,6 +3271,7 @@ packages:
     resolution: {integrity: sha512-L/4pUDMxcNa8R/EthV08Zt42WBO4h1rarVtK0K+QJG0X187OLo7l699jWw0GKuwzkPQ//jMFA/8Xm6Fh3J/DAg==}
     engines: {node: '>=14'}
     hasBin: true
+    dev: true
 
   /process-warning@1.0.0:
     resolution: {integrity: sha512-du4wfLyj4yCZq1VupnVSZmRsPJsNuxoDQFdCFHLaYiEbFBD7QE0a+I4D7hOxrVnh78QE/YipFAj9lXHiXocV+Q==}

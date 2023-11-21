@@ -8,7 +8,7 @@ import { configureConnection } from '@puzzlehq/sdk';
   configureConnection({
     dAppName: 'Treasure Hunt',
     dAppDescription: 'A friendly wager between friends',
-    dAppUrl: 'https://treasurehunt.puzzle.online',
+    dAppUrl: 'https://treasures.puzzle.online',
     dAppIconURL: 'https://i.imgur.com/TXRCKod.png',
   });
   return ReactDOM.createRoot(document.getElementById('root')!).render(

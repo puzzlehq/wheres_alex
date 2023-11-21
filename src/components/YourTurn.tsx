@@ -32,7 +32,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
         return (
           <Button
             onClick={() => {
-              initializeAcceptGame(opponent, Number(wager), multisig);
+              // initializeAcceptGame(opponent, Number(wager), multisig);
               navigate('/accept-game');
             }}
             variant='green'
