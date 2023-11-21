@@ -47,7 +47,7 @@ export default GameState;
 
 export enum Answer {
   left = 'on the left',
-  right = 'on the right'
+  right = 'on the right',
 }
 
 export const aleoAddressRegex = /^aleo1.{58}$/i;

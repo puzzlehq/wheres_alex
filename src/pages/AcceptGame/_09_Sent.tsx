@@ -9,9 +9,9 @@ function Sent() {
 
   useEffect(() => {
     setTimeout(() => {
-      setStep('10_Checking')
-    }, 5000)
-  }, [])
+      setStep('10_Checking');
+    }, 5000);
+  }, []);
 
   return (
     <main className='flex h-full flex-col justify-between'>
@@ -19,12 +19,12 @@ function Sent() {
         <NakedBanner
           title={<>Sent!</>}
           body={
-            <p className='mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
+            <p className='text-primary-white mb-8 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight'>
               Aleo TXN ID: xxxxxxx
             </p>
           }
         />
-        </div>
+      </div>
     </main>
   );
 }

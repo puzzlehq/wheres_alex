@@ -13,28 +13,38 @@ function AboutPuzzle() {
     <main className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
         <Banner
-          title={<>Puzzle<br/>Pieces on<br/>Aleo</>}
+          title={
+            <>
+              Puzzle
+              <br />
+              Pieces on
+              <br />
+              Aleo
+            </>
+          }
           body={
             <>
-              <p className='mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
-                Puzzle is the first onchain org on Aleo and creators of Puzzle Wallet. Puzzle pieces are onchain rewards on Aleo that can be redeemed for items from Puzzle in the future.
+              <p className='text-primary-white mb-8 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight'>
+                Puzzle is the first onchain org on Aleo and creators of Puzzle
+                Wallet. Puzzle pieces are onchain rewards on Aleo that can be
+                redeemed for items from Puzzle in the future.
               </p>
               <div className='flex flex-col'>
                 <p>You have</p>
-                <p className='font-header text-primary text-4xl'>{availableBalance} pieces</p>
+                <p className='font-header text-4xl text-primary'>
+                  {availableBalance} pieces
+                </p>
               </div>
             </>
           }
           onClickLeft={() => {
             setStep('2_FindTreasure');
           }}
-          onClickRight={() => 
-            setStep('4_Wager')
-          }
+          onClickRight={() => setStep('4_Wager')}
           step={2}
           totalSteps={5}
         />
-        </div>
+      </div>
     </main>
   );
 }

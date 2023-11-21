@@ -1,14 +1,13 @@
-import { useNavigate } from "react-router-dom";
-import GameState, { Answer } from "../state/game_states";
-import { useClaimPrizeLoseStore } from "../pages/ClaimPrize/Lose/store";
-import { useClaimPrizeWinStore } from "../pages/ClaimPrize/Win/store";
-import { useFinishGameStore } from "../pages/FinishGame/store";
-import Button from "./Button";
-import { useAtom } from "jotai";
-import { acceptGameInputsAtom } from "../pages/AcceptGame";
+import { useNavigate } from 'react-router-dom';
+import GameState, { Answer } from '../state/game_states';
+import { useClaimPrizeLoseStore } from '../pages/ClaimPrize/Lose/store';
+import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store';
+import { useFinishGameStore } from '../pages/FinishGame/store';
+import Button from './Button';
+import { useAtom } from 'jotai';
+import { acceptGameInputsAtom } from '../pages/AcceptGame';
 
 function NotificationItem({ notification }: { notification: GameState }) {
-  
   const action = notification.action;
   const multisig = notification.gameMultisig;
   const opponent = notification.player;
@@ -17,9 +16,15 @@ function NotificationItem({ notification }: { notification: GameState }) {
   const navigate = useNavigate();
 
   const [_1, initializeAcceptGame] = useAtom(acceptGameInputsAtom);
-  const [initializeFinishGame] = useFinishGameStore((state) => [state.initialize]);
-  const [initializeClaimLose] = useClaimPrizeLoseStore((state) => [state.initialize]);
-  const [initializeClaimWin] = useClaimPrizeWinStore((state) => [state.initialize]);
+  const [initializeFinishGame] = useFinishGameStore((state) => [
+    state.initialize,
+  ]);
+  const [initializeClaimLose] = useClaimPrizeLoseStore((state) => [
+    state.initialize,
+  ]);
+  const [initializeClaimWin] = useClaimPrizeWinStore((state) => [
+    state.initialize,
+  ]);
 
   const renderActionButton = () => {
     switch (action) {
@@ -27,8 +32,8 @@ function NotificationItem({ notification }: { notification: GameState }) {
         return (
           <Button
             onClick={() => {
-              initializeAcceptGame(opponent, Number(wager), multisig)
-              navigate('/accept-game')
+              initializeAcceptGame(opponent, Number(wager), multisig);
+              navigate('/accept-game');
             }}
             variant='green'
             size='md'
@@ -40,7 +45,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
         return (
           <Button
             onClick={() => {
-              initializeFinishGame(opponent, Number(wager), Answer.left)
+              initializeFinishGame(opponent, Number(wager), Answer.left);
               navigate('/finish-game');
             }}
             variant='green'
@@ -71,10 +76,7 @@ function NotificationItem({ notification }: { notification: GameState }) {
         // The 'else' part for '... other buttons'
         return (
           <>
-            <Button
-              variant={action === 'Delete' ? 'red' : 'gray'}
-              size='md'
-            >
+            <Button variant={action === 'Delete' ? 'red' : 'gray'} size='md'>
               {action}
             </Button>
           </>
@@ -101,13 +103,13 @@ type NotificationsProps = {
 
 function Notifications({ notifications }: NotificationsProps) {
   return (
-    <section className='flex grow flex-col border-2 border-solid border-bg2 pb-6 bg-bg1 rounded-t-[5px]'>
+    <section className='flex grow flex-col rounded-t-[5px] border-2 border-solid border-bg2 bg-bg1 pb-6'>
       <div className='flex max-w-full flex-col self-start bg-bg2 px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3'>
           YOUR TURN
         </div>
       </div>
-      <div className='px-5 pt-2 flex flex-col'>
+      <div className='flex flex-col px-5 pt-2'>
         {notifications.map((notification) => (
           <NotificationItem
             key={notification.player}

@@ -2,7 +2,11 @@
 import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
-import { eventIdAtom, proposeGameInputsAtom, proposeGameStepAtom } from './index';
+import {
+  eventIdAtom,
+  proposeGameInputsAtom,
+  proposeGameStepAtom,
+} from './index';
 import { NakedBanner } from '../../components/Banner';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,15 +17,27 @@ function GameStarted() {
 
   const game_multisig = inputs.game_multisig;
   const [eventId] = useAtom(eventIdAtom);
-  
+
   return (
-    <div className='flex flex-col h-full w-full justify-between items-center px-5'>
+    <div className='flex h-full w-full flex-col items-center justify-between px-5'>
       <NakedBanner
-        title={<>Game<br/>started</>}
+        title={
+          <>
+            Game
+            <br />
+            started
+          </>
+        }
         body={
           <>
-            {game_multisig && eventId && <GameInfo multisig={game_multisig} eventId={eventId} newGame={true} />}
-            <div className='flex flex-col flex-grow'/>
+            {game_multisig && eventId && (
+              <GameInfo
+                multisig={game_multisig}
+                eventId={eventId}
+                newGame={true}
+              />
+            )}
+            <div className='flex flex-grow flex-col' />
             <div className='flex flex-col items-center'>
               <Button
                 className='w-fit'
@@ -31,7 +47,7 @@ function GameStarted() {
                   navigate('/');
                 }}
               >
-                Go home 
+                Go home
               </Button>
             </div>
           </>

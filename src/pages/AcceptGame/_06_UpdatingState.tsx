@@ -9,22 +9,29 @@ function UpdatingState() {
 
   useEffect(() => {
     setTimeout(() => {
-      setStep('7_CreatingProof')
-    }, 5000)
-  }, [])
+      setStep('7_CreatingProof');
+    }, 5000);
+  }, []);
 
   return (
     <main className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
         <NakedBanner
-          title={<>Updating<br/>state...</>}
+          title={
+            <>
+              Updating
+              <br />
+              state...
+            </>
+          }
           body={
-            <p className='mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
-              Did you know that there is a $10B pirate industry that still exists today?
+            <p className='text-primary-white mb-8 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight'>
+              Did you know that there is a $10B pirate industry that still
+              exists today?
             </p>
           }
         />
-        </div>
+      </div>
     </main>
   );
 }

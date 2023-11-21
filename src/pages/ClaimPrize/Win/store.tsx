@@ -19,28 +19,29 @@ type ClaimPrizeWinStore = {
 };
 
 export const useClaimPrizeWinStore = create<ClaimPrizeWinStore>()(
-  persist((set) => ({
-    step: Step._01_Claim,
-    opponent: '',
-    wager: 0,
-    answer: undefined,
-    setStep: (step: Step) => {
-      set({ step });
-    },
-    initialize: (opponent: string, wager: number, answer: Answer) => {
-      set({ opponent, answer, wager, step: Step._01_Claim });
-    },
-    claimWinPrize: async () => {
-      
-    },
-    close: () => {
-      set({
-        step: Step._01_Claim,
-        opponent: '',
-        wager: 0,
-      });
-    },
-  }), {
-    name: 'claim-game-win'
-  })
+  persist(
+    (set) => ({
+      step: Step._01_Claim,
+      opponent: '',
+      wager: 0,
+      answer: undefined,
+      setStep: (step: Step) => {
+        set({ step });
+      },
+      initialize: (opponent: string, wager: number, answer: Answer) => {
+        set({ opponent, answer, wager, step: Step._01_Claim });
+      },
+      claimWinPrize: async () => {},
+      close: () => {
+        set({
+          step: Step._01_Claim,
+          opponent: '',
+          wager: 0,
+        });
+      },
+    }),
+    {
+      name: 'claim-game-win',
+    }
+  )
 );

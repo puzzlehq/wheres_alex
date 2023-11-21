@@ -1,7 +1,7 @@
-import { useNavigate } from "react-router-dom";
-import GameState from "../state/game_states";
-import { useRenegeStore } from "../pages/Renege/store";
-import Button from "./Button";
+import { useNavigate } from 'react-router-dom';
+import GameState from '../state/game_states';
+import { useRenegeStore } from '../pages/Renege/store';
+import Button from './Button';
 
 type LiveGameProps = {
   game: GameState;
@@ -24,9 +24,9 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
         // Assuming 'Claim' needs a special button not shown in this snippet
         // This is just an example
         return (
-          <div className="flex gap-2">
+          <div className='flex gap-2'>
             <div
-              className='flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] text-primary-white px-5 py-3 text-xs font-extrabold tabular-nums text-primary-black max-sm:w-[78px]'
+              className='text-primary-white text-primary-black flex w-[fit-content] items-center justify-center whitespace-nowrap rounded-[200px] px-5 py-3 text-xs font-extrabold tabular-nums max-sm:w-[78px]'
               style={{ minWidth: '100px' }}
             >
               {timeLeft[game.player] &&
@@ -43,12 +43,8 @@ function LiveGameItem({ game, timeLeft }: LiveGameProps) {
       default:
         // The 'else' part for '... other buttons'
         return (
-          <div className="flex gap-2">
-            <Button
-              onClick={handleRenegeClick}
-              variant="red"
-              size="md"
-            >
+          <div className='flex gap-2'>
+            <Button onClick={handleRenegeClick} variant='red' size='md'>
               {game.action}
             </Button>
           </div>
@@ -76,13 +72,13 @@ type LiveGamesProps = {
 
 function LiveGames({ liveGames, timeLeft }: LiveGamesProps) {
   return (
-    <section className='flex grow flex-col self-stretch border-2 border-solid border-bg2 bg-bg1 rounded-b-[5px] pb-6'>
+    <section className='flex grow flex-col self-stretch rounded-b-[5px] border-2 border-solid border-bg2 bg-bg1 pb-6'>
       <div className='flex max-w-full flex-col self-start bg-bg2 px-5 py-2'>
         <div className='self-center whitespace-nowrap text-left text-xs font-extrabold leading-3'>
           THEIR TURN
         </div>
       </div>
-      <div className='px-5 pt-2 flex flex-col'>
+      <div className='flex flex-col px-5 pt-2'>
         {liveGames.map((game) => (
           <LiveGameItem key={game.player} game={game} timeLeft={timeLeft} />
         ))}

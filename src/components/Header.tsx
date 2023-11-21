@@ -11,12 +11,12 @@ export const AppHeader = () => {
   const { account } = useAccount();
   const { disconnect, loading } = useDisconnect();
   const [_1, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
-  const [_2, setAcceptGameStep]   = useAtom(acceptGameStepAtom);
+  const [_2, setAcceptGameStep] = useAtom(acceptGameStepAtom);
   const [_3, setProposeGameInputs] = useAtom(proposeGameInputsAtom);
   const [_4, setProposeGameStep] = useAtom(proposeGameStepAtom);
   const [_5, setMapStep] = useAtom(mapStepAtom);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className='flex w-full items-center justify-between gap-5  p-4'>
@@ -27,12 +27,12 @@ export const AppHeader = () => {
             src={swaggers}
             className='max-h-[100px] self-stretch overflow-hidden fill-white object-cover object-center'
             onClick={() => {
-              navigate('/')
+              navigate('/');
               setMapStep(false);
               setAcceptGameStep('1_AcceptGame');
               setProposeGameStep('1_NewGame');
-              setAcceptGameInputs({})
-              setProposeGameInputs({})
+              setAcceptGameInputs({});
+              setProposeGameInputs({});
             }}
           />
           <Button
@@ -48,7 +48,7 @@ export const AppHeader = () => {
           </Button>
         </>
       ) : (
-        <div className='w-full self-stretch'/>
+        <div className='w-full self-stretch' />
       )}
     </div>
   );

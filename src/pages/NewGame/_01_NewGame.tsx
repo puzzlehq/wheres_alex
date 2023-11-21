@@ -13,31 +13,40 @@ function NewGame() {
 
   const opponent = inputs.opponent;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
-    <div className='flex flex-col h-full w-full justify-between items-center px-5'>
+    <div className='flex h-full w-full flex-col items-center justify-between px-5'>
       <Banner
-        title={<>Choose yer<br/>matey</>}
+        title={
+          <>
+            Choose yer
+            <br />
+            matey
+          </>
+        }
         body={
           <div className='w-full'>
             <input
               type='text'
-              className='mt-5 w-full rounded-lg border-[3px] bg-transparent border-solid border-bg2 p-4 text-sm font-semibold leading-4 max-md:mr-px focus-visible:outline-primary'
+              className='mt-5 w-full rounded-lg border-[3px] border-solid border-bg2 bg-transparent p-4 text-sm font-semibold leading-4 focus-visible:outline-primary max-md:mr-px'
               placeholder="Enter Opponent's Address"
               id='opponent'
               value={opponent ?? ''}
               onChange={(e) => {
-                setInputs({ ...inputs, opponent: e.target.value })
+                setInputs({ ...inputs, opponent: e.target.value });
               }}
             />
           </div>
         }
         onClickLeft={() => {
-          navigate('/')
+          navigate('/');
         }}
         onClickRight={() => setStep('2_HideTreasure')}
-        rightDisabled={!aleoAddressRegex.test(inputs.opponent ?? '') || inputs.opponent === account.address}
+        rightDisabled={
+          !aleoAddressRegex.test(inputs.opponent ?? '') ||
+          inputs.opponent === account.address
+        }
         step={0}
         totalSteps={5}
       />

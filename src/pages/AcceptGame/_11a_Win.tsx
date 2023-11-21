@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { NakedBanner } from '../../components/Banner';
 import Button from '../../components/Button.js';
 import { useNavigate } from 'react-router-dom';
-import treasure_open_full from '../../assets/treasure_open_full.png'
+import treasure_open_full from '../../assets/treasure_open_full.png';
 
 function Win() {
   const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
@@ -18,38 +18,36 @@ function Win() {
         <NakedBanner
           title='You Won!'
           body={
-            <div className='flex flex-col gap-4 justify-center items-center'>
-  <p className='mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
-    Aye matey, you found the booty
-  </p>
-  <div className='flex flex-col items-center'>
-    <p>Amount won</p>
-    <p className='font-header text-primary text-4xl'>{acceptGameInputs.wager_amount ?? 10} pieces</p>
-  </div>
-  <div className='flex justify-center'>
-    <img
-      src={treasure_open_full}
-      className='w-1/3 self-center'
-    />
-  </div>
+            <div className='flex flex-col items-center justify-center gap-4'>
+              <p className='text-primary-white mb-8 max-w-[400px] text-center text-base font-bold tracking-tight'>
+                Aye matey, you found the booty
+              </p>
+              <div className='flex flex-col items-center'>
+                <p>Amount won</p>
+                <p className='font-header text-4xl text-primary'>
+                  {acceptGameInputs.wager_amount ?? 10} pieces
+                </p>
+              </div>
+              <div className='flex justify-center'>
+                <img src={treasure_open_full} className='w-1/3 self-center' />
+              </div>
 
-  <div className='flex justify-center'>
-    <Button
-      className='w-fit'
-      onClick={() => {
-        navigate('/')
-        setStep('1_AcceptGame');
-        setAcceptGameInputs({});
-      }}
-    >
-      Home
-    </Button>
-  </div>
+              <div className='flex justify-center'>
+                <Button
+                  className='w-fit'
+                  onClick={() => {
+                    navigate('/');
+                    setStep('1_AcceptGame');
+                    setAcceptGameInputs({});
+                  }}
+                >
+                  Home
+                </Button>
+              </div>
             </div>
-            
           }
         />
-        </div>
+      </div>
     </main>
   );
 }

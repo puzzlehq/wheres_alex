@@ -5,12 +5,26 @@ import Wager from '../../components/Wager';
 import SelectedTreasureLocation from '../../components/SelectedTreasureLocation';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
-import { eventIdAtom, proposeGameInputsAtom, proposeGameStepAtom } from "./index"
-import { GAME_FUNCTIONS, GAME_PROGRAM_ID, ProposeGameInputs, stepFees } from '../../state/manager';
-import { createSharedState, requestCreateEvent, requestSignature, useAccount } from '@puzzlehq/sdk';
+import {
+  eventIdAtom,
+  proposeGameInputsAtom,
+  proposeGameStepAtom,
+} from './index';
+import {
+  GAME_FUNCTIONS,
+  GAME_PROGRAM_ID,
+  ProposeGameInputs,
+  stepFees,
+} from '../../state/manager';
+import {
+  createSharedState,
+  requestCreateEvent,
+  requestSignature,
+  useAccount,
+} from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
 import { useState } from 'react';
-import jsyaml  from 'js-yaml';
+import jsyaml from 'js-yaml';
 import { Answer } from '../../state/game_states';
 import { Banner } from '../../components/Banner';
 
@@ -18,7 +32,7 @@ const messageToSign = '1234567field';
 
 enum ConfirmStep {
   Signing,
-  RequestingEvent
+  RequestingEvent,
 }
 
 function ConfirmStartGame() {
@@ -48,14 +62,25 @@ function ConfirmStartGame() {
       const address = sharedStateResponse.data.address;
 
       const signature = await requestSignature({ message: messageToSign });
-      
+
       setInputs({ ...inputs, seed, game_multisig: address });
-      if (inputs.opponent && inputs.wager_record && inputs.wager_amount && inputs.player_one_answer && signature && signature.messageFields && signature.signature) {
+      if (
+        inputs.opponent &&
+        inputs.wager_record &&
+        inputs.wager_amount &&
+        inputs.player_one_answer &&
+        signature &&
+        signature.messageFields &&
+        signature.signature
+      ) {
         setConfirmStep(ConfirmStep.RequestingEvent);
-        
+
         const fields = Object(jsyaml.load(signature.messageFields));
 
-        const proposalInputs: Omit<ProposeGameInputs, 'player_one_answer_readable'> = {
+        const proposalInputs: Omit<
+          ProposeGameInputs,
+          'player_one_answer_readable'
+        > = {
           wager_record: inputs.wager_record,
           wager_amount: inputs.wager_amount + 'u64',
           sender_address: account.address,
@@ -77,7 +102,7 @@ function ConfirmStartGame() {
           programId: GAME_PROGRAM_ID,
           functionId: GAME_FUNCTIONS.propose_game,
           fee: stepFees.propose_game,
-          inputs: Object.values(proposalInputs)
+          inputs: Object.values(proposalInputs),
         });
         if (createEventResponse.error) {
           setError(createEventResponse.error);
@@ -92,25 +117,45 @@ function ConfirmStartGame() {
     setConfirmStep(ConfirmStep.Signing);
   };
 
-  const disabled = [inputs.opponent, inputs.wager_record, inputs.wager_amount, inputs.player_one_answer_readable].includes(undefined);
+  const disabled = [
+    inputs.opponent,
+    inputs.wager_record,
+    inputs.wager_amount,
+    inputs.player_one_answer_readable,
+  ].includes(undefined);
 
   return (
-    <div className='flex flex-col h-full w-full justify-between items-center px-5'>
+    <div className='flex h-full w-full flex-col items-center justify-between px-5'>
       <Banner
-        title={<>Review<br />game</>}
+        title={
+          <>
+            Review
+            <br />
+            game
+          </>
+        }
         body={
           <div className='flex flex-col justify-center gap-4'>
             <Opponent opponent={opponent} />
             <Wager wagerAmount={Number(amount)} />
-            {answer &&
+            {answer && (
               <div className='flex flex-col gap-2'>
-                <SelectedTreasureLocation answer={answer as Answer} win={undefined} />
+                <SelectedTreasureLocation
+                  answer={answer as Answer}
+                  win={undefined}
+                />
                 <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary'>
                   You chose to hide the Treasure {answer}!
                 </div>
               </div>
-            }
-            {!loading ? '' : confirmStep === ConfirmStep.Signing ? <p className='text-2xl'>SIGN MESSAGE</p>: <p className='text-2xl'>CREATE EVENT</p>}
+            )}
+            {!loading ? (
+              ''
+            ) : confirmStep === ConfirmStep.Signing ? (
+              <p className='text-2xl'>SIGN MESSAGE</p>
+            ) : (
+              <p className='text-2xl'>CREATE EVENT</p>
+            )}
           </div>
         }
         step={3}

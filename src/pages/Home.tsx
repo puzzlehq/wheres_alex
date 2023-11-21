@@ -9,30 +9,29 @@ import Notifications from '../components/YourTurn';
 import { usePieces } from '../state/usePieces';
 
 function Home() {
-
   const { totalBalance } = usePieces();
 
   const gameStates: GameState[] = [
-    { gameMultisig: 'aleo1', player: 'Alice', wager: "10", action: 'Start' },
+    { gameMultisig: 'aleo1', player: 'Alice', wager: '10', action: 'Start' },
     {
       gameMultisig: 'aleo2',
       player: 'Bob',
-      wager: "20",
+      wager: '20',
       action: 'Finish',
-      win: true
+      win: true,
     },
     {
       gameMultisig: 'aleo3',
       player: 'Charlie',
-      wager: "30",
+      wager: '30',
       action: 'Renege',
     },
-    { gameMultisig: 'aleo4', player: 'David', wager: "40", action: 'Delete' },
+    { gameMultisig: 'aleo4', player: 'David', wager: '40', action: 'Delete' },
     {
       gameMultisig: 'aleo5',
       player: 'Eva',
       blockheight: 10500,
-      wager: "50",
+      wager: '50',
       action: 'Claim',
       win: false,
     },
@@ -40,7 +39,7 @@ function Home() {
       gameMultisig: 'aleo6',
       player: 'Frank',
       blockheight: 105000,
-      wager: "60",
+      wager: '60',
       action: 'Claim',
       win: true,
     },
@@ -112,13 +111,12 @@ function Home() {
 
     return () => clearInterval(timer);
   }, []);
-  
-  const navigate = useNavigate();
 
+  const navigate = useNavigate();
 
   return (
     <div className='flex h-full flex-col justify-between '>
-      <div className='flex flex-col w-full px-1 gap-4'>
+      <div className='flex w-full flex-col gap-4 px-1'>
         <TotalWinnings amount={totalBalance} />
         <Button
           variant='primary'
@@ -134,10 +132,7 @@ function Home() {
       <div className='mt-4 px-4 pb-4 text-center'>
         {' '}
         {/* Adding px-4 back here to maintain padding for the bottom button */}
-        <Button
-          variant='gray'
-          size='md'
-        >
+        <Button variant='gray' size='md'>
           Past Games
         </Button>
       </div>

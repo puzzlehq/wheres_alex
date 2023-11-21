@@ -5,9 +5,14 @@ type NavProps = {
 
 function Nav({ step, totalSteps }: NavProps) {
   return (
-    <nav className='flex gap-3 justify-center'>
+    <nav className='flex justify-center gap-3'>
       {Array.from({ length: totalSteps }).map((_, ix) => (
-        <div key={ix} className={`w-6 h-3 rounded-full bg-primary ${ix > step ? 'opacity-40' : '' }`}></div>
+        <div
+          key={ix}
+          className={`h-3 w-6 rounded-full bg-primary ${
+            ix > step ? 'opacity-40' : ''
+          }`}
+        ></div>
       ))}
     </nav>
   );

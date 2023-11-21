@@ -6,13 +6,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          'bg-primary disabled:opacity-40 font-header text-black',
+        primary: 'bg-primary disabled:opacity-40 font-header text-black',
         secondary: 'bg-bg1 border-bg2 border-[5px] disabled:opacity-40',
         green: 'bg-primary-green disabled:opacity-40',
         red: 'bg-primary-red disabled:opacity-40',
         gray: 'bg-bg2 disabled:opacity-40',
-        transparent: 'bg-transparent disabled:opacity-40'
+        transparent: 'bg-transparent disabled:opacity-40',
       },
       size: {
         md: 'h-10 rounded-full px-3 py-2 text-[24px]',
@@ -33,15 +32,16 @@ export interface ButtonProps
   fullWidth?: boolean;
 }
 
-
-const Button = ({ className, variant, size , ...props }: ButtonProps) => {
-
+const Button = ({ className, variant, size, ...props }: ButtonProps) => {
   return (
     <button
-      className={`${className === undefined ? '' : className} ${buttonVariants({variant, size})}`}
+      className={`${className === undefined ? '' : className} ${buttonVariants({
+        variant,
+        size,
+      })}`}
       {...props}
     />
   );
-}
+};
 
-export default Button
+export default Button;

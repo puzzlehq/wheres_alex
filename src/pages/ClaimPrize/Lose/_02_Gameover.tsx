@@ -7,21 +7,15 @@ const GameOver = () => {
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
-      <PageHeader
-        bg='bg-primary-blue'
-        text='BETTER LUCK NEXT TIME'
-      />
+      <PageHeader bg='bg-primary-blue' text='BETTER LUCK NEXT TIME' />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-2'>
-        <Button
-          color='green'
-          onClick={() => navigate('/')}
-        >
+        <Button color='green' onClick={() => navigate('/')}>
           REFER A PLAYER
         </Button>
         <Button
           color='gray'
-          className='w-full rounded-full bg-[#868686] p-3 text-4xl font-extrabold text-primary-black'
+          className='text-primary-black w-full rounded-full bg-[#868686] p-3 text-4xl font-extrabold'
           onClick={() => navigate('/new-game')}
         >
           START ANOTHER GAME
