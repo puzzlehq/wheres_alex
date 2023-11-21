@@ -4,7 +4,7 @@ import { useAtom } from 'jotai';
 import { NakedBanner } from '../../components/Banner.js';
 import { useEffect } from 'react';
 
-function Sent() {
+function Checking() {
   const [_2, setStep] = useAtom(acceptGameStepAtom);
 
   useEffect(() => {
@@ -29,4 +29,4 @@ function Sent() {
   );
 }
 
-export default Sent;
+export default Checking;

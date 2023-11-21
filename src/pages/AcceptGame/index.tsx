@@ -12,6 +12,9 @@ import UpdatingState from "./_06_UpdatingState";
 import CreatingProof from "./_07_CreatingProof";
 import Sending from "./_08_Sending";
 import Sent from "./_09_Sent";
+import Checking from "./_10_Checking";
+import Win from "./_11a_Win";
+import Lose from "../ClaimPrize/Lose/_01_Lose";
 
 export type Step = '1_AcceptGame' | '2_FindTreasure' | '3_AboutPuzzle' | '4_Wager' | '5_Submit' | '6_UpdatingState' | '7_CreatingProof' | '8_Sending' | '9_Sent' | '10_Checking' | '11a_win' | '11b_lose';
 export const acceptGameInputsAtom = atom<Partial<AcceptGameInputs>>({});
@@ -22,13 +25,15 @@ const AcceptGame = () => {
   const navigate = useNavigate();
   const [_, setInputs] = useAtom(acceptGameInputsAtom);
   const [step, setStep] = useAtom(acceptGameStepAtom);
-  const [mapStep, setMapStep] = useAtom(mapStepAtom);
+  const [__, setMapStep] = useAtom(mapStepAtom);
   const [intervalId, setIntervalId] = useState(0);
 
   useEffect(() => {
     if (['6_UpdatingState', '10_Checking'].includes(step)) {
+      let mapStep = 0
       const interval = setInterval(() => {
-        setMapStep(mapStep + 1);
+        mapStep += 1;
+        setMapStep(mapStep);
       }, 1500)
       setIntervalId(interval);
     } else if (['9_Sent', '11a_win', '11b_lose', '1_AcceptGame'].includes(step)) {
@@ -50,9 +55,9 @@ const AcceptGame = () => {
       {step === '7_CreatingProof' && <CreatingProof />}
       {step === '8_Sending' && <Sending />}
       {step === '9_Sent' && <Sent />}
-      {step === '10_Checking' && <Submit />}
-      {step === '11a_win' && <Submit />}
-      {step === '11b_lose' && <Submit />}
+      {step === '10_Checking' && <Checking />}
+      {step === '11a_win' && <Win />}
+      {step === '11b_lose' && <Lose />}
     </div>
   )
 }

@@ -9,7 +9,7 @@ function Sent() {
 
   useEffect(() => {
     setTimeout(() => {
-      setStep('9_Sent')
+      setStep('10_Checking')
     }, 5000)
   }, [])
 
