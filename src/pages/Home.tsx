@@ -4,49 +4,15 @@ import GameState from '../state/game_states';
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
-import LiveGames from '../components/LiveGames';
-import Notifications from '../components/Notifications';
+import LiveGames from '../components/TheirTurn';
+import Notifications from '../components/YourTurn';
 import { usePieces } from '../state/usePieces';
 
 function Home() {
-
   const { totalBalance } = usePieces();
 
   const gameStates: GameState[] = [
-    { gameMultisig: 'aleo1', player: 'Alice', wager: "10", action: 'Start' },
-    {
-      gameMultisig: 'aleo2',
-      player: 'Bob',
-      wager: "20",
-      action: 'Finish',
-      win: true
-      // answer: Answer.InTheWeeds
-    },
-    {
-      gameMultisig: 'aleo3',
-      player: 'Charlie',
-      wager: "30",
-      action: 'Renege',
-    },
-    { gameMultisig: 'aleo4', player: 'David', wager: "40", action: 'Delete' },
-    {
-      gameMultisig: 'aleo5',
-      player: 'Eva',
-      blockheight: 10500,
-      wager: "50",
-      action: 'Claim',
-      win: false,
-      // answer: Answer.InTheWeeds
-    },
-    {
-      gameMultisig: 'aleo6',
-      player: 'Frank',
-      blockheight: 105000,
-      wager: "60",
-      action: 'Claim',
-      win: true,
-      // answer: Answer.BehindTheBuilding
-    },
+    { gameMultisig: 'aleo1', player: 'Alice', wager: '10', action: 'Start' },
   ];
 
   const aleo_blockheight: number = 50000;
@@ -88,6 +54,10 @@ function Home() {
   );
 
   useEffect(() => {
+    navigate('/accept-game')
+  }, [])
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prevTime) => {
         const newTime: { [key: string]: any } = {};
@@ -115,16 +85,18 @@ function Home() {
 
     return () => clearInterval(timer);
   }, []);
-  
+
   const navigate = useNavigate();
 
   return (
     <div className='flex h-full flex-col justify-between '>
-      <div className='flex flex-col w-full px-1 gap-4'>
+      <div className='flex w-full flex-col gap-4 px-1'>
         <TotalWinnings amount={totalBalance} />
         <Button
-          color='yellow'
+          variant='primary'
+          size='lg'
           onClick={() => navigate('/new-game')}
+          className='w-fit self-center'
         >
           NEW GAME
         </Button>
@@ -134,10 +106,7 @@ function Home() {
       <div className='mt-4 px-4 pb-4 text-center'>
         {' '}
         {/* Adding px-4 back here to maintain padding for the bottom button */}
-        <Button
-          color='blue'
-          size='sm'
-        >
+        <Button variant='gray' size='md'>
           Past Games
         </Button>
       </div>

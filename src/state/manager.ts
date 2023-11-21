@@ -1,6 +1,6 @@
 import { Record } from '@puzzlehq/sdk';
 import { Answer } from './game_states';
-import _ from 'lodash'
+import _ from 'lodash';
 
 export const GAME_PROGRAM_ID = 'wheres_alex_v001.aleo';
 
@@ -10,7 +10,7 @@ export const GAME_FUNCTIONS = {
   set_wager: 'set_wager',
   reveal_answer: 'reveal_answer',
   finish_game: 'finish_game',
-} 
+};
 
 /// todo - update these
 export const stepFees = {
@@ -24,8 +24,8 @@ export const stepFees = {
 export type LoadingStatus = 'idle' | 'loading' | 'success' | 'error';
 
 /// note: def more to come here
-export type GameStep = 
-  'proposed'
+export type GameStep =
+  | 'proposed'
   | 'waitingAccept'
   | 'accepted'
   | 'waitingReveal'
@@ -40,11 +40,11 @@ export type Game = {
   wager: number;
 
   eventIds?: string[];
-}
+};
 
 export type ProposeGameInputs = {
   wager_record: Record;
-  amount: string;
+  wager_amount: string;
   sender_address: string;
   challenger: string;
   opponent: string;
@@ -53,12 +53,13 @@ export type ProposeGameInputs = {
   message_2: string;
   message_3: string;
   message_4: string;
-  message_5: string;  
+  message_5: string;
   signature: string;
   nonce: string;
-  answer: string;
+  player_one_answer: '0field' | '1field';
+  player_one_answer_readable: Answer;
   seed: string;
-}
+};
 
 // used for submit wager and accept game
 export type AcceptGameInputs = {
@@ -73,17 +74,17 @@ export type AcceptGameInputs = {
   player_two_answer_readable: Answer;
   game_address: string;
   opponent: string;
-  wagerAmount: string;
-  wagerRecord: string;
-}
+  wager_amount: string;
+  wager_record: string;
+};
 
 export type RevealAnswerInputs = {
   AnswerRecord: Record;
   PieceStakeOutcome: string;
-}
+};
 export type FinishGameInputs = {
   GameStateRevealedFinish: string;
   GameStateAwaitFinish: string;
   PieceJointStake: Record;
   PieceTimeClaim: Record;
-}
+};

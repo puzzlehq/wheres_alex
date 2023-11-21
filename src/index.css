@@ -50,25 +50,3 @@ h1 {
 .notifications-scrollbar::-webkit-scrollbar-thumb:hover {
   background-color: rgba(255, 255, 255, 0.2);
 }
-
-.App {
-  background-image: url('../src/assets/puzzle_upside_down_left.png'),
-    url('../src/assets/puzzle_tilt_right.png'),
-    url('../src/assets/puzzle_tilt_left.png'),
-    url('../src/assets/puzzle_upside_down_right.png');
-
-  background-position:
-    left 10%,
-    right 25%,
-    left 90%,
-    right 75%;
-
-  /* Set the size for each image to cover 25% vertically */
-  background-size:
-    auto 20%,
-    auto 20%,
-    auto 20%,
-    auto 20%;
-
-  background-repeat: no-repeat;
-}

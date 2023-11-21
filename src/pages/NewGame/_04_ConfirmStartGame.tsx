@@ -2,22 +2,37 @@
 import Opponent from '../../components/Opponent';
 import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
-import SelectedAlexLocation from '../../components/SelectedAlexLocation';
+import SelectedTreasureLocation from '../../components/SelectedTreasureLocation';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
-import { eventIdAtom, proposeGameInputsAtom, proposeGameStepAtom } from "./index"
-import { GAME_FUNCTIONS, GAME_PROGRAM_ID, ProposeGameInputs, stepFees } from '../../state/manager';
-import { createSharedState, requestCreateEvent, requestSignature, useAccount } from '@puzzlehq/sdk';
+import {
+  eventIdAtom,
+  proposeGameInputsAtom,
+  proposeGameStepAtom,
+} from './index';
+import {
+  GAME_FUNCTIONS,
+  GAME_PROGRAM_ID,
+  ProposeGameInputs,
+  stepFees,
+} from '../../state/manager';
+import {
+  createSharedState,
+  requestCreateEvent,
+  requestSignature,
+  useAccount,
+} from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
 import { useState } from 'react';
-import jsyaml  from 'js-yaml';
+import jsyaml from 'js-yaml';
 import { Answer } from '../../state/game_states';
+import { Banner } from '../../components/Banner';
 
 const messageToSign = '1234567field';
 
 enum ConfirmStep {
   Signing,
-  RequestingEvent
+  RequestingEvent,
 }
 
 function ConfirmStartGame() {
@@ -26,8 +41,8 @@ function ConfirmStartGame() {
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
   const opponent = inputs.opponent ?? '';
-  const answer = inputs.answer;
-  const amount = inputs.amount ?? 0;
+  const answer = inputs.player_one_answer_readable;
+  const amount = inputs.wager_amount ?? 0;
 
   const { account } = useAccount();
 
@@ -47,16 +62,27 @@ function ConfirmStartGame() {
       const address = sharedStateResponse.data.address;
 
       const signature = await requestSignature({ message: messageToSign });
-      
+
       setInputs({ ...inputs, seed, game_multisig: address });
-      if (inputs.opponent && inputs.wager_record && inputs.amount && inputs.answer && signature && signature.messageFields && signature.signature) {
+      if (
+        inputs.opponent &&
+        inputs.wager_record &&
+        inputs.wager_amount &&
+        inputs.player_one_answer &&
+        signature &&
+        signature.messageFields &&
+        signature.signature
+      ) {
         setConfirmStep(ConfirmStep.RequestingEvent);
-        
+
         const fields = Object(jsyaml.load(signature.messageFields));
 
-        const proposalInputs: ProposeGameInputs = {
+        const proposalInputs: Omit<
+          ProposeGameInputs,
+          'player_one_answer_readable'
+        > = {
           wager_record: inputs.wager_record,
-          amount: inputs.amount + 'u64',
+          wager_amount: inputs.wager_amount + 'u64',
           sender_address: account.address,
           challenger: account.address,
           opponent: inputs.opponent,
@@ -68,7 +94,7 @@ function ConfirmStartGame() {
           message_5: fields.field_5,
           signature: signature.signature,
           nonce: messageToSign, /// todo - make this random
-          answer: inputs.answer === Answer.InTheWeeds ? '0field' : '1field',
+          player_one_answer: inputs.player_one_answer,
           seed,
         };
         const createEventResponse = await requestCreateEvent({
@@ -76,7 +102,7 @@ function ConfirmStartGame() {
           programId: GAME_PROGRAM_ID,
           functionId: GAME_FUNCTIONS.propose_game,
           fee: stepFees.propose_game,
-          inputs: Object.values(proposalInputs)
+          inputs: Object.values(proposalInputs),
         });
         if (createEventResponse.error) {
           setError(createEventResponse.error);
@@ -91,38 +117,54 @@ function ConfirmStartGame() {
     setConfirmStep(ConfirmStep.Signing);
   };
 
-  const disabled = [inputs.opponent, inputs.wager_record, inputs.amount, inputs.answer].includes(undefined);
+  const disabled = [
+    inputs.opponent,
+    inputs.wager_record,
+    inputs.wager_amount,
+    inputs.player_one_answer_readable,
+  ].includes(undefined);
 
   return (
-    <main className='flex h-full w-full flex-col justify-center gap-8'>
-      <PageHeader bg='bg-primary-pink' text='REVIEW AND KICKOFF GAME' />
-      <Opponent opponent={opponent} />
-      <Wager wagerAmount={Number(amount)} />
-      {answer &&
-        <div className='flex flex-col gap-2'>
-          <SelectedAlexLocation answer={answer as Answer} win={undefined} />
-          <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
-            You chose to hide Alex {answer}!
+    <div className='flex h-full w-full flex-col items-center justify-between px-5'>
+      <Banner
+        title={
+          <>
+            Review
+            <br />
+            game
+          </>
+        }
+        body={
+          <div className='flex flex-col justify-center gap-4'>
+            <Opponent opponent={opponent} />
+            <Wager wagerAmount={Number(amount)} />
+            {answer && (
+              <div className='flex flex-col gap-2'>
+                <SelectedTreasureLocation
+                  answer={answer as Answer}
+                  win={undefined}
+                />
+                <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary'>
+                  You chose to hide the Treasure {answer}!
+                </div>
+              </div>
+            )}
+            {!loading ? (
+              ''
+            ) : confirmStep === ConfirmStep.Signing ? (
+              <p className='text-2xl'>SIGN MESSAGE</p>
+            ) : (
+              <p className='text-2xl'>CREATE EVENT</p>
+            )}
           </div>
-        </div>
-      }
-      <div className='flex flex-col flex-grow'/>
-      <div className='flex flex-col gap-4'>
-        <Button
-          onClick={createProposeGameEvent}
-          color='green'  
-          disabled={disabled || loading}
-        >
-          {!loading ? 'PROPOSE GAME' : confirmStep === ConfirmStep.Signing ? 'SIGN MESSAGE' : 'CREATE EVENT'}
-        </Button>
-        <Button
-          onClick={() => setStep('5_GameStarted')}
-          color='gray'
-        >
-          BACK
-        </Button>
-      </div>
-    </main>
+        }
+        step={3}
+        totalSteps={5}
+        onClickLeft={() => setStep('3_StartWager')}
+        onClickRight={createProposeGameEvent}
+        rightDisabled={disabled || loading}
+      />
+    </div>
   );
 }
 

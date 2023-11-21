@@ -1,9 +1,7 @@
 import { useConnect, useAccount } from '@puzzlehq/sdk';
-import rightImageSrc from '../assets/alex_mic_left_tilt.png';
-import leftImageSrc from '../assets/alex_mic_right_tilt.png';
-import bottomImageSrc from '../assets/alexbottom.png';
+import swaggers from '../assets/swaggers.png';
 import { useNavigate } from 'react-router-dom';
-import { useEffect,  } from 'react';
+import { useEffect } from 'react';
 import Button from '../components/Button.js';
 
 export const Welcome = () => {
@@ -18,38 +16,37 @@ export const Welcome = () => {
   }, [account, navigate]);
 
   return (
-    <div className='flex h-full w-full items-stretch justify-between'>
-      <div className='relative flex h-full w-full flex-col items-center justify-center'>
+    <div className='h-full w-full items-stretch justify-between'>
+      <div className='align-items-center flex w-full justify-center'>
         <img
-          src={rightImageSrc}
-          alt='Top-right Alex'
-          className='fixed right-0 top-0 h-full max-h-[18rem] max-w-[50%] object-contain'
+          src={swaggers}
+          className='max-h-[163px]'
+          alt={'Leo McPirate'}
         />
-        <img
-          src={leftImageSrc}
-          alt='Left Alex'
-          className='fixed left-0 top-1/4 h-full max-h-[20rem] max-w-[50%] -translate-y-20 object-contain'
-        />
-        <h1 className='z-10 text-24xl max-w-full overflow-visible whitespace-nowrap text-center font-extrabold leading-[40.56px] tracking-tight text-primary-white'>
-          WHERE'S<br />ALEX?
+      </div>
+      <div className='relative z-10 flex flex-col items-center justify-center rounded-[20px] border-[5px] border-bg2 bg-bg1 p-8'>
+        <h1 className='text-primary-white overflow-visible whitespace-nowrap text-center font-header text-[96px] font-extrabold leading-[104.86px] tracking-tight'>
+          TREASURE
+          <br />
+          HUNT
         </h1>
-        <p className='z-10 mt-8 mb-8 max-w-[400px] text-center text-base font-bold tracking-tight text-primary-white'>
-          A thrilling game showcasing the power of Aleo and the Puzzle
-          multiparty privacy stack through a wager between friends!
+        <p className='text-primary-white mb-8 mt-8 max-w-[400px] text-center text-base font-bold tracking-tight'>
+          Arhhh! Pirate Leo the Lion hid his Puzzle Piece treasure on Aleo! Use
+          your Puzzle Pieces to try to find the correct chests where he hid his
+          treasure!
         </p>
         <Button
-          className='max-w-[250px]'
+          className='font-pirata max-w-[250px] font-header'
           onClick={connect}
           color='yellow'
           disabled={loading}
         >
-          {loading ? 'Loading...' : loading ? 'Connecting...' : 'Play!'}
+          {loading
+            ? 'Loading...'
+            : loading
+            ? 'Connecting...'
+            : 'Connect Wallet'}
         </Button>
-        <img
-          src={bottomImageSrc}
-          alt='Bottom Alex'
-          className='fixed center -translate-y-100 bottom-0 h-full max-h-[12rem] w-3/5 max-w-[35%] transform object-contain'
-        />
       </div>
     </div>
   );
