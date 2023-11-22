@@ -1,19 +1,9 @@
-import { useConnect, useAccount } from '@puzzlehq/sdk';
+import { useConnect } from '@puzzlehq/sdk';
 import swaggers from '../assets/swaggers.png';
-import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
 import Button from '../components/Button.js';
 
 export const Welcome = () => {
-  const navigate = useNavigate();
-  const { account } = useAccount();
   const { loading, connect } = useConnect();
-
-  useEffect(() => {
-    if (account) {
-      navigate('/');
-    }
-  }, [account, navigate]);
 
   return (
     <div className='h-full w-full items-stretch justify-between'>
@@ -42,8 +32,6 @@ export const Welcome = () => {
           disabled={loading}
         >
           {loading
-            ? 'Loading...'
-            : loading
             ? 'Connecting...'
             : 'Connect Wallet'}
         </Button>
