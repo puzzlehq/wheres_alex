@@ -1,4 +1,4 @@
-import { Record } from '@puzzlehq/sdk';
+import { RecordWithPlaintext } from '@puzzlehq/sdk';
 import { Answer } from './game_states';
 import _ from 'lodash';
 
@@ -43,7 +43,7 @@ export type Game = {
 };
 
 export type ProposeGameInputs = {
-  wager_record: Record;
+  wager_record: RecordWithPlaintext;
   wager_amount: string;
   sender_address: string;
   challenger: string;
@@ -65,11 +65,11 @@ export type ProposeGameInputs = {
 export type AcceptGameInputs = {
   eventIdWager: string;
   eventIdAccept: string;
-  gameRecord: Record;
-  playerOneClaimRecord: Record;
-  playerTwoClaimRecord: Record;
-  puzz_piece_stake_one: Record;
-  puzz_piece_stake_two: Record;
+  gameRecord: RecordWithPlaintext;
+  playerOneClaimRecord: RecordWithPlaintext;
+  playerTwoClaimRecord: RecordWithPlaintext;
+  puzz_piece_stake_one: RecordWithPlaintext;
+  puzz_piece_stake_two: RecordWithPlaintext;
   player_two_answer: '0field' | '1field';
   player_two_answer_readable: Answer;
   game_address: string;
@@ -79,12 +79,12 @@ export type AcceptGameInputs = {
 };
 
 export type RevealAnswerInputs = {
-  AnswerRecord: Record;
+  AnswerRecord: RecordWithPlaintext;
   PieceStakeOutcome: string;
 };
 export type FinishGameInputs = {
   GameStateRevealedFinish: string;
   GameStateAwaitFinish: string;
-  PieceJointStake: Record;
-  PieceTimeClaim: Record;
+  PieceJointStake: RecordWithPlaintext;
+  PieceTimeClaim: RecordWithPlaintext;
 };

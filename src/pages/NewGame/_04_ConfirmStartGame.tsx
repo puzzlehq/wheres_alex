@@ -1,9 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Opponent from '../../components/Opponent';
-import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import SelectedTreasureLocation from '../../components/SelectedTreasureLocation';
-import Button from '../../components/Button';
 import { useAtom } from 'jotai';
 import {
   eventIdAtom,
