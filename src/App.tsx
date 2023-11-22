@@ -83,9 +83,9 @@ function App() {
 
   return (
     <div className='flex min-h-screen justify-center bg-gradient-to-b from-[#7CF7FF] to-[#0DD4FF] font-body'>
-      <div className='z-10 flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
+      <div className='z-10 flex w-full max-w-screen-sm flex-col overflow-y-auto'>
         <Router>
-          {account && account?.address && <AppHeader />}
+          <AppHeader />
           <div className='h-full w-full max-w-screen-sm p-4'>
             <Routes>
               <Route path='/new-game' element={<NewGame />} />
@@ -96,7 +96,8 @@ function App() {
               </Route>
               <Route path='/renege-game' element={<RenegeGame />} />
               <Route path='/finish-game' element={<Reveal />} />
-              <Route path='/' element={account ? <Home /> : <Welcome />} />
+              <Route path='/home' element={<Home />} />
+              <Route path='/' element={<Welcome />} />
             </Routes>
           </div>
         </Router>

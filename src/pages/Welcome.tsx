@@ -1,9 +1,21 @@
-import { useConnect } from '@puzzlehq/sdk';
+import { useAccount, useConnect } from '@puzzlehq/sdk';
 import swaggers from '../assets/swaggers.png';
 import Button from '../components/Button.js';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 export const Welcome = () => {
-  const { loading, connect } = useConnect();
+  const navigate = useNavigate();
+  const { loading: accountLoading, account } = useAccount();
+  const { loading: connectLoading, connect } = useConnect();
+  console.log('accountLoading', accountLoading);
+  console.log('connectLoading', connectLoading);
+
+  useEffect(() => {
+    if (account) {
+      navigate("/home");
+    }
+  }, [account]);
 
   return (
     <div className='h-full w-full items-stretch justify-between'>
@@ -29,11 +41,9 @@ export const Welcome = () => {
           className='font-pirata max-w-[250px] font-header'
           onClick={connect}
           color='yellow'
-          disabled={loading}
+          disabled={accountLoading || connectLoading}
         >
-          {loading
-            ? 'Connecting...'
-            : 'Connect Wallet'}
+          {accountLoading ? 'Loading...' : connectLoading ? 'Connecting...' : 'Connect Wallet'}
         </Button>
       </div>
     </div>

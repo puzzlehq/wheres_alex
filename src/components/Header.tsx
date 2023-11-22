@@ -20,7 +20,7 @@ export const AppHeader = () => {
 
   return (
     <div className='flex w-full items-center justify-between gap-5  p-4'>
-      {account && account?.address ? (
+      {account?.address && (
         <>
           <img
             loading='lazy'
@@ -47,8 +47,6 @@ export const AppHeader = () => {
             {shortenAddress(account.address)}
           </Button>
         </>
-      ) : (
-        <div className='w-full self-stretch' />
       )}
     </div>
   );
