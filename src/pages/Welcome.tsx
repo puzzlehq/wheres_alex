@@ -8,8 +8,6 @@ export const Welcome = () => {
   const navigate = useNavigate();
   const { loading: accountLoading, account } = useAccount();
   const { loading: connectLoading, connect } = useConnect();
-  console.log('accountLoading', accountLoading);
-  console.log('connectLoading', connectLoading);
 
   useEffect(() => {
     if (account) {
