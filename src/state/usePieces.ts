@@ -32,7 +32,7 @@ export const usePieces = () => {
       const totalBalance = records
         .filter((record) => !record.spent)
         .map((record) => {
-          const amount = record.plaintext.match(/amount:(\d+)u64/);
+          const amount = record.data.amount.replace('u64', '');
           if (amount) {
             /// find largestPiece (and thus availableBalance)
             const amountInt = parseInt(amount[1]);

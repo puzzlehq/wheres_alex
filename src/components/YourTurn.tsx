@@ -14,8 +14,8 @@ function YourTurnItem({ game }: { game: Game }) {
 
   const navigate = useNavigate();
 
-  const [initializeAcceptGame] = useAcceptGameStore((state) => [
-    state.initialize,
+  const [initializeAcceptGame, initializeSubmitWager] = useAcceptGameStore((state) => [
+    state.initializeAcceptGame, state.initializeSubmitWager
   ]);
   const [initializeFinishGame] = useFinishGameStore((state) => [
     state.initialize,
@@ -27,6 +27,19 @@ function YourTurnItem({ game }: { game: Game }) {
 
   const renderActionButton = () => {
     switch (game.gameAction) {
+      case 'Submit Wager':
+        return (
+          <Button
+            onClick={() => {
+              initializeSubmitWager(opponent, Number(wager), multisig);
+              navigate('/accept-game');
+            }}
+            color='yellow'
+            size='sm'
+          >
+            Accept
+          </Button>
+        );
       case 'Accept':
         return (
           <Button

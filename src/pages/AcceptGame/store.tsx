@@ -13,7 +13,8 @@ type AcceptGameStore = {
   step: Step;
   setInputs: (inputs: Partial<AcceptGameInputs>) => void;
   setStep: (step: Step) => void;
-  initialize: (opponent: string, wagerAmount: number, multisig: string) => void;
+  initializeAcceptGame: (opponent: string, wagerAmount: number, multisig: string) => void;
+  initializeSubmitWager: (opponent: string, wagerAmount: number, multisig: string) => void;
   close: () => void;
 };
 
@@ -28,7 +29,17 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
       setStep: (step: Step) => {
         set({ step });
       },
-      initialize: (opponent: string, wagerAmount: number, game_multisig: string) => {
+      initializeAcceptGame: (opponent: string, wagerAmount: number, game_multisig: string) => {
+        set({
+          inputs: {
+            opponent,
+            wagerAmount: wagerAmount.toString(),
+            game_multisig,
+          },
+          step: Step._02_FindAlex
+        });
+      },
+      initializeSubmitWager: (opponent: string, wagerAmount: number, game_multisig: string) => {
         set({
           inputs: {
             opponent,
