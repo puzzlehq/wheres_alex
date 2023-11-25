@@ -22,9 +22,12 @@ const AcceptGame = () => {
   const wagerRecord = largestPiece;
 
   useEffect(() => {
-    setAcceptGameInputs({ ...acceptGameInputs, wagerRecord: wagerRecord?.plaintext.toString().replace(/\s+/g, '') });
+    setAcceptGameInputs({
+      ...acceptGameInputs,
+      wagerRecord: wagerRecord?.plaintext.toString().replace(/\s+/g, ''),
+    });
   }, []);
-  
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const createEvent = async () => {
@@ -43,7 +46,7 @@ const AcceptGame = () => {
       setStep('2_FindAlex');
     }
     setLoading(false);
-  }
+  };
 
   return (
     <main className='flex h-full w-full flex-col justify-center gap-8'>
@@ -52,18 +55,14 @@ const AcceptGame = () => {
       <Wager wagerAmount={Number(wagerAmount)} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
-        <Button
-          color='green'
-          disabled={loading}
-          onClick={createEvent}
-        >
+        <Button color='green' disabled={loading} onClick={createEvent}>
           ACCEPT WAGER
         </Button>
         <Button
           color='gray'
           onClick={() => {
             /// todo - way more here
-            navigate('/')
+            navigate('/');
           }}
         >
           REJECT

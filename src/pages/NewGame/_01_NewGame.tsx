@@ -4,8 +4,8 @@ import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
 import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { useAtom } from 'jotai';
-import { aleoAddressRegex } from '../../state/game_states';
 import { useAccount } from '@puzzlehq/sdk';
+import { aleoAddressRegex } from '../../utils.js';
 
 function NewGame() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
@@ -15,25 +15,31 @@ function NewGame() {
   const opponent = inputs.opponent;
 
   return (
-    <div className='flex h-full w-full flex-col justify-between items-center px-5 gap-2'>
+    <div className='flex h-full w-full flex-col items-center justify-between gap-2 px-5'>
       <Nav step={1} />
-      <PageHeader text='WHO WOULD YOU LIKE TO CHALLENGE?' bg='bg-primary-blue' />
+      <PageHeader
+        text='WHO WOULD YOU LIKE TO CHALLENGE?'
+        bg='bg-primary-blue'
+      />
       <input
         type='text'
-        className='mt-5 w-full rounded-lg border-[3px] bg-transparent border-solid border-primary-gray p-4 text-sm font-semibold leading-4 max-md:mr-px'
+        className='mt-5 w-full rounded-lg border-[3px] border-solid border-primary-gray bg-transparent p-4 text-sm font-semibold leading-4 max-md:mr-px'
         placeholder="Enter Opponent's Address"
         id='opponent'
         value={opponent ?? ''}
         onChange={(e) => {
-          setInputs({ ...inputs, opponent: e.target.value })
+          setInputs({ ...inputs, opponent: e.target.value });
         }}
       />
-      <div className='flex flex-col flex-grow'/>
+      <div className='flex flex-grow flex-col' />
       <Button
         className='mb-6'
         onClick={() => setStep('2_HideAlex')}
         color='green'
-        disabled={!aleoAddressRegex.test(inputs.opponent ?? '') || inputs.opponent === account.address}
+        disabled={
+          !aleoAddressRegex.test(inputs.opponent ?? '') ||
+          inputs.opponent === account.address
+        }
       >
         NEXT
       </Button>

@@ -5,7 +5,7 @@ import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
 import { useAtom } from 'jotai';
 import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
-import { Answer } from '../../state/game_states';
+import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 
 function HideAlex() {
   const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
@@ -13,11 +13,14 @@ function HideAlex() {
 
   return (
     <main className='flex h-full flex-col justify-between'>
-      <div className='flex h-full w-full flex-col items-center px-5 gap-2'>
+      <div className='flex h-full w-full flex-col items-center gap-2 px-5'>
         <Nav step={2} />
-        <PageHeader text='WHERE WOULD YOU LIKE TO HIDE ALEX?' bg='bg-primary-blue' />
+        <PageHeader
+          text='WHERE WOULD YOU LIKE TO HIDE ALEX?'
+          bg='bg-primary-blue'
+        />
         <ChooseAlexLocation
-          setAnswer={(answer: Answer) => setInputs({...inputs, answer})}
+          setAnswer={(answer: Answer) => setInputs({ ...inputs, answer })}
           answer={inputs.answer as Answer}
           hiding={true}
         />

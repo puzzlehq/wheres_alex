@@ -1,4 +1,4 @@
-function TotalWinnings({amount}: {amount: number}) {
+function TotalWinnings({ amount }: { amount: number }) {
   return (
     <section className='mt-8 flex flex-col self-stretch border-2 border-solid border-[color:var(--primary-green,#4EC331)] px-2.5 pt-3.5 text-primary-green'>
       <div

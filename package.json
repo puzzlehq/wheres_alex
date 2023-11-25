@@ -7,10 +7,11 @@
     "type-check": "tsc --noEmit",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\""
   },
   "dependencies": {
-    "@puzzlehq/sdk": "0.1.31",
+    "@puzzlehq/sdk": "../puzzle-sdk",
     "@puzzlehq/types": "^1.0.3",
     "html5-qrcode": "^2.3.8",
     "immer": "^10.0.3",
@@ -21,19 +22,20 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
+    "zod": "^3.22.4",
     "zustand": "^4.4.6"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.1.4",
     "@rollup/plugin-inject": "^5.0.3",
+    "@types/js-yaml": "^4.0.5",
     "@types/lodash": "^4.14.201",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",
     "@vitejs/plugin-react": "^4.0.3",
-    "@types/js-yaml": "^4.0.5",
     "autoprefixer": "^10.4.15",
     "eslint": "^8.45.0",
     "eslint-plugin-react-hooks": "^4.6.0",

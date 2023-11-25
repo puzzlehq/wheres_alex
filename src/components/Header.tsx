@@ -25,7 +25,7 @@ export const AppHeader = () => {
           </Button>
         </>
       ) : (
-        <div className='w-full self-stretch'/>
+        <div className='w-full self-stretch' />
       )}
     </div>
   );

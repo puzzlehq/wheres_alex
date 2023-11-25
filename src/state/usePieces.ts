@@ -1,9 +1,9 @@
-import { getRecords, Record, useAccount } from "@puzzlehq/sdk";
-import { useEffect, useMemo, useState } from "react";
+import { getRecords, RecordWithPlaintext } from '@puzzlehq/sdk';
+import { useEffect, useMemo, useState } from 'react';
 
 export const usePieces = () => {
   const [loading, setLoading] = useState(true);
-  const [records, setRecords] = useState<Record[]>([]);
+  const [records, setRecords] = useState<RecordWithPlaintext[]>([]);
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
@@ -13,8 +13,8 @@ export const usePieces = () => {
   const fetch = async () => {
     const response = await getRecords({
       filter: {
-        programId: 'puzzle_pieces_v007.aleo',
-        type: 'unspent'
+        programId: 'puzzle_pieces_v010.aleo',
+        type: 'unspent',
       },
     });
     if (response.error) {
@@ -30,8 +30,8 @@ export const usePieces = () => {
       let availableBalance = 0;
       let largestPiece = records[0];
       const totalBalance = records
-        .filter(record => !record.spent)
-        .map(record => {
+        .filter((record) => !record.spent)
+        .map((record) => {
           const amount = record.plaintext.match(/amount:(\d+)u64/);
           if (amount) {
             /// find largestPiece (and thus availableBalance)
@@ -47,7 +47,7 @@ export const usePieces = () => {
         .reduce((total, amount) => {
           /// sum up
           return total + amount;
-        })
+        });
       return { totalBalance, availableBalance, largestPiece };
     }
     return { totalBalance: 0, availableBalance: 0, largestPiece: undefined };
@@ -60,6 +60,6 @@ export const usePieces = () => {
     largestPiece,
     loading,
     error,
-    refetch: fetch
+    refetch: fetch,
   };
 };

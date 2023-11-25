@@ -11,10 +11,7 @@ const FinishGame = () => {
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
-      <PageHeader
-        bg='bg-primary-blue'
-        text='CONGRATS WINNER!'
-      />
+      <PageHeader bg='bg-primary-blue' text='CONGRATS WINNER!' />
       <div className='flex flex-col items-center gap-2'>
         <Wager wagerAmount={getNumberAmount(wager)} winnings />
         <a
@@ -26,10 +23,7 @@ const FinishGame = () => {
       </div>
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-2'>
-        <Button
-          color='green'
-          onClick={() => navigate('/')}
-        >
+        <Button color='green' onClick={() => navigate('/')}>
           REFER A PLAYER
         </Button>
         <Button

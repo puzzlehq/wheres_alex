@@ -1,6 +1,11 @@
-import { Record } from '@puzzlehq/sdk';
-import { Answer } from './game_states';
-import _ from 'lodash'
+import { RecordWithPlaintext } from '@puzzlehq/sdk';
+import _ from 'lodash';
+import {
+  GameRecord,
+  removeVisibilitySuffix,
+  Answer,
+  GameRecordSchema,
+} from './RecordTypes/wheres_alex_vxxx';
 
 export const GAME_PROGRAM_ID = 'wheres_alex_v001.aleo';
 
@@ -10,7 +15,7 @@ export const GAME_FUNCTIONS = {
   set_wager: 'set_wager',
   reveal_answer: 'reveal_answer',
   finish_game: 'finish_game',
-} 
+};
 
 /// todo - update these
 export const stepFees = {
@@ -23,27 +28,8 @@ export const stepFees = {
 
 export type LoadingStatus = 'idle' | 'loading' | 'success' | 'error';
 
-/// note: def more to come here
-export type GameStep = 
-  'proposed'
-  | 'waitingAccept'
-  | 'accepted'
-  | 'waitingReveal'
-  | 'waitingClaim'
-  | 'reneged';
-
-export type Game = {
-  step: GameStep;
-  challenger: string; /// address
-  opponent: string; /// address
-  address: string; /// address of shared state multisig
-  wager: number;
-
-  eventIds?: string[];
-}
-
 export type ProposeGameInputs = {
-  wager_record: Record;
+  wager_record: RecordWithPlaintext;
   amount: string;
   sender_address: string;
   challenger: string;
@@ -53,37 +39,38 @@ export type ProposeGameInputs = {
   message_2: string;
   message_3: string;
   message_4: string;
-  message_5: string;  
+  message_5: string;
   signature: string;
   nonce: string;
   answer: string;
   seed: string;
-}
+};
 
 // used for submit wager and accept game
 export type AcceptGameInputs = {
   eventIdWager: string;
   eventIdAccept: string;
-  gameRecord: Record;
-  playerOneClaimRecord: Record;
-  playerTwoClaimRecord: Record;
-  puzz_piece_stake_one: Record;
-  puzz_piece_stake_two: Record;
+  gameRecord: RecordWithPlaintext;
+  playerOneClaimRecord: RecordWithPlaintext;
+  playerTwoClaimRecord: RecordWithPlaintext;
+  puzz_piece_stake_one: RecordWithPlaintext;
+  puzz_piece_stake_two: RecordWithPlaintext;
   player_two_answer: '0field' | '1field';
   player_two_answer_readable: Answer;
   game_address: string;
   opponent: string;
   wagerAmount: string;
   wagerRecord: string;
-}
+};
 
 export type RevealAnswerInputs = {
-  AnswerRecord: Record;
+  AnswerRecord: RecordWithPlaintext;
   PieceStakeOutcome: string;
-}
+};
 export type FinishGameInputs = {
   GameStateRevealedFinish: string;
   GameStateAwaitFinish: string;
-  PieceJointStake: Record;
-  PieceTimeClaim: Record;
-}
+  PieceJointStake: RecordWithPlaintext;
+  PieceTimeClaim: RecordWithPlaintext;
+};
+

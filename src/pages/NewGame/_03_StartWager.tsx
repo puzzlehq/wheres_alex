@@ -23,7 +23,11 @@ function StartWager() {
       setError('You do not have enough Pieces');
     } else {
       setError(undefined);
-      setInputs({ ...inputs, amount: input.toString(), wager_record: largestPiece });
+      setInputs({
+        ...inputs,
+        amount: input.toString(),
+        wager_record: largestPiece,
+      });
     }
     setWager(input);
   };
@@ -31,27 +35,37 @@ function StartWager() {
   const { inputTextColor, inputOpacity } = useMemo(() => {
     return {
       inputTextColor: wager !== 0 ? 'text-primary-green' : '',
-      inputOpacity: wager === 0 ? 'opacity-40' : ''
+      inputOpacity: wager === 0 ? 'opacity-40' : '',
     };
   }, [wager]);
 
-  const isDisabled = wager === undefined || wager <= 0 || wager > availableBalance || !largestPiece || !wagerRecord;
+  const isDisabled =
+    wager === undefined ||
+    wager <= 0 ||
+    wager > availableBalance ||
+    !largestPiece ||
+    !wagerRecord;
 
   return (
-    <main className='flex h-full flex-col justify-between px-5 gap-2'>
+    <main className='flex h-full flex-col justify-between gap-2 px-5'>
       <Nav step={3} />
-      <PageHeader bg='bg-primary-blue' text='HOW MUCH WOULD YOU LIKE TO WAGER?' />
+      <PageHeader
+        bg='bg-primary-blue'
+        text='HOW MUCH WOULD YOU LIKE TO WAGER?'
+      />
       <input
         type='number'
         min={0}
         value={wager}
         onChange={onWagerInput}
-        className={`mt-14 flex w-full flex-col bg-transparent rounded-lg border-[3px] border-primary-gray px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} self-center text-center text-3xl font-bold`}
+        className={`mt-14 flex w-full flex-col rounded-lg border-[3px] border-primary-gray bg-transparent px-5 py-7 max-md:mt-10 ${inputTextColor} ${inputOpacity} self-center text-center text-3xl font-bold`}
         placeholder='Enter amount'
       />
-      <p className='mt-6 mx-auto'>{'Available balance: ' + availableBalance} Pieces</p>
-      {error && <p className='text-primary-red mx-auto'>{error}</p>}
-      <div className='flex flex-col flex-grow'/>
+      <p className='mx-auto mt-6'>
+        {'Available balance: ' + availableBalance} Pieces
+      </p>
+      {error && <p className='mx-auto text-primary-red'>{error}</p>}
+      <div className='flex flex-grow flex-col' />
       <Button
         className='mb-6'
         onClick={() => setStep('4_ConfirmStartGame')}

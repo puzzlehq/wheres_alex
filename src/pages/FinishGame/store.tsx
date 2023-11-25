@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Answer } from '../../state/game_states';
+import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 
 export enum Step {
   _01_Finish,
@@ -19,28 +19,29 @@ type FinishGameStore = {
 };
 
 export const useFinishGameStore = create<FinishGameStore>()(
-  persist((set) => ({
-    step: Step._01_Finish,
-    opponent: undefined,
-    wager: undefined,
-    answer: undefined,
-    setStep: (step: Step) => {
-      set({ step });
-    },
-    initialize: (opponent: string, wager: number, answer: Answer) => {
-      set({ opponent, answer, wager, step: Step._01_Finish });
-    },
-    finish: async () => {
-      
-    },
-    close: () => {
-      set({
-        step: Step._01_Finish,
-        opponent: '',
-        wager: 0,
-      });
-    },
-  }), {
-    name: 'finish-game'
-  })
+  persist(
+    (set) => ({
+      step: Step._01_Finish,
+      opponent: undefined,
+      wager: undefined,
+      answer: undefined,
+      setStep: (step: Step) => {
+        set({ step });
+      },
+      initialize: (opponent: string, wager: number, answer: Answer) => {
+        set({ opponent, answer, wager, step: Step._01_Finish });
+      },
+      finish: async () => {},
+      close: () => {
+        set({
+          step: Step._01_Finish,
+          opponent: '',
+          wager: 0,
+        });
+      },
+    }),
+    {
+      name: 'finish-game',
+    }
+  )
 );

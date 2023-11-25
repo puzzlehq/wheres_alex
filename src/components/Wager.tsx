@@ -11,12 +11,16 @@ const Wager = ({ wagerAmount, winnings = false }: WagerProps) => {
           {winnings ? 'WINNINGS' : 'WAGER'}
         </div>
         <div className='flex w-full items-center gap-2 border-[3px] border-primary-green p-1'>
-          <p className='flex-1 text-3xl font-bold text-primary-green'>{wagerAmount}</p>
+          <p className='flex-1 text-3xl font-bold text-primary-green'>
+            {wagerAmount}
+          </p>
           <div className='flex flex-col gap-0'>
             <p className='flex-1 text-base font-bold leading-[16px] text-primary-green'>
               Puzzle
             </p>
-            <p className='flex-1 text-base font-bold text-primary-green'>Pieces</p>
+            <p className='flex-1 text-base font-bold text-primary-green'>
+              Pieces
+            </p>
           </div>
         </div>
       </div>

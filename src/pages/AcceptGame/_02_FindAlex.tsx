@@ -5,11 +5,11 @@ import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import Button from '../../components/Button';
 import { acceptGameInputsAtom, acceptGameStepAtom } from './index';
 import { useAtom } from 'jotai';
-import { Answer } from '../../state/game_states';
 import { requestCreateEvent } from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
 import { useState } from 'react';
+import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 
 function FindAlex() {
   const [acceptGameInputs, setAcceptGameInputs] = useAtom(acceptGameInputsAtom);
@@ -39,15 +39,20 @@ function FindAlex() {
 
   return (
     <main className='flex h-full flex-col justify-between'>
-      <div className='flex h-full w-full flex-col items-center px-5 gap-6'>
-        <div className='w-full flex flex-col gap-2'>
+      <div className='flex h-full w-full flex-col items-center gap-6 px-5'>
+        <div className='flex w-full flex-col gap-2'>
           <Nav step={2} />
           <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
         </div>
         <ChooseAlexLocation
           setAnswer={(answer) => {
-            const newAnswer = answer === Answer.InTheWeeds ? '0field' : '1field' 
-            setAcceptGameInputs({ ...acceptGameInputs, player_two_answer: newAnswer, player_two_answer_readable: answer })
+            const newAnswer =
+              answer === Answer.InTheWeeds ? '0field' : '1field';
+            setAcceptGameInputs({
+              ...acceptGameInputs,
+              player_two_answer: newAnswer,
+              player_two_answer_readable: answer,
+            });
           }}
           answer={answer}
           hiding={false}

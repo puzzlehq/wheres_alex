@@ -12,14 +12,13 @@ function GameStarted(props: { done: () => void }) {
 
   return (
     <main className='flex h-full flex-col justify-between'>
-      <div className='flex w-full h-full flex-col items-center px-5'>
-        {game_multisig && eventId && <GameInfo multisig={game_multisig} eventId={eventId} newGame={true} />}
-        <div className='flex flex-col flex-grow'/>
+      <div className='flex h-full w-full flex-col items-center px-5'>
+        {game_multisig && eventId && (
+          <GameInfo multisig={game_multisig} eventId={eventId} newGame={true} />
+        )}
+        <div className='flex flex-grow flex-col' />
         <div className='flex flex-col gap-4'>
-          <Button
-            onClick={props.done}
-            color='transparent'
-          >
+          <Button onClick={props.done} color='transparent'>
             GO HOME
           </Button>
         </div>

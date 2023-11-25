@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Answer } from '../../../state/game_states';
+import { Answer } from '../../../state/RecordTypes/wheres_alex_vxxx';
 
 export enum Step {
   _01_Claim,
@@ -19,28 +19,29 @@ type ClaimPrizeTieStore = {
 };
 
 export const useClaimPrizeTieStore = create<ClaimPrizeTieStore>()(
-  persist((set) => ({
-    step: Step._01_Claim,
-    opponent: '',
-    wager: 0,
-    answer: undefined,
-    setStep: (step: Step) => {
-      set({ step });
-    },
-    initialize: (opponent: string, wager: number, answer: Answer) => {
-      set({ opponent, answer, wager, step: Step._01_Claim });
-    },
-    claimWinPrize: async () => {
-      
-    },
-    close: () => {
-      set({
-        step: Step._01_Claim,
-        opponent: '',
-        wager: 0,
-      });
-    },
-  }), {
-    name: 'claim-game-tie'
-  })
+  persist(
+    (set) => ({
+      step: Step._01_Claim,
+      opponent: '',
+      wager: 0,
+      answer: undefined,
+      setStep: (step: Step) => {
+        set({ step });
+      },
+      initialize: (opponent: string, wager: number, answer: Answer) => {
+        set({ opponent, answer, wager, step: Step._01_Claim });
+      },
+      claimWinPrize: async () => {},
+      close: () => {
+        set({
+          step: Step._01_Claim,
+          opponent: '',
+          wager: 0,
+        });
+      },
+    }),
+    {
+      name: 'claim-game-tie',
+    }
+  )
 );
