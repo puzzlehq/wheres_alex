@@ -1,18 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import { useRenegeStore } from '../pages/Renege/store';
 import Button from './Button';
-import { Game } from '../state/store';
+import { Game, useGameStore } from '../state/store';
 import { shortenAddress } from '@puzzlehq/sdk';
 
 function TheirTurnItem({ game }: {game: Game}) {
   const navigate = useNavigate(); // Hook to navigate
   const [initializeRenege] = useRenegeStore((state) => [state.initialize]);
-
-  const handleRenegeClick = () => {
-    // Navigate to accept-game and pass the challenger and wager as state
-    initializeRenege(game.gameRecord.opponent_address, Number(game.gameRecord.total_pot));
-    navigate('/renege-game');
-  };
+  const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
 
   // Function to handle the ping button click
   const handlePingClick = () => {
@@ -40,7 +35,15 @@ function TheirTurnItem({ game }: {game: Game}) {
       case 'Renege': 
         return (
           <div className='flex gap-2'>
-            <Button onClick={handleRenegeClick} color='gray' size='sm'>
+            <Button
+              onClick={() => {
+                initializeRenege(game.gameRecord.opponent_address, Number(game.gameRecord.total_pot));
+                setCurrentGame(game);
+                navigate('/renege-game');
+              }}
+              color='gray'
+              size='sm'
+            >
               Renege
             </Button>
           </div>

@@ -9,10 +9,12 @@ import { requestCreateEvent } from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
 import { Step, useAcceptGameStore } from './store';
+import { useGameStore } from '../../state/store';
 
 const AcceptGame = () => {
   const [inputs, setInputs, setStep] = useAcceptGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
   const { largestPiece } = usePieces();
+  const [currentGame] = useGameStore((state) => [state.currentGame]);
   const navigate = useNavigate();
 
   const opponent = inputs?.opponent;
@@ -22,14 +24,22 @@ const AcceptGame = () => {
   const disabled = !opponent || !wagerAmount || !wagerRecord || !inputs;
 
   useEffect(() => {
+    if (!wagerRecord) return;
     setInputs({
       ...inputs,
       wagerRecord: wagerRecord?.plaintext.toString().replace(/\s+/g, ''),
     });
   }, []);
 
+  useEffect(() => {
+    if (currentGame?.gameRecord.game_state === '2field') {
+      setStep(Step._02_FindAlex);
+    }
+  }, [currentGame])
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
+
   const createEvent = async () => {
     if (!inputs) return;
     setLoading(true);
@@ -45,6 +55,7 @@ const AcceptGame = () => {
     } else if (response.eventId) {
       /// todo - other things here?
       setStep(Step._02_FindAlex);
+      setInputs({ ...inputs, eventIdWager: response.eventId });
     }
     setLoading(false);
   };

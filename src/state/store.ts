@@ -17,7 +17,7 @@ export type Game = {
 }
 
 type GameStore = {
-  currentGame?: GameRecord;
+  currentGame?: Game;
   yourTurn: Game[];
   theirTurn: Game[];
   finished: Game[];
@@ -28,6 +28,7 @@ type GameStore = {
     utilRecords: RecordWithPlaintext[];
     puzzleRecords: RecordWithPlaintext[];
   }, user: string) => void;
+  setCurrentGame: (game?: Game) => void;
   close: () => void;
   clearFlowStores: () => void;
 };
@@ -42,11 +43,27 @@ export const useGameStore = create<GameStore>()(
       puzzleRecords: [],
       utilRecords: [],
       setRecords: (records, user) => {
+        const currentGame = get().currentGame;
         // const utilRecords = records.utilRecords
         // const puzzleRecords = records.puzzleRecords;
-        const gameRecords: GameRecord[] = records.gameRecords.map((record) =>
-          parseGameRecord(record)
+        const gameRecords: GameRecord[] = records.gameRecords.map((record) => {
+          const gameRecord: GameRecord = parseGameRecord(record)
+
+          if (gameRecord.game_multisig === currentGame?.gameRecord.game_multisig) {
+            const gameState = getGameState(gameRecord, user);
+            set({
+              currentGame: {
+                gameRecord,
+                gameState,
+                gameAction: getGameAction(gameState)
+              }
+            })
+          }
+          return gameRecord;
+        }
         ).filter((record): record is GameRecord => record !== undefined);
+
+        
 
         console.log(gameRecords);
 
@@ -91,6 +108,9 @@ export const useGameStore = create<GameStore>()(
 
         set({ yourTurn, theirTurn, finished });
       },
+      setCurrentGame: (game?: Game) => {
+        set({ currentGame: game });
+      },
       close: () => {
         set({ currentGame: undefined });
       },
@@ -102,6 +122,7 @@ export const useGameStore = create<GameStore>()(
         useClaimPrizeWinStore.getState().close();
         useClaimPrizeNoShowStore.getState().close();
         useFinishGameStore.getState().close();
+        set({ currentGame: undefined });
       }
     }),
     {

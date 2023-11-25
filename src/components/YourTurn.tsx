@@ -4,7 +4,7 @@ import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store.js';
 import { useFinishGameStore } from '../pages/FinishGame/store.js';
 import Button from './Button.js';
 import { Answer } from '../state/RecordTypes/wheres_alex_vxxx.js';
-import { Game } from '../state/store.js';
+import { Game, useGameStore } from '../state/store.js';
 import { shortenAddress } from '@puzzlehq/sdk';
 
 function YourTurnItem({ game }: { game: Game }) {
@@ -13,6 +13,8 @@ function YourTurnItem({ game }: { game: Game }) {
   const wager = game.gameRecord.total_pot;
 
   const navigate = useNavigate();
+
+  const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
 
   const [initializeAcceptGame, initializeSubmitWager] = useAcceptGameStore((state) => [
     state.initializeAcceptGame, state.initializeSubmitWager
@@ -32,6 +34,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               initializeSubmitWager(opponent, Number(wager), multisig);
+              setCurrentGame(game);
               navigate('/accept-game');
             }}
             color='yellow'
@@ -45,6 +48,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               initializeAcceptGame(opponent, Number(wager), multisig);
+              setCurrentGame(game);
               navigate('/accept-game');
             }}
             color='yellow'
@@ -58,6 +62,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               initializeFinishGame(opponent, Number(wager), Answer.InTheWeeds);
+              setCurrentGame(game);
               navigate('/finish-game');
             }}
             size='sm'
@@ -71,6 +76,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               initializeClaimWin(opponent, Number(wager), Answer.InTheWeeds);
+              setCurrentGame(game);
               navigate('/claim-prize/win');
             }}
             color='yellow'
