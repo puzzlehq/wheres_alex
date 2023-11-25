@@ -5,6 +5,7 @@ import { useFinishGameStore } from '../pages/FinishGame/store.js';
 import Button from './Button.js';
 import { Answer } from '../state/RecordTypes/wheres_alex_vxxx.js';
 import { Game } from '../state/store.js';
+import { shortenAddress } from '@puzzlehq/sdk';
 
 function YourTurnItem({ game }: { game: Game }) {
   const multisig = game.gameRecord.game_multisig;
@@ -19,9 +20,7 @@ function YourTurnItem({ game }: { game: Game }) {
   const [initializeFinishGame] = useFinishGameStore((state) => [
     state.initialize,
   ]);
-  // const [initializeClaimLose] = useClaimPrizeLoseStore((state) => [
-  //   state.initialize,
-  // ]);
+
   const [initializeClaimWin] = useClaimPrizeWinStore((state) => [
     state.initialize,
   ]);
@@ -73,7 +72,7 @@ function YourTurnItem({ game }: { game: Game }) {
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {opponent}
+        {shortenAddress(opponent)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
         {wager} pieces

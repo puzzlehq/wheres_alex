@@ -2,18 +2,16 @@
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
-import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { usePieces } from '../../state/usePieces';
 import { useMemo, useState } from 'react';
-import { useAtom } from 'jotai';
+import { Step, useNewGameStore } from './store';
 
 function StartWager() {
   const { availableBalance, largestPiece } = usePieces();
   const [error, setError] = useState<string | undefined>();
-  const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
-  const [_, setStep] = useAtom(proposeGameStepAtom);
+  const [inputs, setInputs, setStep] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
   const [wager, setWager] = useState<number | undefined>(undefined);
-  const wagerRecord = inputs.wager_record;
+  const wagerRecord = inputs?.wagerRecord;
 
   const onWagerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = Number(e.target.value);
@@ -25,8 +23,8 @@ function StartWager() {
       setError(undefined);
       setInputs({
         ...inputs,
-        amount: input.toString(),
-        wager_record: largestPiece,
+        wagerAmount: input.toString(),
+        wagerRecord: largestPiece,
       });
     }
     setWager(input);
@@ -47,7 +45,7 @@ function StartWager() {
     !wagerRecord;
 
   return (
-    <main className='flex h-full flex-col justify-between gap-2 px-5'>
+    <div className='flex h-full flex-col justify-between gap-2 px-5'>
       <Nav step={3} />
       <PageHeader
         bg='bg-primary-blue'
@@ -68,13 +66,13 @@ function StartWager() {
       <div className='flex flex-grow flex-col' />
       <Button
         className='mb-6'
-        onClick={() => setStep('4_ConfirmStartGame')}
+        onClick={() => setStep(Step._04_ConfirmStartGame)}
         disabled={isDisabled || !!error}
         color='green'
       >
         NEXT
       </Button>
-    </main>
+    </div>
   );
 }
 

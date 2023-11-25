@@ -57,21 +57,28 @@ function App() {
 
   useOnSessionEvent(({ params }) => {
     const eventName = params.event.name;
-    if (!['accountSelected', 'accountSynced'].includes(eventName)) return;
-    if (!account) return;
+    if (!['accountSynced'].includes(eventName)) return;
     fetchRecords();
     refetchPieces();
   });
 
   useEffect(() => {
+    if (!account) return;
+    fetchRecords();
+    refetchPieces();
+  }, [account?.address])
+
+  useEffect(() => {
     if (
       gameRecords !== undefined &&
       puzzleRecords !== undefined &&
-      utilRecords !== undefined
+      utilRecords !== undefined &&
+      account
     ) {
       console.log('gameRecords', gameRecords);
       console.log('puzzleRecords', puzzleRecords);
       console.log('utilRecords', utilRecords);
+      console.log('account.address', account.address);
 
       setRecords({ gameRecords, puzzleRecords, utilRecords }, account.address);
     }
@@ -83,9 +90,9 @@ function App() {
 
   return (
     <div className='App flex min-h-screen justify-center bg-neutral-900'>
+      <Router>
       <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
         {account && account?.address && <AppHeader />}
-        <Router>
           <div className='h-full w-full max-w-screen-sm p-4'>
             <Routes>
               <Route path='/new-game' element={<NewGame />} />
@@ -99,8 +106,8 @@ function App() {
               <Route path='/' element={account ? <Home /> : <Welcome />} />
             </Routes>
           </div>
-        </Router>
-      </div>
+        </div>
+      </Router>
     </div>
   );
 }

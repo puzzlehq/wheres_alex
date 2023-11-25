@@ -9,7 +9,7 @@ export enum Answer {
 export const GameRecordSchema = z.object({
   owner: z.string(), // opponent address
   game_multisig: z.string(), // multisig address
-  game_state: z.enum(['0field', '1field', '2field', '3field']), 
+  game_state: z.enum(['0field', '1field', '2field', '3field', '4field', '5field', '6field']), 
   your_turn: z.string(),
   total_pot: z.string().transform(Number),
   challenger_address: z.string(),
@@ -34,52 +34,59 @@ export const removeVisibilitySuffix = (obj: {
   return obj;
 }
 
-export type GameState = 'challenger:0'
+export type GameState =
+  'challenger:0'
   | 'challenger:1'
-  | 'challenger:2:lose'
-  | 'challenger:2:win'
+  | 'challenger:2'
   | 'challenger:3'
+  | 'challenger:4:lose'
+  | 'challenger:4:win'
+  | 'challenger:5'
+  | 'challenger:6'
   | 'opponent:0'
   | 'opponent:1'
-  | 'opponent:2:lose'
-  | 'opponent:2:win'
+  | 'opponent:2'
   | 'opponent:3'
+  | 'opponent:4:lose'
+  | 'opponent:4:win'
+  | 'opponent:5'
+  | 'opponent:6'
 
 export const getGameState = (game: GameRecord, user: string): GameState => {
-  const isChallenger = user === game.challenger_address;
+  const challenger_or_opponent = user === game.challenger_address ? 'challenger' : 'opponent';
   const isWinner = user === game.winner;
 
-  if (isChallenger) {
-    switch (game.game_state) {
-      case ('0field'): return 'challenger:0';
-      case ('1field'): return 'challenger:1';
-      case ('2field'): return isWinner ? 'challenger:2:win' : 'challenger:2:lose';
-      case ('3field'): return 'challenger:3';
-    }
-  } else {
-    switch (game.game_state) {
-      case ('0field'): return 'opponent:0';
-      case ('1field'): return 'opponent:1';
-      case ('2field'): return isWinner ? 'opponent:2:win' : 'opponent:2:lose';
-      case ('3field'): return 'opponent:3';
-    }
+  switch (game.game_state) {
+    case ('0field'): return `${challenger_or_opponent}:0`;
+    case ('1field'): return `${challenger_or_opponent}:1`;
+    case ('2field'): return `${challenger_or_opponent}:2`;
+    case ('3field'): return `${challenger_or_opponent}:3`;
+    case ('4field'): return isWinner ? `${challenger_or_opponent}:4:win` : `${challenger_or_opponent}:4:lose`;
+    case ('5field'): return `${challenger_or_opponent}:5`;
+    case ('6field'): return `${challenger_or_opponent}:6`;
   }
 }
 
-export type GameAction = 'Renege' | 'Reveal' | 'Claim' | 'Accept' | 'Ping' | 'Claim' | undefined
+export type GameAction = 'Renege' | 'Reveal' | 'Claim' | 'Accept' | 'Submit Wager' | 'Ping' | 'Claim' | undefined
 
 export const getGameAction = (gameState: GameState): GameAction => {
   switch (gameState) {
-    case ('challenger:0'): return 'Renege' // and ping
-    case ('challenger:1'): return 'Reveal'
-    case ('challenger:2:lose'): return undefined
-    case ('challenger:2:win'): return 'Claim'
-    case ('challenger:3'): return undefined
-    case ('opponent:0'): return 'Accept'
-    case ('opponent:1'): return 'Ping'
-    case ('opponent:2:lose'): return undefined
-    case ('opponent:2:win'): return 'Claim'
-    case ('opponent:3'): return undefined
+    case ('challenger:0'): return undefined 
+    case ('challenger:1'): return 'Renege' // and ping
+    case ('challenger:2'): return 'Renege' // and ping
+    case ('challenger:3'): return 'Reveal' 
+    case ('challenger:4:lose'): return undefined
+    case ('challenger:4:win'): return 'Claim'
+    case ('challenger:5'): return undefined
+    case ('challenger:6'): return undefined
+    case ('opponent:0'): return undefined
+    case ('opponent:1'): return 'Submit Wager'
+    case ('opponent:2'): return 'Accept' 
+    case ('opponent:3'): return 'Ping'
+    case ('opponent:4:lose'): return undefined 
+    case ('opponent:4:win'): return 'Claim'
+    case ('opponent:5'): return undefined
+    case ('opponent:6'): return undefined 
   }
 }
 

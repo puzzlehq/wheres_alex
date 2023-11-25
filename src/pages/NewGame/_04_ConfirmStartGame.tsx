@@ -4,12 +4,6 @@ import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Button from '../../components/Button';
-import { useAtom } from 'jotai';
-import {
-  eventIdAtom,
-  proposeGameInputsAtom,
-  proposeGameStepAtom,
-} from './index';
 import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
@@ -26,6 +20,7 @@ import { EventType } from '@puzzlehq/types';
 import { useState } from 'react';
 import jsyaml from 'js-yaml';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx.js';
+import { Step, useNewGameStore } from './store.js';
 
 const messageToSign = '1234567field';
 
@@ -35,20 +30,17 @@ enum ConfirmStep {
 }
 
 function ConfirmStartGame() {
-  const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
-  const [_, setStep] = useAtom(proposeGameStepAtom);
+  const [inputs, setInputs, setStep, setEventId] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep, state.setEventId]);
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
-  const opponent = inputs.opponent ?? '';
-  const answer = inputs.answer;
-  const amount = inputs.amount ?? 0;
+  const opponent = inputs?.opponent ?? '';
+  const answer = inputs?.answer;
+  const amount = inputs?.wagerAmount ?? 0;
 
   const { account } = useAccount();
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
-
-  const [_eventId, setEventId] = useAtom(eventIdAtom);
 
   const createProposeGameEvent = async () => {
     setLoading(true);
@@ -64,21 +56,22 @@ function ConfirmStartGame() {
 
       setInputs({ ...inputs, seed, game_multisig: address });
       if (
-        inputs.opponent &&
-        inputs.wager_record &&
-        inputs.amount &&
-        inputs.answer &&
+        inputs?.opponent &&
+        inputs?.wagerRecord &&
+        inputs?.wagerAmount &&
+        inputs?.answer &&
         signature &&
         signature.messageFields &&
-        signature.signature
+        signature.signature &&
+        account
       ) {
         setConfirmStep(ConfirmStep.RequestingEvent);
 
         const fields = Object(jsyaml.load(signature.messageFields));
 
         const proposalInputs: ProposeGameInputs = {
-          wager_record: inputs.wager_record,
-          amount: inputs.amount + 'u64',
+          wagerRecord: inputs.wagerRecord,
+          wagerAmount: inputs.wagerAmount + 'u64',
           sender_address: account.address,
           challenger: account.address,
           opponent: inputs.opponent,
@@ -102,10 +95,12 @@ function ConfirmStartGame() {
         });
         if (createEventResponse.error) {
           setError(createEventResponse.error);
+        } else if (!createEventResponse.eventId){
+          setError('No eventId found!')
         } else {
           console.log('success', createEventResponse.eventId);
           setEventId(createEventResponse.eventId);
-          setStep('5_GameStarted');
+          setStep(Step._05_GameStarted);
         }
       }
     }
@@ -114,14 +109,14 @@ function ConfirmStartGame() {
   };
 
   const disabled = [
-    inputs.opponent,
-    inputs.wager_record,
-    inputs.amount,
-    inputs.answer,
+    inputs?.opponent,
+    inputs?.wagerRecord,
+    inputs?.wagerAmount,
+    inputs?.answer,
   ].includes(undefined);
 
   return (
-    <main className='flex h-full w-full flex-col justify-center gap-8'>
+    <div className='flex h-full w-full flex-col justify-center gap-8'>
       <PageHeader bg='bg-primary-pink' text='REVIEW AND KICKOFF GAME' />
       <Opponent opponent={opponent} />
       <Wager wagerAmount={Number(amount)} />
@@ -146,11 +141,11 @@ function ConfirmStartGame() {
             ? 'SIGN MESSAGE'
             : 'CREATE EVENT'}
         </Button>
-        <Button onClick={() => setStep('5_GameStarted')} color='gray'>
+        <Button onClick={() => setStep(Step._05_GameStarted)} color='gray'>
           BACK
         </Button>
       </div>
-    </main>
+    </div>
   );
 }
 

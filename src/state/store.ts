@@ -2,6 +2,13 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { RecordWithPlaintext } from '@puzzlehq/sdk';
 import { GameAction, GameRecord, GameState, getGameAction, getGameState, parseGameRecord } from './RecordTypes/wheres_alex_vxxx';
+import { useRenegeStore } from '../pages/Renege/store';
+import { useAcceptGameStore } from '../pages/AcceptGame/store';
+import { useNewGameStore } from '../pages/NewGame/store';
+import { useClaimPrizeLoseStore } from '../pages/ClaimPrize/Lose/store';
+import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store';
+import { useClaimPrizeNoShowStore } from '../pages/ClaimPrize/NoShow/store';
+import { useFinishGameStore } from '../pages/FinishGame/store';
 
 export type Game = {
   gameRecord: GameRecord,
@@ -22,6 +29,7 @@ type GameStore = {
     puzzleRecords: RecordWithPlaintext[];
   }, user: string) => void;
   close: () => void;
+  clearFlowStores: () => void;
 };
 
 export const useGameStore = create<GameStore>()(
@@ -44,7 +52,7 @@ export const useGameStore = create<GameStore>()(
 
         const yourTurn: Game[] = gameRecords.filter((record) => {
           const game_state = getGameState(record, user);
-          return ['challenger:1', 'challenger:2:win', 'opponent:0', 'opponent:2:win'].includes(game_state);
+          return ['opponent:1', 'opponent:2', 'opponent:4:win', 'challenger:3', 'challenger:4:win'].includes(game_state);
         }).map((record) => {
           const gameState = getGameState(record, user);
 
@@ -57,7 +65,7 @@ export const useGameStore = create<GameStore>()(
 
         const theirTurn: Game[] = gameRecords.filter((record) => {
           const game_state = getGameState(record, user);
-          return ['challenger:0', 'opponent:1'].includes(game_state);
+          return ['opponent:3', 'challenger:1', 'challenger:2'].includes(game_state);
         }).map((record) => {
           const gameState = getGameState(record, user);
 
@@ -70,7 +78,7 @@ export const useGameStore = create<GameStore>()(
 
         const finished: Game[] = gameRecords.filter((record) => {
           const game_state = getGameState(record, user);
-          return ['challenger:2:lose', 'opponent:2:lose', 'challenger:3', 'opponent:3'].includes(game_state);
+          return ['opponent:0', 'opponent:4:lose', 'opponent:5', 'opponent:6', 'challenger:0', 'challenger:4:lose', 'challenger:5', 'challenger:6'].includes(game_state);
         }).map((record) => {
           const gameState = getGameState(record, user);
 
@@ -86,6 +94,15 @@ export const useGameStore = create<GameStore>()(
       close: () => {
         set({ currentGame: undefined });
       },
+      clearFlowStores: () => {
+        useNewGameStore.getState().close();
+        useAcceptGameStore.getState().close();
+        useRenegeStore.getState().close();
+        useClaimPrizeLoseStore.getState().close();
+        useClaimPrizeWinStore.getState().close();
+        useClaimPrizeNoShowStore.getState().close();
+        useFinishGameStore.getState().close();
+      }
     }),
     {
       name: 'game-manager',

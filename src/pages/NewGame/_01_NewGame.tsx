@@ -2,17 +2,15 @@
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
-import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
-import { useAtom } from 'jotai';
 import { useAccount } from '@puzzlehq/sdk';
 import { aleoAddressRegex } from '../../utils.js';
+import { Step, useNewGameStore } from './store.js';
 
 function NewGame() {
-  const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
-  const [_, setStep] = useAtom(proposeGameStepAtom);
+  const [inputs, setInputs, setStep] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
   const { account } = useAccount();
 
-  const opponent = inputs.opponent;
+  const opponent = inputs?.opponent;
 
   return (
     <div className='flex h-full w-full flex-col items-center justify-between gap-2 px-5'>
@@ -34,9 +32,10 @@ function NewGame() {
       <div className='flex flex-grow flex-col' />
       <Button
         className='mb-6'
-        onClick={() => setStep('2_HideAlex')}
+        onClick={() => setStep(Step._02_HideAlex)}
         color='green'
         disabled={
+          !inputs || !account ||
           !aleoAddressRegex.test(inputs.opponent ?? '') ||
           inputs.opponent === account.address
         }

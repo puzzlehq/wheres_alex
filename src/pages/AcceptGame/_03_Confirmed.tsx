@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
-import { acceptGameInputsAtom } from './index';
-import { useAtom } from 'jotai';
+import { useAcceptGameStore } from './store';
 
 function Confirmed(props: { done: () => void }) {
-  const [inputs] = useAtom(acceptGameInputsAtom);
+  const [inputs] = useAcceptGameStore((state) => [state.inputs]);
 
-  const game_address = inputs.game_address;
-  const eventId = inputs.eventIdAccept;
+  const game_address = inputs?.game_multisig;
+  const eventId = inputs?.eventIdAccept;
 
   return (
-    <main className='flex h-full flex-col justify-between'>
+    <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
         {game_address && eventId && (
           <GameInfo multisig={game_address} eventId={eventId} newGame={false} />
@@ -23,7 +22,7 @@ function Confirmed(props: { done: () => void }) {
           </Button>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

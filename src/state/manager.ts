@@ -1,10 +1,6 @@
 import { RecordWithPlaintext } from '@puzzlehq/sdk';
-import _ from 'lodash';
 import {
-  GameRecord,
-  removeVisibilitySuffix,
   Answer,
-  GameRecordSchema,
 } from './RecordTypes/wheres_alex_vxxx';
 
 export const GAME_PROGRAM_ID = 'wheres_alex_v001.aleo';
@@ -29,8 +25,8 @@ export const stepFees = {
 export type LoadingStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export type ProposeGameInputs = {
-  wager_record: RecordWithPlaintext;
-  amount: string;
+  wagerRecord: RecordWithPlaintext;
+  wagerAmount: string;
   sender_address: string;
   challenger: string;
   opponent: string;
@@ -57,7 +53,7 @@ export type AcceptGameInputs = {
   puzz_piece_stake_two: RecordWithPlaintext;
   player_two_answer: '0field' | '1field';
   player_two_answer_readable: Answer;
-  game_address: string;
+  game_multisig: string;
   opponent: string;
   wagerAmount: string;
   wagerRecord: string;

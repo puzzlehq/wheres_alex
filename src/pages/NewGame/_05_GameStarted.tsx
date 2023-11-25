@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
-import { useAtom } from 'jotai';
-import { eventIdAtom, proposeGameInputsAtom } from './index';
+import { useNewGameStore } from './store';
 
 function GameStarted(props: { done: () => void }) {
-  const [inputs] = useAtom(proposeGameInputsAtom);
-
-  const game_multisig = inputs.game_multisig;
-  const [eventId] = useAtom(eventIdAtom);
+  const [inputs, eventId] = useNewGameStore((state) => [state.inputs, state.eventId]);
+  const game_multisig = inputs?.game_multisig;
 
   return (
-    <main className='flex h-full flex-col justify-between'>
+    <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
         {game_multisig && eventId && (
           <GameInfo multisig={game_multisig} eventId={eventId} newGame={true} />
@@ -23,7 +20,7 @@ function GameStarted(props: { done: () => void }) {
           </Button>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
 

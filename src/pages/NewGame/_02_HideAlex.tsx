@@ -3,16 +3,14 @@ import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
-import { useAtom } from 'jotai';
-import { proposeGameInputsAtom, proposeGameStepAtom } from './index';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
+import { Step, useNewGameStore } from './store';
 
 function HideAlex() {
-  const [inputs, setInputs] = useAtom(proposeGameInputsAtom);
-  const [_, setStep] = useAtom(proposeGameStepAtom);
+  const [inputs, setInputs, setStep] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
 
   return (
-    <main className='flex h-full flex-col justify-between'>
+    <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center gap-2 px-5'>
         <Nav step={2} />
         <PageHeader
@@ -21,20 +19,20 @@ function HideAlex() {
         />
         <ChooseAlexLocation
           setAnswer={(answer: Answer) => setInputs({ ...inputs, answer })}
-          answer={inputs.answer as Answer}
+          answer={inputs?.answer as Answer}
           hiding={true}
         />
         <div className='flex flex-grow flex-col' />
         <Button
           className='mb-6'
-          onClick={() => setStep('3_StartWager')}
-          disabled={!inputs.answer}
+          onClick={() => setStep(Step._03_StartWager)}
+          disabled={!inputs || !inputs.answer}
           color='green'
         >
           NEXT
         </Button>
       </div>
-    </main>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
+import { AcceptGameInputs } from '../../state/manager';
 
 export enum Step {
   _01_AcceptGame,
@@ -9,52 +9,39 @@ export enum Step {
 }
 
 type AcceptGameStore = {
+  inputs?: Partial<AcceptGameInputs>;
   step: Step;
-  opponent: string;
-  answer?: Answer;
-  wager: number;
-  multisig?: string;
-  eventId?: string;
+  setInputs: (inputs: Partial<AcceptGameInputs>) => void;
   setStep: (step: Step) => void;
-  setAnswer: (answer: Answer) => void;
-  submit: () => Promise<void>;
-  initialize: (opponent: string, wager: number, multisig: string) => void;
-  acceptGame: () => Promise<void>;
-  rejectGame: () => Promise<void>;
+  initialize: (opponent: string, wagerAmount: number, multisig: string) => void;
   close: () => void;
 };
 
 export const useAcceptGameStore = create<AcceptGameStore>()(
   persist(
     (set, get) => ({
+      inputs: undefined,
       step: Step._01_AcceptGame,
-      wager: 0,
-      opponent: '',
-      answer: undefined,
-      multisig: undefined,
+      setInputs: (inputs: Partial<AcceptGameInputs>) => {
+        set({ inputs });
+      },
       setStep: (step: Step) => {
         set({ step });
       },
-      setAnswer: (answer: Answer) => {
-        set({ answer });
-      },
-      submit: async () => {
-        set({ eventId: '1234532' });
-      },
-      initialize: (opponent: string, wager: number, multisig: string) => {
-        set({ opponent, wager, multisig, step: Step._01_AcceptGame });
-      },
-      acceptGame: async () => {
-        set({ step: Step._02_FindAlex });
-      },
-      rejectGame: async () => {
-        get().close();
+      initialize: (opponent: string, wagerAmount: number, game_multisig: string) => {
+        set({
+          inputs: {
+            opponent,
+            wagerAmount: wagerAmount.toString(),
+            game_multisig,
+          },
+          step: Step._01_AcceptGame
+        });
       },
       close: () => {
         set({
           step: Step._01_AcceptGame,
-          opponent: '',
-          wager: 0,
+          inputs: undefined,
         });
       },
     }),
