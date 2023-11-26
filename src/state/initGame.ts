@@ -50,9 +50,9 @@ export const useInitGame = () => {
 
   useEffect(() => {
     if (
-      gameRecords !== undefined && gameRecords.length > 0 &&
-      puzzleRecords !== undefined && puzzleRecords.length > 0 &&
-      utilRecords !== undefined && utilRecords.length > 0 &&
+      gameRecords !== undefined &&
+      puzzleRecords !== undefined &&
+      utilRecords !== undefined &&
       account
     ) {
       console.log('gameRecords', gameRecords);
@@ -62,5 +62,5 @@ export const useInitGame = () => {
 
       setRecords({ gameRecords, puzzleRecords, utilRecords }, account.address);
     }
-  }, [gameRecords, puzzleRecords, utilRecords]);
+  }, [gameRecords, puzzleRecords, utilRecords, account]);
 }

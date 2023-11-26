@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
@@ -17,8 +16,9 @@ function Home() {
         <Button color='yellow' onClick={() => navigate('/new-game')}>
           NEW GAME
         </Button>
-        <YourTurn games={yourTurn} />
-        <TheirTurn games={theirTurn} />
+        {yourTurn.length > 0 && <YourTurn games={yourTurn} />}
+        {theirTurn.length > 0 && <TheirTurn games={theirTurn} />}
+        {yourTurn.length === 0 && theirTurn.length === 0 && <p className='font-semibold self-center'>No ongoing games, start one with a friend!</p>}
       </div>
       <div className='mt-4 px-4 pb-4 text-center'>
         {' '}
