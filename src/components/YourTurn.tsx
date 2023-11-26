@@ -8,9 +8,9 @@ import { Game, useGameStore } from '../state/store.js';
 import { shortenAddress } from '@puzzlehq/sdk';
 
 function YourTurnItem({ game }: { game: Game }) {
-  const multisig = game.gameRecord.game_multisig;
-  const opponent = game.gameRecord.opponent_address;
-  const wager = game.gameRecord.total_pot;
+  const multisig = game.gameRecord.recordData.game_multisig;
+  const opponent = game.gameRecord.recordData.opponent_address;
+  const wager = game.gameRecord.recordData.total_pot;
 
   const navigate = useNavigate();
 
@@ -27,18 +27,25 @@ function YourTurnItem({ game }: { game: Game }) {
     state.initialize,
   ]);
 
+  const [largestPiece, availableBalance] = useGameStore((state) => [state.largestPiece, state.availableBalance]);
+  const puzzleRecord = availableBalance >= game.gameRecord.recordData.total_pot / 2 ? largestPiece : undefined;
+  
   const renderActionButton = () => {
     switch (game.gameAction) {
       case 'Submit Wager':
         return (
           <Button
             onClick={() => {
-              initializeSubmitWager(opponent, Number(wager), multisig);
+              const key_record = game.utilRecords[0];
+              const game_req_notification = game.gameRecord.recordWithPlaintext;
+              if (!puzzleRecord || !key_record || !game_req_notification) return;
+              initializeSubmitWager(puzzleRecord, key_record, game_req_notification);
               setCurrentGame(game);
               navigate('/accept-game');
             }}
             color='yellow'
             size='sm'
+            disabled={puzzleRecord === undefined}
           >
             Accept
           </Button>
@@ -47,7 +54,7 @@ function YourTurnItem({ game }: { game: Game }) {
         return (
           <Button
             onClick={() => {
-              initializeAcceptGame(opponent, Number(wager), multisig);
+              // initializeAcceptGame(opponent, Number(wager), multisig);
               setCurrentGame(game);
               navigate('/accept-game');
             }}
@@ -110,9 +117,9 @@ function YourTurn({ games }: {games: Game[]}) {
         </div>
       </div>
       <div className='flex flex-col px-5 pt-2'>
-        {games.map((game) => (
+        {games.map((game, ix) => (
           <YourTurnItem
-            key={game.gameRecord._nonce}
+            key={ix}
             game={game}
           />
         ))}

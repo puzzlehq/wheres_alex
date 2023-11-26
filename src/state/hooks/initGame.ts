@@ -1,8 +1,9 @@
-import { RecordWithPlaintext, getRecords, useAccount, useOnSessionEvent } from "@puzzlehq/sdk";
+import { RecordWithPlaintext, getRecords, useAccount, useOnSessionEvent, useSession } from "@puzzlehq/sdk";
 import { useEffect, useState } from "react";
-import { useGameStore } from "./store";
+import { useGameStore } from "../store";
 
 export const useInitGame = () => {
+  const session = useSession();
   const { account } = useAccount();
   const [gameRecords, setGameRecords] = useState<
     RecordWithPlaintext[] | undefined
@@ -19,20 +20,23 @@ export const useInitGame = () => {
   const fetchRecords = () => {
     // fetch gameRecords
     getRecords({
-      filter: { programId: 'wheres_alex_v010.aleo', type: 'unspent' },
+      filter: { programId: 'wheres_alex_v011.aleo', type: 'unspent' },
     }).then((response) => {
+      console.log(response);
       setGameRecords(response.records ?? []);
     });
     // fetch puzzleRecords
     getRecords({
-      filter: { programId: 'puzzle_pieces_v010.aleo', type: 'unspent' },
+      filter: { programId: 'puzzle_pieces_v011.aleo', type: 'unspent' },
     }).then((response) => {
+      console.log(response);
       setPuzzleRecords(response.records ?? []);
     });
     // fetch utilRecords
     getRecords({
-      filter: { programId: 'multiparty_pvp_utils_v010.aleo', type: 'unspent' },
+      filter: { programId: 'multiparty_pvp_utils_v011.aleo', type: 'unspent' },
     }).then((response) => {
+      console.log(response);
       setUtilRecords(response.records ?? []);
     });
   };

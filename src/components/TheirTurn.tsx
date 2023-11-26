@@ -13,7 +13,7 @@ function TheirTurnItem({ game }: {game: Game}) {
   const handlePingClick = () => {
     // You might want to replace 'ENTER_PHONE_NUMBER' with the actual number if needed
     const phoneNumber = 'ENTER_PHONE_NUMBER'; // Leave this as is if you want the user to enter the number.
-    const message = `I'm betting you ${game.gameRecord.total_pot} that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
+    const message = `I'm betting you ${game.gameRecord.recordData.total_pot / 2} puzzle pieces that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
     const encodedMessage = encodeURIComponent(message);
     const smsHref = `sms:${phoneNumber}?&body=${encodedMessage}`;
 
@@ -37,7 +37,7 @@ function TheirTurnItem({ game }: {game: Game}) {
           <div className='flex gap-2'>
             <Button
               onClick={() => {
-                initializeRenege(game.gameRecord.opponent_address, Number(game.gameRecord.total_pot));
+                initializeRenege(game.gameRecord.recordData.opponent_address, game.gameRecord.recordData.total_pot / 2);
                 setCurrentGame(game);
                 navigate('/renege-game');
               }}
@@ -54,10 +54,10 @@ function TheirTurnItem({ game }: {game: Game}) {
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {shortenAddress(game.gameRecord.challenger_address)}
+        {shortenAddress(game.gameRecord.recordData.challenger_address)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {game.gameRecord.total_pot / 2} pieces
+        {game.gameRecord.recordData.total_pot / 2} pieces
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>
@@ -73,8 +73,8 @@ function TheirTurn({ games }: {games: Game[]}) {
         </div>
       </div>
       <div className='flex flex-col px-5 pt-2'>
-        {games.map((game) => (
-          <TheirTurnItem key={game.gameRecord._nonce} game={game} />
+        {games.map((game, ix) => (
+          <TheirTurnItem key={ix} game={game} />
         ))}
       </div>
     </section>

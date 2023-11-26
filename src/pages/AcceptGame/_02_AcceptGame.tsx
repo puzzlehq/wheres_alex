@@ -10,8 +10,8 @@ import { useState } from 'react';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import { Step, useAcceptGameStore } from './store';
 
-function FindAlex() {
-  const [inputs, setInputs, setStep] = useAcceptGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
+function AcceptGame() {
+  const [inputs, setInputs, setStep] = useAcceptGameStore((state) => [state.inputsAcceptGame, state.setAcceptGameInputs, state.setStep]);
 
   const answer = inputs?.player_two_answer_readable;
 
@@ -69,4 +69,4 @@ function FindAlex() {
   );
 }
 
-export default FindAlex;
+export default AcceptGame;

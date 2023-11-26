@@ -11,7 +11,7 @@ import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
 import WinRoute from './pages/ClaimPrize/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
 import Reveal from './pages/FinishGame/_01_Reveal.js';
-import { useInitGame } from './state/initGame.js';
+import { useInitGame } from './state/hooks/initGame.js';
 
 function App() {
   const { account } = useAccount();

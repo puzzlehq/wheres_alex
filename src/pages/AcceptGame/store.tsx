@@ -1,58 +1,74 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AcceptGameInputs } from '../../state/manager';
+import { AcceptGameInputs, SubmitWagerInputs } from '../../state/manager';
+import { RecordWithPlaintext } from '@puzzlehq/sdk';
 
 export enum Step {
-  _01_AcceptGame,
-  _02_FindAlex,
+  _01_SubmitWager,
+  _02_AcceptGame,
   _03_Confirmed,
 }
 
 type AcceptGameStore = {
-  inputs?: Partial<AcceptGameInputs>;
+  inputsSubmitWager?: Partial<SubmitWagerInputs>;
+  inputsAcceptGame?: Partial<AcceptGameInputs>;
   step: Step;
-  setInputs: (inputs: Partial<AcceptGameInputs>) => void;
+  setSubmitWagerInputs: (inputs: Partial<SubmitWagerInputs>) => void;
+  setAcceptGameInputs: (inputs: Partial<AcceptGameInputs>) => void;
   setStep: (step: Step) => void;
-  initializeAcceptGame: (opponent: string, wagerAmount: number, multisig: string) => void;
-  initializeSubmitWager: (opponent: string, wagerAmount: number, multisig: string) => void;
+  initializeSubmitWager: (wager_record: RecordWithPlaintext, key_record: RecordWithPlaintext, game_req_notification: RecordWithPlaintext) => void;
+  initializeAcceptGame: (gameRecord: RecordWithPlaintext, playerOneClaimRecord: RecordWithPlaintext, playerTwoClaimRecord: RecordWithPlaintext, puzz_piece_stake_one: RecordWithPlaintext, puzz_piece_stake_two: RecordWithPlaintext) => void;
   close: () => void;
 };
 
 export const useAcceptGameStore = create<AcceptGameStore>()(
   persist(
     (set, get) => ({
-      inputs: undefined,
-      step: Step._01_AcceptGame,
-      setInputs: (inputs: Partial<AcceptGameInputs>) => {
-        set({ inputs });
+      inputsSubmitWager: undefined,
+      inputsAcceptGame: undefined,
+      step: Step._01_SubmitWager,
+      setSubmitWagerInputs: (inputsSubmitWager: Partial<SubmitWagerInputs>) => {
+        set({ inputsSubmitWager });
+      },
+      setAcceptGameInputs: (inputsAcceptGame: Partial<AcceptGameInputs>) => {
+        set({ inputsAcceptGame });
       },
       setStep: (step: Step) => {
         set({ step });
       },
-      initializeAcceptGame: (opponent: string, wagerAmount: number, game_multisig: string) => {
+      initializeSubmitWager: (wager_record: RecordWithPlaintext, key_record: RecordWithPlaintext, game_req_notification: RecordWithPlaintext) => {
         set({
-          inputs: {
-            opponent,
-            wagerAmount: wagerAmount.toString(),
-            game_multisig,
+          inputsSubmitWager: {
+            wager_record,
+            key_record,
+            game_req_notification,
           },
-          step: Step._02_FindAlex
+          step: Step._01_SubmitWager
         });
       },
-      initializeSubmitWager: (opponent: string, wagerAmount: number, game_multisig: string) => {
+      initializeAcceptGame: (
+        gameRecord: RecordWithPlaintext,
+        playerOneClaimRecord: RecordWithPlaintext,
+        playerTwoClaimRecord: RecordWithPlaintext,
+        puzz_piece_stake_one: RecordWithPlaintext,
+        puzz_piece_stake_two: RecordWithPlaintext
+      ) => {
         set({
-          inputs: {
-            opponent,
-            wagerAmount: wagerAmount.toString(),
-            game_multisig,
+          inputsAcceptGame: {
+            gameRecord,
+            playerOneClaimRecord,
+            playerTwoClaimRecord,
+            puzz_piece_stake_one,
+            puzz_piece_stake_two
           },
-          step: Step._01_AcceptGame
+          step: Step._02_AcceptGame
         });
       },
       close: () => {
         set({
-          step: Step._01_AcceptGame,
-          inputs: undefined,
+          step: Step._01_SubmitWager,
+          inputsSubmitWager: undefined,
+          inputsAcceptGame: undefined
         });
       },
     }),

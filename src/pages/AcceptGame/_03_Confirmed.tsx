@@ -4,7 +4,7 @@ import Button from '../../components/Button';
 import { useAcceptGameStore } from './store';
 
 function Confirmed(props: { done: () => void }) {
-  const [inputs] = useAcceptGameStore((state) => [state.inputs]);
+  const [inputs] = useAcceptGameStore((state) => [state.inputsAcceptGame]);
 
   const game_address = inputs?.game_multisig;
   const eventId = inputs?.eventIdAccept;

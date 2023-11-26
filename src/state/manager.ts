@@ -3,21 +3,21 @@ import {
   Answer,
 } from './RecordTypes/wheres_alex_vxxx';
 
-export const GAME_PROGRAM_ID = 'wheres_alex_v001.aleo';
+export const GAME_PROGRAM_ID = 'wheres_alex_v011.aleo';
 
 export const GAME_FUNCTIONS = {
   propose_game: 'propose_game',
   accept_game: 'accept_game',
-  set_wager: 'set_wager',
+  submit_wager: 'submit_wager',
   reveal_answer: 'reveal_answer',
   finish_game: 'finish_game',
 };
 
 /// todo - update these
 export const stepFees = {
-  propose_game: 10,
+  propose_game: 20,
   accept_game: 1,
-  set_wager: 1,
+  submit_wager: 1,
   reveal_answer: 1,
   finish_game: 1,
 };
@@ -41,6 +41,18 @@ export type ProposeGameInputs = {
   answer: string;
   seed: string;
 };
+
+export type SubmitWagerInputs = {
+  wager_record: RecordWithPlaintext,
+  key_record: RecordWithPlaintext,
+  game_req_notification: RecordWithPlaintext,
+  message_1: string, //from output of useSignature
+  message_2: string,
+  message_3: string,
+  message_4: string,
+  message_5: string,
+  sig: string, //from output of useSignature
+}
 
 // used for submit wager and accept game
 export type AcceptGameInputs = {

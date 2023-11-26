@@ -21,7 +21,10 @@ export const GameRecordSchema = z.object({
   opponent_answer: z.string().optional() // if 2field
 })
 
-export type GameRecord = z.infer<typeof GameRecordSchema>;
+export type GameRecord = {
+  recordData: z.infer<typeof GameRecordSchema>;
+  recordWithPlaintext: RecordWithPlaintext;
+};
 
 export const removeVisibilitySuffix = (obj: {
   [key: string]: string;
@@ -53,10 +56,10 @@ export type GameState =
   | 'opponent:6'
 
 export const getGameState = (game: GameRecord, user: string): GameState => {
-  const challenger_or_opponent = user === game.challenger_address ? 'challenger' : 'opponent';
-  const isWinner = user === game.winner;
+  const challenger_or_opponent = user === game.recordData.challenger_address ? 'challenger' : 'opponent';
+  const isWinner = user === game.recordData.winner;
 
-  switch (game.game_state) {
+  switch (game.recordData.game_state) {
     case ('0field'): return `${challenger_or_opponent}:0`;
     case ('1field'): return `${challenger_or_opponent}:1`;
     case ('2field'): return `${challenger_or_opponent}:2`;
@@ -90,12 +93,12 @@ export const getGameAction = (gameState: GameState): GameAction => {
   }
 }
 
-export const parseGameRecord = (record: RecordWithPlaintext) => {
+export const parseGameRecord = (recordWithPlaintext: RecordWithPlaintext): GameRecord => {
   const result = GameRecordSchema.parse(
-    removeVisibilitySuffix(record.data)
+    removeVisibilitySuffix(recordWithPlaintext.data)
   );
 
-  return result as GameRecord;
+  return { recordData: result, recordWithPlaintext: recordWithPlaintext };
 };
 
 
