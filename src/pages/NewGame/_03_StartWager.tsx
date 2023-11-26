@@ -2,14 +2,14 @@
 import Nav from '../../components/Nav';
 import PageHeader from '../../components/PageHeader';
 import Button from '../../components/Button';
-import { usePieces } from '../../state/usePieces';
 import { useMemo, useState } from 'react';
 import { Step, useNewGameStore } from './store';
+import { useGameStore } from '../../state/store';
 
 function StartWager() {
-  const { availableBalance, largestPiece } = usePieces();
   const [error, setError] = useState<string | undefined>();
   const [inputs, setInputs, setStep] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
+  const [availableBalance, largestPiece] = useGameStore((state) => [state.availableBalance, state.largestPiece]);
   const [wager, setWager] = useState<number | undefined>(undefined);
   const wagerRecord = inputs?.wagerRecord;
 

@@ -10,6 +10,34 @@ import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store';
 import { useClaimPrizeNoShowStore } from '../pages/ClaimPrize/NoShow/store';
 import { useFinishGameStore } from '../pages/FinishGame/store';
 
+const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
+  if (records.length > 0) {
+    let availableBalance = 0;
+    let largestPiece = records[0];
+    const totalBalance = records
+      .filter((record) => !record.spent)
+      .map((record) => {
+        const amount = record.data.amount.replace('u64.private', '');
+        if (amount) {
+          /// find largestPiece (and thus availableBalance)
+          const amountInt = parseInt(amount);
+          availableBalance = Math.max(availableBalance, amountInt);
+          if (availableBalance == amountInt) {
+            largestPiece = record;
+          }
+          return amountInt;
+        }
+        return 0;
+      })
+      .reduce((total, amount) => {
+        /// sum up
+        return total + amount;
+      });
+    return { totalBalance, availableBalance, largestPiece };
+  }
+  return { totalBalance: 0, availableBalance: 0, largestPiece: undefined };
+}
+
 export type Game = {
   gameRecord: GameRecord,
   gameState: GameState,
@@ -23,6 +51,9 @@ type GameStore = {
   finished: Game[];
   puzzleRecords: RecordWithPlaintext[];
   utilRecords: RecordWithPlaintext[];
+  availableBalance: number;
+  totalBalance: number;
+  largestPiece?: RecordWithPlaintext;
   setRecords: (records: {
     gameRecords: RecordWithPlaintext[];
     utilRecords: RecordWithPlaintext[];
@@ -42,10 +73,19 @@ export const useGameStore = create<GameStore>()(
       finished: [],
       puzzleRecords: [],
       utilRecords: [],
+      availableBalance: 0,
+      totalBalance: 0,
+      largestPiece: undefined,
       setRecords: (records, user) => {
         const currentGame = get().currentGame;
-        // const utilRecords = records.utilRecords
-        // const puzzleRecords = records.puzzleRecords;
+        
+        const utilRecords = records.utilRecords;
+        set({ utilRecords });
+
+        const puzzleRecords = records.puzzleRecords;
+        const { availableBalance, totalBalance, largestPiece } = parsePuzzlePieces(puzzleRecords);
+        set({ availableBalance, totalBalance, largestPiece });
+
         const gameRecords: GameRecord[] = records.gameRecords.map((record) => {
           const gameRecord: GameRecord = parseGameRecord(record)
 
@@ -62,10 +102,6 @@ export const useGameStore = create<GameStore>()(
           return gameRecord;
         }
         ).filter((record): record is GameRecord => record !== undefined);
-
-        
-
-        console.log(gameRecords);
 
         const yourTurn: Game[] = gameRecords.filter((record) => {
           const game_state = getGameState(record, user);

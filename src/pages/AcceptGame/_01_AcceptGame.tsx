@@ -3,7 +3,6 @@ import PageHeader from '../../components/PageHeader';
 import Opponent from '../../components/Opponent';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
-import { usePieces } from '../../state/usePieces';
 import { useEffect, useState } from 'react';
 import { requestCreateEvent } from '@puzzlehq/sdk';
 import { EventType } from '@puzzlehq/types';
@@ -13,8 +12,7 @@ import { useGameStore } from '../../state/store';
 
 const AcceptGame = () => {
   const [inputs, setInputs, setStep] = useAcceptGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
-  const { largestPiece } = usePieces();
-  const [currentGame] = useGameStore((state) => [state.currentGame]);
+  const [currentGame, largestPiece] = useGameStore((state) => [state.currentGame, state.largestPiece]);
   const navigate = useNavigate();
 
   const opponent = inputs?.opponent;

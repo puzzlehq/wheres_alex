@@ -5,88 +5,17 @@ import { AppHeader } from './components/Header.js';
 import { Welcome } from './pages/Welcome.js';
 import {
   useAccount,
-  RecordWithPlaintext,
-  getRecords,
-  useOnSessionEvent,
 } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
 import { LoseRoute } from './pages/ClaimPrize/Lose/index.js';
 import WinRoute from './pages/ClaimPrize/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
 import Reveal from './pages/FinishGame/_01_Reveal.js';
-import { useEffect, useState } from 'react';
-import { useGameStore } from './state/store.js';
-import { usePieces } from './state/usePieces.js';
+import { useInitGame } from './state/hooks.js';
 
 function App() {
   const { account } = useAccount();
-  const [gameRecords, setGameRecords] = useState<
-    RecordWithPlaintext[] | undefined
-  >(undefined);
-  const [puzzleRecords, setPuzzleRecords] = useState<
-    RecordWithPlaintext[] | undefined
-  >(undefined);
-  const [utilRecords, setUtilRecords] = useState<
-    RecordWithPlaintext[] | undefined
-  >(undefined);
-
-  const [setRecords] = useGameStore((state) => [state.setRecords]);
-
-  const fetchRecords = () => {
-    // fetch gameRecords
-    getRecords({
-      filter: { programId: 'wheres_alex_v010.aleo', type: 'unspent' },
-    }).then((response) => {
-      setGameRecords(response.records ?? []);
-    });
-    // fetch puzzleRecords
-    getRecords({
-      filter: { programId: 'puzzle_pieces_v010.aleo', type: 'unspent' },
-    }).then((response) => {
-      setPuzzleRecords(response.records ?? []);
-    });
-    // fetch utilRecords
-    getRecords({
-      filter: { programId: 'multiparty_pvp_utils_v010.aleo', type: 'unspent' },
-    }).then((response) => {
-      setUtilRecords(response.records ?? []);
-    });
-  };
-
-  const { refetch: refetchPieces } = usePieces();
-
-  useOnSessionEvent(({ params }) => {
-    const eventName = params.event.name;
-    if (!['accountSynced'].includes(eventName)) return;
-    fetchRecords();
-    refetchPieces();
-  });
-
-  useEffect(() => {
-    if (!account) return;
-    fetchRecords();
-    refetchPieces();
-  }, [account?.address])
-
-  useEffect(() => {
-    if (
-      gameRecords !== undefined &&
-      puzzleRecords !== undefined &&
-      utilRecords !== undefined &&
-      account
-    ) {
-      console.log('gameRecords', gameRecords);
-      console.log('puzzleRecords', puzzleRecords);
-      console.log('utilRecords', utilRecords);
-      console.log('account.address', account.address);
-
-      setRecords({ gameRecords, puzzleRecords, utilRecords }, account.address);
-    }
-  }, [gameRecords, puzzleRecords, utilRecords]);
-
-  useEffect(() => {
-    fetchRecords();
-  }, []);
+  useInitGame();
 
   return (
     <div className='App flex min-h-screen justify-center bg-neutral-900'>

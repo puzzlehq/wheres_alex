@@ -4,12 +4,10 @@ import Button from '../components/Button';
 import TotalWinnings from '../components/TotalWinnings';
 import TheirTurn from '../components/TheirTurn';
 import YourTurn from '../components/YourTurn';
-import { usePieces } from '../state/usePieces';
 import { useGameStore } from '../state/store';
 
 function Home() {
-  const { totalBalance } = usePieces();
-  const [yourTurn, theirTurn] = useGameStore((state) => [state.yourTurn, state.theirTurn]);
+  const [yourTurn, theirTurn, totalBalance] = useGameStore((state) => [state.yourTurn, state.theirTurn, state.totalBalance]);
   const navigate = useNavigate();
 
   return (

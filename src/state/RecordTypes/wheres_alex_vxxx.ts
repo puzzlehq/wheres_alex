@@ -95,9 +95,6 @@ export const parseGameRecord = (record: RecordWithPlaintext) => {
     removeVisibilitySuffix(record.data)
   );
 
-  console.log('result', result);
-  console.log('removedResult', removeVisibilitySuffix(record.data));
-
   return result as GameRecord;
 };
 
