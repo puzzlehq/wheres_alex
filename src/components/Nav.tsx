@@ -25,7 +25,7 @@ function Nav({ step, isChallenger = true }: NavProps) {
           step == 3 ? 'text-primary-white' : 'text-primary-gray'
         }`}
       >
-        {isChallenger ? '3. SUBMIT' : '3. SUBMITTED'}
+        {isChallenger ? '3. SET WAGER' : '3. SUBMITTED'}
       </p>
     </nav>
   );

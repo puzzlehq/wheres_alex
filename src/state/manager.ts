@@ -15,7 +15,7 @@ export const GAME_FUNCTIONS = {
 
 /// todo - update these
 export const stepFees = {
-  propose_game: 20,
+  propose_game: 0.015720,
   accept_game: 1,
   submit_wager: 1,
   reveal_answer: 1,
