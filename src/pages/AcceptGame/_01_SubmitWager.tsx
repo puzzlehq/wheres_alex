@@ -10,7 +10,8 @@ import { GAME_FUNCTIONS, GAME_PROGRAM_ID, SubmitWagerInputs, stepFees } from '..
 import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
 import jsyaml from 'js-yaml';
-
+import { useMsRecords } from '../../state/hooks/msRecords';
+import Nav from '../../components/Nav';
 
 const messageToSign = '1234567field';
 
@@ -19,7 +20,7 @@ const SubmitWager = () => {
   const [currentGame, largestPiece] = useGameStore((state) => [state.currentGame, state.largestPiece]);
   const navigate = useNavigate();
 
-  const ms_records = useRecords({address.})
+  const ms_records = useMsRecords(currentGame?.gameRecord.recordData.game_multisig);
 
   const opponent = currentGame?.gameRecord.recordData.challenger_address;
   const wagerAmount = currentGame?.gameRecord.recordData.total_pot ?? 0 / 2;
@@ -53,8 +54,9 @@ const SubmitWager = () => {
       message_5: messageFields.field_5,
       sig: signature.signature
     }
-
-    await importSharedState(currentGame?.gameRecord.recordData.)
+    const game_multisig_seed = currentGame?.utilRecords?.[0].data.seed ?? '';
+    console.log('game_multisig seed', game_multisig_seed)
+    await importSharedState(game_multisig_seed);
 
     setSubmitWagerInputs(newInputs);
     const response = await requestCreateEvent({
@@ -78,6 +80,10 @@ const SubmitWager = () => {
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
+        <div className='flex w-full flex-col gap-2'>
+          <Nav step={1} isChallenger={false} />
+          <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
+        </div>
       <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
       {opponent && <Opponent opponent={opponent} />}
       <Wager wagerAmount={Number(wagerAmount)} />

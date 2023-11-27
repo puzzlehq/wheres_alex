@@ -6,6 +6,7 @@ import Button from './Button.js';
 import { Answer } from '../state/RecordTypes/wheres_alex_vxxx.js';
 import { Game, useGameStore } from '../state/store.js';
 import { shortenAddress } from '@puzzlehq/sdk';
+import { useMsRecords } from '../state/hooks/msRecords.js';
 
 function YourTurnItem({ game }: { game: Game }) {
   const multisig = game.gameRecord.recordData.game_multisig;
@@ -29,6 +30,8 @@ function YourTurnItem({ game }: { game: Game }) {
 
   const [largestPiece, availableBalance] = useGameStore((state) => [state.largestPiece, state.availableBalance]);
   const puzzleRecord = availableBalance >= game.gameRecord.recordData.total_pot / 2 ? largestPiece : undefined;
+
+  const { msPuzzleRecords, msGameRecords, msUtilRecords } = useMsRecords(game.gameRecord.recordData.game_multisig);
   
   const renderActionButton = () => {
     switch (game.gameAction) {
@@ -54,7 +57,18 @@ function YourTurnItem({ game }: { game: Game }) {
         return (
           <Button
             onClick={() => {
-              // initializeAcceptGame(opponent, Number(wager), multisig);
+              if (msGameRecords?.length !== 1) return;
+              const playerOneClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '') === game.gameRecord.recordData.challenger_address)
+              const playerTwoClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.opponent_address)
+              const puzz_piece_stake_one = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.challenger_address)
+              const puzz_piece_stake_two = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.opponent_address)
+              console.log('msGameRecords[0]', msGameRecords[0])
+              console.log('playerOneClaimRecord', playerOneClaimRecord)
+              console.log('playerTwoClaimRecord', playerTwoClaimRecord)
+              console.log('puzz_piece_stake_one', puzz_piece_stake_one)
+              console.log('puzz_piece_stake_two', puzz_piece_stake_two)
+              if ([playerOneClaimRecord, playerTwoClaimRecord, puzz_piece_stake_one, puzz_piece_stake_two].includes(undefined)) return;
+              initializeAcceptGame(msGameRecords[0], playerOneClaimRecord, playerTwoClaimRecord, puzz_piece_stake_one, puzz_piece_stake_two);
               setCurrentGame(game);
               navigate('/accept-game');
             }}

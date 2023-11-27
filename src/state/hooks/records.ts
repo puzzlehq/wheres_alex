@@ -1,7 +1,9 @@
-import { RecordWithPlaintext, getRecords, useOnSessionEvent } from "@puzzlehq/sdk";
+import { RecordWithPlaintext, getRecords, useAccount, useOnSessionEvent, useSession } from "@puzzlehq/sdk";
 import { useEffect, useState } from "react";
 
-export const useMsRecords = (address?: string) => {
+export const useGameRecords = () => {
+  const session = useSession();
+  const { account } = useAccount();
   const [gameRecords, setGameRecords] = useState<
     RecordWithPlaintext[] | undefined
   >(undefined);
@@ -14,23 +16,19 @@ export const useMsRecords = (address?: string) => {
 
   const fetchRecords = () => {
     // fetch gameRecords
-    if (!address) return;
     getRecords({
-      address,
       filter: { programId: 'wheres_alex_v011.aleo', type: 'unspent' },
     }).then((response) => {
       setGameRecords(response.records ?? []);
     });
     // fetch puzzleRecords
     getRecords({
-      address,
       filter: { programId: 'puzzle_pieces_v011.aleo', type: 'unspent' },
     }).then((response) => {
       setPuzzleRecords(response.records ?? []);
     });
     // fetch utilRecords
     getRecords({
-      address,
       filter: { programId: 'multiparty_pvp_utils_v011.aleo', type: 'unspent' },
     }).then((response) => {
       setUtilRecords(response.records ?? []);
@@ -44,9 +42,9 @@ export const useMsRecords = (address?: string) => {
   });
 
   useEffect(() => {
-    if (!address) return;
+    if (!account) return;
     fetchRecords();
-  }, [address])
+  }, [account?.address])
 
-  return { msPuzzleRecords: puzzleRecords, msGameRecords: gameRecords, msUtilRecords: utilRecords };
+  return { puzzleRecords, gameRecords, utilRecords };
 }

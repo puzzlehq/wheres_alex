@@ -40,7 +40,7 @@ function AcceptGame() {
     <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center gap-6 px-5'>
         <div className='flex w-full flex-col gap-2'>
-          <Nav step={2} />
+          <Nav step={2} isChallenger={false} />
           <PageHeader bg='bg-primary-blue' text='FIND ALEX' />
         </div>
         <ChooseAlexLocation

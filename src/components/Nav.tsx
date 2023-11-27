@@ -1,8 +1,9 @@
 type NavProps = {
   step: number;
+  isChallenger?: boolean
 };
 
-function Nav({ step }: NavProps) {
+function Nav({ step, isChallenger = true }: NavProps) {
   return (
     <nav className='mt-11 flex w-full items-start justify-between gap-5 self-stretch text-center text-sm max-md:mr-px max-md:mt-10'>
       <p
@@ -10,21 +11,21 @@ function Nav({ step }: NavProps) {
           step == 1 ? 'text-primary-white' : 'text-primary-gray'
         } ${step > 1 ? 'line-through' : ''}`}
       >
-        1. CHALLENGE
+        {isChallenger ? '1. CHALLENGE' : '1. SUBMIT WAGER'}
       </p>
       <p
         className={`self-stretch font-extrabold tracking-tight ${
           step == 2 ? 'text-primary-white' : 'text-primary-gray'
         } ${step > 2 ? 'line-through' : ''}`}
       >
-        2. HIDE ALEX
+        {isChallenger ? '2. HIDE ALEX' : '2. FIND ALEX'}
       </p>
       <p
         className={`self-stretch font-extrabold tracking-tight  ${
           step == 3 ? 'text-primary-white' : 'text-primary-gray'
         }`}
       >
-        3. WAGER
+        {isChallenger ? '3. SUBMIT' : '3. SUBMITTED'}
       </p>
     </nav>
   );

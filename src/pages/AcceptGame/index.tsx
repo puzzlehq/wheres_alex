@@ -15,6 +15,8 @@ const AcceptGame = () => {
     navigate('/');
   };
 
+  
+
   return (
     <div className='flex h-full w-full flex-col'>
       {step === Step._01_SubmitWager && <SubmitWager />}

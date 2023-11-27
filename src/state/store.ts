@@ -42,7 +42,12 @@ export type Game = {
   gameRecord: GameRecord,
   gameState: GameState,
   gameAction?: GameAction,
-  utilRecords: RecordWithPlaintext[]
+  utilRecords: RecordWithPlaintext[],
+  msRecords?: {
+    gameRecords: RecordWithPlaintext[],
+    puzzleRecords: RecordWithPlaintext[],
+    utilRecords: RecordWithPlaintext[]
+  }
 }
 
 type GameStore = {
@@ -51,7 +56,6 @@ type GameStore = {
   theirTurn: Game[];
   finished: Game[];
   puzzleRecords: RecordWithPlaintext[];
-  utilRecords: RecordWithPlaintext[];
   availableBalance: number;
   totalBalance: number;
   largestPiece?: RecordWithPlaintext;
@@ -60,6 +64,11 @@ type GameStore = {
     utilRecords: RecordWithPlaintext[];
     puzzleRecords: RecordWithPlaintext[];
   }, user: string) => void;
+  setMsRecords: (records: {
+    msGameRecords: RecordWithPlaintext[];
+    msUtilRecords: RecordWithPlaintext[];
+    msPuzzleRecords: RecordWithPlaintext[];
+  }, game_multisig: string) => void;
   setCurrentGame: (game?: Game) => void;
   close: () => void;
   clearFlowStores: () => void;
@@ -73,7 +82,6 @@ export const useGameStore = create<GameStore>()(
       theirTurn: [],
       finished: [],
       puzzleRecords: [],
-      utilRecords: [],
       availableBalance: 0,
       totalBalance: 0,
       largestPiece: undefined,
@@ -81,7 +89,6 @@ export const useGameStore = create<GameStore>()(
         const currentGame = get().currentGame;
         
         const utilRecords = records.utilRecords;
-        set({ utilRecords });
 
         const puzzleRecords = records.puzzleRecords;
         const { availableBalance, totalBalance, largestPiece } = parsePuzzlePieces(puzzleRecords);
@@ -148,6 +155,10 @@ export const useGameStore = create<GameStore>()(
         })
 
         set({ yourTurn, theirTurn, finished });
+      },
+      setMsRecords: (records, game_multisig) => {
+        const currentGame = get().currentGame;
+        if (currentGame?.gameRecord.recordData.game_multisig !== game_multisig) return;
       },
       setCurrentGame: (game?: Game) => {
         set({ currentGame: game });

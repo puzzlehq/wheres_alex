@@ -1,56 +1,34 @@
-import { RecordWithPlaintext, getRecords, useAccount, useOnSessionEvent, useSession } from "@puzzlehq/sdk";
-import { useEffect, useState } from "react";
+import { useAccount } from "@puzzlehq/sdk";
+import { useEffect } from "react";
 import { useGameStore } from "../store";
+import { useGameRecords } from "./records";
+import { useMsRecords } from "./msRecords";
 
 export const useInitGame = () => {
-  const session = useSession();
   const { account } = useAccount();
-  const [gameRecords, setGameRecords] = useState<
-    RecordWithPlaintext[] | undefined
-  >(undefined);
-  const [puzzleRecords, setPuzzleRecords] = useState<
-    RecordWithPlaintext[] | undefined
-  >(undefined);
-  const [utilRecords, setUtilRecords] = useState<
-    RecordWithPlaintext[] | undefined
-    >(undefined);
 
-  const [setRecords] = useGameStore((state) => [state.setRecords]);
+  const [currentGame, setRecords, setMsRecords] = useGameStore((state) => [state.currentGame, state.setRecords, state.setMsRecords]);
+  const current_game_multisig = currentGame?.gameRecord.recordData.game_multisig;
 
-  const fetchRecords = () => {
-    // fetch gameRecords
-    getRecords({
-      filter: { programId: 'wheres_alex_v011.aleo', type: 'unspent' },
-    }).then((response) => {
-      console.log(response);
-      setGameRecords(response.records ?? []);
-    });
-    // fetch puzzleRecords
-    getRecords({
-      filter: { programId: 'puzzle_pieces_v011.aleo', type: 'unspent' },
-    }).then((response) => {
-      console.log(response);
-      setPuzzleRecords(response.records ?? []);
-    });
-    // fetch utilRecords
-    getRecords({
-      filter: { programId: 'multiparty_pvp_utils_v011.aleo', type: 'unspent' },
-    }).then((response) => {
-      console.log(response);
-      setUtilRecords(response.records ?? []);
-    });
-  };
-
-  useOnSessionEvent(({ params }) => {
-    const eventName = params.event.name;
-    if (!['accountSynced'].includes(eventName)) return;
-    fetchRecords();
-  });
+  const { gameRecords, puzzleRecords, utilRecords } = useGameRecords();
+  const { msGameRecords, msPuzzleRecords, msUtilRecords } = useMsRecords(current_game_multisig);
 
   useEffect(() => {
-    if (!account) return;
-    fetchRecords();
-  }, [account?.address])
+    if (
+      msGameRecords !== undefined &&
+      msPuzzleRecords !== undefined &&
+      msUtilRecords !== undefined &&
+      current_game_multisig
+    ) {
+      console.log('msGameRecords', msGameRecords);
+      console.log('msPuzzleRecords', msPuzzleRecords);
+      console.log('msUtilRecords', msUtilRecords);
+      console.log('current_game_multisig', current_game_multisig);
+      setMsRecords({
+        msGameRecords, msPuzzleRecords, msUtilRecords
+      }, current_game_multisig)
+    }
+  }, [msGameRecords, msPuzzleRecords, msUtilRecords, current_game_multisig])
 
   useEffect(() => {
     if (
