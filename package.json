@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@puzzlehq/sdk": "../puzzle-sdk",
-    "@puzzlehq/types": "^1.0.3",
+    "@puzzlehq/types": "^1.0.4",
     "html5-qrcode": "^2.3.8",
     "immer": "^10.0.3",
     "js-yaml": "^4.1.0",

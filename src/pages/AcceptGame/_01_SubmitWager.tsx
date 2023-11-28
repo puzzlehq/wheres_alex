@@ -4,8 +4,7 @@ import Opponent from '../../components/Opponent';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { importSharedState, requestCreateEvent, requestSignature, useRecords } from '@puzzlehq/sdk';
-import { EventType } from '@puzzlehq/types';
+import { EventType, importSharedState, requestCreateEvent, requestSignature, useRecords } from '@puzzlehq/sdk';
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, SubmitWagerInputs, stepFees } from '../../state/manager';
 import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
@@ -76,14 +75,12 @@ const SubmitWager = () => {
     setLoading(false);
   };
 
-  
-
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
-        <div className='flex w-full flex-col gap-2'>
-          <Nav step={1} isChallenger={false} />
-          <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
-        </div>
+      <div className='flex w-full flex-col gap-2'>
+        <Nav step={1} isChallenger={false} />
+        <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
+      </div>
       <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
       {opponent && <Opponent opponent={opponent} />}
       <Wager wagerAmount={Number(wagerAmount)} />

@@ -9,6 +9,9 @@ function TheirTurnItem({ game }: {game: Game}) {
   const [initializeRenege] = useRenegeStore((state) => [state.initialize]);
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
 
+  const opponent = game.gameRecord.recordData.opponent_address;
+  const wager = game.gameRecord.recordData.total_pot / 2;
+
   // Function to handle the ping button click
   const handlePingClick = () => {
     // You might want to replace 'ENTER_PHONE_NUMBER' with the actual number if needed
@@ -54,7 +57,7 @@ function TheirTurnItem({ game }: {game: Game}) {
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {shortenAddress(game.gameRecord.recordData.challenger_address)}
+        {shortenAddress(game.gameRecord.recordData.opponent_address)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
         {game.gameRecord.recordData.total_pot / 2} pieces

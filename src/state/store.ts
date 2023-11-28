@@ -17,7 +17,7 @@ const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
     const totalBalance = records
       .filter((record) => !record.spent)
       .map((record) => {
-        const amount = record.data.amount.replace('u64.private', '');
+        const amount = record.data?.amount?.replace('u64.private', '');
         if (amount) {
           /// find largestPiece (and thus availableBalance)
           const amountInt = parseInt(amount);
@@ -74,6 +74,22 @@ type GameStore = {
   clearFlowStores: () => void;
 };
 
+const createGame = (gameRecord: GameRecord, utilRecords: RecordWithPlaintext[], user: string): Game => {
+  const gameState = getGameState(gameRecord, user);
+  return {
+    gameRecord: gameRecord,
+    gameState: gameState,
+    gameAction: getGameAction(gameState),
+    utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig?.replace('.private', '') === gameRecord.recordData.game_multisig)
+  }
+}
+
+const validStates = {
+  yourTurn: new Set(['opponent:1', 'opponent:2', 'opponent:4:win', 'challenger:3', 'challenger:4:win']),
+  theirTurn: new Set(['opponent:3', 'challenger:1', 'challenger:2']),
+  finished: new Set(['opponent:0', 'opponent:4:lose', 'opponent:5', 'opponent:6', 'challenger:0', 'challenger:4:lose', 'challenger:5', 'challenger:6'])
+}
+
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
@@ -104,7 +120,7 @@ export const useGameStore = create<GameStore>()(
                 gameRecord,
                 gameState,
                 gameAction: getGameAction(gameState),
-                utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig.replace('.private', '') === gameRecord.recordData.game_multisig)
+                utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig?.replace('.private', '') === gameRecord.recordData.game_multisig)
               }
             })
           }
@@ -112,47 +128,21 @@ export const useGameStore = create<GameStore>()(
         }
         ).filter((record): record is GameRecord => record !== undefined);
 
-        const yourTurn: Game[] = gameRecords.filter((gameRecord) => {
+        const { yourTurn, theirTurn, finished } = gameRecords.reduce<{ yourTurn: Game[], theirTurn: Game[], finished: Game[] }>((acc, gameRecord) => {
           const game_state = getGameState(gameRecord, user);
-          return ['opponent:1', 'opponent:2', 'opponent:4:win', 'challenger:3', 'challenger:4:win'].includes(game_state);
-        }).map((gameRecord) => {
-          const gameState = getGameState(gameRecord, user);
-
-          return {
-            gameRecord: gameRecord,
-            gameState: gameState,
-            gameAction: getGameAction(gameState),
-            utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig.replace('.private', '') === gameRecord.recordData.game_multisig)
+          const game = createGame(gameRecord, utilRecords, user);
+          if (validStates.yourTurn.has(game_state)) {
+            acc.yourTurn.push(game);
+          } else if (validStates.theirTurn.has(game_state)) {
+            acc.theirTurn.push(game);
+          } else if (validStates.finished.has(game_state)) {
+            acc.finished.push(game);
           }
-        })
-
-        const theirTurn: Game[] = gameRecords.filter((gameRecord) => {
-          const game_state = getGameState(gameRecord, user);
-          return ['opponent:3', 'challenger:1', 'challenger:2'].includes(game_state);
-        }).map((gameRecord) => {
-          const gameState = getGameState(gameRecord, user);
-
-          return {
-            gameRecord: gameRecord,
-            gameState: gameState,
-            gameAction: getGameAction(gameState),
-            utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig.replace('.private', '') === gameRecord.recordData.game_multisig)
-          }
-        })
-
-        const finished: Game[] = gameRecords.filter((gameRecord) => {
-          const game_state = getGameState(gameRecord, user);
-          return ['opponent:0', 'opponent:4:lose', 'opponent:5', 'opponent:6', 'challenger:0', 'challenger:4:lose', 'challenger:5', 'challenger:6'].includes(game_state);
-        }).map((gameRecord) => {
-          const gameState = getGameState(gameRecord, user);
-
-          return {
-            gameRecord: gameRecord,
-            gameState: gameState,
-            gameAction: getGameAction(gameState),
-            utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig.replace('.private', '') === gameRecord.recordData.game_multisig)
-          }
-        })
+          return acc;
+        }, { yourTurn: [], theirTurn: [], finished: [] });
+        
+        set({ yourTurn, theirTurn, finished });
+        
 
         set({ yourTurn, theirTurn, finished });
       },

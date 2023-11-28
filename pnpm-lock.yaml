@@ -9,8 +9,8 @@ dependencies:
     specifier: ../puzzle-sdk
     version: link:../puzzle-sdk
   '@puzzlehq/types':
-    specifier: ^1.0.3
-    version: 1.0.3
+    specifier: ^1.0.4
+    version: 1.0.4
   html5-qrcode:
     specifier: ^2.3.8
     version: 2.3.8
@@ -673,8 +673,8 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@puzzlehq/types@1.0.3:
-    resolution: {integrity: sha512-WdX/i5JZCGTh/vd9YGmWn0DC9cVw61kMSoHBEk7JdPJLWE1vTOaOwMqEtWYWBlTNMs2X8nb1OI0OGzIsy4rpag==}
+  /@puzzlehq/types@1.0.4:
+    resolution: {integrity: sha512-PoNskZ//7skrUq56xazZ3jPTBpvYDLgWZ70yVHKCjMAB5cBnrQEUSNxh2diYj3lT5yamu0ti69tpMSN591X7Og==}
     dev: false
 
   /@remix-run/router@1.11.0:

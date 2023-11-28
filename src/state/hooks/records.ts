@@ -1,50 +1,14 @@
-import { RecordWithPlaintext, getRecords, useAccount, useOnSessionEvent, useSession } from "@puzzlehq/sdk";
-import { useEffect, useState } from "react";
+import { useRecords } from "@puzzlehq/sdk";
 
 export const useGameRecords = () => {
-  const session = useSession();
-  const { account } = useAccount();
-  const [gameRecords, setGameRecords] = useState<
-    RecordWithPlaintext[] | undefined
-  >(undefined);
-  const [puzzleRecords, setPuzzleRecords] = useState<
-    RecordWithPlaintext[] | undefined
-  >(undefined);
-  const [utilRecords, setUtilRecords] = useState<
-    RecordWithPlaintext[] | undefined
-    >(undefined);
+  const { records } = useRecords({
+    filter: { programIds: ['wheres_alex_v011.aleo', 'puzzle_pieces_v011.aleo', 'multiparty_pvp_utils_v011.aleo'], type: 'unspent' },
+  })
+  const gameRecords = records?.filter((record) => record.programId === 'wheres_alex_v011.aleo');
+  const puzzleRecords = records?.filter((record) => record.programId === 'puzzle_pieces_v011.aleo');
+  const utilRecords = records?.filter((record) => record.programId === 'multiparty_pvp_utils_v011.aleo');
 
-  const fetchRecords = () => {
-    // fetch gameRecords
-    getRecords({
-      filter: { programId: 'wheres_alex_v011.aleo', type: 'unspent' },
-    }).then((response) => {
-      setGameRecords(response.records ?? []);
-    });
-    // fetch puzzleRecords
-    getRecords({
-      filter: { programId: 'puzzle_pieces_v011.aleo', type: 'unspent' },
-    }).then((response) => {
-      setPuzzleRecords(response.records ?? []);
-    });
-    // fetch utilRecords
-    getRecords({
-      filter: { programId: 'multiparty_pvp_utils_v011.aleo', type: 'unspent' },
-    }).then((response) => {
-      setUtilRecords(response.records ?? []);
-    });
-  };
-
-  useOnSessionEvent(({ params }) => {
-    const eventName = params.event.name;
-    if (!['accountSynced'].includes(eventName)) return;
-    fetchRecords();
-  });
-
-  useEffect(() => {
-    if (!account) return;
-    fetchRecords();
-  }, [account?.address])
+  console.log([puzzleRecords, gameRecords, utilRecords])
 
   return { puzzleRecords, gameRecords, utilRecords };
 }

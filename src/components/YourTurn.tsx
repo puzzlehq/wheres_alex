@@ -1,25 +1,21 @@
 import { useNavigate } from 'react-router-dom';
-import { useAcceptGameStore } from '../pages/AcceptGame/store.js';
 import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store.js';
 import { useFinishGameStore } from '../pages/FinishGame/store.js';
 import Button from './Button.js';
 import { Answer } from '../state/RecordTypes/wheres_alex_vxxx.js';
 import { Game, useGameStore } from '../state/store.js';
 import { shortenAddress } from '@puzzlehq/sdk';
-import { useMsRecords } from '../state/hooks/msRecords.js';
+import { AcceptGameButton, SubmitWagerButton } from '../pages/AcceptGame/index.js';
 
 function YourTurnItem({ game }: { game: Game }) {
   const multisig = game.gameRecord.recordData.game_multisig;
   const opponent = game.gameRecord.recordData.opponent_address;
-  const wager = game.gameRecord.recordData.total_pot;
+  const wager = game.gameRecord.recordData.total_pot / 2;
 
   const navigate = useNavigate();
 
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
 
-  const [initializeAcceptGame, initializeSubmitWager] = useAcceptGameStore((state) => [
-    state.initializeAcceptGame, state.initializeSubmitWager
-  ]);
   const [initializeFinishGame] = useFinishGameStore((state) => [
     state.initialize,
   ]);
@@ -28,55 +24,15 @@ function YourTurnItem({ game }: { game: Game }) {
     state.initialize,
   ]);
 
-  const [largestPiece, availableBalance] = useGameStore((state) => [state.largestPiece, state.availableBalance]);
-  const puzzleRecord = availableBalance >= game.gameRecord.recordData.total_pot / 2 ? largestPiece : undefined;
-
-  const { msPuzzleRecords, msGameRecords, msUtilRecords } = useMsRecords(game.gameRecord.recordData.game_multisig);
-  
   const renderActionButton = () => {
     switch (game.gameAction) {
       case 'Submit Wager':
         return (
-          <Button
-            onClick={() => {
-              const key_record = game.utilRecords[0];
-              const game_req_notification = game.gameRecord.recordWithPlaintext;
-              if (!puzzleRecord || !key_record || !game_req_notification) return;
-              initializeSubmitWager(puzzleRecord, key_record, game_req_notification);
-              setCurrentGame(game);
-              navigate('/accept-game');
-            }}
-            color='yellow'
-            size='sm'
-            disabled={puzzleRecord === undefined}
-          >
-            Accept
-          </Button>
+          <SubmitWagerButton game={game}/>
         );
       case 'Accept':
         return (
-          <Button
-            onClick={() => {
-              if (msGameRecords?.length !== 1) return;
-              const playerOneClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '') === game.gameRecord.recordData.challenger_address)
-              const playerTwoClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.opponent_address)
-              const puzz_piece_stake_one = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.challenger_address)
-              const puzz_piece_stake_two = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.opponent_address)
-              console.log('msGameRecords[0]', msGameRecords[0])
-              console.log('playerOneClaimRecord', playerOneClaimRecord)
-              console.log('playerTwoClaimRecord', playerTwoClaimRecord)
-              console.log('puzz_piece_stake_one', puzz_piece_stake_one)
-              console.log('puzz_piece_stake_two', puzz_piece_stake_two)
-              if ([playerOneClaimRecord, playerTwoClaimRecord, puzz_piece_stake_one, puzz_piece_stake_two].includes(undefined)) return;
-              initializeAcceptGame(msGameRecords[0], playerOneClaimRecord, playerTwoClaimRecord, puzz_piece_stake_one, puzz_piece_stake_two);
-              setCurrentGame(game);
-              navigate('/accept-game');
-            }}
-            color='yellow'
-            size='sm'
-          >
-            Accept
-          </Button>
+          <AcceptGameButton game={game} />
         );
       case 'Reveal':
         return (

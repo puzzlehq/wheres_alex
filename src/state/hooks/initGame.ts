@@ -20,10 +20,6 @@ export const useInitGame = () => {
       msUtilRecords !== undefined &&
       current_game_multisig
     ) {
-      console.log('msGameRecords', msGameRecords);
-      console.log('msPuzzleRecords', msPuzzleRecords);
-      console.log('msUtilRecords', msUtilRecords);
-      console.log('current_game_multisig', current_game_multisig);
       setMsRecords({
         msGameRecords, msPuzzleRecords, msUtilRecords
       }, current_game_multisig)
@@ -37,11 +33,6 @@ export const useInitGame = () => {
       utilRecords !== undefined &&
       account
     ) {
-      console.log('gameRecords', gameRecords);
-      console.log('puzzleRecords', puzzleRecords);
-      console.log('utilRecords', utilRecords);
-      console.log('account.address', account.address);
-
       setRecords({ gameRecords, puzzleRecords, utilRecords }, account.address);
     }
   }, [gameRecords, puzzleRecords, utilRecords, account]);
