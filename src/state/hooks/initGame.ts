@@ -35,5 +35,5 @@ export const useInitGame = () => {
     ) {
       setRecords({ gameNotifications, puzzleRecords, utilRecords }, account.address);
     }
-  }, [[gameNotifications, puzzleRecords, utilRecords].toString(), account]);
+  }, [[gameNotifications, puzzleRecords, utilRecords].toString(), account?.address]);
 }

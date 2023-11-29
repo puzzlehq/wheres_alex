@@ -26,7 +26,7 @@ export const GameReqNotificationSchema = z.object({
   owner: zodAddress,
   game_multisig: zodAddress,
   game_state: z.literal('1field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -41,7 +41,7 @@ export const WaitingAcceptanceNotificationSchema = z.object({
   owner: zodAddress,
   game_multisig: zodAddress,
   game_state: z.literal('1field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -56,7 +56,7 @@ export const StakeRenegedNotificationSchema = z.object({
   owner: zodAddress, //opponent
   game_multisig: zodAddress,
   game_state: z.literal('0field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -72,7 +72,7 @@ export const ChallengerWagerNotificationSchema = z.object({
   owner: zodAddress, //opponent
   game_multisig: zodAddress,
   game_state: z.literal('2field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -87,7 +87,7 @@ export const OpponentWagerNotificationSchema = z.object({
   owner: zodAddress, //opponent
   game_multisig: zodAddress,
   game_state: z.literal('2field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -102,7 +102,7 @@ export const WaitingRevealNotificationSchema = z.object({
   owner: zodAddress, //opponent
   game_multisig: zodAddress,
   game_state: z.literal('3field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -117,7 +117,7 @@ export const RevealAnswerNotificationSchema = z.object({
   owner: zodAddress, //opponent
   game_multisig: zodAddress,
   game_state: z.literal('3field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -133,7 +133,7 @@ export const GameFinishReqNotificationSchema = z.object({
   owner: zodAddress, //opponent
   game_multisig: zodAddress,
   game_state: z.literal('4field'),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
@@ -148,7 +148,7 @@ export const GameFinishedNotificationSchema = z.object({
   owner: zodAddress, //opponent
   game_multisig: zodAddress,
   game_state: z.enum(['5field', '6field']),
-  your_turn: z.boolean(),
+  your_turn: z.string().transform(Boolean),
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
