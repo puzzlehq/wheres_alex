@@ -4,7 +4,7 @@ import Opponent from '../../components/Opponent';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { EventType, importSharedState, requestCreateEvent, requestSignature, useRecords } from '@puzzlehq/sdk';
+import { EventType, importSharedState, requestCreateEvent, requestSignature } from '@puzzlehq/sdk';
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, SubmitWagerInputs, stepFees } from '../../state/manager';
 import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
@@ -19,16 +19,16 @@ const SubmitWager = () => {
   const [currentGame, largestPiece] = useGameStore((state) => [state.currentGame, state.largestPiece]);
   const navigate = useNavigate();
 
-  const ms_records = useMsRecords(currentGame?.gameRecord.recordData.game_multisig);
+  const ms_records = useMsRecords(currentGame?.gameNotification.recordData.game_multisig);
 
-  const opponent = currentGame?.gameRecord.recordData.challenger_address;
-  const wagerAmount = currentGame?.gameRecord.recordData.total_pot ?? 0 / 2;
+  const opponent = currentGame?.gameNotification.recordData.challenger_address;
+  const wagerAmount = currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
   const wagerRecord = largestPiece;
 
   const disabled = !opponent || !wagerAmount || !wagerRecord || !inputs;
 
   useEffect(() => {
-    if (currentGame?.gameRecord.recordData.game_state === '2field') {
+    if (currentGame?.gameNotification.recordData.game_state === '2field') {
       setStep(Step._02_AcceptGame);
     }
   }, [currentGame])

@@ -9,14 +9,14 @@ function TheirTurnItem({ game }: {game: Game}) {
   const [initializeRenege] = useRenegeStore((state) => [state.initialize]);
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
 
-  const opponent = game.gameRecord.recordData.opponent_address;
-  const wager = game.gameRecord.recordData.total_pot / 2;
+  const opponent = game.gameNotification.recordData.opponent_address;
+  const wager = game.gameNotification.recordData.total_pot / 2;
 
   // Function to handle the ping button click
   const handlePingClick = () => {
     // You might want to replace 'ENTER_PHONE_NUMBER' with the actual number if needed
     const phoneNumber = 'ENTER_PHONE_NUMBER'; // Leave this as is if you want the user to enter the number.
-    const message = `I'm betting you ${game.gameRecord.recordData.total_pot / 2} puzzle pieces that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
+    const message = `I'm betting you ${game.gameNotification.recordData.total_pot / 2} puzzle pieces that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
     const encodedMessage = encodeURIComponent(message);
     const smsHref = `sms:${phoneNumber}?&body=${encodedMessage}`;
 
@@ -40,7 +40,7 @@ function TheirTurnItem({ game }: {game: Game}) {
           <div className='flex gap-2'>
             <Button
               onClick={() => {
-                initializeRenege(game.gameRecord.recordData.opponent_address, game.gameRecord.recordData.total_pot / 2);
+                initializeRenege(game.gameNotification.recordData.opponent_address, game.gameNotification.recordData.total_pot / 2);
                 setCurrentGame(game);
                 navigate('/renege-game');
               }}
@@ -57,10 +57,10 @@ function TheirTurnItem({ game }: {game: Game}) {
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {shortenAddress(game.gameRecord.recordData.opponent_address)}
+        {shortenAddress(game.gameNotification.recordData.opponent_address)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {game.gameRecord.recordData.total_pot / 2} pieces
+        {game.gameNotification.recordData.total_pot / 2} pieces
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>

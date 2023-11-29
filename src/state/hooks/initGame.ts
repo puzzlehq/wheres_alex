@@ -8,9 +8,9 @@ export const useInitGame = () => {
   const { account } = useAccount();
 
   const [currentGame, setRecords, setMsRecords] = useGameStore((state) => [state.currentGame, state.setRecords, state.setMsRecords]);
-  const current_game_multisig = currentGame?.gameRecord.recordData.game_multisig;
+  const current_game_multisig = currentGame?.gameNotification.recordData.game_multisig;
 
-  const { gameRecords, puzzleRecords, utilRecords } = useGameRecords();
+  const { gameNotifications, puzzleRecords, utilRecords } = useGameRecords();
   const { msGameRecords, msPuzzleRecords, msUtilRecords } = useMsRecords(current_game_multisig);
 
   useEffect(() => {
@@ -24,16 +24,16 @@ export const useInitGame = () => {
         msGameRecords, msPuzzleRecords, msUtilRecords
       }, current_game_multisig)
     }
-  }, [msGameRecords, msPuzzleRecords, msUtilRecords, current_game_multisig])
+  }, [[msGameRecords, msPuzzleRecords, msUtilRecords].toString(), current_game_multisig])
 
   useEffect(() => {
     if (
-      gameRecords !== undefined &&
+      gameNotifications !== undefined &&
       puzzleRecords !== undefined &&
       utilRecords !== undefined &&
       account
     ) {
-      setRecords({ gameRecords, puzzleRecords, utilRecords }, account.address);
+      setRecords({ gameNotifications, puzzleRecords, utilRecords }, account.address);
     }
-  }, [gameRecords, puzzleRecords, utilRecords, account]);
+  }, [[gameNotifications, puzzleRecords, utilRecords].toString(), account]);
 }

@@ -3,7 +3,7 @@ import {
   Answer,
 } from './RecordTypes/wheres_alex_vxxx';
 
-export const GAME_PROGRAM_ID = 'wheres_alex_v011.aleo';
+export const GAME_PROGRAM_ID = 'wheres_alex_v012.aleo';
 
 export const GAME_FUNCTIONS = {
   propose_game: 'propose_game',
@@ -58,7 +58,7 @@ export type SubmitWagerInputs = {
 export type AcceptGameInputs = {
   eventIdWager: string;
   eventIdAccept: string;
-  gameRecord: RecordWithPlaintext;
+  gameNotification: RecordWithPlaintext;
   playerOneClaimRecord: RecordWithPlaintext;
   playerTwoClaimRecord: RecordWithPlaintext;
   puzz_piece_stake_one: RecordWithPlaintext;

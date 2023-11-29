@@ -15,13 +15,13 @@ export const SubmitWagerButton = ({game}: {game: Game}) => {
   const navigate = useNavigate();
 
   const [largestPiece, availableBalance] = useGameStore((state) => [state.largestPiece, state.availableBalance]);
-  const puzzleRecord = availableBalance >= game.gameRecord.recordData.total_pot / 2 ? largestPiece : undefined;
+  const puzzleRecord = availableBalance >= game.gameNotification.recordData.total_pot / 2 ? largestPiece : undefined;
 
   return (
     <Button
       onClick={() => {
         const key_record = game.utilRecords[0];
-        const game_req_notification = game.gameRecord.recordWithPlaintext;
+        const game_req_notification = game.gameNotification.recordWithPlaintext;
         if (!puzzleRecord || !key_record || !game_req_notification) return;
         initializeSubmitWager(puzzleRecord, key_record, game_req_notification);
         setCurrentGame(game);
@@ -43,22 +43,22 @@ export const AcceptGameButton = ({game}: {game: Game}) => {
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
   const navigate = useNavigate();
 
-  // const { msPuzzleRecords, msGameRecords, msUtilRecords } = useMsRecords(game.gameRecord.recordData.game_multisig);
+  const { msPuzzleRecords, msGameRecords } = useMsRecords(game.gameNotification.recordData.game_multisig);
 
   return (
     <Button
       onClick={() => {
         if (msGameRecords?.length !== 1) return;
-        const playerOneClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '') === game.gameRecord.recordData.challenger_address)
-        const playerTwoClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.opponent_address)
-        const puzz_piece_stake_one = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.challenger_address)
-        const puzz_piece_stake_two = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameRecord.recordData.opponent_address)
+        const playerOneClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '') === game.gameNotification.recordData.challenger_address)
+        const playerTwoClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '')  === game.gameNotification.recordData.opponent_address)
+        const puzz_piece_stake_one = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameNotification.recordData.challenger_address)
+        const puzz_piece_stake_two = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameNotification.recordData.opponent_address)
         console.log('msGameRecords[0]', msGameRecords[0])
         console.log('playerOneClaimRecord', playerOneClaimRecord)
         console.log('playerTwoClaimRecord', playerTwoClaimRecord)
         console.log('puzz_piece_stake_one', puzz_piece_stake_one)
         console.log('puzz_piece_stake_two', puzz_piece_stake_two)
-        if ([playerOneClaimRecord, playerTwoClaimRecord, puzz_piece_stake_one, puzz_piece_stake_two].includes(undefined)) return;
+        if (playerOneClaimRecord === undefined || playerTwoClaimRecord === undefined || puzz_piece_stake_one === undefined || puzz_piece_stake_two === undefined) return;
         initializeAcceptGame(msGameRecords[0], playerOneClaimRecord, playerTwoClaimRecord, puzz_piece_stake_one, puzz_piece_stake_two);
         setCurrentGame(game);
         navigate('/accept-game');

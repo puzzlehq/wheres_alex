@@ -8,9 +8,6 @@ dependencies:
   '@puzzlehq/sdk':
     specifier: ../puzzle-sdk
     version: link:../puzzle-sdk
-  '@puzzlehq/types':
-    specifier: ^1.0.4
-    version: 1.0.4
   html5-qrcode:
     specifier: ^2.3.8
     version: 2.3.8
@@ -36,8 +33,8 @@ dependencies:
     specifier: ^6.17.0
     version: 6.18.0(react-dom@18.2.0)(react@18.2.0)
   zod:
-    specifier: ^3.22.4
-    version: 3.22.4
+    specifier: 3.21.1
+    version: 3.21.1
   zustand:
     specifier: ^4.4.6
     version: 4.4.6(@types/react@18.2.37)(immer@10.0.3)(react@18.2.0)
@@ -672,10 +669,6 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
-
-  /@puzzlehq/types@1.0.4:
-    resolution: {integrity: sha512-PoNskZ//7skrUq56xazZ3jPTBpvYDLgWZ70yVHKCjMAB5cBnrQEUSNxh2diYj3lT5yamu0ti69tpMSN591X7Og==}
-    dev: false
 
   /@remix-run/router@1.11.0:
     resolution: {integrity: sha512-BHdhcWgeiudl91HvVa2wxqZjSHbheSgIiDvxrF1VjFzBzpTtuDPkOdOi3Iqvc08kXtFkLjhbS+ML9aM8mJS+wQ==}
@@ -2415,8 +2408,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /zod@3.22.4:
-    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+  /zod@3.21.1:
+    resolution: {integrity: sha512-+dTu2m6gmCbO9Ahm4ZBDapx2O6ZY9QSPXst2WXjcznPMwf2YNpn3RevLx4KkZp1OPW/ouFcoBtBzFz/LeY69oA==}
     dev: false
 
   /zustand@4.4.6(@types/react@18.2.37)(immer@10.0.3)(react@18.2.0):

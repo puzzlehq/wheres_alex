@@ -8,9 +8,9 @@ import { shortenAddress } from '@puzzlehq/sdk';
 import { AcceptGameButton, SubmitWagerButton } from '../pages/AcceptGame/index.js';
 
 function YourTurnItem({ game }: { game: Game }) {
-  const multisig = game.gameRecord.recordData.game_multisig;
-  const opponent = game.gameRecord.recordData.opponent_address;
-  const wager = game.gameRecord.recordData.total_pot / 2;
+  const multisig = game.gameNotification.recordData.game_multisig;
+  const opponent = game.gameNotification.recordData.opponent_address;
+  const wager = game.gameNotification.recordData.total_pot / 2;
 
   const navigate = useNavigate();
 

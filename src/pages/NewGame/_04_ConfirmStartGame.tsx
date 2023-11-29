@@ -15,8 +15,8 @@ import {
   requestCreateEvent,
   requestSignature,
   useAccount,
+  EventType
 } from '@puzzlehq/sdk';
-import { EventType } from '@puzzlehq/types';
 import { useState } from 'react';
 import jsyaml from 'js-yaml';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx.js';

@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@puzzlehq/sdk": "../puzzle-sdk",
-    "@puzzlehq/types": "^1.0.4",
     "html5-qrcode": "^2.3.8",
     "immer": "^10.0.3",
     "js-yaml": "^4.1.0",
@@ -21,7 +20,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.17.0",
-    "zod": "^3.22.4",
+    "zod": "3.21.1",
     "zustand": "^4.4.6"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { RecordWithPlaintext } from '@puzzlehq/sdk';
-import { GameAction, GameRecord, GameState, getGameAction, getGameState, parseGameRecord } from './RecordTypes/wheres_alex_vxxx';
+import { GameAction, GameNotification, GameState, getGameAction, getGameState, parseGameRecord } from './RecordTypes/wheres_alex_vxxx';
 import { useRenegeStore } from '../pages/Renege/store';
 import { useAcceptGameStore } from '../pages/AcceptGame/store';
 import { useNewGameStore } from '../pages/NewGame/store';
@@ -39,12 +39,12 @@ const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
 }
 
 export type Game = {
-  gameRecord: GameRecord,
+  gameNotification: GameNotification,
   gameState: GameState,
   gameAction?: GameAction,
   utilRecords: RecordWithPlaintext[],
   msRecords?: {
-    gameRecords: RecordWithPlaintext[],
+    gameNotifications: RecordWithPlaintext[],
     puzzleRecords: RecordWithPlaintext[],
     utilRecords: RecordWithPlaintext[]
   }
@@ -60,7 +60,7 @@ type GameStore = {
   totalBalance: number;
   largestPiece?: RecordWithPlaintext;
   setRecords: (records: {
-    gameRecords: RecordWithPlaintext[];
+    gameNotifications: RecordWithPlaintext[];
     utilRecords: RecordWithPlaintext[];
     puzzleRecords: RecordWithPlaintext[];
   }, user: string) => void;
@@ -74,13 +74,13 @@ type GameStore = {
   clearFlowStores: () => void;
 };
 
-const createGame = (gameRecord: GameRecord, utilRecords: RecordWithPlaintext[], user: string): Game => {
-  const gameState = getGameState(gameRecord, user);
+const createGame = (gameNotification: GameNotification, utilRecords: RecordWithPlaintext[], user: string): Game => {
+  const gameState = getGameState(gameNotification, user);
   return {
-    gameRecord: gameRecord,
+    gameNotification,
     gameState: gameState,
     gameAction: getGameAction(gameState),
-    utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig?.replace('.private', '') === gameRecord.recordData.game_multisig)
+    utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig?.replace('.private', '') === gameNotification.recordData.game_multisig)
   }
 }
 
@@ -110,27 +110,27 @@ export const useGameStore = create<GameStore>()(
         const { availableBalance, totalBalance, largestPiece } = parsePuzzlePieces(puzzleRecords);
         set({ availableBalance, totalBalance, largestPiece });
 
-        const gameRecords: GameRecord[] = records.gameRecords.map((record) => {
-          const gameRecord: GameRecord = parseGameRecord(record);
-
-          if (gameRecord.recordData.game_multisig === currentGame?.gameRecord.recordData.game_multisig) {
-            const gameState = getGameState(gameRecord, user);
+        const gameNotifications: GameNotification[] = records.gameNotifications.map((record) => {
+          const gameNotification: GameNotification | undefined = parseGameRecord(record);
+          if (!gameNotification) return;
+          if (gameNotification.recordData.game_multisig === currentGame?.gameNotification.recordData.game_multisig) {
+            const gameState = getGameState(gameNotification, user);
             set({
               currentGame: {
-                gameRecord,
+                gameNotification: gameNotification,
                 gameState,
                 gameAction: getGameAction(gameState),
-                utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig?.replace('.private', '') === gameRecord.recordData.game_multisig)
+                utilRecords: utilRecords.filter((utilRecord) => utilRecord.data.game_multisig?.replace('.private', '') === gameNotification.recordData.game_multisig)
               }
             })
           }
-          return gameRecord;
+          return gameNotification;
         }
-        ).filter((record): record is GameRecord => record !== undefined);
+        ).filter((record): record is GameNotification => record !== undefined);
 
-        const { yourTurn, theirTurn, finished } = gameRecords.reduce<{ yourTurn: Game[], theirTurn: Game[], finished: Game[] }>((acc, gameRecord) => {
-          const game_state = getGameState(gameRecord, user);
-          const game = createGame(gameRecord, utilRecords, user);
+        const { yourTurn, theirTurn, finished } = gameNotifications.reduce<{ yourTurn: Game[], theirTurn: Game[], finished: Game[] }>((acc, gameNotification) => {
+          const game_state = getGameState(gameNotification, user);
+          const game = createGame(gameNotification, utilRecords, user);
           if (validStates.yourTurn.has(game_state)) {
             acc.yourTurn.push(game);
           } else if (validStates.theirTurn.has(game_state)) {
@@ -148,7 +148,7 @@ export const useGameStore = create<GameStore>()(
       },
       setMsRecords: (records, game_multisig) => {
         const currentGame = get().currentGame;
-        if (currentGame?.gameRecord.recordData.game_multisig !== game_multisig) return;
+        if (currentGame?.gameNotification.recordData.game_multisig !== game_multisig) return;
       },
       setCurrentGame: (game?: Game) => {
         set({ currentGame: game });

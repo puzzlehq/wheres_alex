@@ -17,7 +17,7 @@ type AcceptGameStore = {
   setAcceptGameInputs: (inputs: Partial<AcceptGameInputs>) => void;
   setStep: (step: Step) => void;
   initializeSubmitWager: (wager_record: RecordWithPlaintext, key_record: RecordWithPlaintext, game_req_notification: RecordWithPlaintext) => void;
-  initializeAcceptGame: (gameRecord: RecordWithPlaintext, playerOneClaimRecord: RecordWithPlaintext, playerTwoClaimRecord: RecordWithPlaintext, puzz_piece_stake_one: RecordWithPlaintext, puzz_piece_stake_two: RecordWithPlaintext) => void;
+  initializeAcceptGame: (gameNotification: RecordWithPlaintext, playerOneClaimRecord: RecordWithPlaintext, playerTwoClaimRecord: RecordWithPlaintext, puzz_piece_stake_one: RecordWithPlaintext, puzz_piece_stake_two: RecordWithPlaintext) => void;
   close: () => void;
 };
 
@@ -47,7 +47,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
         });
       },
       initializeAcceptGame: (
-        gameRecord: RecordWithPlaintext,
+        gameNotification: RecordWithPlaintext,
         playerOneClaimRecord: RecordWithPlaintext,
         playerTwoClaimRecord: RecordWithPlaintext,
         puzz_piece_stake_one: RecordWithPlaintext,
@@ -55,7 +55,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
       ) => {
         set({
           inputsAcceptGame: {
-            gameRecord,
+            gameNotification,
             playerOneClaimRecord,
             playerTwoClaimRecord,
             puzz_piece_stake_one,
