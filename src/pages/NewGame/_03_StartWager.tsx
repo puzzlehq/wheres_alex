@@ -18,7 +18,7 @@ function StartWager() {
     state.largestPiece,
   ]);
   const [wager, setWager] = useState<number | undefined>(undefined);
-  const wagerRecord = inputs?.wagerRecord;
+  const wagerRecord = inputs?.wager_record;
 
   const onWagerInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = Number(e.target.value);
@@ -30,8 +30,8 @@ function StartWager() {
       setError(undefined);
       setInputs({
         ...inputs,
-        wagerAmount: input.toString(),
-        wagerRecord: largestPiece,
+        challenger_wager_amount: input.toString(),
+        wager_record: largestPiece,
       });
     }
     setWager(input);

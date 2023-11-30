@@ -22,15 +22,15 @@ function HideAlex() {
           bg='bg-primary-blue'
         />
         <ChooseAlexLocation
-          setAnswer={(answer: Answer) => setInputs({ ...inputs, answer })}
-          answer={inputs?.answer as Answer}
+          setAnswer={(challenger_answer: Answer) => setInputs({ ...inputs, challenger_answer })}
+          answer={inputs?.challenger_answer as Answer}
           hiding={true}
         />
         <div className='flex flex-grow flex-col' />
         <Button
           className='mb-6'
           onClick={() => setStep(Step._03_StartWager)}
-          disabled={!inputs || !inputs.answer}
+          disabled={!inputs || !inputs.challenger_answer}
           color='green'
         >
           NEXT

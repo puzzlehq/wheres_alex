@@ -23,21 +23,21 @@ export const stepFees = {
 export type LoadingStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export type ProposeGameInputs = {
-  wagerRecord: RecordWithPlaintext;
-  wagerAmount: string;
-  sender_address: string;
+  wager_record: RecordWithPlaintext;
+  challenger_wager_amount: string;
+  sender: string; // challenger address proposing game
   challenger: string;
   opponent: string;
   game_multisig: string;
-  message_1: string;
-  message_2: string;
-  message_3: string;
-  message_4: string;
-  message_5: string;
-  signature: string;
-  nonce: string;
-  answer: string;
-  seed: string;
+  challenger_message_1: string;
+  challenger_message_2: string;
+  challenger_message_3: string;
+  challenger_message_4: string;
+  challenger_message_5: string;
+  challenger_sig: string;
+  challenger_nonce: string;
+  challenger_answer: string;
+  game_multisig_seed: string;
 };
 
 export type SubmitWagerInputs = {

@@ -39,8 +39,8 @@ function ConfirmStartGame() {
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
   const opponent = inputs?.opponent ?? '';
-  const answer = inputs?.answer;
-  const amount = inputs?.wagerAmount ?? 0;
+  const answer = inputs?.challenger_answer;
+  const amount = inputs?.challenger_wager_amount ?? 0;
 
   const { account } = useAccount();
 
@@ -54,17 +54,18 @@ function ConfirmStartGame() {
     if (sharedStateResponse.error) {
       setError(sharedStateResponse.error);
     } else if (sharedStateResponse.data) {
-      const seed = sharedStateResponse.data.seed;
+      const game_multisig_seed = sharedStateResponse.data.seed;
       const game_multisig = sharedStateResponse.data.address;
 
       const signature = await requestSignature({ message: messageToSign });
 
-      setInputs({ ...inputs, seed, game_multisig });
+      setInputs({ ...inputs, game_multisig_seed, game_multisig });
       if (
         inputs?.opponent &&
-        inputs?.wagerRecord &&
-        inputs?.wagerAmount &&
-        inputs?.answer &&
+        inputs?.wager_record &&
+        inputs?.challenger_wager_amount &&
+        inputs?.challenger_answer &&
+        inputs?.challenger &&
         signature &&
         signature.messageFields &&
         signature.signature &&
@@ -75,21 +76,21 @@ function ConfirmStartGame() {
         const fields = Object(jsyaml.load(signature.messageFields));
 
         const proposalInputs: ProposeGameInputs = {
-          wagerRecord: inputs.wagerRecord,
-          wagerAmount: inputs.wagerAmount + 'u64',
-          sender_address: account.address,
-          challenger: account.address,
+          wager_record: inputs.wager_record,
+          challenger_wager_amount: inputs.challenger_wager_amount + 'u64',
+          sender: inputs.challenger,
+          challenger: inputs.challenger,
           opponent: inputs.opponent,
           game_multisig: game_multisig,
-          message_1: fields.field_1,
-          message_2: fields.field_2,
-          message_3: fields.field_3,
-          message_4: fields.field_4,
-          message_5: fields.field_5,
-          signature: signature.signature,
-          nonce: messageToSign, /// todo - make this random
-          answer: inputs.answer === Answer.InTheWeeds ? '0field' : '1field',
-          seed,
+          challenger_message_1: fields.field_1,
+          challenger_message_2: fields.field_2,
+          challenger_message_3: fields.field_3,
+          challenger_message_4: fields.field_4,
+          challenger_message_5: fields.field_5,
+          challenger_sig: signature.signature,
+          challenger_nonce: messageToSign, /// todo - make this random
+          challenger_answer: inputs.challenger_answer === Answer.InTheWeeds ? '0field' : '1field',
+          game_multisig_seed,
         };
         const createEventResponse = await requestCreateEvent({
           type: EventType.Execute,
@@ -115,9 +116,9 @@ function ConfirmStartGame() {
 
   const disabled = [
     inputs?.opponent,
-    inputs?.wagerRecord,
-    inputs?.wagerAmount,
-    inputs?.answer,
+    inputs?.wager_record,
+    inputs?.challenger_wager_amount,
+    inputs?.challenger_answer,
   ].includes(undefined);
 
   return (
