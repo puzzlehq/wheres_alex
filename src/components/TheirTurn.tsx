@@ -4,7 +4,7 @@ import Button from './Button';
 import { Game, useGameStore } from '../state/store';
 import { shortenAddress } from '@puzzlehq/sdk';
 
-function TheirTurnItem({ game }: {game: Game}) {
+function TheirTurnItem({ game }: { game: Game }) {
   const navigate = useNavigate(); // Hook to navigate
   const [initializeRenege] = useRenegeStore((state) => [state.initialize]);
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
@@ -16,7 +16,9 @@ function TheirTurnItem({ game }: {game: Game}) {
   const handlePingClick = () => {
     // You might want to replace 'ENTER_PHONE_NUMBER' with the actual number if needed
     const phoneNumber = 'ENTER_PHONE_NUMBER'; // Leave this as is if you want the user to enter the number.
-    const message = `I'm betting you ${game.gameNotification.recordData.total_pot / 2} puzzle pieces that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
+    const message = `I'm betting you ${
+      game.gameNotification.recordData.total_pot / 2
+    } puzzle pieces that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
     const encodedMessage = encodeURIComponent(message);
     const smsHref = `sms:${phoneNumber}?&body=${encodedMessage}`;
 
@@ -35,12 +37,15 @@ function TheirTurnItem({ game }: {game: Game}) {
             </Button>
           </div>
         );
-      case 'Renege': 
+      case 'Renege':
         return (
           <div className='flex gap-2'>
             <Button
               onClick={() => {
-                initializeRenege(game.gameNotification.recordData.opponent_address, game.gameNotification.recordData.total_pot / 2);
+                initializeRenege(
+                  game.gameNotification.recordData.opponent_address,
+                  game.gameNotification.recordData.total_pot / 2
+                );
                 setCurrentGame(game);
                 navigate('/renege-game');
               }}
@@ -67,7 +72,7 @@ function TheirTurnItem({ game }: {game: Game}) {
   );
 }
 
-function TheirTurn({ games }: {games: Game[]}) {
+function TheirTurn({ games }: { games: Game[] }) {
   return (
     <section className='flex grow flex-col self-stretch border-2 border-solid border-primary-red pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-red px-5 py-2'>

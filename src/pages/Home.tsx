@@ -4,21 +4,41 @@ import TotalWinnings from '../components/TotalWinnings';
 import TheirTurn from '../components/TheirTurn';
 import YourTurn from '../components/YourTurn';
 import { useGameStore } from '../state/store';
+import { useNewGameStore } from './NewGame/store';
+import { useAccount } from '@puzzlehq/sdk';
 
 function Home() {
-  const [yourTurn, theirTurn, totalBalance] = useGameStore((state) => [state.yourTurn, state.theirTurn, state.totalBalance]);
+  const [yourTurn, theirTurn, totalBalance] = useGameStore((state) => [
+    state.yourTurn,
+    state.theirTurn,
+    state.totalBalance,
+  ]);
+  const [initialize] = useNewGameStore((state) => [state.initialize]);
+  const { account } = useAccount();
   const navigate = useNavigate();
 
   return (
     <div className='flex h-full flex-col justify-between '>
       <div className='flex w-full flex-col gap-4 px-1'>
         <TotalWinnings amount={totalBalance} />
-        <Button color='yellow' onClick={() => navigate('/new-game')}>
+        <Button
+          color='yellow'
+          onClick={() => {
+            if (!account) return;
+            initialize(account?.address);
+            navigate('/new-game');
+          }}
+          disabled={!account}
+        >
           NEW GAME
         </Button>
         {yourTurn.length > 0 && <YourTurn games={yourTurn} />}
         {theirTurn.length > 0 && <TheirTurn games={theirTurn} />}
-        {yourTurn.length === 0 && theirTurn.length === 0 && <p className='font-semibold self-center'>No ongoing games, start one with a friend!</p>}
+        {yourTurn.length === 0 && theirTurn.length === 0 && (
+          <p className='self-center font-semibold'>
+            No ongoing games, start one with a friend!
+          </p>
+        )}
       </div>
       <div className='mt-4 px-4 pb-4 text-center'>
         {' '}

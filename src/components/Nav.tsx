@@ -1,6 +1,6 @@
 type NavProps = {
   step: number;
-  isChallenger?: boolean
+  isChallenger?: boolean;
 };
 
 function Nav({ step, isChallenger = true }: NavProps) {

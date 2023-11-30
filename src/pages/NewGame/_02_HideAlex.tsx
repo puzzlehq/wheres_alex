@@ -7,7 +7,11 @@ import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import { Step, useNewGameStore } from './store';
 
 function HideAlex() {
-  const [inputs, setInputs, setStep] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
+  const [inputs, setInputs, setStep] = useNewGameStore((state) => [
+    state.inputs,
+    state.setInputs,
+    state.setStep,
+  ]);
 
   return (
     <div className='flex h-full flex-col justify-between'>

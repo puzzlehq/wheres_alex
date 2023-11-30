@@ -8,7 +8,11 @@ import { Step, useNewGameStore } from './store';
 
 const NewGame = () => {
   const navigate = useNavigate();
-  const [step, setInputs, setStep] = useNewGameStore((state) => [state.step, state.setInputs, state.setStep])
+  const [step, setInputs, setStep] = useNewGameStore((state) => [
+    state.step,
+    state.setInputs,
+    state.setStep,
+  ]);
 
   const done = () => {
     setInputs({});

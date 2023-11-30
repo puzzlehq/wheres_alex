@@ -5,7 +5,10 @@ import Button from './Button.js';
 import { Answer } from '../state/RecordTypes/wheres_alex_vxxx.js';
 import { Game, useGameStore } from '../state/store.js';
 import { shortenAddress } from '@puzzlehq/sdk';
-import { AcceptGameButton, SubmitWagerButton } from '../pages/AcceptGame/index.js';
+import {
+  AcceptGameButton,
+  SubmitWagerButton,
+} from '../pages/AcceptGame/index.js';
 
 function YourTurnItem({ game }: { game: Game }) {
   const multisig = game.gameNotification.recordData.game_multisig;
@@ -27,13 +30,9 @@ function YourTurnItem({ game }: { game: Game }) {
   const renderActionButton = () => {
     switch (game.gameAction) {
       case 'Submit Wager':
-        return (
-          <SubmitWagerButton game={game}/>
-        );
+        return <SubmitWagerButton game={game} />;
       case 'Accept':
-        return (
-          <AcceptGameButton game={game} />
-        );
+        return <AcceptGameButton game={game} />;
       case 'Reveal':
         return (
           <Button
@@ -78,7 +77,7 @@ function YourTurnItem({ game }: { game: Game }) {
   );
 }
 
-function YourTurn({ games }: {games: Game[]}) {
+function YourTurn({ games }: { games: Game[] }) {
   return (
     <section className='flex grow flex-col border-2 border-solid border-primary-pink pb-6'>
       <div className='flex max-w-full flex-col self-start bg-primary-pink px-5 py-2'>
@@ -88,10 +87,7 @@ function YourTurn({ games }: {games: Game[]}) {
       </div>
       <div className='flex flex-col px-5 pt-2'>
         {games.map((game, ix) => (
-          <YourTurnItem
-            key={ix}
-            game={game}
-          />
+          <YourTurnItem key={ix} game={game} />
         ))}
       </div>
     </section>

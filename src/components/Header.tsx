@@ -15,7 +15,7 @@ export const AppHeader = () => {
           <button
             onClick={() => {
               useGameStore.getState().clearFlowStores();
-              navigate('/')
+              navigate('/');
             }}
           >
             <img

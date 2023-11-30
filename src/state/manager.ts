@@ -1,9 +1,7 @@
 import { RecordWithPlaintext } from '@puzzlehq/sdk';
-import {
-  Answer,
-} from './RecordTypes/wheres_alex_vxxx';
+import { Answer } from './RecordTypes/wheres_alex_vxxx';
 
-export const GAME_PROGRAM_ID = 'wheres_alex_v012.aleo';
+export const GAME_PROGRAM_ID = 'wheres_alex_v013.aleo';
 
 export const GAME_FUNCTIONS = {
   propose_game: 'propose_game',
@@ -15,7 +13,7 @@ export const GAME_FUNCTIONS = {
 
 /// todo - update these
 export const stepFees = {
-  propose_game: 0.015720,
+  propose_game: 0.01572,
   accept_game: 1,
   submit_wager: 1,
   reveal_answer: 1,
@@ -43,32 +41,27 @@ export type ProposeGameInputs = {
 };
 
 export type SubmitWagerInputs = {
-  wager_record: RecordWithPlaintext,
-  key_record: RecordWithPlaintext,
-  game_req_notification: RecordWithPlaintext,
-  message_1: string, //from output of useSignature
-  message_2: string,
-  message_3: string,
-  message_4: string,
-  message_5: string,
-  sig: string, //from output of useSignature
-}
+  wager_record: RecordWithPlaintext;
+  key_record: RecordWithPlaintext;
+  game_req_notification: RecordWithPlaintext;
+  message_1: string; //from output of useSignature
+  message_2: string;
+  message_3: string;
+  message_4: string;
+  message_5: string;
+  sig: string; //from output of useSignature
+};
 
 // used for submit wager and accept game
 export type AcceptGameInputs = {
-  eventIdWager: string;
-  eventIdAccept: string;
-  gameNotification: RecordWithPlaintext;
-  playerOneClaimRecord: RecordWithPlaintext;
-  playerTwoClaimRecord: RecordWithPlaintext;
-  puzz_piece_stake_one: RecordWithPlaintext;
-  puzz_piece_stake_two: RecordWithPlaintext;
-  player_two_answer: '0field' | '1field';
-  player_two_answer_readable: Answer;
-  game_multisig: string;
-  opponent: string;
-  wagerAmount: string;
-  wagerRecord: string;
+  game_record: RecordWithPlaintext;
+  opponent_answer: '0field' | '1field';
+  opponent_answer_readable: Answer;
+  piece_stake_challenger: RecordWithPlaintext;
+  piece_claim_challenger: RecordWithPlaintext;
+  piece_stake_opponent: RecordWithPlaintext;
+  piece_claim_opponent: RecordWithPlaintext;
+  block_ht: string;
 };
 
 export type RevealAnswerInputs = {
@@ -81,4 +74,3 @@ export type FinishGameInputs = {
   PieceJointStake: RecordWithPlaintext;
   PieceTimeClaim: RecordWithPlaintext;
 };
-

@@ -1,5 +1,5 @@
 import { RecordWithPlaintext, zodAddress } from '@puzzlehq/sdk';
-import { z } from 'zod'
+import { z } from 'zod';
 
 export enum Answer {
   InTheWeeds = 'In the Weeds',
@@ -14,9 +14,17 @@ export const GameRecordSchema = z.object({
   challenger_address: zodAddress,
   opponent_address: zodAddress,
   game_multisig: zodAddress,
-  game_state: z.enum(['0field', '1field', '2field', '3field', '4field', '5field', '6field']), 
+  game_state: z.enum([
+    '0field',
+    '1field',
+    '2field',
+    '3field',
+    '4field',
+    '5field',
+    '6field',
+  ]),
   _nonce: z.string(),
-})
+});
 export type GameRecord = {
   recordData: z.infer<typeof GameRecordSchema>;
   recordWithPlaintext: RecordWithPlaintext;
@@ -31,7 +39,7 @@ export const GameReqNotificationSchema = z.object({
   challenger_address: zodAddress,
   opponent_address: zodAddress,
   _nonce: z.string(),
-})
+});
 export type GameReqNotification = {
   recordData: z.infer<typeof GameReqNotificationSchema>;
   recordWithPlaintext: RecordWithPlaintext;
@@ -46,7 +54,7 @@ export const WaitingAcceptanceNotificationSchema = z.object({
   challenger_address: zodAddress,
   opponent_address: zodAddress,
   _nonce: z.string(),
-})
+});
 export type WaitingAcceptanceNotification = {
   recordData: z.infer<typeof WaitingAcceptanceNotificationSchema>;
   recordWithPlaintext: RecordWithPlaintext;
@@ -138,7 +146,7 @@ export const GameFinishReqNotificationSchema = z.object({
   challenger_address: zodAddress,
   opponent_address: zodAddress,
   _nonce: z.string(),
-})
+});
 export type GameFinishReqNotification = {
   recordData: z.infer<typeof GameFinishReqNotificationSchema>;
   recordWithPlaintext: RecordWithPlaintext;
@@ -161,21 +169,31 @@ export type GameFinishedNotification = {
   recordWithPlaintext: RecordWithPlaintext;
 };
 
-export type GameNotification = GameReqNotification | WaitingAcceptanceNotification | StakeRenegedNotification | ChallengerWagerNotification | OpponentWagerNotification | WaitingRevealNotification | RevealAnswerNotification | GameFinishReqNotification | GameFinishedNotification
+export type GameNotification =
+  | GameReqNotification
+  | WaitingAcceptanceNotification
+  | StakeRenegedNotification
+  | ChallengerWagerNotification
+  | OpponentWagerNotification
+  | WaitingRevealNotification
+  | RevealAnswerNotification
+  | GameFinishReqNotification
+  | GameFinishedNotification;
 
-export const removeVisibilitySuffix = (obj: {
-  [key: string]: string;
-}) => {
+export const removeVisibilitySuffix = (obj: { [key: string]: string }) => {
   for (const key in obj) {
     if (typeof obj[key] === 'string') {
-      obj[key] = obj[key].replace('.private', '').replace('.public', '').replace('u64', '');
+      obj[key] = obj[key]
+        .replace('.private', '')
+        .replace('.public', '')
+        .replace('u64', '');
     }
   }
   return obj;
-}
+};
 
 export type GameState =
-  'challenger:0'
+  | 'challenger:0'
   | 'challenger:1'
   | 'challenger:2'
   | 'challenger:3'
@@ -190,60 +208,112 @@ export type GameState =
   | 'opponent:4:lose'
   | 'opponent:4:win'
   | 'opponent:5'
-  | 'opponent:6'
+  | 'opponent:6';
 
-export const getGameState = (game: GameNotification, user: string): GameState => {
-  const challenger_or_opponent = user === game.recordData.challenger_address ? 'challenger' : 'opponent';
-  const isWinner =  'winner' in game.recordData && game.recordData.winner === user;
+export const getGameState = (
+  game: GameNotification,
+  user: string
+): GameState => {
+  const challenger_or_opponent =
+    user === game.recordData.challenger_address ? 'challenger' : 'opponent';
+  const isWinner =
+    'winner' in game.recordData && game.recordData.winner === user;
 
   switch (game.recordData.game_state) {
-    case ('0field'): return `${challenger_or_opponent}:0`;
-    case ('1field'): return `${challenger_or_opponent}:1`;
-    case ('2field'): return `${challenger_or_opponent}:2`;
-    case ('3field'): return `${challenger_or_opponent}:3`;
-    case ('4field'): return isWinner ? `${challenger_or_opponent}:4:win` : `${challenger_or_opponent}:4:lose`;
-    case ('5field'): return `${challenger_or_opponent}:5`;
-    case ('6field'): return `${challenger_or_opponent}:6`;
+    case '0field':
+      return `${challenger_or_opponent}:0`;
+    case '1field':
+      return `${challenger_or_opponent}:1`;
+    case '2field':
+      return `${challenger_or_opponent}:2`;
+    case '3field':
+      return `${challenger_or_opponent}:3`;
+    case '4field':
+      return isWinner
+        ? `${challenger_or_opponent}:4:win`
+        : `${challenger_or_opponent}:4:lose`;
+    case '5field':
+      return `${challenger_or_opponent}:5`;
+    case '6field':
+      return `${challenger_or_opponent}:6`;
   }
-}
+};
 
-export type GameAction = 'Renege' | 'Reveal' | 'Claim' | 'Accept' | 'Submit Wager' | 'Ping' | 'Claim' | undefined
+export type GameAction =
+  | 'Renege'
+  | 'Reveal'
+  | 'Claim'
+  | 'Accept'
+  | 'Submit Wager'
+  | 'Ping'
+  | 'Claim'
+  | undefined;
 
 export const getGameAction = (gameState: GameState): GameAction => {
   switch (gameState) {
-    case ('challenger:0'): return undefined 
-    case ('challenger:1'): return 'Renege' // and ping
-    case ('challenger:2'): return 'Renege' // and ping
-    case ('challenger:3'): return 'Reveal' 
-    case ('challenger:4:lose'): return undefined
-    case ('challenger:4:win'): return 'Claim'
-    case ('challenger:5'): return undefined
-    case ('challenger:6'): return undefined
-    case ('opponent:0'): return undefined
-    case ('opponent:1'): return 'Submit Wager'
-    case ('opponent:2'): return 'Accept' 
-    case ('opponent:3'): return 'Ping'
-    case ('opponent:4:lose'): return undefined 
-    case ('opponent:4:win'): return 'Claim'
-    case ('opponent:5'): return undefined
-    case ('opponent:6'): return undefined 
+    case 'challenger:0':
+      return undefined;
+    case 'challenger:1':
+      return 'Renege'; // and ping
+    case 'challenger:2':
+      return 'Renege'; // and ping
+    case 'challenger:3':
+      return 'Reveal';
+    case 'challenger:4:lose':
+      return undefined;
+    case 'challenger:4:win':
+      return 'Claim';
+    case 'challenger:5':
+      return undefined;
+    case 'challenger:6':
+      return undefined;
+    case 'opponent:0':
+      return undefined;
+    case 'opponent:1':
+      return 'Submit Wager';
+    case 'opponent:2':
+      return 'Accept';
+    case 'opponent:3':
+      return 'Ping';
+    case 'opponent:4:lose':
+      return undefined;
+    case 'opponent:4:win':
+      return 'Claim';
+    case 'opponent:5':
+      return undefined;
+    case 'opponent:6':
+      return undefined;
   }
-}
+};
 
-export const parseGameRecord = (recordWithPlaintext: RecordWithPlaintext): GameNotification | undefined => {
-  const schemas = [GameReqNotificationSchema, WaitingAcceptanceNotificationSchema, StakeRenegedNotificationSchema, ChallengerWagerNotificationSchema, OpponentWagerNotificationSchema, WaitingRevealNotificationSchema, RevealAnswerNotificationSchema, GameFinishReqNotificationSchema, GameFinishedNotificationSchema]
+export const parseGameRecord = (
+  recordWithPlaintext: RecordWithPlaintext
+): GameNotification | undefined => {
+  const schemas = [
+    GameReqNotificationSchema,
+    WaitingAcceptanceNotificationSchema,
+    StakeRenegedNotificationSchema,
+    ChallengerWagerNotificationSchema,
+    OpponentWagerNotificationSchema,
+    WaitingRevealNotificationSchema,
+    RevealAnswerNotificationSchema,
+    GameFinishReqNotificationSchema,
+    GameFinishedNotificationSchema,
+  ];
 
   for (const schema of schemas) {
     try {
       const result = schema.parse(
         removeVisibilitySuffix(recordWithPlaintext.data)
-      )
-      return { recordData: result, recordWithPlaintext: recordWithPlaintext } as GameNotification;
+      );
+      return {
+        recordData: result,
+        recordWithPlaintext: recordWithPlaintext,
+      } as GameNotification;
     } catch {}
   }
   return undefined;
 };
-
 
 // game_state
 // 0field - StakeRenegedNotification

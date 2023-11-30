@@ -4,7 +4,10 @@ import Button from '../../components/Button';
 import { useNewGameStore } from './store';
 
 function GameStarted(props: { done: () => void }) {
-  const [inputs, eventId] = useNewGameStore((state) => [state.inputs, state.eventId]);
+  const [inputs, eventId] = useNewGameStore((state) => [
+    state.inputs,
+    state.eventId,
+  ]);
   const game_multisig = inputs?.game_multisig;
 
   return (

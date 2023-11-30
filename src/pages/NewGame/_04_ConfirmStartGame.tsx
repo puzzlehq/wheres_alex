@@ -15,7 +15,7 @@ import {
   requestCreateEvent,
   requestSignature,
   useAccount,
-  EventType
+  EventType,
 } from '@puzzlehq/sdk';
 import { useState } from 'react';
 import jsyaml from 'js-yaml';
@@ -30,7 +30,12 @@ enum ConfirmStep {
 }
 
 function ConfirmStartGame() {
-  const [inputs, setInputs, setStep, setEventId] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep, state.setEventId]);
+  const [inputs, setInputs, setStep, setEventId] = useNewGameStore((state) => [
+    state.inputs,
+    state.setInputs,
+    state.setStep,
+    state.setEventId,
+  ]);
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
   const opponent = inputs?.opponent ?? '';
@@ -50,11 +55,11 @@ function ConfirmStartGame() {
       setError(sharedStateResponse.error);
     } else if (sharedStateResponse.data) {
       const seed = sharedStateResponse.data.seed;
-      const address = sharedStateResponse.data.address;
+      const game_multisig = sharedStateResponse.data.address;
 
       const signature = await requestSignature({ message: messageToSign });
 
-      setInputs({ ...inputs, seed, game_multisig: address });
+      setInputs({ ...inputs, seed, game_multisig });
       if (
         inputs?.opponent &&
         inputs?.wagerRecord &&
@@ -75,7 +80,7 @@ function ConfirmStartGame() {
           sender_address: account.address,
           challenger: account.address,
           opponent: inputs.opponent,
-          game_multisig: address,
+          game_multisig: game_multisig,
           message_1: fields.field_1,
           message_2: fields.field_2,
           message_3: fields.field_3,
@@ -95,8 +100,8 @@ function ConfirmStartGame() {
         });
         if (createEventResponse.error) {
           setError(createEventResponse.error);
-        } else if (!createEventResponse.eventId){
-          setError('No eventId found!')
+        } else if (!createEventResponse.eventId) {
+          setError('No eventId found!');
         } else {
           console.log('success', createEventResponse.eventId);
           setEventId(createEventResponse.eventId);

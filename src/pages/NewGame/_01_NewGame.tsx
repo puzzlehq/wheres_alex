@@ -7,7 +7,11 @@ import { aleoAddressRegex } from '../../utils.js';
 import { Step, useNewGameStore } from './store.js';
 
 function NewGame() {
-  const [inputs, setInputs, setStep] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
+  const [inputs, setInputs, setStep] = useNewGameStore((state) => [
+    state.inputs,
+    state.setInputs,
+    state.setStep,
+  ]);
   const { account } = useAccount();
 
   const opponent = inputs?.opponent;
@@ -35,7 +39,8 @@ function NewGame() {
         onClick={() => setStep(Step._02_HideAlex)}
         color='green'
         disabled={
-          !inputs || !account ||
+          !inputs ||
+          !account ||
           !aleoAddressRegex.test(inputs.opponent ?? '') ||
           inputs.opponent === account.address
         }

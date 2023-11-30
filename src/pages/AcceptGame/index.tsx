@@ -5,17 +5,22 @@ import { useNavigate } from 'react-router-dom';
 import { Step, useAcceptGameStore } from './store';
 import { Game, useGameStore } from '../../state/store';
 import Button from '../../components/Button';
-import { useMsRecords } from '../../state/hooks/msRecords';
 
-export const SubmitWagerButton = ({game}: {game: Game}) => {
+export const SubmitWagerButton = ({ game }: { game: Game }) => {
   const [initializeSubmitWager] = useAcceptGameStore((state) => [
-    state.initializeSubmitWager
+    state.initializeSubmitWager,
   ]);
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
   const navigate = useNavigate();
 
-  const [largestPiece, availableBalance] = useGameStore((state) => [state.largestPiece, state.availableBalance]);
-  const puzzleRecord = availableBalance >= game.gameNotification.recordData.total_pot / 2 ? largestPiece : undefined;
+  const [largestPiece, availableBalance] = useGameStore((state) => [
+    state.largestPiece,
+    state.availableBalance,
+  ]);
+  const puzzleRecord =
+    availableBalance >= game.gameNotification.recordData.total_pot / 2
+      ? largestPiece
+      : undefined;
 
   return (
     <Button
@@ -33,33 +38,74 @@ export const SubmitWagerButton = ({game}: {game: Game}) => {
     >
       Accept
     </Button>
-  )
-}
+  );
+};
 
-export const AcceptGameButton = ({game}: {game: Game}) => {
+export const AcceptGameButton = ({ game }: { game: Game }) => {
   const [initializeAcceptGame] = useAcceptGameStore((state) => [
-    state.initializeAcceptGame
+    state.initializeAcceptGame,
   ]);
-  const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
+  const [currentGame, setCurrentGame] = useGameStore((state) => [
+    state.currentGame,
+    state.setCurrentGame,
+  ]);
   const navigate = useNavigate();
 
-  const { msPuzzleRecords, msGameRecords } = useMsRecords(game.gameNotification.recordData.game_multisig);
+  const msGameRecords = currentGame?.msRecords?.gameRecords;
+  const msPuzzleRecords = currentGame?.msRecords?.puzzleRecords;
+
+  console.log('currentGame', currentGame);
 
   return (
     <Button
       onClick={() => {
+        setCurrentGame(game);
         if (msGameRecords?.length !== 1) return;
-        const playerOneClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '') === game.gameNotification.recordData.challenger_address)
-        const playerTwoClaimRecord = msPuzzleRecords?.find((r) => r.data.ix === '6u32.private' && r.data.challenger.replace('.private', '')  === game.gameNotification.recordData.opponent_address)
-        const puzz_piece_stake_one = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameNotification.recordData.challenger_address)
-        const puzz_piece_stake_two = msPuzzleRecords?.find((r) => r.data.ix === '3u32.private' && r.data.challenger.replace('.private', '')  === game.gameNotification.recordData.opponent_address)
-        console.log('msGameRecords[0]', msGameRecords[0])
-        console.log('playerOneClaimRecord', playerOneClaimRecord)
-        console.log('playerTwoClaimRecord', playerTwoClaimRecord)
-        console.log('puzz_piece_stake_one', puzz_piece_stake_one)
-        console.log('puzz_piece_stake_two', puzz_piece_stake_two)
-        if (playerOneClaimRecord === undefined || playerTwoClaimRecord === undefined || puzz_piece_stake_one === undefined || puzz_piece_stake_two === undefined) return;
-        initializeAcceptGame(msGameRecords[0], playerOneClaimRecord, playerTwoClaimRecord, puzz_piece_stake_one, puzz_piece_stake_two);
+        const piece_stake_challenger = msPuzzleRecords?.find(
+          (r) =>
+            r.data.ix === '3u32.private' &&
+            r.data.challenger.replace('.private', '') ===
+              game.gameNotification.recordData.challenger_address
+        );
+        const piece_claim_challenger = msPuzzleRecords?.find(
+          (r) =>
+            r.data.ix === '6u32.private' &&
+            r.data.challenger.replace('.private', '') ===
+              game.gameNotification.recordData.challenger_address
+        );
+        const piece_stake_opponent = msPuzzleRecords?.find(
+          (r) =>
+            r.data.ix === '3u32.private' &&
+            r.data.opponent.replace('.private', '') ===
+              game.gameNotification.recordData.opponent_address
+        );
+        const piece_claim_opponent = msPuzzleRecords?.find(
+          (r) =>
+            r.data.ix === '6u32.private' &&
+            r.data.opponent.replace('.private', '') ===
+              game.gameNotification.recordData.opponent_address
+        );
+
+        console.log('msGameRecords[0]', msGameRecords[0]);
+        console.log('piece_stake_challenger', piece_stake_challenger);
+        console.log('piece_claim_challenger', piece_claim_challenger);
+        console.log('piece_stake_opponent', piece_stake_opponent);
+        console.log('piece_claim_opponent', piece_claim_opponent);
+        if (
+          piece_claim_challenger === undefined ||
+          piece_claim_opponent === undefined ||
+          piece_stake_challenger === undefined ||
+          piece_stake_opponent === undefined
+        )
+          return;
+        initializeAcceptGame(
+          msGameRecords[0],
+          piece_stake_challenger,
+          piece_claim_challenger,
+          piece_stake_opponent,
+          piece_claim_opponent,
+          "70000u32"
+        );
         setCurrentGame(game);
         navigate('/accept-game');
       }}
@@ -68,12 +114,18 @@ export const AcceptGameButton = ({game}: {game: Game}) => {
     >
       Accept
     </Button>
-  )
-}
+  );
+};
 
 const AcceptGame = () => {
   const navigate = useNavigate();
-  const [step, setStep, setAcceptGameInputs, setSubmitWagerInputs] = useAcceptGameStore((state) => [state.step, state.setStep, state.setAcceptGameInputs, state.setSubmitWagerInputs])
+  const [step, setStep, setAcceptGameInputs, setSubmitWagerInputs] =
+    useAcceptGameStore((state) => [
+      state.step,
+      state.setStep,
+      state.setAcceptGameInputs,
+      state.setSubmitWagerInputs,
+    ]);
 
   const done = () => {
     setAcceptGameInputs({});

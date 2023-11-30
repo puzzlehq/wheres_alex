@@ -8,8 +8,15 @@ import { useGameStore } from '../../state/store';
 
 function StartWager() {
   const [error, setError] = useState<string | undefined>();
-  const [inputs, setInputs, setStep] = useNewGameStore((state) => [state.inputs, state.setInputs, state.setStep]);
-  const [availableBalance, largestPiece] = useGameStore((state) => [state.availableBalance, state.largestPiece]);
+  const [inputs, setInputs, setStep] = useNewGameStore((state) => [
+    state.inputs,
+    state.setInputs,
+    state.setStep,
+  ]);
+  const [availableBalance, largestPiece] = useGameStore((state) => [
+    state.availableBalance,
+    state.largestPiece,
+  ]);
   const [wager, setWager] = useState<number | undefined>(undefined);
   const wagerRecord = inputs?.wagerRecord;
 

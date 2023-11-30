@@ -7,14 +7,14 @@ export enum Step {
   _02_HideAlex,
   _03_StartWager,
   _04_ConfirmStartGame,
-  _05_GameStarted
+  _05_GameStarted,
 }
 
 type NewGameStore = {
   inputs?: Partial<ProposeGameInputs>;
-  eventId?: string,
-  step: Step,
-  initialize: (opponent: string, wager: number) => void;
+  eventId?: string;
+  step: Step;
+  initialize: (challenger: string) => void;
   setInputs: (inputs: Partial<ProposeGameInputs>) => void;
   setEventId: (eventId: string) => void;
   setStep: (step: Step) => void;
@@ -27,12 +27,11 @@ export const useNewGameStore = create<NewGameStore>()(
       inputs: undefined,
       eventId: undefined,
       step: Step._01_NewGame,
-      initialize: (opponent: string, amount: number) => {
+      initialize: (challenger: string) => {
         set({
           inputs: {
-            opponent,
-            wagerAmount: amount.toString()
-          }
+            challenger,
+          },
         });
       },
       setInputs: (inputs: Partial<ProposeGameInputs>) => {
@@ -47,7 +46,7 @@ export const useNewGameStore = create<NewGameStore>()(
       close: () => {
         set({
           inputs: undefined,
-          step: Step._01_NewGame
+          step: Step._01_NewGame,
         });
       },
     }),
