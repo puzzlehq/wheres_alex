@@ -16,7 +16,7 @@ import { useClaimPrizeLoseStore } from '../pages/ClaimPrize/Lose/store';
 import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store';
 import { useClaimPrizeNoShowStore } from '../pages/ClaimPrize/NoShow/store';
 import { useFinishGameStore } from '../pages/FinishGame/store';
-import _ from 'lodash'
+import _ from 'lodash';
 
 const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
   if (records.length > 0) {
@@ -103,18 +103,15 @@ const createGame = (
       ? {
           gameRecords: msRecords.gameRecords.filter(
             (gameRecord) =>
-              gameRecord.owner ===
-              gameNotification.recordData.game_multisig
+              gameRecord.owner === gameNotification.recordData.game_multisig
           ),
           puzzleRecords: msRecords.puzzleRecords.filter(
             (puzzleRecord) =>
-              puzzleRecord.owner ===
-              gameNotification.recordData.game_multisig
+              puzzleRecord.owner === gameNotification.recordData.game_multisig
           ),
           utilRecords: msRecords.utilRecords.filter(
             (utilRecord) =>
-              utilRecord.owner ===
-              gameNotification.recordData.game_multisig
+              utilRecord.owner === gameNotification.recordData.game_multisig
           ),
         }
       : undefined,
@@ -163,25 +160,39 @@ export const useGameStore = create<GameStore>()(
           parsePuzzlePieces(puzzleRecords);
         set({ availableBalance, totalBalance, largestPiece });
 
-        const allGameNotifications: GameNotification[] = records.gameNotifications
-          .map((record) => {
-            const gameNotification: GameNotification | undefined =
-              parseGameRecord(record);
-            if (!gameNotification) return;
-            return gameNotification;
-          })
-          .filter((record): record is GameNotification => record !== undefined);
-        
-        const gameNotificationsByGameAddress = _.groupBy(allGameNotifications, 'recordData.game_multisig');
-        const gameNotifications = _.values(gameNotificationsByGameAddress).map((notifications) => {
-          if (notifications.length === 1) return notifications[0];
-          else {
-            const reneged = notifications.find((n) => n.recordData.game_state === '0field');
-            if (reneged) return reneged;
-            const sorted = _.orderBy(notifications, 'recordData.game_state', 'desc');
-            return sorted[0]
+        const allGameNotifications: GameNotification[] =
+          records.gameNotifications
+            .map((record) => {
+              const gameNotification: GameNotification | undefined =
+                parseGameRecord(record);
+              if (!gameNotification) return;
+              return gameNotification;
+            })
+            .filter(
+              (record): record is GameNotification => record !== undefined
+            );
+
+        const gameNotificationsByGameAddress = _.groupBy(
+          allGameNotifications,
+          'recordData.game_multisig'
+        );
+        const gameNotifications = _.values(gameNotificationsByGameAddress).map(
+          (notifications) => {
+            if (notifications.length === 1) return notifications[0];
+            else {
+              const reneged = notifications.find(
+                (n) => n.recordData.game_state === '0field'
+              );
+              if (reneged) return reneged;
+              const sorted = _.orderBy(
+                notifications,
+                'recordData.game_state',
+                'desc'
+              );
+              return sorted[0];
+            }
           }
-        })
+        );
         console.log('gameNotifications', gameNotifications);
 
         const { yourTurn, theirTurn, finished } = gameNotifications.reduce<{
@@ -222,12 +233,12 @@ export const useGameStore = create<GameStore>()(
       setCurrentGame: (game?: Game) => {
         set({ currentGame: game });
         switch (game?.gameAction) {
-          case ('Submit Wager'):
+          case 'Submit Wager':
             useAcceptGameStore.getState().setStep(Step._01_SubmitWager);
-            break
-          case ('Accept'):
+            break;
+          case 'Accept':
             useAcceptGameStore.getState().setStep(Step._02_AcceptGame);
-            break   
+            break;
         }
       },
       close: () => {

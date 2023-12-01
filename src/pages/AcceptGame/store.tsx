@@ -75,7 +75,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
         piece_claim_challenger: RecordWithPlaintext,
         piece_stake_opponent: RecordWithPlaintext,
         piece_claim_opponent: RecordWithPlaintext,
-        block_ht: string,
+        block_ht: string
       ) => {
         set({
           inputsAcceptGame: {
@@ -84,16 +84,19 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
             piece_claim_challenger,
             piece_stake_opponent,
             piece_claim_opponent,
-            block_ht
+            block_ht,
+            opponent_answer: get().inputsAcceptGame?.opponent_answer,
+            opponent_answer_readable:
+              get().inputsAcceptGame?.opponent_answer_readable,
           },
           step: Step._02_AcceptGame,
         });
       },
       setEventIdSubmit: (id: string) => {
-        set({eventIdSubmit: id})
+        set({ eventIdSubmit: id });
       },
       setEventIdAccept: (id: string) => {
-        set({eventIdAccept: id})
+        set({ eventIdAccept: id });
       },
       close: () => {
         set({

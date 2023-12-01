@@ -12,17 +12,25 @@ const Reveal = () => {
     state.wager,
     state.answer,
   ]);
-  const [currentGame] = useGameStore((state) => [state.currentGame])
+  const [currentGame] = useGameStore((state) => [state.currentGame]);
 
-  const { msPuzzleRecords, msGameRecords, msUtilRecords } = useMsRecords(currentGame?.gameNotification.recordData.game_multisig);
+  const { msPuzzleRecords, msGameRecords, msUtilRecords } = useMsRecords(
+    currentGame?.gameNotification.recordData.game_multisig
+  );
 
   useEffect(() => {
-    if (!currentGame || !msPuzzleRecords || !msGameRecords || msUtilRecords) return;
-    const challenger_answer_record = currentGame.utilRecords.find((r) => 
-      r.data.owner.replace('.private', '') === currentGame.gameNotification.recordData.challenger_address
-    )
+    if (!currentGame || !msPuzzleRecords || !msGameRecords || msUtilRecords)
+      return;
+    const challenger_answer_record = currentGame.utilRecords.find(
+      (r) =>
+        r.data.owner.replace('.private', '') ===
+        currentGame.gameNotification.recordData.challenger_address
+    );
     // const joint_piece_state = currentGame.
-  },[currentGame?.gameNotification.recordData.game_multisig, [msPuzzleRecords, msGameRecords].toString()])
+  }, [
+    currentGame?.gameNotification.recordData.game_multisig,
+    [msPuzzleRecords, msGameRecords].toString(),
+  ]);
 
   return (
     <div className='flex h-full w-full flex-col gap-4'>

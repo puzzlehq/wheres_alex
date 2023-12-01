@@ -42,9 +42,7 @@ export const SubmitWagerButton = ({ game }: { game: Game }) => {
 };
 
 export const AcceptGameButton = ({ game }: { game: Game }) => {
-  const [setCurrentGame] = useGameStore((state) => [
-    state.setCurrentGame,
-  ]);
+  const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
   const navigate = useNavigate();
 
   return (

@@ -27,7 +27,7 @@ function YourTurnItem({ game }: { game: Game }) {
     state.initialize,
   ]);
 
-  console.log(game)
+  console.log(game);
 
   const renderActionButton = () => {
     switch (game.gameAction) {

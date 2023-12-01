@@ -16,11 +16,13 @@ import {
   requestSignature,
   useAccount,
   EventType,
+  EventStatus,
 } from '@puzzlehq/sdk';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import jsyaml from 'js-yaml';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx.js';
 import { Step, useNewGameStore } from './store.js';
+import { useEventQuery } from '../../state/hooks/event.js';
 
 const messageToSign = '1234567field';
 
@@ -30,12 +32,15 @@ enum ConfirmStep {
 }
 
 function ConfirmStartGame() {
-  const [inputs, setInputs, setStep, setEventId] = useNewGameStore((state) => [
-    state.inputs,
-    state.setInputs,
-    state.setStep,
-    state.setEventId,
-  ]);
+  const [inputs, eventId, setInputs, setStep, setEventId] = useNewGameStore(
+    (state) => [
+      state.inputs,
+      state.eventId,
+      state.setInputs,
+      state.setStep,
+      state.setEventId,
+    ]
+  );
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
   const opponent = inputs?.opponent ?? '';
@@ -46,6 +51,11 @@ function ConfirmStartGame() {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
+
+  const { data } = useEventQuery(eventId);
+  const event = data?.event;
+  const eventError = data?.error;
+  const eventStatus = event?.status;
 
   const createProposeGameEvent = async () => {
     setLoading(true);
@@ -89,7 +99,10 @@ function ConfirmStartGame() {
           challenger_message_5: fields.field_5,
           challenger_sig: signature.signature,
           challenger_nonce: messageToSign, /// todo - make this random
-          challenger_answer: inputs.challenger_answer === Answer.InTheWeeds ? '0field' : '1field',
+          challenger_answer:
+            inputs.challenger_answer === Answer.InTheWeeds
+              ? '0field'
+              : '1field',
           game_multisig_seed,
         };
         const createEventResponse = await requestCreateEvent({
@@ -106,7 +119,6 @@ function ConfirmStartGame() {
         } else {
           console.log('success', createEventResponse.eventId);
           setEventId(createEventResponse.eventId);
-          setStep(Step._05_GameStarted);
         }
       }
     }
@@ -114,12 +126,23 @@ function ConfirmStartGame() {
     setConfirmStep(ConfirmStep.Signing);
   };
 
+  useEffect(() => {
+    if (eventStatus === EventStatus.Settled) {
+      setStep(Step._05_GameStarted);
+    } else if (eventStatus === EventStatus.Failed) {
+      setLoading(false);
+      setError(event?.error);
+    }
+  }, [eventStatus]);
+
   const disabled = [
     inputs?.opponent,
     inputs?.wager_record,
     inputs?.challenger_wager_amount,
     inputs?.challenger_answer,
   ].includes(undefined);
+  const eventLoading =
+    event && [EventStatus.Creating, EventStatus.Pending].includes(event.status);
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
@@ -135,11 +158,13 @@ function ConfirmStartGame() {
         </div>
       )}
       <div className='flex flex-grow flex-col' />
+      {eventError && <p>Event Error: {eventError}</p>}
+      {error && <p>Error: {eventError}</p>}
       <div className='flex flex-col gap-4'>
         <Button
           onClick={createProposeGameEvent}
           color='green'
-          disabled={disabled || loading}
+          disabled={disabled || loading || eventLoading}
         >
           {!loading
             ? 'PROPOSE GAME'

@@ -4,7 +4,10 @@ import Button from '../../components/Button';
 import { useAcceptGameStore } from './store';
 
 function Confirmed(props: { done: () => void }) {
-  const [inputs, eventIdAccept] = useAcceptGameStore((state) => [state.inputsAcceptGame, state.eventIdAccept]);
+  const [inputs, eventIdAccept] = useAcceptGameStore((state) => [
+    state.inputsAcceptGame,
+    state.eventIdAccept,
+  ]);
 
   const game_address = inputs?.game_record?.owner;
 
@@ -12,7 +15,11 @@ function Confirmed(props: { done: () => void }) {
     <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
         {game_address && eventIdAccept && (
-          <GameInfo multisig={game_address} eventId={eventIdAccept} newGame={false} />
+          <GameInfo
+            multisig={game_address}
+            eventId={eventIdAccept}
+            newGame={false}
+          />
         )}
         <div className='flex flex-grow flex-col' />
         <div className='flex flex-col gap-4'>

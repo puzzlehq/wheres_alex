@@ -22,7 +22,9 @@ function HideAlex() {
           bg='bg-primary-blue'
         />
         <ChooseAlexLocation
-          setAnswer={(challenger_answer: Answer) => setInputs({ ...inputs, challenger_answer })}
+          setAnswer={(challenger_answer: Answer) =>
+            setInputs({ ...inputs, challenger_answer })
+          }
           answer={inputs?.challenger_answer as Answer}
           hiding={true}
         />

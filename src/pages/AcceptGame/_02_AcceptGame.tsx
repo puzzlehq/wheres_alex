@@ -3,27 +3,57 @@ import PageHeader from '../../components/PageHeader';
 import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import Button from '../../components/Button';
-import { requestCreateEvent, EventType } from '@puzzlehq/sdk';
-import { AcceptGameInputs, GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
+import { requestCreateEvent, EventType, EventStatus } from '@puzzlehq/sdk';
+import {
+  AcceptGameInputs,
+  GAME_FUNCTIONS,
+  GAME_PROGRAM_ID,
+  stepFees,
+} from '../../state/manager';
 import { useEffect, useState } from 'react';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
 import { useMsRecords } from '../../state/hooks/msRecords';
+import { useEventQuery } from '../../state/hooks/event';
 
 function AcceptGame() {
-  const [inputs, setInputs, setEventIdAccept, initializeAcceptGame, setStep] = useAcceptGameStore((state) => [
+  const [
+    inputs,
+    eventIdAccept,
+    setInputs,
+    setEventIdAccept,
+    initializeAcceptGame,
+    setStep,
+  ] = useAcceptGameStore((state) => [
     state.inputsAcceptGame,
+    state.eventIdAccept,
     state.setAcceptGameInputs,
     state.setEventIdAccept,
     state.initializeAcceptGame,
     state.setStep,
   ]);
-  const [currentGame] = useGameStore((state) => [state.currentGame])
+  const [currentGame] = useGameStore((state) => [state.currentGame]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { msPuzzleRecords, msGameRecords } = useMsRecords(currentGame?.gameNotification.recordData.game_multisig);
+  const { data } = useEventQuery(eventIdAccept);
+  const event = data?.event;
+  const eventError = data?.error;
+  const eventStatus = event?.status;
+
+  useEffect(() => {
+    if (eventStatus === EventStatus.Settled) {
+      setStep(Step._03_Confirmed);
+    } else if (eventStatus === EventStatus.Failed) {
+      setLoading(false);
+      setError(event?.error);
+    }
+  }, [eventStatus]);
+
+  const { msPuzzleRecords, msGameRecords } = useMsRecords(
+    currentGame?.gameNotification.recordData.game_multisig
+  );
 
   useEffect(() => {
     if (!currentGame || !msPuzzleRecords || !msGameRecords) return;
@@ -31,29 +61,33 @@ function AcceptGame() {
       (r) =>
         r.data.ix === '3u32.private' &&
         r.data.challenger.replace('.private', '') ===
-          currentGame.gameNotification.recordData.challenger_address && 
-            r.data.staker.replace('.private', '') === currentGame.gameNotification.recordData.challenger_address
+          currentGame.gameNotification.recordData.challenger_address &&
+        r.data.staker.replace('.private', '') ===
+          currentGame.gameNotification.recordData.challenger_address
     );
     const piece_claim_challenger = msPuzzleRecords?.find(
       (r) =>
         r.data.ix === '6u32.private' &&
         r.data.challenger.replace('.private', '') ===
           currentGame.gameNotification.recordData.challenger_address &&
-            r.data.claimer.replace('.private', '') === currentGame.gameNotification.recordData.challenger_address
+        r.data.claimer.replace('.private', '') ===
+          currentGame.gameNotification.recordData.challenger_address
     );
     const piece_stake_opponent = msPuzzleRecords?.find(
       (r) =>
         r.data.ix === '3u32.private' &&
         r.data.opponent.replace('.private', '') ===
           currentGame.gameNotification.recordData.opponent_address &&
-            r.data.staker.replace('.private', '') === currentGame.gameNotification.recordData.opponent_address
+        r.data.staker.replace('.private', '') ===
+          currentGame.gameNotification.recordData.opponent_address
     );
     const piece_claim_opponent = msPuzzleRecords?.find(
       (r) =>
         r.data.ix === '6u32.private' &&
         r.data.opponent.replace('.private', '') ===
           currentGame.gameNotification.recordData.opponent_address &&
-            r.data.claimer.replace('.private', '') === currentGame.gameNotification.recordData.opponent_address
+        r.data.claimer.replace('.private', '') ===
+          currentGame.gameNotification.recordData.opponent_address
     );
 
     console.log('msGameRecords[0]', msGameRecords[0]);
@@ -75,9 +109,12 @@ function AcceptGame() {
       piece_claim_challenger,
       piece_stake_opponent,
       piece_claim_opponent,
-      "70000u32"
+      '70000u32'
     );
-  }, [currentGame?.gameNotification.recordData.game_multisig, [msPuzzleRecords, msGameRecords].toString()])
+  }, [
+    currentGame?.gameNotification.recordData.game_multisig,
+    [msPuzzleRecords, msGameRecords].toString(),
+  ]);
 
   const createEvent = async () => {
     if (
@@ -85,26 +122,28 @@ function AcceptGame() {
       !inputs?.opponent_answer ||
       !inputs.piece_stake_challenger ||
       !inputs.piece_claim_challenger ||
-      !inputs.piece_stake_opponent || 
+      !inputs.piece_stake_opponent ||
       !inputs.piece_claim_opponent
-    ) return;
+    )
+      return;
     setLoading(true);
-    const acceptGameInputs: Omit<AcceptGameInputs, 'opponent_answer_readable'> = {
-      game_record: inputs.game_record,
-      opponent_answer: inputs.opponent_answer,
-      piece_stake_challenger: inputs.piece_stake_challenger,
-      piece_claim_challenger: inputs.piece_claim_challenger,
-      piece_stake_opponent: inputs.piece_stake_opponent,
-      piece_claim_opponent: inputs.piece_claim_opponent,
-      block_ht: '700000u32',
-    };
+    const acceptGameInputs: Omit<AcceptGameInputs, 'opponent_answer_readable'> =
+      {
+        game_record: inputs.game_record,
+        opponent_answer: inputs.opponent_answer,
+        piece_stake_challenger: inputs.piece_stake_challenger,
+        piece_claim_challenger: inputs.piece_claim_challenger,
+        piece_stake_opponent: inputs.piece_stake_opponent,
+        piece_claim_opponent: inputs.piece_claim_opponent,
+        block_ht: '741518u32',
+      };
     const response = await requestCreateEvent({
       type: EventType.Execute,
       programId: GAME_PROGRAM_ID,
       functionId: GAME_FUNCTIONS.accept_game,
       fee: stepFees.accept_game,
       inputs: Object.values(acceptGameInputs),
-      address: inputs.game_record.owner
+      address: inputs.game_record.owner,
     });
     if (response.error) {
       setError(response.error);
@@ -123,9 +162,12 @@ function AcceptGame() {
     !inputs?.opponent_answer ||
     !inputs.piece_stake_challenger ||
     !inputs.piece_claim_challenger ||
-    !inputs.piece_stake_opponent || 
+    !inputs.piece_stake_opponent ||
     !inputs.piece_claim_opponent ||
-    !answer
+    !answer;
+  const eventLoading =
+    eventStatus &&
+    [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
 
   return (
     <div className='flex h-full flex-col justify-between'>
@@ -148,10 +190,11 @@ function AcceptGame() {
           hiding={false}
         />
         <div className='flex flex-grow flex-col' />
-        {error && <p>error</p>}
+        {error && <p>Error: {error}</p>}
+        {eventError && <p>Event Error: {eventError}</p>}
         <Button
           onClick={createEvent}
-          disabled={disabled || loading}
+          disabled={disabled || loading || eventLoading}
           color='green'
         >
           NEXT

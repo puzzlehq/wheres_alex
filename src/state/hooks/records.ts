@@ -10,7 +10,7 @@ export const useGameRecords = () => {
       ],
       type: 'unspent',
     },
-    multisig: false
+    multisig: false,
   });
   const gameNotifications = records?.filter(
     (record) => record.programId === 'wheres_alex_v014.aleo'

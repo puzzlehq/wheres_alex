@@ -6,9 +6,7 @@ import { useGameRecords } from './records';
 export const useInitGame = () => {
   const { account } = useAccount();
 
-  const [setRecords] = useGameStore((state) => [
-    state.setRecords,
-  ]);
+  const [setRecords] = useGameStore((state) => [state.setRecords]);
 
   const { gameNotifications, puzzleRecords, utilRecords } = useGameRecords();
 
@@ -19,10 +17,11 @@ export const useInitGame = () => {
       utilRecords !== undefined &&
       account
     ) {
-      setRecords(
-        account.address,
-        { gameNotifications, puzzleRecords, utilRecords },
-      );
+      setRecords(account.address, {
+        gameNotifications,
+        puzzleRecords,
+        utilRecords,
+      });
     }
   }, [
     [gameNotifications, puzzleRecords, utilRecords].toString(),
