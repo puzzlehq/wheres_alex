@@ -10,12 +10,13 @@ import {
   parseGameRecord,
 } from './RecordTypes/wheres_alex_vxxx';
 import { useRenegeStore } from '../pages/Renege/store';
-import { useAcceptGameStore } from '../pages/AcceptGame/store';
+import { Step, useAcceptGameStore } from '../pages/AcceptGame/store';
 import { useNewGameStore } from '../pages/NewGame/store';
 import { useClaimPrizeLoseStore } from '../pages/ClaimPrize/Lose/store';
 import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store';
 import { useClaimPrizeNoShowStore } from '../pages/ClaimPrize/NoShow/store';
 import { useFinishGameStore } from '../pages/FinishGame/store';
+import _ from 'lodash'
 
 const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
   if (records.length > 0) {
@@ -162,7 +163,7 @@ export const useGameStore = create<GameStore>()(
           parsePuzzlePieces(puzzleRecords);
         set({ availableBalance, totalBalance, largestPiece });
 
-        const gameNotifications: GameNotification[] = records.gameNotifications
+        const allGameNotifications: GameNotification[] = records.gameNotifications
           .map((record) => {
             const gameNotification: GameNotification | undefined =
               parseGameRecord(record);
@@ -170,6 +171,18 @@ export const useGameStore = create<GameStore>()(
             return gameNotification;
           })
           .filter((record): record is GameNotification => record !== undefined);
+        
+        const gameNotificationsByGameAddress = _.groupBy(allGameNotifications, 'recordData.game_multisig');
+        const gameNotifications = _.values(gameNotificationsByGameAddress).map((notifications) => {
+          if (notifications.length === 1) return notifications[0];
+          else {
+            const reneged = notifications.find((n) => n.recordData.game_state === '0field');
+            if (reneged) return reneged;
+            const sorted = _.orderBy(notifications, 'recordData.game_state', 'desc');
+            return sorted[0]
+          }
+        })
+        console.log('gameNotifications', gameNotifications);
 
         const { yourTurn, theirTurn, finished } = gameNotifications.reduce<{
           yourTurn: Game[];
@@ -208,6 +221,14 @@ export const useGameStore = create<GameStore>()(
       },
       setCurrentGame: (game?: Game) => {
         set({ currentGame: game });
+        switch (game?.gameAction) {
+          case ('Submit Wager'):
+            useAcceptGameStore.getState().setStep(Step._01_SubmitWager);
+            break
+          case ('Accept'):
+            useAcceptGameStore.getState().setStep(Step._02_AcceptGame);
+            break   
+        }
       },
       close: () => {
         set({ currentGame: undefined });

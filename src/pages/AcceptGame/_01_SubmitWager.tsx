@@ -40,9 +40,9 @@ const SubmitWager = () => {
   const opponent = currentGame?.gameNotification.recordData.challenger_address;
   const wagerAmount =
     currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
-  const wagerRecord = largestPiece;
+  const opponent_wager_record = largestPiece;
 
-  const disabled = !opponent || !wagerAmount || !wagerRecord || !inputs;
+  console.log(currentGame)
 
   useEffect(() => {
     if (currentGame?.gameNotification.recordData.game_state === '2field') {
@@ -54,25 +54,31 @@ const SubmitWager = () => {
   const [error, setError] = useState<string | undefined>();
 
   const createEvent = async () => {
-    if (!inputs) return;
+    if (!inputs?.opponent_wager_record || !inputs.key_record || !inputs.game_req_notification) return;
     setLoading(true);
     const signature = await requestSignature({ message: messageToSign });
 
-    if (!signature.messageFields || !signature.signature) return;
+    if (!signature.messageFields || !signature.signature) {
+      setError('Signature or signature message fields not found');
+      return;
+    }
     const messageFields = Object(jsyaml.load(signature.messageFields));
 
     const newInputs: Partial<SubmitWagerInputs> = {
-      ...inputs,
-      message_1: messageFields.field_1,
-      message_2: messageFields.field_2,
-      message_3: messageFields.field_3,
-      message_4: messageFields.field_4,
-      message_5: messageFields.field_5,
-      sig: signature.signature,
+      opponent_wager_record: inputs.opponent_wager_record,
+      key_record: inputs.key_record,
+      game_req_notification: inputs.game_req_notification,
+      opponent_message_1: messageFields.field_1,
+      opponent_message_2: messageFields.field_2,
+      opponent_message_3: messageFields.field_3,
+      opponent_message_4: messageFields.field_4,
+      opponent_message_5: messageFields.field_5,
+      opponent_sig: signature.signature,
     };
     const game_multisig_seed = currentGame?.utilRecords?.[0].data.seed ?? '';
     console.log('game_multisig seed', game_multisig_seed);
-    await importSharedState(game_multisig_seed);
+    const { data } = await importSharedState(game_multisig_seed);
+    console.log(`Shared state imported: ${data?.address}`)
 
     setSubmitWagerInputs(newInputs);
     const response = await requestCreateEvent({
@@ -92,6 +98,8 @@ const SubmitWager = () => {
     setLoading(false);
   };
 
+  const disabled = !opponent || !wagerAmount || !opponent_wager_record || !inputs;
+
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
       <div className='flex w-full flex-col gap-2'>
@@ -102,6 +110,7 @@ const SubmitWager = () => {
       <Wager wagerAmount={Number(wagerAmount)} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
+        {error && <p>{error}</p>}
         <Button
           color='green'
           disabled={loading || disabled}

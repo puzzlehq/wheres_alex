@@ -5,22 +5,79 @@ import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import Button from '../../components/Button';
 import { requestCreateEvent, EventType } from '@puzzlehq/sdk';
 import { AcceptGameInputs, GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import { Step, useAcceptGameStore } from './store';
+import { useGameStore } from '../../state/store';
+import { useMsRecords } from '../../state/hooks/msRecords';
 
 function AcceptGame() {
-  const [inputs, setInputs, setEventIdAccept, setStep] = useAcceptGameStore((state) => [
+  const [inputs, setInputs, setEventIdAccept, initializeAcceptGame, setStep] = useAcceptGameStore((state) => [
     state.inputsAcceptGame,
     state.setAcceptGameInputs,
     state.setEventIdAccept,
+    state.initializeAcceptGame,
     state.setStep,
   ]);
-
-  const answer = inputs?.opponent_answer_readable;
-
+  const [currentGame] = useGameStore((state) => [state.currentGame])
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
+
+  const { msPuzzleRecords, msGameRecords } = useMsRecords(currentGame?.gameNotification.recordData.game_multisig);
+
+  useEffect(() => {
+    if (!currentGame || !msPuzzleRecords || !msGameRecords) return;
+    const piece_stake_challenger = msPuzzleRecords?.find(
+      (r) =>
+        r.data.ix === '3u32.private' &&
+        r.data.challenger.replace('.private', '') ===
+          currentGame.gameNotification.recordData.challenger_address && 
+            r.data.staker.replace('.private', '') === currentGame.gameNotification.recordData.challenger_address
+    );
+    const piece_claim_challenger = msPuzzleRecords?.find(
+      (r) =>
+        r.data.ix === '6u32.private' &&
+        r.data.challenger.replace('.private', '') ===
+          currentGame.gameNotification.recordData.challenger_address &&
+            r.data.claimer.replace('.private', '') === currentGame.gameNotification.recordData.challenger_address
+    );
+    const piece_stake_opponent = msPuzzleRecords?.find(
+      (r) =>
+        r.data.ix === '3u32.private' &&
+        r.data.opponent.replace('.private', '') ===
+          currentGame.gameNotification.recordData.opponent_address &&
+            r.data.staker.replace('.private', '') === currentGame.gameNotification.recordData.opponent_address
+    );
+    const piece_claim_opponent = msPuzzleRecords?.find(
+      (r) =>
+        r.data.ix === '6u32.private' &&
+        r.data.opponent.replace('.private', '') ===
+          currentGame.gameNotification.recordData.opponent_address &&
+            r.data.claimer.replace('.private', '') === currentGame.gameNotification.recordData.opponent_address
+    );
+
+    console.log('msGameRecords[0]', msGameRecords[0]);
+    console.log('piece_stake_challenger', piece_stake_challenger);
+    console.log('piece_claim_challenger', piece_claim_challenger);
+    console.log('piece_stake_opponent', piece_stake_opponent);
+    console.log('piece_claim_opponent', piece_claim_opponent);
+    if (
+      piece_claim_challenger === undefined ||
+      piece_claim_opponent === undefined ||
+      piece_stake_challenger === undefined ||
+      piece_stake_opponent === undefined ||
+      msGameRecords[0] === undefined
+    )
+      return;
+    initializeAcceptGame(
+      msGameRecords[0],
+      piece_stake_challenger,
+      piece_claim_challenger,
+      piece_stake_opponent,
+      piece_claim_opponent,
+      "70000u32"
+    );
+  }, [currentGame?.gameNotification.recordData.game_multisig, [msPuzzleRecords, msGameRecords].toString()])
 
   const createEvent = async () => {
     if (
@@ -59,6 +116,17 @@ function AcceptGame() {
     setLoading(false);
   };
 
+  const answer = inputs?.opponent_answer_readable;
+
+  const disabled =
+    !inputs?.game_record ||
+    !inputs?.opponent_answer ||
+    !inputs.piece_stake_challenger ||
+    !inputs.piece_claim_challenger ||
+    !inputs.piece_stake_opponent || 
+    !inputs.piece_claim_opponent ||
+    !answer
+
   return (
     <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center gap-6 px-5'>
@@ -83,7 +151,7 @@ function AcceptGame() {
         {error && <p>error</p>}
         <Button
           onClick={createEvent}
-          disabled={!answer || loading}
+          disabled={disabled || loading}
           color='green'
         >
           NEXT

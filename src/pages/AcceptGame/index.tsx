@@ -36,83 +36,27 @@ export const SubmitWagerButton = ({ game }: { game: Game }) => {
       size='sm'
       disabled={puzzleRecord === undefined}
     >
-      Accept
+      Accept 1
     </Button>
   );
 };
 
 export const AcceptGameButton = ({ game }: { game: Game }) => {
-  const [initializeAcceptGame] = useAcceptGameStore((state) => [
-    state.initializeAcceptGame,
-  ]);
-  const [currentGame, setCurrentGame] = useGameStore((state) => [
-    state.currentGame,
+  const [setCurrentGame] = useGameStore((state) => [
     state.setCurrentGame,
   ]);
   const navigate = useNavigate();
 
-  const msGameRecords = currentGame?.msRecords?.gameRecords;
-  const msPuzzleRecords = currentGame?.msRecords?.puzzleRecords;
-
-  console.log('currentGame', currentGame);
-
   return (
     <Button
       onClick={() => {
-        setCurrentGame(game);
-        if (msGameRecords?.length !== 1) return;
-        const piece_stake_challenger = msPuzzleRecords?.find(
-          (r) =>
-            r.data.ix === '3u32.private' &&
-            r.data.challenger.replace('.private', '') ===
-              game.gameNotification.recordData.challenger_address
-        );
-        const piece_claim_challenger = msPuzzleRecords?.find(
-          (r) =>
-            r.data.ix === '6u32.private' &&
-            r.data.challenger.replace('.private', '') ===
-              game.gameNotification.recordData.challenger_address
-        );
-        const piece_stake_opponent = msPuzzleRecords?.find(
-          (r) =>
-            r.data.ix === '3u32.private' &&
-            r.data.opponent.replace('.private', '') ===
-              game.gameNotification.recordData.opponent_address
-        );
-        const piece_claim_opponent = msPuzzleRecords?.find(
-          (r) =>
-            r.data.ix === '6u32.private' &&
-            r.data.opponent.replace('.private', '') ===
-              game.gameNotification.recordData.opponent_address
-        );
-
-        console.log('msGameRecords[0]', msGameRecords[0]);
-        console.log('piece_stake_challenger', piece_stake_challenger);
-        console.log('piece_claim_challenger', piece_claim_challenger);
-        console.log('piece_stake_opponent', piece_stake_opponent);
-        console.log('piece_claim_opponent', piece_claim_opponent);
-        if (
-          piece_claim_challenger === undefined ||
-          piece_claim_opponent === undefined ||
-          piece_stake_challenger === undefined ||
-          piece_stake_opponent === undefined
-        )
-          return;
-        initializeAcceptGame(
-          msGameRecords[0],
-          piece_stake_challenger,
-          piece_claim_challenger,
-          piece_stake_opponent,
-          piece_claim_opponent,
-          "70000u32"
-        );
         setCurrentGame(game);
         navigate('/accept-game');
       }}
       color='yellow'
       size='sm'
     >
-      Accept
+      Accept 2
     </Button>
   );
 };

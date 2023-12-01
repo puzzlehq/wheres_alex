@@ -19,7 +19,7 @@ type AcceptGameStore = {
   setAcceptGameInputs: (inputs: Partial<AcceptGameInputs>) => void;
   setStep: (step: Step) => void;
   initializeSubmitWager: (
-    wager_record: RecordWithPlaintext,
+    opponent_wager_record: RecordWithPlaintext,
     key_record: RecordWithPlaintext,
     game_req_notification: RecordWithPlaintext
   ) => void;
@@ -46,21 +46,23 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
       step: Step._01_SubmitWager,
       setSubmitWagerInputs: (inputsSubmitWager: Partial<SubmitWagerInputs>) => {
         set({ inputsSubmitWager });
+        set({ step: Step._01_SubmitWager });
       },
       setAcceptGameInputs: (inputsAcceptGame: Partial<AcceptGameInputs>) => {
         set({ inputsAcceptGame });
+        set({ step: Step._02_AcceptGame });
       },
       setStep: (step: Step) => {
         set({ step });
       },
       initializeSubmitWager: (
-        wager_record: RecordWithPlaintext,
+        opponent_wager_record: RecordWithPlaintext,
         key_record: RecordWithPlaintext,
         game_req_notification: RecordWithPlaintext
       ) => {
         set({
           inputsSubmitWager: {
-            wager_record,
+            opponent_wager_record,
             key_record,
             game_req_notification,
           },

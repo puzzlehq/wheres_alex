@@ -1,14 +1,28 @@
+import { useEffect } from 'react';
 import Button from '../../components/Button';
 import PageHeader from '../../components/PageHeader';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Wager from '../../components/Wager';
 import { useFinishGameStore } from './store';
+import { useMsRecords } from '../../state/hooks/msRecords';
+import { useGameStore } from '../../state/store';
 
 const Reveal = () => {
   const [wager, answer] = useFinishGameStore((state) => [
     state.wager,
     state.answer,
   ]);
+  const [currentGame] = useGameStore((state) => [state.currentGame])
+
+  const { msPuzzleRecords, msGameRecords, msUtilRecords } = useMsRecords(currentGame?.gameNotification.recordData.game_multisig);
+
+  useEffect(() => {
+    if (!currentGame || !msPuzzleRecords || !msGameRecords || msUtilRecords) return;
+    const challenger_answer_record = currentGame.utilRecords.find((r) => 
+      r.data.owner.replace('.private', '') === currentGame.gameNotification.recordData.challenger_address
+    )
+    // const joint_piece_state = currentGame.
+  },[currentGame?.gameNotification.recordData.game_multisig, [msPuzzleRecords, msGameRecords].toString()])
 
   return (
     <div className='flex h-full w-full flex-col gap-4'>

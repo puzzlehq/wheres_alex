@@ -4,21 +4,22 @@ export const useGameRecords = () => {
   const { records } = useRecords({
     filter: {
       programIds: [
-        'wheres_alex_v013.aleo',
-        'puzzle_pieces_v012.aleo',
-        'multiparty_pvp_utils_v012.aleo',
+        'wheres_alex_v014.aleo',
+        'puzzle_pieces_v014.aleo',
+        'multiparty_pvp_utils_v014.aleo',
       ],
       type: 'unspent',
     },
+    multisig: false
   });
   const gameNotifications = records?.filter(
-    (record) => record.programId === 'wheres_alex_v013.aleo'
+    (record) => record.programId === 'wheres_alex_v014.aleo'
   );
   const puzzleRecords = records?.filter(
-    (record) => record.programId === 'puzzle_pieces_v012.aleo'
+    (record) => record.programId === 'puzzle_pieces_v014.aleo'
   );
   const utilRecords = records?.filter(
-    (record) => record.programId === 'multiparty_pvp_utils_v012.aleo'
+    (record) => record.programId === 'multiparty_pvp_utils_v014.aleo'
   );
 
   console.log([gameNotifications, puzzleRecords, utilRecords]);
