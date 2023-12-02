@@ -7,7 +7,7 @@ export const GAME_FUNCTIONS = {
   propose_game: 'propose_game',
   accept_game: 'accept_game',
   submit_wager: 'submit_wager',
-  reveal_answer: 'reveal_answer',
+  reveal_answer: 'reveal_answer_game',
   finish_game: 'finish_game',
 };
 
@@ -65,12 +65,13 @@ export type AcceptGameInputs = {
 };
 
 export type RevealAnswerInputs = {
+  reveal_answer_notification_record: RecordWithPlaintext;
+  challenger_answer_record: RecordWithPlaintext;
+  joint_piece_stake: RecordWithPlaintext;
+  challenger_claim_signature: RecordWithPlaintext;
+};
+
+export type ClaimPrizeInputs = {
   AnswerRecord: RecordWithPlaintext;
   PieceStakeOutcome: string;
-};
-export type FinishGameInputs = {
-  GameStateRevealedFinish: string;
-  GameStateAwaitFinish: string;
-  PieceJointStake: RecordWithPlaintext;
-  PieceTimeClaim: RecordWithPlaintext;
 };

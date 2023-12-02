@@ -17,6 +17,9 @@ function Home() {
   const { account } = useAccount();
   const navigate = useNavigate();
 
+  console.log('yourTurn', yourTurn)
+  console.log('theirTurn', theirTurn)
+
   return (
     <div className='flex h-full flex-col justify-between '>
       <div className='flex w-full flex-col gap-4 px-1'>

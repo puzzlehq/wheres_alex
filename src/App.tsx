@@ -10,31 +10,40 @@ import WinRoute from './pages/ClaimPrize/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
 import Reveal from './pages/FinishGame/_01_Reveal.js';
 import { useInitGame } from './state/hooks/initGame.js';
+import {
+
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
 
 function App() {
   const { account } = useAccount();
+  const queryClient = new QueryClient()
+
   useInitGame();
 
   return (
     <div className='App flex min-h-screen justify-center bg-neutral-900'>
-      <Router>
-        <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
-          {account && account?.address && <AppHeader />}
-          <div className='h-full w-full max-w-screen-sm p-4'>
-            <Routes>
-              <Route path='/new-game' element={<NewGame />} />
-              <Route path='/accept-game' element={<AcceptGame />} />
-              <Route path='/claim-prize'>
-                <Route path='win' element={<WinRoute />} />
-                <Route path='lose' element={<LoseRoute />} />
-              </Route>
-              <Route path='/renege-game' element={<RenegeGame />} />
-              <Route path='/finish-game' element={<Reveal />} />
-              <Route path='/' element={account ? <Home /> : <Welcome />} />
-            </Routes>
+      <QueryClientProvider client={queryClient}>
+        <Router>
+          <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
+            {account && account?.address && <AppHeader />}
+            <div className='h-full w-full max-w-screen-sm p-4'>
+              <Routes>
+                <Route path='/new-game' element={<NewGame />} />
+                <Route path='/accept-game' element={<AcceptGame />} />
+                <Route path='/claim-prize'>
+                  <Route path='win' element={<WinRoute />} />
+                  <Route path='lose' element={<LoseRoute />} />
+                </Route>
+                <Route path='/renege-game' element={<RenegeGame />} />
+                <Route path='/finish-game' element={<Reveal />} />
+                <Route path='/' element={account ? <Home /> : <Welcome />} />
+              </Routes>
+            </div>
           </div>
-        </div>
-      </Router>
+        </Router>
+      </QueryClientProvider>
     </div>
   );
 }

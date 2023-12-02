@@ -1,8 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store.js';
-import { useFinishGameStore } from '../pages/FinishGame/store.js';
 import Button from './Button.js';
-import { Answer } from '../state/RecordTypes/wheres_alex_vxxx.js';
 import { Game, useGameStore } from '../state/store.js';
 import { shortenAddress } from '@puzzlehq/sdk';
 import {
@@ -11,21 +8,12 @@ import {
 } from '../pages/AcceptGame/index.js';
 
 function YourTurnItem({ game }: { game: Game }) {
-  const multisig = game.gameNotification.recordData.game_multisig;
   const opponent = game.gameNotification.recordData.opponent_address;
   const wager = game.gameNotification.recordData.total_pot / 2;
 
   const navigate = useNavigate();
 
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
-
-  const [initializeFinishGame] = useFinishGameStore((state) => [
-    state.initialize,
-  ]);
-
-  const [initializeClaimWin] = useClaimPrizeWinStore((state) => [
-    state.initialize,
-  ]);
 
   console.log(game);
 
@@ -39,7 +27,6 @@ function YourTurnItem({ game }: { game: Game }) {
         return (
           <Button
             onClick={() => {
-              initializeFinishGame(opponent, Number(wager), Answer.InTheWeeds);
               setCurrentGame(game);
               navigate('/finish-game');
             }}
@@ -49,18 +36,30 @@ function YourTurnItem({ game }: { game: Game }) {
             Reveal
           </Button>
         );
+      case 'Lose': 
+        return (
+          <Button
+            onClick={() => {
+              setCurrentGame(game);
+              navigate('/claim-prize/lose');
+            }}
+            size='sm'
+            color='yellow'
+          >
+            View Result
+          </Button>
+        )
       case 'Claim':
         return (
           <Button
             onClick={() => {
-              initializeClaimWin(opponent, Number(wager), Answer.InTheWeeds);
               setCurrentGame(game);
               navigate('/claim-prize/win');
             }}
             color='yellow'
             size='sm'
           >
-            Claim
+            View Result
           </Button>
         );
     }

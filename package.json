@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@puzzlehq/sdk": "../puzzle-sdk",
+    "@tanstack/react-query": "^5.12.1",
     "html5-qrcode": "^2.3.8",
     "immer": "^10.0.3",
     "js-yaml": "^4.1.0",
@@ -19,7 +20,6 @@
     "prettier": "^3.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-query": "^3.39.3",
     "react-router-dom": "^6.17.0",
     "zod": "3.21.1",
     "zustand": "^4.4.6"

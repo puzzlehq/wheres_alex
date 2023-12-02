@@ -32,15 +32,16 @@ enum ConfirmStep {
 }
 
 function ConfirmStartGame() {
-  const [inputs, eventId, setInputs, setStep, setEventId] = useNewGameStore(
+  const [inputs, eventId, setInputs, setEventId, setStep] = useNewGameStore(
     (state) => [
       state.inputs,
       state.eventId,
       state.setInputs,
-      state.setStep,
       state.setEventId,
+      state.setStep,
     ]
   );
+  console.log([inputs, eventId, setInputs, setEventId, setStep] )
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
   const opponent = inputs?.opponent ?? '';
@@ -52,10 +53,12 @@ function ConfirmStartGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { data } = useEventQuery(eventId);
-  const event = data?.event;
-  const eventError = data?.error;
+  const { data, error: _error } = useEventQuery(eventId);
+  const event = data;
+  const eventError = _error?.message;
   const eventStatus = event?.status;
+
+  console.log('event', event);
 
   const createProposeGameEvent = async () => {
     setLoading(true);
@@ -122,13 +125,13 @@ function ConfirmStartGame() {
         }
       }
     }
-    setLoading(false);
     setConfirmStep(ConfirmStep.Signing);
   };
 
   useEffect(() => {
     if (eventStatus === EventStatus.Settled) {
       setStep(Step._05_GameStarted);
+      setLoading(false);
     } else if (eventStatus === EventStatus.Failed) {
       setLoading(false);
       setError(event?.error);
@@ -142,7 +145,7 @@ function ConfirmStartGame() {
     inputs?.challenger_answer,
   ].includes(undefined);
   const eventLoading =
-    event && [EventStatus.Creating, EventStatus.Pending].includes(event.status);
+    event && [EventStatus.Creating, EventStatus.Pending].includes(event?.status);
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
@@ -159,7 +162,7 @@ function ConfirmStartGame() {
       )}
       <div className='flex flex-grow flex-col' />
       {eventError && <p>Event Error: {eventError}</p>}
-      {error && <p>Error: {eventError}</p>}
+      {error && <p>Error: {error}</p>}
       <div className='flex flex-col gap-4'>
         <Button
           onClick={createProposeGameEvent}
@@ -170,9 +173,9 @@ function ConfirmStartGame() {
             ? 'PROPOSE GAME'
             : confirmStep === ConfirmStep.Signing
             ? 'SIGN MESSAGE'
-            : 'CREATE EVENT'}
+            : eventLoading ? event.status.toUpperCase() : 'CREATE EVENT'}
         </Button>
-        <Button onClick={() => setStep(Step._05_GameStarted)} color='gray'>
+        <Button onClick={() => setStep(Step._03_StartWager)} disabled={loading || eventLoading} color='gray'>
           BACK
         </Button>
       </div>

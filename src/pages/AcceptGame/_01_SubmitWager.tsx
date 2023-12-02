@@ -45,10 +45,13 @@ const SubmitWager = () => {
   ]);
   const navigate = useNavigate();
 
-  const { data } = useEventQuery(eventIdSubmit);
-  const event = data?.event;
-  const eventError = data?.error;
+  const { data, error: _error } = useEventQuery(eventIdSubmit);
+  const event = data;
+  const eventError = _error?.message;
   const eventStatus = event?.status;
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
     if (eventStatus === EventStatus.Settled) {
@@ -58,9 +61,6 @@ const SubmitWager = () => {
       setError(event?.error);
     }
   }, [eventStatus]);
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
 
   const createEvent = async () => {
     if (

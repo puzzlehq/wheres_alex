@@ -37,9 +37,9 @@ function AcceptGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { data } = useEventQuery(eventIdAccept);
-  const event = data?.event;
-  const eventError = data?.error;
+  const { data, error: _error } = useEventQuery(eventIdAccept);
+  const event = data;
+  const eventError = _error?.message;
   const eventStatus = event?.status;
 
   useEffect(() => {
@@ -109,7 +109,7 @@ function AcceptGame() {
       piece_claim_challenger,
       piece_stake_opponent,
       piece_claim_opponent,
-      '70000u32'
+      '748004u32'
     );
   }, [
     currentGame?.gameNotification.recordData.game_multisig,
@@ -135,7 +135,7 @@ function AcceptGame() {
         piece_claim_challenger: inputs.piece_claim_challenger,
         piece_stake_opponent: inputs.piece_stake_opponent,
         piece_claim_opponent: inputs.piece_claim_opponent,
-        block_ht: '741518u32',
+        block_ht: '748004u32',
       };
     const response = await requestCreateEvent({
       type: EventType.Execute,

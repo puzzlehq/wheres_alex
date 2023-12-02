@@ -1,16 +1,20 @@
 import { getEvent } from '@puzzlehq/sdk';
-import { useQuery } from 'react-query';
+import { useQuery } from '@tanstack/react-query';
 
 export const useEventQuery = (id: string | undefined) => {
-  return useQuery(
-    ['event', id],
-    async () => {
+  return useQuery({
+    queryKey: ['event', id],
+    queryFn: async () => {
       if (!id) return;
-      return await getEvent(id);
+      const result = await getEvent(id);
+      if (result.error) {
+        throw new Error(result.error);
+      } else if (result.event) {
+        return result.event
+      }
     },
-    {
-      enabled: !!id, // Only run the query if `id` is not null
-      refetchInterval: 5000, // Refetch the data every 5 seconds
-    }
-  );
+    refetchInterval: 5_000, // Refetch every 5 seconds
+    staleTime: 10_000,
+    refetchIntervalInBackground: true,
+  });
 };

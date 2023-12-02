@@ -2,17 +2,16 @@ import PageHeader from '../../../components/PageHeader';
 import SelectedAlexLocation from '../../../components/SelectedAlexLocation';
 import Wager from '../../../components/Wager';
 import Button from '../../../components/Button';
-import { Step, useClaimPrizeLoseStore } from './store';
+import { useClaimPrizeLoseStore } from './store';
 import { useNavigate } from 'react-router-dom';
 
 const Lose = () => {
   const navigate = useNavigate();
 
-  const [answer, wager, setStep, claim] = useClaimPrizeLoseStore((state) => [
+  const [answer, wager, setStep] = useClaimPrizeLoseStore((state) => [
     state.answer,
     state.wager,
     state.setStep,
-    state.claimLosePrize,
   ]);
 
   return (
@@ -26,17 +25,8 @@ const Lose = () => {
         </div>
       </div>
       <div className='flex flex-grow flex-col' />
-      <Button
-        color='green'
-        onClick={async () => {
-          await claim();
-          setStep(Step._02_GameOver);
-        }}
-      >
-        CLAIM CONSOLATION PRIZE
-      </Button>
-      <Button color='pink' onClick={() => navigate('/')}>
-        DOUBLE OR NOTHING
+      <Button onClick={() => navigate('/')} color='transparent'>
+        GO HOME
       </Button>
     </div>
   );

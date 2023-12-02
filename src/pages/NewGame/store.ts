@@ -32,6 +32,8 @@ export const useNewGameStore = create<NewGameStore>()(
           inputs: {
             challenger,
           },
+          eventId: undefined,
+          step: Step._01_NewGame,
         });
       },
       setInputs: (inputs: Partial<ProposeGameInputs>) => {
@@ -46,6 +48,7 @@ export const useNewGameStore = create<NewGameStore>()(
       close: () => {
         set({
           inputs: undefined,
+          eventId: undefined,
           step: Step._01_NewGame,
         });
       },

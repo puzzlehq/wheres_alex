@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
+import { RecordWithPlaintext } from '@puzzlehq/sdk';
+import { RevealAnswerInputs } from '../../state/manager';
 
 export enum Step {
   _01_Finish,
@@ -8,35 +9,54 @@ export enum Step {
 }
 
 type FinishGameStore = {
+  inputsRevealAnswer?: Partial<RevealAnswerInputs>;
+  eventId?: string;
   step: Step;
-  opponent?: string;
-  wager?: number;
-  answer?: Answer;
   setStep: (step: Step) => void;
-  initialize: (opponent: string, wager: number, answer: Answer) => void;
-  finish: () => Promise<void>;
+  initialize: (
+    reveal_answer_notification_record: RecordWithPlaintext,
+    challenger_answer_record: RecordWithPlaintext,
+    joint_piece_stake: RecordWithPlaintext,
+    challenger_claim_signature: RecordWithPlaintext
+  ) => void;
+  setEventId: (eventId?: string) => void;
   close: () => void;
 };
 
 export const useFinishGameStore = create<FinishGameStore>()(
   persist(
     (set) => ({
+      inputsRevealAnswer: undefined,
+      eventId: undefined,
       step: Step._01_Finish,
-      opponent: undefined,
-      wager: undefined,
-      answer: undefined,
       setStep: (step: Step) => {
         set({ step });
       },
-      initialize: (opponent: string, wager: number, answer: Answer) => {
-        set({ opponent, answer, wager, step: Step._01_Finish });
+      initialize: (
+        reveal_answer_notification_record: RecordWithPlaintext,
+        challenger_answer_record: RecordWithPlaintext,
+        joint_piece_stake: RecordWithPlaintext,
+        challenger_claim_signature: RecordWithPlaintext
+      ) => {
+        set({
+          inputsRevealAnswer: {
+            reveal_answer_notification_record,
+            challenger_answer_record,
+            joint_piece_stake,
+            challenger_claim_signature
+          },
+          step: Step._01_Finish,
+          eventId: undefined,
+        });
       },
-      finish: async () => {},
+      setEventId: (eventId) => {
+        set({ eventId });
+      },
       close: () => {
         set({
+          inputsRevealAnswer: undefined,
           step: Step._01_Finish,
-          opponent: '',
-          wager: 0,
+          eventId: undefined,
         });
       },
     }),
