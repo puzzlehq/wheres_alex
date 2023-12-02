@@ -41,7 +41,6 @@ function ConfirmStartGame() {
       state.setStep,
     ]
   );
-  console.log([inputs, eventId, setInputs, setEventId, setStep] )
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
 
   const opponent = inputs?.opponent ?? '';
@@ -55,14 +54,19 @@ function ConfirmStartGame() {
 
   const { data, error: _error } = useEventQuery(eventId);
   const event = data;
-  const eventError = _error?.message;
   const eventStatus = event?.status;
+
+  useEffect(() => {
+    const eventError = _error?.message;
+    eventError && setError(eventError);
+  }, [_error])
 
   console.log('event', event);
 
   const createProposeGameEvent = async () => {
     setLoading(true);
     setConfirmStep(ConfirmStep.Signing);
+    setError(undefined);
     const sharedStateResponse = await createSharedState();
     if (sharedStateResponse.error) {
       setError(sharedStateResponse.error);
@@ -146,6 +150,24 @@ function ConfirmStartGame() {
   ].includes(undefined);
   const eventLoading =
     event && [EventStatus.Creating, EventStatus.Pending].includes(event?.status);
+  
+  let buttonText = 'CREATE EVENT';
+  switch (true) { 
+    case (!loading):
+      break;
+    case (event?.status === EventStatus.Creating):
+      buttonText = 'CREATING EVENT...'
+      break;
+    case (event?.status === EventStatus.Pending):
+      buttonText = 'EVENT PENDING...';
+      break
+    case (confirmStep === ConfirmStep.Signing):
+      buttonText = 'REQUESTING SIGNATURE...';
+      break;
+    case (confirmStep === ConfirmStep.RequestingEvent):
+      buttonText = 'REQUESTING EVENT...';
+      break;
+  }
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
@@ -161,7 +183,6 @@ function ConfirmStartGame() {
         </div>
       )}
       <div className='flex flex-grow flex-col' />
-      {eventError && <p>Event Error: {eventError}</p>}
       {error && <p>Error: {error}</p>}
       <div className='flex flex-col gap-4'>
         <Button
@@ -169,11 +190,7 @@ function ConfirmStartGame() {
           color='green'
           disabled={disabled || loading || eventLoading}
         >
-          {!loading
-            ? 'PROPOSE GAME'
-            : confirmStep === ConfirmStep.Signing
-            ? 'SIGN MESSAGE'
-            : eventLoading ? event.status.toUpperCase() : 'CREATE EVENT'}
+          {buttonText}
         </Button>
         <Button onClick={() => setStep(Step._03_StartWager)} disabled={loading || eventLoading} color='gray'>
           BACK

@@ -222,12 +222,15 @@ export type GameState =
 
 export const getGameState = (
   game: GameNotification,
-  user: string
+  user: string,
+  answerRecord: RecordWithPlaintext,
 ): GameState => {
   const challenger_or_opponent =
     user === game.recordData.challenger_address ? 'challenger' : 'opponent';
   const isWinner =
     'winner' in game.recordData && game.recordData.winner === user;
+  
+  
 
   switch (game.recordData.game_state) {
     case '0field':

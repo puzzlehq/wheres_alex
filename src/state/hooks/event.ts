@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 export const useEventQuery = (id: string | undefined) => {
   return useQuery({
-    queryKey: ['event', id],
+    queryKey: ['event', id ?? ''],
     queryFn: async () => {
       if (!id) return;
       const result = await getEvent(id);
@@ -16,5 +16,6 @@ export const useEventQuery = (id: string | undefined) => {
     refetchInterval: 5_000, // Refetch every 5 seconds
     staleTime: 10_000,
     refetchIntervalInBackground: true,
+    enabled: id !== undefined
   });
 };

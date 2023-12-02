@@ -2,7 +2,7 @@ import alexHeadImg from '../assets/alex_head.png';
 
 function GameInfo(props: {
   multisig: string;
-  eventId: string;
+  transactionId: string;
   newGame: boolean;
 }) {
   return (
@@ -18,6 +18,9 @@ function GameInfo(props: {
         </h1>
         <p className='mt-1.5 max-w-[295px] self-center break-words text-center text-base font-extrabold leading-4 text-primary-black'>
           GAME ID: {props.multisig}
+        </p>
+        <p className='mt-1.5 max-w-[295px] self-center break-words text-center text-base font-extrabold leading-4 text-primary-black'>
+          Aleo Transaction ID: {props.transactionId}
         </p>
       </div>
     </section>
