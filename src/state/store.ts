@@ -12,9 +12,8 @@ import {
 import { useRenegeStore } from '../pages/Renege/store';
 import { Step, useAcceptGameStore } from '../pages/AcceptGame/store';
 import { useNewGameStore } from '../pages/NewGame/store';
-import { useClaimPrizeLoseStore } from '../pages/ClaimPrize/Lose/store';
-import { useClaimPrizeWinStore } from '../pages/ClaimPrize/Win/store';
-import { useFinishGameStore } from '../pages/FinishGame/store';
+import { useClaimPrizeWinStore } from '../pages/FinishGame/Win/store';
+import { useFinishGameStore } from '../pages/RevealAnswer/store';
 import _ from 'lodash';
 
 const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
@@ -126,15 +125,14 @@ const validStates = {
   yourTurn: new Set([
     'challenger:3', // challenger to reveal answer
     'challenger:4:win', // challenger to claim prize
-    'opponent:4:win', // opponent to claim prize
+    'winner:4', // challenger or opponent to claim prize
     'opponent:1', // opponent to submit wager
     'opponent:2', // opponent to accept game
   ]),
   theirTurn: new Set([
     'challenger:1', // challenger to ping opponent to submit wager
     'challenger:2', // challenger to ping opponent to accept game
-    'challenger:4:lose', // remind opponent to accept funds
-    'opponent:4:lose', // remind challenger to accept funds
+    'loser:4', // remind challenger or opponent to accept funds
     'opponent:3', // opponent to ping challenger to reveal answer
   ]),
   finished: new Set([
@@ -256,7 +254,6 @@ export const useGameStore = create<GameStore>()(
         useNewGameStore.getState().close();
         useAcceptGameStore.getState().close();
         useRenegeStore.getState().close();
-        useClaimPrizeLoseStore.getState().close();
         useClaimPrizeWinStore.getState().close();
         useFinishGameStore.getState().close();
         set({ currentGame: undefined });

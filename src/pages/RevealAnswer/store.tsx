@@ -5,7 +5,7 @@ import { RevealAnswerInputs } from '../../state/manager';
 
 export enum Step {
   _01_Finish,
-  _02_Await,
+  _02_Confirmed,
 }
 
 type FinishGameStore = {

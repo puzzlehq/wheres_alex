@@ -3,7 +3,13 @@ import PageHeader from '../../components/PageHeader';
 import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import Button from '../../components/Button';
-import { requestCreateEvent, EventType, EventStatus, useBalance, shortenAddress } from '@puzzlehq/sdk';
+import {
+  requestCreateEvent,
+  EventType,
+  EventStatus,
+  useBalance,
+  shortenAddress,
+} from '@puzzlehq/sdk';
 import {
   AcceptGameInputs,
   GAME_FUNCTIONS,
@@ -37,10 +43,16 @@ function AcceptGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
+  const msAddress = currentGame?.gameNotification.recordData.game_multisig;
+  const { msPuzzleRecords, msGameRecords } = useMsRecords(msAddress);
 
-  const { data, error: _error } = useEventQuery({id: eventIdAccept});
+  const { data, error: _error } = useEventQuery({
+    id: eventIdAccept,
+    address: msAddress,
+  });
   const event = data;
   const eventStatus = event?.status;
+  console.log(event);
 
   useEffect(() => {
     const eventError = _error?.message;
@@ -58,13 +70,11 @@ function AcceptGame() {
     }
   }, [eventStatus]);
 
-  const msAddress = currentGame?.gameNotification.recordData.game_multisig;
-  const { msPuzzleRecords, msGameRecords } = useMsRecords(
-    msAddress
-  );
-
-  const { balances: msBalances } = useBalance({ address: msAddress ?? 'placeholder_todo_remove' });
-  const msPublicBalance = msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
+  const { balances: msBalances } = useBalance({
+    address: msAddress ?? 'placeholder_todo_remove',
+  });
+  const msPublicBalance =
+    msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
 
   useEffect(() => {
     if (!currentGame || !msPuzzleRecords || !msGameRecords) return;
@@ -76,7 +86,7 @@ function AcceptGame() {
         r.data.staker.replace('.private', '') ===
           currentGame.gameNotification.recordData.challenger_address
     );
-    const piece_claim_challenger = msPuzzleRecords?.find(
+    const piece_claim_challenger = msPuzzleRecords.find(
       (r) =>
         r.data.ix === '6u32.private' &&
         r.data.challenger.replace('.private', '') ===
@@ -84,7 +94,7 @@ function AcceptGame() {
         r.data.claimer.replace('.private', '') ===
           currentGame.gameNotification.recordData.challenger_address
     );
-    const piece_stake_opponent = msPuzzleRecords?.find(
+    const piece_stake_opponent = msPuzzleRecords.find(
       (r) =>
         r.data.ix === '3u32.private' &&
         r.data.opponent.replace('.private', '') ===
@@ -92,7 +102,7 @@ function AcceptGame() {
         r.data.staker.replace('.private', '') ===
           currentGame.gameNotification.recordData.opponent_address
     );
-    const piece_claim_opponent = msPuzzleRecords?.find(
+    const piece_claim_opponent = msPuzzleRecords.find(
       (r) =>
         r.data.ix === '6u32.private' &&
         r.data.opponent.replace('.private', '') ===
@@ -139,31 +149,42 @@ function AcceptGame() {
       return;
     setLoading(true);
     setError(undefined);
-    const acceptGameInputs: Omit<AcceptGameInputs, 'opponent_answer_readable'> =
-      {
+    try {
+      const response_block_ht = await fetch(
+        'https://jigsaw-dev.puzzle.online/api/aleoapi/latest/height'
+      );
+      const block_ht = Number(await response_block_ht.json());
+      const acceptGameInputs: Omit<
+        AcceptGameInputs,
+        'opponent_answer_readable'
+      > = {
         game_record: inputs.game_record,
         opponent_answer: inputs.opponent_answer,
         piece_stake_challenger: inputs.piece_stake_challenger,
         piece_claim_challenger: inputs.piece_claim_challenger,
         piece_stake_opponent: inputs.piece_stake_opponent,
         piece_claim_opponent: inputs.piece_claim_opponent,
-        block_ht: '769343u32',
+        block_ht: block_ht.toString() + 'u32',
       };
-    const response = await requestCreateEvent({
-      type: EventType.Execute,
-      programId: GAME_PROGRAM_ID,
-      functionId: GAME_FUNCTIONS.accept_game,
-      fee: stepFees.accept_game,
-      inputs: Object.values(acceptGameInputs),
-      address: inputs.game_record.owner,
-    });
-    if (response.error) {
-      setError(response.error);
-    } else if (!response.eventId) {
-      setError('No eventId found!');
-    } else {
-      console.log('success', response.eventId);
-      setEventIdAccept(response.eventId);
+      const response = await requestCreateEvent({
+        type: EventType.Execute,
+        programId: GAME_PROGRAM_ID,
+        functionId: GAME_FUNCTIONS.accept_game,
+        fee: stepFees.accept_game,
+        inputs: Object.values(acceptGameInputs),
+        address: inputs.game_record.owner,
+      });
+      if (response.error) {
+        setError(response.error);
+      } else if (!response.eventId) {
+        setError('No eventId found!');
+      } else {
+        console.log('success', response.eventId);
+        setEventIdAccept(response.eventId);
+      }
+    } catch (e) {
+      setError((e as Error).message);
+      setLoading(false);
     }
   };
 
@@ -182,7 +203,6 @@ function AcceptGame() {
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
 
   const [buttonText, setButtonText] = useState('CREATE EVENT');
-
   useEffect(() => {
     if (!loading) {
       setButtonText('CREATE EVENT');
@@ -216,7 +236,12 @@ function AcceptGame() {
         <div className='flex flex-grow flex-col' />
         {error && <p>Error: {error}</p>}
         {<p>Game multisig public balance: {msPublicBalance} public credits</p>}
-        {msPublicBalance < 0.5 && <p>{shortenAddress(msAddress ?? '') ?? 'Game multisig'} needs at least 0.5 public credits! </p>}
+        {msPublicBalance < 0.5 && (
+          <p>
+            {shortenAddress(msAddress ?? '') ?? 'Game multisig'} needs at least
+            0.5 public credits!{' '}
+          </p>
+        )}
         <Button
           onClick={createEvent}
           disabled={disabled || loading || eventLoading}

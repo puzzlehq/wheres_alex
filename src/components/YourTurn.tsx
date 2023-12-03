@@ -8,11 +8,14 @@ import {
 } from '../pages/AcceptGame/index.js';
 
 function YourTurnItem({ game }: { game: Game }) {
-  const opponent = game.gameNotification.recordData.opponent_address;
+  const user = game.gameNotification.recordData.owner;
+  const opponent_address = game.gameNotification.recordData.opponent_address;
+  const challenger_address =
+    game.gameNotification.recordData.challenger_address;
+  const vs = user === opponent_address ? challenger_address : opponent_address;
   const wager = game.gameNotification.recordData.total_pot / 2;
 
   const navigate = useNavigate();
-
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
 
   const renderActionButton = () => {
@@ -44,7 +47,7 @@ function YourTurnItem({ game }: { game: Game }) {
             size='sm'
             color='yellow'
           >
-            View Result
+            See Answer
           </Button>
         );
       case 'Claim':
@@ -66,7 +69,7 @@ function YourTurnItem({ game }: { game: Game }) {
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {shortenAddress(opponent)}
+        {shortenAddress(vs)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
         {wager} pieces

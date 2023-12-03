@@ -54,7 +54,7 @@ const SubmitWager = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { data, error: _error } = useEventQuery({id: eventIdSubmit});
+  const { data, error: _error } = useEventQuery({ id: eventIdSubmit });
   const event = data;
   const eventStatus = event?.status;
 

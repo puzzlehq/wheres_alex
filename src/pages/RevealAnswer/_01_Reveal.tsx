@@ -5,18 +5,23 @@ import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Wager from '../../components/Wager';
 import { useMsRecords } from '../../hooks/msRecords';
 import { useGameStore } from '../../state/store';
-import { useFinishGameStore } from './store';
+import { Step, useFinishGameStore } from './store';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import Opponent from '../../components/Opponent';
-import { EventType, requestCreateEvent } from '@puzzlehq/sdk';
+import { EventStatus, EventType, requestCreateEvent } from '@puzzlehq/sdk';
 import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
+import { useEventQuery } from '../../hooks/event';
 
 const Reveal = () => {
-  const [inputs, initialize, setEventId] = useFinishGameStore((state) => [
-    state.inputsRevealAnswer,
-    state.initialize,
-    state.setEventId,
-  ]);
+  const [inputs, eventId, initialize, setEventId, setStep] = useFinishGameStore(
+    (state) => [
+      state.inputsRevealAnswer,
+      state.eventId,
+      state.initialize,
+      state.setEventId,
+      state.setStep,
+    ]
+  );
   const [currentGame] = useGameStore((state) => [
     state.currentGame,
     state.puzzleRecords,
@@ -25,6 +30,29 @@ const Reveal = () => {
   const { msPuzzleRecords, msGameRecords } = useMsRecords(
     currentGame?.gameNotification.recordData.game_multisig
   );
+
+  const { data, error: _error } = useEventQuery({ id: eventId });
+  const event = data;
+  const eventStatus = event?.status;
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | undefined>();
+
+  useEffect(() => {
+    const eventError = _error?.message;
+    eventError && setError(eventError);
+  }, [_error]);
+
+  useEffect(() => {
+    if (eventStatus === EventStatus.Settled) {
+      setStep(Step._02_Confirmed);
+      setLoading(false);
+      setError(undefined);
+    } else if (eventStatus === EventStatus.Failed) {
+      setLoading(false);
+      setError(event?.error);
+    }
+  }, [eventStatus]);
 
   useEffect(() => {
     if (
@@ -90,9 +118,6 @@ const Reveal = () => {
       ? Answer.InTheWeeds
       : Answer.BehindTheBuilding;
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-
   const createEvent = async () => {
     if (
       !inputs?.reveal_answer_notification_record ||
@@ -112,10 +137,11 @@ const Reveal = () => {
     });
     if (response.error) {
       setError(response.error);
+      setLoading(false);
     } else if (response.eventId) {
+      console.log('success!', response.eventId);
       setEventId(response.eventId);
     }
-    setLoading(false);
   };
 
   const disabled =
@@ -140,6 +166,7 @@ const Reveal = () => {
         </div>
       )}
       <div className='flex flex-grow flex-col' />
+      {error && <p>{error}</p>}
       <Button
         color='green'
         onClick={createEvent}

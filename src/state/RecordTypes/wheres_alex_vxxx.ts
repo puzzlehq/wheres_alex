@@ -211,18 +211,16 @@ export type GameState =
   | 'challenger:1'
   | 'challenger:2'
   | 'challenger:3'
-  | 'challenger:4:lose'
-  | 'challenger:4:win'
   | 'challenger:5'
   | 'challenger:6'
   | 'opponent:0'
   | 'opponent:1'
   | 'opponent:2'
   | 'opponent:3'
-  | 'opponent:4:lose'
-  | 'opponent:4:win'
   | 'opponent:5'
-  | 'opponent:6';
+  | 'opponent:6'
+  | 'winner:4'
+  | 'loser:4';
 
 export const getGameState = (game: GameNotification): GameState => {
   const challenger_or_opponent =
@@ -249,9 +247,7 @@ export const getGameState = (game: GameNotification): GameState => {
       return `challenger:3`;
     case '9u32': {
       const isWinner = game.recordData.winner === game.recordData.owner;
-      return isWinner
-        ? `${challenger_or_opponent}:4:win`
-        : `${challenger_or_opponent}:4:lose`;
+      return isWinner ? `winner:4` : `loser:4`;
     }
     case '10u32':
       return `${challenger_or_opponent}:5`;
@@ -279,10 +275,10 @@ export const getGameAction = (gameState: GameState): GameAction => {
       return 'Renege'; // and ping
     case 'challenger:3':
       return 'Reveal';
-    case 'challenger:4:lose':
-      return 'Lose';
-    case 'challenger:4:win':
+    case 'winner:4':
       return 'Claim';
+    case 'loser:4':
+      return 'Lose';
     case 'challenger:5':
       return undefined;
     case 'challenger:6':
@@ -295,10 +291,6 @@ export const getGameAction = (gameState: GameState): GameAction => {
       return 'Accept';
     case 'opponent:3':
       return 'Ping';
-    case 'opponent:4:lose':
-      return 'Lose';
-    case 'opponent:4:win':
-      return 'Claim';
     case 'opponent:5':
       return undefined;
     case 'opponent:6':

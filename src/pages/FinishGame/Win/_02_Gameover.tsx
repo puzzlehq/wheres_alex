@@ -3,11 +3,13 @@ import Wager from '../../../components/Wager';
 import PageHeader from '../../../components/PageHeader';
 import { getNumberAmount } from '../../../utils';
 import Button from '../../../components/Button';
-import { useClaimPrizeWinStore } from './store';
+import { useGameStore } from '../../../state/store';
 
 const GameOver = () => {
-  const [wager] = useClaimPrizeWinStore((state) => [state.wager]);
+  const [currentGame] = useGameStore((state) => [state.currentGame]);
   const navigate = useNavigate();
+
+  const wager = currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
@@ -23,9 +25,6 @@ const GameOver = () => {
       </div>
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-2'>
-        <Button color='green' onClick={() => navigate('/')}>
-          REFER A PLAYER
-        </Button>
         <Button color='gray' onClick={() => navigate('/new-game')}>
           START ANOTHER GAME
         </Button>

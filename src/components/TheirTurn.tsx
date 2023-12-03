@@ -5,12 +5,16 @@ import { Game, useGameStore } from '../state/store';
 import { shortenAddress } from '@puzzlehq/sdk';
 
 function TheirTurnItem({ game }: { game: Game }) {
+  const user = game.gameNotification.recordData.owner;
+  const opponent_address = game.gameNotification.recordData.opponent_address;
+  const challenger_address =
+    game.gameNotification.recordData.challenger_address;
+  const vs = user === opponent_address ? challenger_address : opponent_address;
+  const wager = game.gameNotification.recordData.total_pot / 2;
+
   const navigate = useNavigate(); // Hook to navigate
   const [initializeRenege] = useRenegeStore((state) => [state.initialize]);
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
-
-  const opponent = game.gameNotification.recordData.opponent_address;
-  const wager = game.gameNotification.recordData.total_pot / 2;
 
   // Function to handle the ping button click
   const handlePingClick = () => {
@@ -56,16 +60,29 @@ function TheirTurnItem({ game }: { game: Game }) {
             </Button>
           </div>
         );
+      case 'Lose':
+        return (
+          <Button
+            onClick={() => {
+              setCurrentGame(game);
+              navigate('/claim-prize/lose');
+            }}
+            size='sm'
+            color='gray'
+          >
+            See Answer
+          </Button>
+        );
     }
   };
 
   return (
     <div className='mb-2 grid w-full grid-cols-[1fr,auto,1fr] items-center gap-5'>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {shortenAddress(game.gameNotification.recordData.opponent_address)}
+        {shortenAddress(vs)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {game.gameNotification.recordData.total_pot / 2} pieces
+        {wager} pieces
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>

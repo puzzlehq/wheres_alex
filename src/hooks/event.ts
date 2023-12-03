@@ -2,16 +2,16 @@ import { getEvent } from '@puzzlehq/sdk';
 import { useQuery } from '@tanstack/react-query';
 
 type UseEventQueryProps = {
-  id?: string,
-  address?: string
-}
+  id?: string;
+  address?: string;
+};
 
-export const useEventQuery = ({id, address}: UseEventQueryProps) => {
+export const useEventQuery = ({ id, address }: UseEventQueryProps) => {
   return useQuery({
     queryKey: ['event', id ?? ''],
     queryFn: async () => {
       if (!id) return;
-      const result = await getEvent({id, address});
+      const result = await getEvent({ id, address });
       if (result.error) {
         throw new Error(result.error);
       } else if (result.event) {

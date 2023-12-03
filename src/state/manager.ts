@@ -71,7 +71,9 @@ export type RevealAnswerInputs = {
   challenger_claim_signature: RecordWithPlaintext;
 };
 
-export type ClaimPrizeInputs = {
-  AnswerRecord: RecordWithPlaintext;
-  PieceStakeOutcome: string;
+export type FinishGameInputs = {
+  game_record: RecordWithPlaintext;
+  joint_piece_winner: RecordWithPlaintext;
+  piece_joint_stake: RecordWithPlaintext;
+  joint_piece_time_claim: RecordWithPlaintext;
 };
