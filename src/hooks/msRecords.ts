@@ -4,7 +4,7 @@ export const useMsRecords = (address?: string) => {
   const { records } = useRecords({
     filter: {
       programIds: [
-        'wheres_alex_v015.aleo',
+        'wheres_alex_v017.aleo',
         'puzzle_pieces_v015.aleo',
         'multiparty_pvp_utils_v015.aleo',
       ],
@@ -14,7 +14,7 @@ export const useMsRecords = (address?: string) => {
     multisig: true,
   });
   const msGameRecords = records?.filter(
-    (record) => record.programId === 'wheres_alex_v015.aleo'
+    (record) => record.programId === 'wheres_alex_v017.aleo'
   );
   const msPuzzleRecords = records?.filter(
     (record) => record.programId === 'puzzle_pieces_v015.aleo'

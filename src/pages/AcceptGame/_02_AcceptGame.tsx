@@ -14,8 +14,8 @@ import { useEffect, useState } from 'react';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
-import { useMsRecords } from '../../state/hooks/msRecords';
-import { useEventQuery } from '../../state/hooks/event';
+import { useMsRecords } from '../../hooks/msRecords';
+import { useEventQuery } from '../../hooks/event';
 
 function AcceptGame() {
   const [
@@ -39,12 +39,18 @@ function AcceptGame() {
 
   const { data, error: _error } = useEventQuery(eventIdAccept);
   const event = data;
-  const eventError = _error?.message;
   const eventStatus = event?.status;
+
+  useEffect(() => {
+    const eventError = _error?.message;
+    eventError && setError(eventError);
+  }, [_error]);
 
   useEffect(() => {
     if (eventStatus === EventStatus.Settled) {
       setStep(Step._03_Confirmed);
+      setLoading(false);
+      setError(undefined);
     } else if (eventStatus === EventStatus.Failed) {
       setLoading(false);
       setError(event?.error);
@@ -127,6 +133,7 @@ function AcceptGame() {
     )
       return;
     setLoading(true);
+    setError(undefined);
     const acceptGameInputs: Omit<AcceptGameInputs, 'opponent_answer_readable'> =
       {
         game_record: inputs.game_record,
@@ -147,12 +154,12 @@ function AcceptGame() {
     });
     if (response.error) {
       setError(response.error);
-    } else if (response.eventId) {
-      /// todo - other things here?
+    } else if (!response.eventId) {
+      setError('No eventId found!');
+    } else {
+      console.log('success', response.eventId);
       setEventIdAccept(response.eventId);
-      setStep(Step._03_Confirmed);
     }
-    setLoading(false);
   };
 
   const answer = inputs?.opponent_answer_readable;
@@ -168,6 +175,18 @@ function AcceptGame() {
   const eventLoading =
     eventStatus &&
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
+
+  const [buttonText, setButtonText] = useState('CREATE EVENT');
+
+  useEffect(() => {
+    if (!loading) {
+      setButtonText('CREATE EVENT');
+    } else if (event?.status === EventStatus.Creating) {
+      setButtonText('CREATING EVENT...');
+    } else if (event?.status === EventStatus.Pending) {
+      setButtonText('EVENT PENDING...');
+    }
+  }, [loading, event?.status]);
 
   return (
     <div className='flex h-full flex-col justify-between'>
@@ -191,13 +210,12 @@ function AcceptGame() {
         />
         <div className='flex flex-grow flex-col' />
         {error && <p>Error: {error}</p>}
-        {eventError && <p>Event Error: {eventError}</p>}
         <Button
           onClick={createEvent}
           disabled={disabled || loading || eventLoading}
           color='green'
         >
-          NEXT
+          {buttonText}
         </Button>
       </div>
     </div>

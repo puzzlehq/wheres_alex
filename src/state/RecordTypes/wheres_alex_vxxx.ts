@@ -48,7 +48,7 @@ export type GameReqNotification = {
 };
 
 export const WaitingAcceptanceNotificationSchema = z.object({
-  owner: zodAddress,
+  owner: zodAddress, // challenger
   game_multisig: zodAddress,
   game_state: z.literal('1field'),
   your_turn: z.string().transform(Boolean),
@@ -153,6 +153,10 @@ export const GameFinishReqNotificationSchema = z.object({
   total_pot: z.string().transform(Number),
   challenger_address: zodAddress,
   opponent_address: zodAddress,
+  challenger_answer: z.enum(['0field', '1field']),
+  opponent_answer: z.enum(['0field', '1field']),
+  winner: zodAddress,
+  loser: zodAddress,
   ix: z.literal('9u32'),
   _nonce: z.string(),
 });
@@ -220,35 +224,37 @@ export type GameState =
   | 'opponent:5'
   | 'opponent:6';
 
-export const getGameState = (
-  game: GameNotification,
-  user: string,
-  answerRecord: RecordWithPlaintext,
-): GameState => {
+export const getGameState = (game: GameNotification): GameState => {
   const challenger_or_opponent =
-    user === game.recordData.challenger_address ? 'challenger' : 'opponent';
-  const isWinner =
-    'winner' in game.recordData && game.recordData.winner === user;
-  
-  
+    game.recordData.challenger_address === game.recordData.owner
+      ? 'challenger'
+      : 'opponent';
 
-  switch (game.recordData.game_state) {
-    case '0field':
+  console.log(challenger_or_opponent);
+
+  switch (game.recordData.ix) {
+    case '2u32':
+      return `opponent:1`;
+    case '3u32':
+      return `challenger:1`;
+    case '4u32':
       return `${challenger_or_opponent}:0`;
-    case '1field':
-      return `${challenger_or_opponent}:1`;
-    case '2field':
-      return `${challenger_or_opponent}:2`;
-    case '3field':
-      return `${challenger_or_opponent}:3`;
-    case '4field':
+    case '5u32':
+      return `challenger:2`;
+    case '6u32':
+      return `opponent:2`;
+    case '7u32':
+      return `opponent:3`;
+    case '8u32':
+      return `challenger:3`;
+    case '9u32': {
+      const isWinner = game.recordData.winner === game.recordData.owner;
       return isWinner
         ? `${challenger_or_opponent}:4:win`
         : `${challenger_or_opponent}:4:lose`;
-    case '5field':
+    }
+    case '10u32':
       return `${challenger_or_opponent}:5`;
-    case '6field':
-      return `${challenger_or_opponent}:6`;
   }
 };
 

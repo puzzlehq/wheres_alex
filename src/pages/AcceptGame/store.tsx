@@ -68,7 +68,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
           },
           step: Step._01_SubmitWager,
           eventIdAccept: undefined,
-          eventIdSubmit: undefined
+          eventIdSubmit: undefined,
         });
       },
       initializeAcceptGame: (
@@ -93,7 +93,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
           },
           step: Step._02_AcceptGame,
           eventIdAccept: undefined,
-          eventIdSubmit: undefined
+          eventIdSubmit: undefined,
         });
       },
       setEventIdSubmit: (id: string) => {
@@ -108,7 +108,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
           inputsSubmitWager: undefined,
           inputsAcceptGame: undefined,
           eventIdAccept: undefined,
-          eventIdSubmit: undefined
+          eventIdSubmit: undefined,
         });
       },
     }),

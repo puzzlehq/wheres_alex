@@ -15,8 +15,6 @@ function YourTurnItem({ game }: { game: Game }) {
 
   const [setCurrentGame] = useGameStore((state) => [state.setCurrentGame]);
 
-  console.log(game);
-
   const renderActionButton = () => {
     switch (game.gameAction) {
       case 'Submit Wager':
@@ -36,7 +34,7 @@ function YourTurnItem({ game }: { game: Game }) {
             Reveal
           </Button>
         );
-      case 'Lose': 
+      case 'Lose':
         return (
           <Button
             onClick={() => {
@@ -48,7 +46,7 @@ function YourTurnItem({ game }: { game: Game }) {
           >
             View Result
           </Button>
-        )
+        );
       case 'Claim':
         return (
           <Button

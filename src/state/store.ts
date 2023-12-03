@@ -79,7 +79,6 @@ type GameStore = {
     msRecords?: MSGameRecords
   ) => void;
   setCurrentGame: (game?: Game) => void;
-  close: () => void;
   clearFlowStores: () => void;
 };
 
@@ -87,10 +86,9 @@ const createGame = (
   gameNotification: GameNotification,
   puzzleRecords: RecordWithPlaintext[],
   utilRecords: RecordWithPlaintext[],
-  user: string,
   msRecords?: MSGameRecords
 ): Game => {
-  const gameState = getGameState(gameNotification, user);
+  const gameState = getGameState(gameNotification);
   return {
     gameNotification,
     gameState: gameState,
@@ -125,19 +123,19 @@ const createGame = (
 };
 
 const validStates = {
-  challengerTurn: new Set([
-    'challenger:1', // challenger to ping opponent to submit wager
-    'challenger:2', // challenger to ping opponent to accept game
+  yourTurn: new Set([
     'challenger:3', // challenger to reveal answer
-    'challenger:4:lose', // challenger to view revealed answer (finish as well)
     'challenger:4:win', // challenger to claim prize
-  ]),
-  opponentTurn: new Set([
+    'opponent:4:win', // opponent to claim prize
     'opponent:1', // opponent to submit wager
     'opponent:2', // opponent to accept game
+  ]),
+  theirTurn: new Set([
+    'challenger:1', // challenger to ping opponent to submit wager
+    'challenger:2', // challenger to ping opponent to accept game
+    'challenger:4:lose', // remind opponent to accept funds
+    'opponent:4:lose', // remind challenger to accept funds
     'opponent:3', // opponent to ping challenger to reveal answer
-    'opponent:4:lose', // opponent to view revealed answer (finish as well)
-    'opponent:4:win', // opponent to claim prize
   ]),
   finished: new Set([
     'opponent:0',
@@ -152,11 +150,11 @@ const validStates = {
 export const useGameStore = create<GameStore>()(
   persist(
     (set, get) => ({
-      currentGame: undefined,
-      yourTurn: [],
-      theirTurn: [],
-      finished: [],
-      puzzleRecords: [],
+      currentGame: undefined as Game | undefined,
+      yourTurn: [] as Game[],
+      theirTurn: [] as Game[],
+      finished: [] as Game[],
+      puzzleRecords: [] as RecordWithPlaintext[],
       availableBalance: 0,
       totalBalance: 0,
       largestPiece: undefined,
@@ -211,44 +209,35 @@ export const useGameStore = create<GameStore>()(
           finished: Game[];
         }>(
           (acc, gameNotification) => {
-            const game_state = getGameState(gameNotification, user);
+            const game_state = getGameState(gameNotification);
             const game = createGame(
               gameNotification,
               puzzleRecords,
               utilRecords,
-              user,
               msRecords
             );
             if (
+              currentGame &&
               game.gameNotification.recordData.game_multisig ===
-              currentGame?.gameNotification.recordData.game_multisig
+                currentGame?.gameNotification.recordData.game_multisig
             ) {
               set({
                 currentGame: game,
               });
             }
-            const isChallenger = game_state.includes('challenger');
-            if (isChallenger) {
-              if (validStates.challengerTurn.has(game_state)) {
-                acc.yourTurn.push(game);
-              } else if ( validStates.opponentTurn.has(game_state)) {
-                acc.theirTurn.push(game);
-              } else {
-                acc.finished.push(game);
-              }
+            if (validStates.yourTurn.has(game_state)) {
+              acc.yourTurn.push(game);
+            } else if (validStates.theirTurn.has(game_state)) {
+              acc.theirTurn.push(game);
             } else {
-              if (validStates.opponentTurn.has(game_state)) {
-                acc.yourTurn.push(game);
-              } else if (validStates.challengerTurn.has(game_state)) {
-                acc.theirTurn.push(game);
-              } else  {
-                acc.finished.push(game);
-              }
+              acc.finished.push(game);
             }
             return acc;
           },
           { yourTurn: [], theirTurn: [], finished: [] }
         );
+        console.log('yourTurn', yourTurn);
+        console.log('theirTurn', theirTurn);
 
         set({ yourTurn, theirTurn, finished });
       },
@@ -262,9 +251,6 @@ export const useGameStore = create<GameStore>()(
             useAcceptGameStore.getState().setStep(Step._02_AcceptGame);
             break;
         }
-      },
-      close: () => {
-        set({ currentGame: undefined });
       },
       clearFlowStores: () => {
         useNewGameStore.getState().close();

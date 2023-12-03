@@ -21,9 +21,14 @@ import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
 import jsyaml from 'js-yaml';
 import Nav from '../../components/Nav';
-import { useEventQuery } from '../../state/hooks/event';
+import { useEventQuery } from '../../hooks/event';
 
 const messageToSign = '1234567field';
+
+enum ConfirmStep {
+  Signing,
+  RequestingEvent,
+}
 
 const SubmitWager = () => {
   const [
@@ -43,19 +48,26 @@ const SubmitWager = () => {
     state.currentGame,
     state.largestPiece,
   ]);
+  const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
   const navigate = useNavigate();
-
-  const { data, error: _error } = useEventQuery(eventIdSubmit);
-  const event = data;
-  const eventError = _error?.message;
-  const eventStatus = event?.status;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
+  const { data, error: _error } = useEventQuery(eventIdSubmit);
+  const event = data;
+  const eventStatus = event?.status;
+
+  useEffect(() => {
+    const eventError = _error?.message;
+    eventError && setError(eventError);
+  }, [_error]);
+
   useEffect(() => {
     if (eventStatus === EventStatus.Settled) {
       setStep(Step._02_AcceptGame);
+      setLoading(false);
+      setError(undefined);
     } else if (eventStatus === EventStatus.Failed) {
       setLoading(false);
       setError(event?.error);
@@ -70,12 +82,14 @@ const SubmitWager = () => {
     )
       return;
     setLoading(true);
+    setError(undefined);
     const signature = await requestSignature({ message: messageToSign });
-
+    setConfirmStep(ConfirmStep.Signing);
     if (!signature.messageFields || !signature.signature) {
       setError('Signature or signature message fields not found');
       return;
     }
+    setConfirmStep(ConfirmStep.RequestingEvent);
     const messageFields = Object(jsyaml.load(signature.messageFields));
 
     const newInputs: Partial<SubmitWagerInputs> = {
@@ -109,7 +123,6 @@ const SubmitWager = () => {
       setEventIdSubmit(response.eventId);
       setSubmitWagerInputs({ ...newInputs });
     }
-    setLoading(false);
   };
 
   const opponent = currentGame?.gameNotification.recordData.challenger_address;
@@ -123,6 +136,22 @@ const SubmitWager = () => {
     eventStatus &&
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
 
+  const [buttonText, setButtonText] = useState('CREATE EVENT');
+
+  useEffect(() => {
+    if (!loading) {
+      setButtonText('CREATE EVENT');
+    } else if (event?.status === EventStatus.Creating) {
+      setButtonText('CREATING EVENT...');
+    } else if (event?.status === EventStatus.Pending) {
+      setButtonText('EVENT PENDING...');
+    } else if (confirmStep === ConfirmStep.Signing) {
+      setButtonText('REQUESTING SIGNATURE...');
+    } else if (confirmStep === ConfirmStep.RequestingEvent) {
+      setButtonText('REQUESTING EVENT...');
+    }
+  }, [loading, event?.status, confirmStep]);
+
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
       <div className='flex w-full flex-col gap-2'>
@@ -134,13 +163,12 @@ const SubmitWager = () => {
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
         {error && <p>Error: {error}</p>}
-        {eventError && <p>Event Error: {eventError}</p>}
         <Button
           color='green'
           disabled={disabled || loading || eventLoading}
           onClick={createEvent}
         >
-          ACCEPT WAGER
+          {buttonText}
         </Button>
         <Button
           color='gray'

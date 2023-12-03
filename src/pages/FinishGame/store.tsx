@@ -43,7 +43,7 @@ export const useFinishGameStore = create<FinishGameStore>()(
             reveal_answer_notification_record,
             challenger_answer_record,
             joint_piece_stake,
-            challenger_claim_signature
+            challenger_claim_signature,
           },
           step: Step._01_Finish,
           eventId: undefined,

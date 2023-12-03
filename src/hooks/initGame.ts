@@ -1,6 +1,6 @@
 import { useAccount } from '@puzzlehq/sdk';
 import { useEffect } from 'react';
-import { useGameStore } from '../store';
+import { useGameStore } from '../state/store';
 import { useGameRecords } from './records';
 
 export const useInitGame = () => {

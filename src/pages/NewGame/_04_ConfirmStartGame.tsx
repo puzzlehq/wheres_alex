@@ -22,7 +22,7 @@ import { useEffect, useState } from 'react';
 import jsyaml from 'js-yaml';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx.js';
 import { Step, useNewGameStore } from './store.js';
-import { useEventQuery } from '../../state/hooks/event.js';
+import { useEventQuery } from '../../hooks/event.js';
 
 const messageToSign = '1234567field';
 
@@ -59,9 +59,18 @@ function ConfirmStartGame() {
   useEffect(() => {
     const eventError = _error?.message;
     eventError && setError(eventError);
-  }, [_error])
+  }, [_error]);
 
-  console.log('event', event);
+  useEffect(() => {
+    if (eventStatus === EventStatus.Settled) {
+      setStep(Step._05_GameStarted);
+      setLoading(false);
+      setError(undefined);
+    } else if (eventStatus === EventStatus.Failed) {
+      setLoading(false);
+      setError(event?.error);
+    }
+  }, [eventStatus]);
 
   const createProposeGameEvent = async () => {
     setLoading(true);
@@ -112,35 +121,25 @@ function ConfirmStartGame() {
               : '1field',
           game_multisig_seed,
         };
-        const createEventResponse = await requestCreateEvent({
+        const response = await requestCreateEvent({
           type: EventType.Execute,
           programId: GAME_PROGRAM_ID,
           functionId: GAME_FUNCTIONS.propose_game,
           fee: stepFees.propose_game,
           inputs: Object.values(proposalInputs),
         });
-        if (createEventResponse.error) {
-          setError(createEventResponse.error);
-        } else if (!createEventResponse.eventId) {
+        if (response.error) {
+          setError(response.error);
+        } else if (!response.eventId) {
           setError('No eventId found!');
         } else {
-          console.log('success', createEventResponse.eventId);
-          setEventId(createEventResponse.eventId);
+          console.log('success', response.eventId);
+          setEventId(response.eventId);
         }
       }
     }
     setConfirmStep(ConfirmStep.Signing);
   };
-
-  useEffect(() => {
-    if (eventStatus === EventStatus.Settled) {
-      setStep(Step._05_GameStarted);
-      setLoading(false);
-    } else if (eventStatus === EventStatus.Failed) {
-      setLoading(false);
-      setError(event?.error);
-    }
-  }, [eventStatus]);
 
   const disabled = [
     inputs?.opponent,
@@ -149,25 +148,24 @@ function ConfirmStartGame() {
     inputs?.challenger_answer,
   ].includes(undefined);
   const eventLoading =
-    event && [EventStatus.Creating, EventStatus.Pending].includes(event?.status);
-  
-  let buttonText = 'CREATE EVENT';
-  switch (true) { 
-    case (!loading):
-      break;
-    case (event?.status === EventStatus.Creating):
-      buttonText = 'CREATING EVENT...'
-      break;
-    case (event?.status === EventStatus.Pending):
-      buttonText = 'EVENT PENDING...';
-      break
-    case (confirmStep === ConfirmStep.Signing):
-      buttonText = 'REQUESTING SIGNATURE...';
-      break;
-    case (confirmStep === ConfirmStep.RequestingEvent):
-      buttonText = 'REQUESTING EVENT...';
-      break;
-  }
+    event &&
+    [EventStatus.Creating, EventStatus.Pending].includes(event?.status);
+
+  const [buttonText, setButtonText] = useState('CREATE EVENT');
+
+  useEffect(() => {
+    if (!loading) {
+      setButtonText('CREATE EVENT');
+    } else if (event?.status === EventStatus.Creating) {
+      setButtonText('CREATING EVENT...');
+    } else if (event?.status === EventStatus.Pending) {
+      setButtonText('EVENT PENDING...');
+    } else if (confirmStep === ConfirmStep.Signing) {
+      setButtonText('REQUESTING SIGNATURE...');
+    } else if (confirmStep === ConfirmStep.RequestingEvent) {
+      setButtonText('REQUESTING EVENT...');
+    }
+  }, [loading, event?.status, confirmStep]);
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
@@ -192,7 +190,11 @@ function ConfirmStartGame() {
         >
           {buttonText}
         </Button>
-        <Button onClick={() => setStep(Step._03_StartWager)} disabled={loading || eventLoading} color='gray'>
+        <Button
+          onClick={() => setStep(Step._03_StartWager)}
+          disabled={loading || eventLoading}
+          color='gray'
+        >
           BACK
         </Button>
       </div>
