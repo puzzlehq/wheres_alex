@@ -52,7 +52,7 @@ function ConfirmStartGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { data, error: _error } = useEventQuery(eventId);
+  const { data, error: _error } = useEventQuery({id: eventId});
   const event = data;
   const eventStatus = event?.status;
 

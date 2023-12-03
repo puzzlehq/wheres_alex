@@ -11,7 +11,7 @@ function Confirmed(props: { done: () => void }) {
   ]);
 
   const game_address = inputs?.game_record?.owner;
-  const { data } = useEventQuery(eventIdAccept);
+  const { data } = useEventQuery({id: eventIdAccept});
 
   return (
     <div className='flex h-full flex-col justify-between'>

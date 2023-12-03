@@ -3,7 +3,7 @@ import PageHeader from '../../components/PageHeader';
 import Nav from '../../components/Nav';
 import ChooseAlexLocation from '../../components/ChooseAlexLocation';
 import Button from '../../components/Button';
-import { requestCreateEvent, EventType, EventStatus } from '@puzzlehq/sdk';
+import { requestCreateEvent, EventType, EventStatus, useBalance, shortenAddress } from '@puzzlehq/sdk';
 import {
   AcceptGameInputs,
   GAME_FUNCTIONS,
@@ -37,7 +37,8 @@ function AcceptGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { data, error: _error } = useEventQuery(eventIdAccept);
+
+  const { data, error: _error } = useEventQuery({id: eventIdAccept});
   const event = data;
   const eventStatus = event?.status;
 
@@ -57,9 +58,13 @@ function AcceptGame() {
     }
   }, [eventStatus]);
 
+  const msAddress = currentGame?.gameNotification.recordData.game_multisig;
   const { msPuzzleRecords, msGameRecords } = useMsRecords(
-    currentGame?.gameNotification.recordData.game_multisig
+    msAddress
   );
+
+  const { balances: msBalances } = useBalance({ address: msAddress ?? 'placeholder_todo_remove' });
+  const msPublicBalance = msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
 
   useEffect(() => {
     if (!currentGame || !msPuzzleRecords || !msGameRecords) return;
@@ -142,7 +147,7 @@ function AcceptGame() {
         piece_claim_challenger: inputs.piece_claim_challenger,
         piece_stake_opponent: inputs.piece_stake_opponent,
         piece_claim_opponent: inputs.piece_claim_opponent,
-        block_ht: '748004u32',
+        block_ht: '769343u32',
       };
     const response = await requestCreateEvent({
       type: EventType.Execute,
@@ -210,6 +215,8 @@ function AcceptGame() {
         />
         <div className='flex flex-grow flex-col' />
         {error && <p>Error: {error}</p>}
+        {<p>Game multisig public balance: {msPublicBalance} public credits</p>}
+        {msPublicBalance < 0.5 && <p>{shortenAddress(msAddress ?? '') ?? 'Game multisig'} needs at least 0.5 public credits! </p>}
         <Button
           onClick={createEvent}
           disabled={disabled || loading || eventLoading}

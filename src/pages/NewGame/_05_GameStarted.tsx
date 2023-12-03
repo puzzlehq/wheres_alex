@@ -11,7 +11,7 @@ function GameStarted(props: { done: () => void }) {
   ]);
   const game_multisig = inputs?.game_multisig;
 
-  const { data } = useEventQuery(eventId);
+  const { data } = useEventQuery({id: eventId});
 
   return (
     <div className='flex h-full flex-col justify-between'>
