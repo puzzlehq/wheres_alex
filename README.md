@@ -15,7 +15,7 @@ Where's Alex? is a fun experiment that aims to be a fun 1v1 game to showcase how
 <br /> 
 
 ## What is the "Where's Alex?" game?
-Challenge another person on Aleo with a wager to guess where you hid Alex and if they guess wrong, then you win the prize pot! 
+Hide alex in a secret location and wager another person on Aleo to guess where you hid Alex. If they guess wrong, then you win the prize pot between you both! 
 
  <br />
 
