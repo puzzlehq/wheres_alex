@@ -7,10 +7,13 @@ import { useMsRecords } from '../../hooks/msRecords';
 import { useGameStore } from '../../state/store';
 import { Step, useFinishGameStore } from './store';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
-import Opponent from '../../components/Opponent';
-import { EventStatus, EventType, requestCreateEvent } from '@puzzlehq/sdk';
-import { GAME_FUNCTIONS, GAME_PROGRAM_ID, stepFees } from '../../state/manager';
-import { useEventQuery } from '../../hooks/event';
+import Versus from '../../components/Versus';
+import { EventStatus, EventType, requestCreateEvent, useEvent } from '@puzzlehq/sdk';
+import {
+  GAME_FUNCTIONS,
+  GAME_PROGRAM_ID,
+  transitionFees,
+} from '../../state/manager';
 
 const Reveal = () => {
   const [inputs, eventId, initialize, setEventId, setStep] = useFinishGameStore(
@@ -31,16 +34,14 @@ const Reveal = () => {
     currentGame?.gameNotification.recordData.game_multisig
   );
 
-  const { data, error: _error } = useEventQuery({ id: eventId });
-  const event = data;
+  const { event, error: _error } = useEvent({ id: eventId });
   const eventStatus = event?.status;
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
-    const eventError = _error?.message;
-    eventError && setError(eventError);
+    _error && setError(_error);
   }, [_error]);
 
   useEffect(() => {
@@ -132,7 +133,7 @@ const Reveal = () => {
       type: EventType.Execute,
       programId: GAME_PROGRAM_ID,
       functionId: GAME_FUNCTIONS.reveal_answer,
-      fee: stepFees.reveal_answer,
+      fee: transitionFees.reveal_answer,
       inputs: Object.values(inputs),
     });
     if (response.error) {
@@ -155,7 +156,7 @@ const Reveal = () => {
       <div className='flex flex-col items-center gap-2'>
         <PageHeader bg='bg-primary-blue' text='RESULTS ARE IN' />
       </div>
-      {opponent && <Opponent opponent={opponent} />}
+      {opponent && <Versus versus={opponent} />}
       {wagerAmount && <Wager wagerAmount={wagerAmount} />}
       {answer && (
         <div className='flex flex-col gap-2'>

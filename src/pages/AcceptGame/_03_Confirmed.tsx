@@ -2,7 +2,7 @@
 import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
 import { useAcceptGameStore } from './store';
-import { useEventQuery } from '../../hooks/event';
+import { useEvent } from '@puzzlehq/sdk';
 
 function Confirmed(props: { done: () => void }) {
   const [inputs, eventIdAccept] = useAcceptGameStore((state) => [
@@ -11,15 +11,15 @@ function Confirmed(props: { done: () => void }) {
   ]);
 
   const game_address = inputs?.game_record?.owner;
-  const { data } = useEventQuery({ id: eventIdAccept });
+  const { event } = useEvent({ id: eventIdAccept });
 
   return (
     <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
-        {game_address && data && data.transactionId && (
+        {game_address && event && event.transactionId && (
           <GameInfo
             multisig={game_address}
-            transactionId={data.transactionId}
+            transactionId={event.transactionId}
             newGame={false}
           />
         )}

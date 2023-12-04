@@ -1,6 +1,6 @@
 import Wager from '../../components/Wager';
 import PageHeader from '../../components/PageHeader';
-import Opponent from '../../components/Opponent';
+import Versus from '../../components/Versus';
 import Button from '../../components/Button';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -10,18 +10,18 @@ import {
   importSharedState,
   requestCreateEvent,
   requestSignature,
+  useEvent,
 } from '@puzzlehq/sdk';
 import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
   SubmitWagerInputs,
-  stepFees,
+  transitionFees,
 } from '../../state/manager';
 import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
 import jsyaml from 'js-yaml';
 import Nav from '../../components/Nav';
-import { useEventQuery } from '../../hooks/event';
 
 const messageToSign = '1234567field';
 
@@ -54,12 +54,11 @@ const SubmitWager = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { data, error: _error } = useEventQuery({ id: eventIdSubmit });
-  const event = data;
+  const { event, error: _error } = useEvent({ id: eventIdSubmit });
   const eventStatus = event?.status;
 
   useEffect(() => {
-    const eventError = _error?.message;
+    const eventError = _error;
     eventError && setError(eventError);
   }, [_error]);
 
@@ -113,7 +112,7 @@ const SubmitWager = () => {
       type: EventType.Execute,
       programId: GAME_PROGRAM_ID,
       functionId: GAME_FUNCTIONS.submit_wager,
-      fee: stepFees.submit_wager,
+      fee: transitionFees.submit_wager,
       inputs: Object.values(newInputs),
     });
     if (response.error) {
@@ -158,7 +157,7 @@ const SubmitWager = () => {
         <Nav step={1} isChallenger={false} />
         <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
       </div>
-      {opponent && <Opponent opponent={opponent} />}
+      {opponent && <Versus versus={opponent} />}
       <Wager wagerAmount={Number(wagerAmount)} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>

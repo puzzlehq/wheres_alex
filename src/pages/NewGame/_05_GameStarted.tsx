@@ -2,7 +2,7 @@
 import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
 import { useNewGameStore } from './store';
-import { useEventQuery } from '../../hooks/event';
+import { useEvent } from '@puzzlehq/sdk';
 
 function GameStarted(props: { done: () => void }) {
   const [inputs, eventId] = useNewGameStore((state) => [
@@ -11,15 +11,15 @@ function GameStarted(props: { done: () => void }) {
   ]);
   const game_multisig = inputs?.game_multisig;
 
-  const { data } = useEventQuery({ id: eventId });
+  const { event } = useEvent({ id: eventId });
 
   return (
     <div className='flex h-full flex-col justify-between'>
       <div className='flex h-full w-full flex-col items-center px-5'>
-        {game_multisig && data && data.transactionId && (
+        {game_multisig && event && event.transactionId && (
           <GameInfo
             multisig={game_multisig}
-            transactionId={data.transactionId}
+            transactionId={event.transactionId}
             newGame={true}
           />
         )}

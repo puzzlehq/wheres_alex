@@ -6,18 +6,19 @@ import { Step, useClaimPrizeWinStore } from './store';
 import { Answer } from '../../../state/RecordTypes/wheres_alex_vxxx';
 import { useGameStore } from '../../../state/store';
 import { useNavigate } from 'react-router-dom';
-import { useEventQuery } from '../../../hooks/event';
 import { useEffect, useState } from 'react';
 import {
   EventStatus,
   EventType,
   requestCreateEvent,
   shortenAddress,
+  useBalance,
+  useEvent,
 } from '@puzzlehq/sdk';
 import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
-  stepFees,
+  transitionFees,
 } from '../../../state/manager';
 import { useMsRecords } from '../../../hooks/msRecords';
 
@@ -36,19 +37,18 @@ const Win = () => {
   const msAddress = currentGame?.gameNotification.recordData.game_multisig;
   const { msPuzzleRecords, msGameRecords } = useMsRecords(msAddress);
 
-  const { data, error: _error } = useEventQuery({
+  const { event, error: _error } = useEvent({
     id: eventId,
     address: msAddress,
   });
-  const event = data;
   const eventStatus = event?.status;
-  console.log(event);
+  event && console.log('Win: event', event);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
   useEffect(() => {
-    const eventError = _error?.message;
+    const eventError = _error;
     eventError && setError(eventError);
   }, [_error]);
 
@@ -62,6 +62,12 @@ const Win = () => {
       setError(event?.error);
     }
   }, [eventStatus]);
+
+  const { balances: msBalances } = useBalance({
+    address: msAddress ?? 'placeholder_todo_remove',
+  });
+  const msPublicBalance =
+    msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
 
   useEffect(() => {
     if (!currentGame || !msPuzzleRecords || !msGameRecords) return;
@@ -158,7 +164,7 @@ const Win = () => {
       type: EventType.Execute,
       programId: GAME_PROGRAM_ID,
       functionId: GAME_FUNCTIONS.finish_game,
-      fee: stepFees.finish_game,
+      fee: transitionFees.finish_game,
       inputs: Object.values(inputs),
       address: msAddress,
     });
@@ -176,6 +182,7 @@ const Win = () => {
     !inputs?.joint_piece_winner ||
     !inputs?.piece_joint_stake ||
     !inputs?.joint_piece_time_claim;
+  msPublicBalance < transitionFees.finish_game;
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-4'>
@@ -200,6 +207,15 @@ const Win = () => {
       </div>
       <div className='flex flex-grow flex-col' />
       {error && <p>{error}</p>}
+      {!loading && (
+        <p>Game multisig public balance: {msPublicBalance} public credits</p>
+      )}
+      {!loading && msPublicBalance < transitionFees.finish_game && (
+        <p>
+          {shortenAddress(msAddress ?? '') ?? 'Game multisig'} needs at least{' '}
+          {transitionFees.finish_game} public credits!
+        </p>
+      )}
       <Button color='green' disabled={disabled || loading} onClick={claim}>
         {buttonText}
       </Button>

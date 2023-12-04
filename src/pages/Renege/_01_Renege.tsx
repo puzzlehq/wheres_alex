@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Opponent from '../../components/Opponent';
+import Versus from '../../components/Versus';
 import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import Button from '../../components/Button';
@@ -18,7 +18,7 @@ const RenegeGame = () => {
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
       <PageHeader bg='bg-primary-red' text='Renege CHALLENGE' />
-      <Opponent opponent={opponent ?? ''} />
+      <Versus versus={opponent ?? ''} />
       <Wager wagerAmount={wager ?? -1} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>

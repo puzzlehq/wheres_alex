@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Opponent from '../../components/Opponent';
+import Versus from '../../components/Versus.js';
 import PageHeader from '../../components/PageHeader';
 import Wager from '../../components/Wager';
 import SelectedAlexLocation from '../../components/SelectedAlexLocation';
@@ -8,7 +8,7 @@ import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
   ProposeGameInputs,
-  stepFees,
+  transitionFees,
 } from '../../state/manager';
 import {
   createSharedState,
@@ -17,12 +17,12 @@ import {
   useAccount,
   EventType,
   EventStatus,
+  useEvent,
 } from '@puzzlehq/sdk';
 import { useEffect, useState } from 'react';
 import jsyaml from 'js-yaml';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx.js';
 import { Step, useNewGameStore } from './store.js';
-import { useEventQuery } from '../../hooks/event.js';
 
 const messageToSign = '1234567field';
 
@@ -52,13 +52,11 @@ function ConfirmStartGame() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
-  const { data, error: _error } = useEventQuery({ id: eventId });
-  const event = data;
+  const { event, error: _error } = useEvent({ id: eventId });
   const eventStatus = event?.status;
 
   useEffect(() => {
-    const eventError = _error?.message;
-    eventError && setError(eventError);
+    _error && setError(_error);
   }, [_error]);
 
   useEffect(() => {
@@ -125,7 +123,7 @@ function ConfirmStartGame() {
           type: EventType.Execute,
           programId: GAME_PROGRAM_ID,
           functionId: GAME_FUNCTIONS.propose_game,
-          fee: stepFees.propose_game,
+          fee: transitionFees.propose_game,
           inputs: Object.values(proposalInputs),
         });
         if (response.error) {
@@ -170,7 +168,7 @@ function ConfirmStartGame() {
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>
       <PageHeader bg='bg-primary-pink' text='REVIEW AND KICKOFF GAME' />
-      <Opponent opponent={opponent} />
+      <Versus versus={opponent} />
       <Wager wagerAmount={Number(amount)} />
       {answer && (
         <div className='flex flex-col gap-2'>

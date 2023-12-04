@@ -8,9 +8,9 @@ import AcceptGame from './pages/AcceptGame/index.js';
 import { LoseRoute } from './pages/FinishGame/Lose/index.js';
 import WinRoute from './pages/FinishGame/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
-import Reveal from './pages/RevealAnswer/_01_Reveal.js';
 import { useInitGame } from './hooks/initGame.js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import FinishGame from './pages/RevealAnswer/index.js';
 
 function App() {
   const { account } = useAccount();
@@ -30,7 +30,7 @@ function App() {
                 <Route path='/new-game' element={<NewGame />} />
                 <Route path='/renege-game' element={<RenegeGame />} />
                 <Route path='/accept-game' element={<AcceptGame />} />
-                <Route path='/finish-game' element={<Reveal />} />
+                <Route path='/finish-game' element={<FinishGame />} />
                 <Route path='/claim-prize'>
                   <Route path='win' element={<WinRoute />} />
                   <Route path='lose' element={<LoseRoute />} />

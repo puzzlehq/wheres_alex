@@ -9,19 +9,19 @@ import {
   EventStatus,
   useBalance,
   shortenAddress,
+  useEvent,
 } from '@puzzlehq/sdk';
 import {
   AcceptGameInputs,
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
-  stepFees,
+  transitionFees,
 } from '../../state/manager';
 import { useEffect, useState } from 'react';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import { Step, useAcceptGameStore } from './store';
 import { useGameStore } from '../../state/store';
 import { useMsRecords } from '../../hooks/msRecords';
-import { useEventQuery } from '../../hooks/event';
 
 function AcceptGame() {
   const [
@@ -46,16 +46,16 @@ function AcceptGame() {
   const msAddress = currentGame?.gameNotification.recordData.game_multisig;
   const { msPuzzleRecords, msGameRecords } = useMsRecords(msAddress);
 
-  const { data, error: _error } = useEventQuery({
+  const { event, error: _error } = useEvent({
     id: eventIdAccept,
     address: msAddress,
+    multisig: true,
   });
-  const event = data;
   const eventStatus = event?.status;
-  console.log(event);
+  event && console.log('AcceptGame: event', event);
 
   useEffect(() => {
-    const eventError = _error?.message;
+    const eventError = _error;
     eventError && setError(eventError);
   }, [_error]);
 
@@ -170,7 +170,7 @@ function AcceptGame() {
         type: EventType.Execute,
         programId: GAME_PROGRAM_ID,
         functionId: GAME_FUNCTIONS.accept_game,
-        fee: stepFees.accept_game,
+        fee: transitionFees.accept_game,
         inputs: Object.values(acceptGameInputs),
         address: inputs.game_record.owner,
       });
@@ -197,7 +197,8 @@ function AcceptGame() {
     !inputs.piece_claim_challenger ||
     !inputs.piece_stake_opponent ||
     !inputs.piece_claim_opponent ||
-    !answer;
+    !answer ||
+    msPublicBalance < transitionFees.accept_game + transitionFees.finish_game;
   const eventLoading =
     eventStatus &&
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
@@ -235,13 +236,18 @@ function AcceptGame() {
         />
         <div className='flex flex-grow flex-col' />
         {error && <p>Error: {error}</p>}
-        {<p>Game multisig public balance: {msPublicBalance} public credits</p>}
-        {msPublicBalance < 0.5 && (
-          <p>
-            {shortenAddress(msAddress ?? '') ?? 'Game multisig'} needs at least
-            0.5 public credits!{' '}
-          </p>
+        {!loading && (
+          <p>Game multisig public balance: {msPublicBalance} public credits</p>
         )}
+        {!loading &&
+          msPublicBalance <
+            transitionFees.accept_game + transitionFees.finish_game && (
+            <p>
+              {shortenAddress(msAddress ?? '') ?? 'Game multisig'} needs at
+              least {transitionFees.accept_game + transitionFees.finish_game}{' '}
+              public credits!
+            </p>
+          )}
         <Button
           onClick={createEvent}
           disabled={disabled || loading || eventLoading}
