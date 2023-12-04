@@ -107,13 +107,13 @@ We can understand these problems specifically by looking at a game of online pok
 <br />
 
 **1. Guarantees on privacy of data** <br />
-The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your hand is private to other players and the dealer to make sure the game is fair.
+The terms of service, the auditing by government, and the enforcement of law by the company's operating jurisdiction is the only guarantee you get that your hand is private to other players as well as the dealer. If you don't know or trust the brand/company, it's likely you won't feel the game is fair. 
 
-The most common complaint of online poker is that the game is rigged because other players can see your cards somehow to know to increase wager or fold.
+The most common complaint of online poker is that the game is rigged because other players or the house can see your cards somehow to know to increase wager or fold.
 <br />
 
 **2. Guarantees on routing of information between parties** <br />
-The terms of service, the auditing by government, and the enforcement of law on that online poker business by the company's operating jurisdiction is the only guarantee you get that your actions to up a bet, match wager, or fold is actually carried out.
+The terms of service, the auditing by government, and the enforcement of law by the company's operating jurisdiction is the only guarantee you get that your actions to up a bet, match wager, or fold is actually carried out. Again, if you don't know or trust the brand/company, it's likely you won't feel the game is fair. 
 
 Another common complaint of online poker is that the game lags or fails to record your action and folds your hand or matches your wager when you didn't want it to.
 <br />
@@ -135,7 +135,7 @@ These are the last most common complaints of an online poker game -- opponents w
 **1. Guarantees on privacy of data** <br />
 In private/public ZKP blockchains like Aleo, your data is guaranteed to be private to other players in the game as long as they don't have your private keys and that the smart contract/program functions don't reveal your data to others.
 
-This alleviates the concern that the game is rigged because you have guarantees your information is hidden and can verify yourself.
+This alleviates the concern that the game is rigged because you have guarantees your information is hidden from other players/house and you can verify yourself onchain.
 
 <br />
 
@@ -151,7 +151,7 @@ This alleviates the concern that your actions will be carried out and reach the 
 <br />
 
 **3. Multiparty computation attacks: timeout and denial of service** <br />
-The secret sauce of Where's Alex is solving the rage-quit, colllusion and denial of service problem with incentive engineering and game design..
+The secret sauce of Where's Alex is solving the rage-quit, colllusion and denial of service problem with incentive engineering and game design.
 
 <br />
 
