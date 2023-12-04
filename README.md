@@ -1,5 +1,5 @@
 # Where's Alex private multiparty game on Aleo 
-built with Aleo and Puzzle Wallet & Puzzle SDK
+built with Puzzle Wallet & Puzzle SDK
  
 ### SDK Docs: [link](https://docs.puzzle.online/guides/getting_started/)
 ### Where's Alex Leo Program Docs: [link](https://github.com/puzzlehq/serengeti/blob/main/README.md)
