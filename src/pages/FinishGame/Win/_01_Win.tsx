@@ -21,7 +21,7 @@ import {
   useEvent,
 } from '@puzzlehq/sdk';
 
-import { useMsRecords } from '../../../hooks/msRecords';
+import { useMsRecords } from '@hooks/msRecords';
 
 const Win = () => {
   const [inputs, eventId, setEventId, initialize, setStep] =

@@ -16,12 +16,12 @@ import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
   transitionFees,
-} from '../../state/manager';
+} from '@state/manager.js';
 import { useEffect, useState } from 'react';
-import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
-import { Step, useAcceptGameStore } from './store';
-import { useGameStore } from '../../state/gameStore';
-import { useMsRecords } from '../../hooks/msRecords';
+import { Answer } from '@state/RecordTypes/wheres_alex_vxxx.js';
+import { Step, useAcceptGameStore } from './store.js';
+import { useGameStore } from '@state/gameStore.js';
+import { useMsRecords } from '@hooks/msRecords.js';
 
 function AcceptGame() {
   const [

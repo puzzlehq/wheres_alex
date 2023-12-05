@@ -1,6 +1,6 @@
 import inWeedsImg from '../assets/in_weeds.jpg';
 import behindBuildingImg from '../assets/behind_building.svg';
-import { Answer } from '../state/RecordTypes/wheres_alex_vxxx';
+import { Answer } from '@state/RecordTypes/wheres_alex_vxxx';
 
 type HideAlexProps = {
   setAnswer: (answer: Answer) => void;

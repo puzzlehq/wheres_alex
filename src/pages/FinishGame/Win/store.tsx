@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { RecordWithPlaintext } from '@puzzlehq/sdk';
-import { FinishGameInputs } from '../../../state/manager';
+import { FinishGameInputs } from '@state/manager';
 
 export enum Step {
   _01_Claim,

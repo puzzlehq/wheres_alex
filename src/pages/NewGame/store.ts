@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { ProposeGameInputs } from '../../state/manager';
+import { ProposeGameInputs } from '@state/manager';
 
 export enum Step {
   _01_NewGame,

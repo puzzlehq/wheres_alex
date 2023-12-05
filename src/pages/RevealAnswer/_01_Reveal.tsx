@@ -11,7 +11,7 @@ import {
   GAME_PROGRAM_ID,
   transitionFees,
 } from '@state/manager.js';
-import { useMsRecords } from '../../hooks/msRecords.js';
+import { useMsRecords } from '@hooks/msRecords.js';
 import { Step, useRevealAnswerStore } from './store.js';
 import {
   EventStatus,
