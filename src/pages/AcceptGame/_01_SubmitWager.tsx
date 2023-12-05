@@ -58,6 +58,10 @@ const SubmitWager = () => {
   const eventStatus = event?.status;
 
   useEffect(() => {
+    event && console.log('Submit Wager: event', event);
+  }, [event])
+
+  useEffect(() => {
     const eventError = _error;
     eventError && setError(eventError);
   }, [_error]);

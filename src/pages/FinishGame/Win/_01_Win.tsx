@@ -42,7 +42,10 @@ const Win = () => {
     address: msAddress,
   });
   const eventStatus = event?.status;
-  event && console.log('Win: event', event);
+  
+  useEffect(() => {
+    event && console.log('Win: event', event);
+  }, [event])
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();

@@ -56,6 +56,10 @@ function ConfirmStartGame() {
   const eventStatus = event?.status;
 
   useEffect(() => {
+    event && console.log('ConfirmStartGame', event);
+  }, [event])
+
+  useEffect(() => {
     _error && setError(_error);
   }, [_error]);
 

@@ -52,7 +52,10 @@ function AcceptGame() {
     multisig: true,
   });
   const eventStatus = event?.status;
-  event && console.log('AcceptGame: event', event);
+  
+  useEffect(() => {
+    event && console.log('AcceptGame: event', event);
+  }, [event])
 
   useEffect(() => {
     const eventError = _error;
