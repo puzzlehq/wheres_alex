@@ -3,7 +3,7 @@ import PageHeader from '@components/PageHeader';
 import Versus from '@components/Versus';
 import Button from '@components/Button';
 import Nav from '@components/Nav';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   EventStatus,
@@ -11,17 +11,17 @@ import {
   importSharedState,
   requestCreateEvent,
   requestSignature,
-  useEvent,
 } from '@puzzlehq/sdk';
 import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
   SubmitWagerInputs,
   transitionFees,
-} from '../../state/manager';
+} from '@state/manager';
 import { Step, useAcceptGameStore } from './store';
-import { useGameStore } from '../../state/gameStore';
+import { useGameStore } from '@state/gameStore';
 import jsyaml from 'js-yaml';
+import { useEventHandling } from '@hooks/eventHandling';
 
 const messageToSign = '1234567field';
 
@@ -50,32 +50,9 @@ const SubmitWager = () => {
   ]);
   const [confirmStep, setConfirmStep] = useState(ConfirmStep.Signing);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-
-  const { event, error: _error } = useEvent({ id: eventIdSubmit });
-  const eventStatus = event?.status;
-
-  useEffect(() => {
-    event && console.log('Submit Wager: event', event);
-  }, [event]);
-
-  useEffect(() => {
-    const eventError = _error;
-    eventError && setError(eventError);
-  }, [_error]);
-
-  useEffect(() => {
-    if (eventStatus === EventStatus.Settled) {
-      setStep(Step._02_AcceptGame);
-      setLoading(false);
-      setError(undefined);
-    } else if (eventStatus === EventStatus.Failed) {
-      setLoading(false);
-      setError(event?.error);
-    }
-  }, [eventStatus]);
+  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventIdSubmit, onSettled: () => setStep(Step._02_AcceptGame) });
 
   const createEvent = async () => {
     if (
@@ -125,6 +102,7 @@ const SubmitWager = () => {
       /// todo - other things here?
       setEventIdSubmit(response.eventId);
       setSubmitWagerInputs({ ...newInputs });
+      setSearchParams({ eventIdSubmit: response.eventId });
     }
   };
 
@@ -133,9 +111,6 @@ const SubmitWager = () => {
   const opponent_wager_record = largestPiece;
 
   const disabled = !opponent || !wager || !opponent_wager_record || !inputs;
-  const eventLoading =
-    eventStatus &&
-    [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
 
   const [buttonText, setButtonText] = useState('SUBMIT WAGER');
 
@@ -166,14 +141,14 @@ const SubmitWager = () => {
         {error && <p>Error: {error}</p>}
         <Button
           color='green'
-          disabled={disabled || loading || eventLoading}
+          disabled={disabled || loading}
           onClick={createEvent}
         >
           {buttonText}
         </Button>
         <Button
           color='gray'
-          disabled={loading || eventLoading}
+          disabled={loading}
           onClick={() => {
             /// todo - way more here
             navigate('/');

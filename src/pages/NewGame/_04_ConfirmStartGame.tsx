@@ -11,6 +11,7 @@ import {
   transitionFees,
 } from '@state/manager.js';
 import { Answer } from '@state/RecordTypes/wheres_alex_vxxx.js';
+import { useEventHandling } from '@hooks/eventHandling.js';
 import {
   createSharedState,
   requestCreateEvent,
@@ -18,12 +19,12 @@ import {
   useAccount,
   EventType,
   EventStatus,
-  useEvent,
 } from '@puzzlehq/sdk';
 import { useEffect, useState } from 'react';
 import jsyaml from 'js-yaml';
 
 import { Step, useNewGameStore } from './store.js';
+import { useSearchParams } from 'react-router-dom';
 
 const messageToSign = '1234567field';
 
@@ -49,31 +50,15 @@ function ConfirmStartGame() {
   const amount = inputs?.challenger_wager_amount ?? 0;
 
   const { account } = useAccount();
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-
-  const { event, error: _error } = useEvent({ id: eventId });
-  const eventStatus = event?.status;
+  
+  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventId, onSettled: () => setStep(Step._05_GameStarted) });
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    event && console.log('ConfirmStartGame', event);
-  }, [event]);
-
-  useEffect(() => {
-    _error && setError(_error);
-  }, [_error]);
-
-  useEffect(() => {
-    if (eventStatus === EventStatus.Settled) {
-      setStep(Step._05_GameStarted);
-      setLoading(false);
-      setError(undefined);
-    } else if (eventStatus === EventStatus.Failed) {
-      setLoading(false);
-      setError(event?.error);
+    if (event) {
+      setConfirmStep(ConfirmStep.Signing);
     }
-  }, [eventStatus]);
+  }, [event])
 
   const createProposeGameEvent = async () => {
     setLoading(true);
@@ -138,10 +123,10 @@ function ConfirmStartGame() {
         } else {
           console.log('success', response.eventId);
           setEventId(response.eventId);
+          setSearchParams({ eventId: response.eventId });
         }
       }
     }
-    setConfirmStep(ConfirmStep.Signing);
   };
 
   const disabled = [

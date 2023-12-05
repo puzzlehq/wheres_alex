@@ -6,9 +6,11 @@ type UseEventHandlingProps = {
   id?: string;
   address?: string;
   multisig?: boolean;
+  stepName?: string;
+  onSettled?: () => void;
 }
 
-export const useEventHandling = ({id, address, multisig}: UseEventHandlingProps) => {
+export const useEventHandling = ({id, address, multisig, stepName, onSettled}: UseEventHandlingProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
 
@@ -16,7 +18,7 @@ export const useEventHandling = ({id, address, multisig}: UseEventHandlingProps)
   const eventStatus = event?.status;
 
   useEffect(() => {
-    event && console.log('Event:', event);
+    event && stepName && console.log(`${stepName}:`, event);
   }, [event]);
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export const useEventHandling = ({id, address, multisig}: UseEventHandlingProps)
 
   useEffect(() => {
     if (eventStatus === EventStatus.Settled) {
+      onSettled && onSettled();
       setLoading(false);
       setError(undefined);
     } else if (eventStatus === EventStatus.Failed) {
