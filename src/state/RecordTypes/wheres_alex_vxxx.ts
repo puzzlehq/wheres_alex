@@ -249,6 +249,8 @@ export const getGameState = (game: GameNotification): GameState => {
     }
     case '10u32':
       return `${challenger_or_opponent}:5`;
+    default:
+      return 'challenger:0';
   }
 };
 
