@@ -153,11 +153,11 @@ function ConfirmStartGame() {
     event &&
     [EventStatus.Creating, EventStatus.Pending].includes(event?.status);
 
-  const [buttonText, setButtonText] = useState('CREATE EVENT');
+  const [buttonText, setButtonText] = useState('PROPOSE GAME');
 
   useEffect(() => {
     if (!loading) {
-      setButtonText('CREATE EVENT');
+      setButtonText('PROPOSE GAME');
     } else if (event?.status === EventStatus.Creating) {
       setButtonText('CREATING EVENT...');
     } else if (event?.status === EventStatus.Pending) {

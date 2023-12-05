@@ -139,11 +139,11 @@ const SubmitWager = () => {
     eventStatus &&
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
 
-  const [buttonText, setButtonText] = useState('CREATE EVENT');
+  const [buttonText, setButtonText] = useState('SUBMIT WAGER');
 
   useEffect(() => {
     if (!loading) {
-      setButtonText('CREATE EVENT');
+      setButtonText('SUBMIT WAGER');
     } else if (event?.status === EventStatus.Creating) {
       setButtonText('CREATING EVENT...');
     } else if (event?.status === EventStatus.Pending) {
@@ -175,6 +175,7 @@ const SubmitWager = () => {
         </Button>
         <Button
           color='gray'
+          disabled={loading || eventLoading}
           onClick={() => {
             /// todo - way more here
             navigate('/');

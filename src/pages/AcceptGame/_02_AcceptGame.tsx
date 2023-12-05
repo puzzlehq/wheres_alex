@@ -74,7 +74,8 @@ function AcceptGame() {
   }, [eventStatus]);
 
   const { balances: msBalances } = useBalance({
-    address: msAddress ?? 'placeholder_todo_remove',
+    address: msAddress,
+    multisig: true
   });
   const msPublicBalance =
     msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
@@ -206,10 +207,10 @@ function AcceptGame() {
     eventStatus &&
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
 
-  const [buttonText, setButtonText] = useState('CREATE EVENT');
+  const [buttonText, setButtonText] = useState('ACCEPT GAME');
   useEffect(() => {
     if (!loading) {
-      setButtonText('CREATE EVENT');
+      setButtonText('ACCEPT GAME');
     } else if (event?.status === EventStatus.Creating) {
       setButtonText('CREATING EVENT...');
     } else if (event?.status === EventStatus.Pending) {

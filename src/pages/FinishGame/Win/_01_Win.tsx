@@ -40,6 +40,7 @@ const Win = () => {
   const { event, error: _error } = useEvent({
     id: eventId,
     address: msAddress,
+    multisig: true
   });
   const eventStatus = event?.status;
   
@@ -67,7 +68,8 @@ const Win = () => {
   }, [eventStatus]);
 
   const { balances: msBalances } = useBalance({
-    address: msAddress ?? 'placeholder_todo_remove',
+    address: msAddress,
+    multisig: true,
   });
   const msPublicBalance =
     msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
