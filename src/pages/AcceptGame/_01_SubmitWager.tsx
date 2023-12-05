@@ -129,12 +129,12 @@ const SubmitWager = () => {
   };
 
   const opponent = currentGame?.gameNotification.recordData.challenger_address;
-  const wagerAmount =
+  const wager =
     currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
   const opponent_wager_record = largestPiece;
 
   const disabled =
-    !opponent || !wagerAmount || !opponent_wager_record || !inputs;
+    !opponent || !wager || !opponent_wager_record || !inputs;
   const eventLoading =
     eventStatus &&
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
@@ -162,7 +162,7 @@ const SubmitWager = () => {
         <PageHeader bg='bg-primary-pink' text={`YOU'VE BEEN CHALLENGED!`} />
       </div>
       {opponent && <Versus versus={opponent} />}
-      <Wager wagerAmount={Number(wagerAmount)} />
+      <Wager wagerAmount={Number(wager)} />
       <div className='flex flex-grow flex-col' />
       <div className='flex w-full flex-col gap-4'>
         {error && <p>Error: {error}</p>}
