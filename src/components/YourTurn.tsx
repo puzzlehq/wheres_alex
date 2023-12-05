@@ -42,7 +42,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               setCurrentGame(game);
-              navigate('/claim-prize/lose');
+              navigate('/finish-game/lose');
             }}
             size='sm'
             color='yellow'
@@ -55,7 +55,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               setCurrentGame(game);
-              navigate('/claim-prize/win');
+              navigate('/finish-game/win');
             }}
             color='yellow'
             size='sm'
