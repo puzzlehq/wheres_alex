@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/Button';
-import TotalWinnings from '../components/TotalWinnings';
-import TheirTurn from '../components/TheirTurn';
-import YourTurn from '../components/YourTurn';
-import { useGameStore } from '../state/store';
+import Button from '@components/Button';
+import TotalWinnings from '@components/TotalWinnings';
+import TheirTurn from '@components/TheirTurn';
+import YourTurn from '@components/YourTurn';
+import { useGameStore } from '../state/gameStore';
 import { useNewGameStore } from './NewGame/store';
 import { useAccount } from '@puzzlehq/sdk';
 

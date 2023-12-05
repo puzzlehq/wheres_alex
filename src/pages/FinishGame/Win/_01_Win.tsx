@@ -1,10 +1,15 @@
-import PageHeader from '../../../components/PageHeader';
-import SelectedAlexLocation from '../../../components/SelectedAlexLocation';
-import Wager from '../../../components/Wager';
-import Button from '../../../components/Button';
+import PageHeader from '@components/PageHeader';
+import SelectedAlexLocation from '@components/SelectedAlexLocation';
+import Wager from '@components/Wager';
+import Button from '@components/Button';
+import { useGameStore } from '@state/gameStore';
+import { Answer } from '@state/RecordTypes/wheres_alex_vxxx';
+import {
+  GAME_FUNCTIONS,
+  GAME_PROGRAM_ID,
+  transitionFees,
+} from '@state/manager';
 import { Step, useClaimPrizeWinStore } from './store';
-import { Answer } from '../../../state/RecordTypes/wheres_alex_vxxx';
-import { useGameStore } from '../../../state/store';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -15,11 +20,7 @@ import {
   useBalance,
   useEvent,
 } from '@puzzlehq/sdk';
-import {
-  GAME_FUNCTIONS,
-  GAME_PROGRAM_ID,
-  transitionFees,
-} from '../../../state/manager';
+
 import { useMsRecords } from '../../../hooks/msRecords';
 
 const Win = () => {
@@ -40,13 +41,13 @@ const Win = () => {
   const { event, error: _error } = useEvent({
     id: eventId,
     address: msAddress,
-    multisig: true
+    multisig: true,
   });
   const eventStatus = event?.status;
-  
+
   useEffect(() => {
     event && console.log('Win: event', event);
-  }, [event])
+  }, [event]);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();

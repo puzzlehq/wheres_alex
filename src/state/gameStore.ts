@@ -9,11 +9,11 @@ import {
   getGameState,
   parseGameRecord,
 } from './RecordTypes/wheres_alex_vxxx';
-import { useRenegeStore } from '../pages/Renege/store';
-import { Step, useAcceptGameStore } from '../pages/AcceptGame/store';
-import { useNewGameStore } from '../pages/NewGame/store';
-import { useClaimPrizeWinStore } from '../pages/FinishGame/Win/store';
-import { useRevealAnswerStore } from '../pages/RevealAnswer/store';
+import { useRenegeStore } from '@pages/Renege/store';
+import { Step, useAcceptGameStore } from '@pages/AcceptGame/store';
+import { useNewGameStore } from '@pages/NewGame/store';
+import { useClaimPrizeWinStore } from '@pages/FinishGame/Win/store';
+import { useRevealAnswerStore } from '@pages/RevealAnswer/store';
 import _ from 'lodash';
 
 const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {

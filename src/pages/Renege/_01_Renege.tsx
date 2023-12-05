@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import Versus from '../../components/Versus';
-import PageHeader from '../../components/PageHeader';
-import Wager from '../../components/Wager';
-import Button from '../../components/Button';
+import Versus from '@components/Versus.js';
+import PageHeader from '@components/PageHeader.js';
+import Wager from '@components/Wager.js';
+import Button from '@components/Button.js';
 import { useRenegeStore } from './store';
 
 const RenegeGame = () => {

@@ -68,8 +68,8 @@ const AlexButton = ({ imgSrc, text, selected, onClick }: AlexButtonProps) => {
           selected
             ? 'text-primary-green'
             : selected === false
-            ? 'text-primary-white opacity-40 group-hover:text-primary-green'
-            : 'text-primary-white'
+              ? 'text-primary-white opacity-40 group-hover:text-primary-green'
+              : 'text-primary-white'
         }`}
       >
         {text}

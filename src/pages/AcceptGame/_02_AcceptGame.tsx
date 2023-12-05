@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import PageHeader from '../../components/PageHeader';
-import Nav from '../../components/Nav';
-import ChooseAlexLocation from '../../components/ChooseAlexLocation';
-import Button from '../../components/Button';
+import PageHeader from '@components/PageHeader';
+import Nav from '@components/Nav';
+import ChooseAlexLocation from '@components/ChooseAlexLocation';
+import Button from '@components/Button';
 import {
   requestCreateEvent,
   EventType,
@@ -20,7 +20,7 @@ import {
 import { useEffect, useState } from 'react';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import { Step, useAcceptGameStore } from './store';
-import { useGameStore } from '../../state/store';
+import { useGameStore } from '../../state/gameStore';
 import { useMsRecords } from '../../hooks/msRecords';
 
 function AcceptGame() {
@@ -52,10 +52,10 @@ function AcceptGame() {
     multisig: true,
   });
   const eventStatus = event?.status;
-  
+
   useEffect(() => {
     event && console.log('AcceptGame: event', event);
-  }, [event])
+  }, [event]);
 
   useEffect(() => {
     const eventError = _error;
@@ -75,7 +75,7 @@ function AcceptGame() {
 
   const { balances: msBalances } = useBalance({
     address: msAddress,
-    multisig: true
+    multisig: true,
   });
   const msPublicBalance =
     msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;

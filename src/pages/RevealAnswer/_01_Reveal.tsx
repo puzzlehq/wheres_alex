@@ -1,30 +1,34 @@
 import { useEffect, useState } from 'react';
-import Button from '../../components/Button';
-import PageHeader from '../../components/PageHeader';
-import SelectedAlexLocation from '../../components/SelectedAlexLocation';
-import Wager from '../../components/Wager';
-import { useMsRecords } from '../../hooks/msRecords';
-import { useGameStore } from '../../state/store';
-import { Step, useRevealAnswerStore } from './store';
-import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
-import Versus from '../../components/Versus';
-import { EventStatus, EventType, requestCreateEvent, useEvent } from '@puzzlehq/sdk';
+import Button from '@components/Button.js';
+import PageHeader from '@components/PageHeader.js';
+import SelectedAlexLocation from '@components/SelectedAlexLocation.js';
+import Wager from '@components/Wager.js';
+import Versus from '@components/Versus.js';
+import { useGameStore } from '@state/gameStore.js';
+import { Answer } from '@state/RecordTypes/wheres_alex_vxxx.js';
 import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
   transitionFees,
-} from '../../state/manager';
+} from '@state/manager.js';
+import { useMsRecords } from '../../hooks/msRecords.js';
+import { Step, useRevealAnswerStore } from './store.js';
+import {
+  EventStatus,
+  EventType,
+  requestCreateEvent,
+  useEvent,
+} from '@puzzlehq/sdk';
 
 const Reveal = () => {
-  const [inputs, eventId, initialize, setEventId, setStep] = useRevealAnswerStore(
-    (state) => [
+  const [inputs, eventId, initialize, setEventId, setStep] =
+    useRevealAnswerStore((state) => [
       state.inputsRevealAnswer,
       state.eventId,
       state.initialize,
       state.setEventId,
       state.setStep,
-    ]
-  );
+    ]);
   const [currentGame] = useGameStore((state) => [
     state.currentGame,
     state.puzzleRecords,

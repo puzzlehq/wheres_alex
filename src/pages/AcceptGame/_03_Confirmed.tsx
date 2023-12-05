@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import GameInfo from '../../components/GameInfo';
-import Button from '../../components/Button';
+import GameInfo from '@components/GameInfo';
+import Button from '@components/Button';
 import { useAcceptGameStore } from './store';
 import { useEvent } from '@puzzlehq/sdk';
 

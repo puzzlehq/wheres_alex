@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useRenegeStore } from '../pages/Renege/store';
 import Button from './Button';
-import { Game, useGameStore } from '../state/store';
+import { Game, useGameStore } from '../state/gameStore';
 import { shortenAddress } from '@puzzlehq/sdk';
 
 function TheirTurnItem({ game }: { game: Game }) {

@@ -1,7 +1,8 @@
-import Wager from '../../components/Wager';
-import PageHeader from '../../components/PageHeader';
-import Versus from '../../components/Versus';
-import Button from '../../components/Button';
+import Wager from '@components/Wager';
+import PageHeader from '@components/PageHeader';
+import Versus from '@components/Versus';
+import Button from '@components/Button';
+import Nav from '@components/Nav';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
@@ -19,9 +20,8 @@ import {
   transitionFees,
 } from '../../state/manager';
 import { Step, useAcceptGameStore } from './store';
-import { useGameStore } from '../../state/store';
+import { useGameStore } from '../../state/gameStore';
 import jsyaml from 'js-yaml';
-import Nav from '../../components/Nav';
 
 const messageToSign = '1234567field';
 
@@ -59,7 +59,7 @@ const SubmitWager = () => {
 
   useEffect(() => {
     event && console.log('Submit Wager: event', event);
-  }, [event])
+  }, [event]);
 
   useEffect(() => {
     const eventError = _error;
@@ -129,12 +129,10 @@ const SubmitWager = () => {
   };
 
   const opponent = currentGame?.gameNotification.recordData.challenger_address;
-  const wager =
-    currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
+  const wager = currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
   const opponent_wager_record = largestPiece;
 
-  const disabled =
-    !opponent || !wager || !opponent_wager_record || !inputs;
+  const disabled = !opponent || !wager || !opponent_wager_record || !inputs;
   const eventLoading =
     eventStatus &&
     [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);

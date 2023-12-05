@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import GameInfo from '../../components/GameInfo';
-import Button from '../../components/Button';
+import GameInfo from '@components/GameInfo';
+import Button from '@components/Button';
+import { useGameStore } from '@state/gameStore';
 import { useRevealAnswerStore } from './store';
-import { useGameStore } from '../../state/store';
 import { useEvent } from '@puzzlehq/sdk';
 
 function Confirmed() {

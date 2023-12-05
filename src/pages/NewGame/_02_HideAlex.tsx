@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Nav from '../../components/Nav';
-import ChooseAlexLocation from '../../components/ChooseAlexLocation';
-import PageHeader from '../../components/PageHeader';
-import Button from '../../components/Button';
-import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
+import Nav from '@components/Nav';
+import ChooseAlexLocation from '@components/ChooseAlexLocation';
+import PageHeader from '@components/PageHeader';
+import Button from '@components/Button';
+import { Answer } from '@state/RecordTypes/wheres_alex_vxxx';
 import { Step, useNewGameStore } from './store';
 
 function HideAlex() {

@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Versus from '../../components/Versus.js';
-import PageHeader from '../../components/PageHeader';
-import Wager from '../../components/Wager';
-import SelectedAlexLocation from '../../components/SelectedAlexLocation';
-import Button from '../../components/Button';
+import Versus from '@components/Versus.js';
+import PageHeader from '@components/PageHeader.js';
+import Wager from '@components/Wager.js';
+import SelectedAlexLocation from '@components/SelectedAlexLocation.js';
+import Button from '@components/Button.js';
 import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
   ProposeGameInputs,
   transitionFees,
-} from '../../state/manager';
+} from '@state/manager.js';
+import { Answer } from '@state/RecordTypes/wheres_alex_vxxx.js';
 import {
   createSharedState,
   requestCreateEvent,
@@ -21,7 +22,7 @@ import {
 } from '@puzzlehq/sdk';
 import { useEffect, useState } from 'react';
 import jsyaml from 'js-yaml';
-import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx.js';
+
 import { Step, useNewGameStore } from './store.js';
 
 const messageToSign = '1234567field';
@@ -57,7 +58,7 @@ function ConfirmStartGame() {
 
   useEffect(() => {
     event && console.log('ConfirmStartGame', event);
-  }, [event])
+  }, [event]);
 
   useEffect(() => {
     _error && setError(_error);

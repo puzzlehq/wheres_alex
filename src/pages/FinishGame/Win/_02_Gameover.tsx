@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import Wager from '../../../components/Wager';
-import PageHeader from '../../../components/PageHeader';
-import { getNumberAmount } from '../../../utils';
-import Button from '../../../components/Button';
-import { useGameStore } from '../../../state/store';
+import Wager from '@components/Wager.js';
+import PageHeader from '@components/PageHeader.js';
+import { getNumberAmount } from '../../../utils.js';
+import Button from '@components/Button.js';
+import { useGameStore } from '@state/gameStore.js';
 
 const GameOver = () => {
   const [currentGame] = useGameStore((state) => [state.currentGame]);

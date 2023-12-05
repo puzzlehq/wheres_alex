@@ -12,6 +12,9 @@ import inject from '@rollup/plugin-inject';
 
 const root = resolve(__dirname, './src');
 const assetsDir = resolve(root, './assets');
+const pagesDir = resolve(root, './pages');
+const componentsDir = resolve(root, './components');
+const stateDir = resolve(root, './state');
 
 export default defineConfig({
   define: {
@@ -21,6 +24,9 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, './src'),
       '@assets': assetsDir,
+      '@pages': pagesDir,
+      '@components': componentsDir,
+      '@state': stateDir,
     },
   },
   plugins: [react(), liveReload('.path'), wasm()],

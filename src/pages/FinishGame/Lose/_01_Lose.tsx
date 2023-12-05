@@ -1,10 +1,10 @@
-import PageHeader from '../../../components/PageHeader';
-import SelectedAlexLocation from '../../../components/SelectedAlexLocation';
-import Wager from '../../../components/Wager';
-import Button from '../../../components/Button';
+import PageHeader from '@components/PageHeader';
+import SelectedAlexLocation from '@components/SelectedAlexLocation';
+import Wager from '@components/Wager';
+import Button from '@components/Button';
 import { useNavigate } from 'react-router-dom';
-import { useGameStore } from '../../../state/store';
-import { Answer } from '../../../state/RecordTypes/wheres_alex_vxxx';
+import { useGameStore } from '@state/gameStore';
+import { Answer } from '@state/RecordTypes/wheres_alex_vxxx';
 import { shortenAddress } from '@puzzlehq/sdk';
 
 const Lose = () => {

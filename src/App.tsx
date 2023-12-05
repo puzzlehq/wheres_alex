@@ -1,7 +1,12 @@
 import Home from './pages/Home.js';
 import NewGame from './pages/NewGame/index.js';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
-import { AppHeader } from './components/Header.js';
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from 'react-router-dom';
+import { AppHeader } from '@components/Header.js';
 import { Welcome } from './pages/Welcome.js';
 import { useAccount, useOnSessionDelete } from '@puzzlehq/sdk';
 import AcceptGame from './pages/AcceptGame/index.js';
@@ -17,12 +22,10 @@ const Rerouter = () => {
 
   useOnSessionDelete(() => {
     navigate('/');
-  })
+  });
 
-  return (
-    <></>
-  )
-}
+  return <></>;
+};
 
 function App() {
   const { account } = useAccount();
@@ -34,7 +37,7 @@ function App() {
     <div className='App flex min-h-screen justify-center bg-neutral-900'>
       <QueryClientProvider client={queryClient}>
         <Router>
-          <Rerouter/>
+          <Rerouter />
           <div className='flex w-full max-w-screen-sm flex-col overflow-y-auto shadow-md'>
             {account && account?.address && <AppHeader />}
             <div className='h-full w-full max-w-screen-sm p-4'>

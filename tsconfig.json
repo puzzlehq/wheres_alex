@@ -21,6 +21,12 @@
     "noFallthroughCasesInSwitch": true,
     "strictNullChecks": true,
     "sourceMap": true,
+    "paths": {
+      "@pages/*": ["./src/pages/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@state/*": ["./src/state/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]

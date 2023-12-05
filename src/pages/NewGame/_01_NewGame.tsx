@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Nav from '../../components/Nav';
-import PageHeader from '../../components/PageHeader';
-import Button from '../../components/Button';
+import Nav from '@components/Nav';
+import PageHeader from '@components/PageHeader';
+import Button from '@components/Button';
 import { useAccount } from '@puzzlehq/sdk';
 import { aleoAddressRegex } from '../../utils.js';
 import { Step, useNewGameStore } from './store.js';

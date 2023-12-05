@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Nav from '../../components/Nav';
-import PageHeader from '../../components/PageHeader';
-import Button from '../../components/Button';
+import Nav from '@components/Nav';
+import PageHeader from '@components/PageHeader';
+import Button from '@components/Button';
+import { useGameStore } from '@state/gameStore';
 import { useMemo, useState } from 'react';
 import { Step, useNewGameStore } from './store';
-import { useGameStore } from '../../state/store';
 
 function StartWager() {
   const [error, setError] = useState<string | undefined>();

@@ -4,7 +4,7 @@ import leftImageSrc from '../assets/alex_mic_right_tilt.png';
 import bottomImageSrc from '../assets/alexbottom.png';
 import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import Button from '../components/Button.js';
+import Button from '@components/Button.js';
 
 export const Welcome = () => {
   const navigate = useNavigate();

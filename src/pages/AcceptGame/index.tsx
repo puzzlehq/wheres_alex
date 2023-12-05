@@ -3,8 +3,8 @@ import AcceptGamePage from './_02_AcceptGame';
 import Confirmed from './_03_Confirmed';
 import { useNavigate } from 'react-router-dom';
 import { Step, useAcceptGameStore } from './store';
-import { Game, useGameStore } from '../../state/store';
-import Button from '../../components/Button';
+import { Game, useGameStore } from '../../state/gameStore';
+import Button from '@components/Button';
 
 export const SubmitWagerButton = ({ game }: { game: Game }) => {
   const [initializeSubmitWager] = useAcceptGameStore((state) => [
