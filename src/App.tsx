@@ -15,7 +15,7 @@ import WinRoute from './pages/FinishGame/Win/index.js';
 import RenegeGame from './pages/Renege/_01_Renege.js';
 import { useInitGame } from './hooks/initGame.js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import FinishGame from './pages/RevealAnswer/index.js';
+import RevealAnswer from './pages/RevealAnswer/index.js';
 
 const Rerouter = () => {
   const navigate = useNavigate();
@@ -44,12 +44,12 @@ function App() {
               <Routes>
                 <Route index element={account ? <Home /> : <Welcome />} />
                 <Route path='/new-game' element={<NewGame />} />
-                <Route path='/renege-game' element={<RenegeGame />} />
-                <Route path='/accept-game' element={<AcceptGame />} />
-                <Route path='/reveal-answer' element={<FinishGame />} />
+                <Route path='/renege-game/:game_multisig' element={<RenegeGame />} />
+                <Route path='/accept-game/:game_multisig' element={<AcceptGame />} />
+                <Route path='/reveal-answer/:game_multisig' element={<RevealAnswer />} />
                 <Route path='/finish-game'>
-                  <Route path='win' element={<WinRoute />} />
-                  <Route path='lose' element={<LoseRoute />} />
+                  <Route path='win/:game_multisig' element={<WinRoute />} />
+                  <Route path='lose/:game_multisig' element={<LoseRoute />} />
                 </Route>
               </Routes>
             </div>

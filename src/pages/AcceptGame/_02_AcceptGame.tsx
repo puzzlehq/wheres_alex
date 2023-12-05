@@ -9,7 +9,6 @@ import {
   EventStatus,
   useBalance,
   shortenAddress,
-  useEvent,
 } from '@puzzlehq/sdk';
 import {
   AcceptGameInputs,
@@ -22,6 +21,8 @@ import { Answer } from '@state/RecordTypes/wheres_alex_vxxx.js';
 import { Step, useAcceptGameStore } from './store.js';
 import { useGameStore } from '@state/gameStore.js';
 import { useMsRecords } from '@hooks/msRecords.js';
+import { useEventHandling } from '@hooks/eventHandling.js';
+import { useSearchParams } from 'react-router-dom';
 
 function AcceptGame() {
   const [
@@ -40,38 +41,13 @@ function AcceptGame() {
     state.setStep,
   ]);
   const [currentGame] = useGameStore((state) => [state.currentGame]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
 
   const msAddress = currentGame?.gameNotification.recordData.game_multisig;
   const { msPuzzleRecords, msGameRecords } = useMsRecords(msAddress);
 
-  const { event, error: _error } = useEvent({
-    id: eventIdAccept,
-    address: msAddress,
-    multisig: true,
-  });
-  const eventStatus = event?.status;
+  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventIdAccept, address: msAddress, multisig: true, onSettled: () => setStep(Step._03_Confirmed) });
 
-  useEffect(() => {
-    event && console.log('AcceptGame: event', event);
-  }, [event]);
-
-  useEffect(() => {
-    const eventError = _error;
-    eventError && setError(eventError);
-  }, [_error]);
-
-  useEffect(() => {
-    if (eventStatus === EventStatus.Settled) {
-      setStep(Step._03_Confirmed);
-      setLoading(false);
-      setError(undefined);
-    } else if (eventStatus === EventStatus.Failed) {
-      setLoading(false);
-      setError(event?.error);
-    }
-  }, [eventStatus]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const { balances: msBalances } = useBalance({
     address: msAddress,
@@ -134,7 +110,6 @@ function AcceptGame() {
       piece_claim_challenger,
       piece_stake_opponent,
       piece_claim_opponent,
-      '748004u32'
     );
   }, [
     currentGame?.gameNotification.recordData.game_multisig,
@@ -185,6 +160,7 @@ function AcceptGame() {
       } else {
         console.log('success', response.eventId);
         setEventIdAccept(response.eventId);
+        setSearchParams({ eventIdAccept: response.eventId });
       }
     } catch (e) {
       setError((e as Error).message);
@@ -203,9 +179,6 @@ function AcceptGame() {
     !inputs.piece_claim_opponent ||
     !answer ||
     msPublicBalance < transitionFees.accept_game + transitionFees.finish_game;
-  const eventLoading =
-    eventStatus &&
-    [EventStatus.Creating, EventStatus.Pending].includes(eventStatus);
 
   const [buttonText, setButtonText] = useState('ACCEPT GAME');
   useEffect(() => {
@@ -254,7 +227,7 @@ function AcceptGame() {
           )}
         <Button
           onClick={createEvent}
-          disabled={disabled || loading || eventLoading}
+          disabled={disabled || loading}
           color='green'
         >
           {buttonText}

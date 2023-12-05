@@ -17,8 +17,9 @@ import {
   EventStatus,
   EventType,
   requestCreateEvent,
-  useEvent,
 } from '@puzzlehq/sdk';
+import { useEventHandling } from '@hooks/eventHandling.js';
+import { useSearchParams } from 'react-router-dom';
 
 const Reveal = () => {
   const [inputs, eventId, initialize, setEventId, setStep] =
@@ -38,26 +39,9 @@ const Reveal = () => {
     currentGame?.gameNotification.recordData.game_multisig
   );
 
-  const { event, error: _error } = useEvent({ id: eventId });
-  const eventStatus = event?.status;
+  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventId, onSettled: () => setStep(Step._02_Confirmed) });
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-
-  useEffect(() => {
-    _error && setError(_error);
-  }, [_error]);
-
-  useEffect(() => {
-    if (eventStatus === EventStatus.Settled) {
-      setStep(Step._02_Confirmed);
-      setLoading(false);
-      setError(undefined);
-    } else if (eventStatus === EventStatus.Failed) {
-      setLoading(false);
-      setError(event?.error);
-    }
-  }, [eventStatus]);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (
@@ -146,6 +130,7 @@ const Reveal = () => {
     } else if (response.eventId) {
       console.log('success!', response.eventId);
       setEventId(response.eventId);
+      setSearchParams({ eventId: response.eventId });
     }
   };
 

@@ -28,7 +28,7 @@ export default defineConfig({
       '@pages': pagesDir,
       '@components': componentsDir,
       '@state': stateDir,
-      '@hooks': stateDir,
+      '@hooks': hooksDir,
     },
   },
   plugins: [react(), liveReload('.path'), wasm()],

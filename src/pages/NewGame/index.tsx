@@ -3,14 +3,16 @@ import HideAlex from './_02_HideAlex';
 import StartWager from './_03_StartWager';
 import ConfirmStartGame from './_04_ConfirmStartGame';
 import GameStarted from './_05_GameStarted';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Step, useNewGameStore } from './store';
+import { useEffect } from 'react';
 
 const NewGame = () => {
   const navigate = useNavigate();
-  const [step, setInputs, setStep] = useNewGameStore((state) => [
+  const [step, setInputs, setEventId, setStep] = useNewGameStore((state) => [
     state.step,
     state.setInputs,
+    state.setEventId,
     state.setStep,
   ]);
 
@@ -19,6 +21,15 @@ const NewGame = () => {
     setStep(Step._01_NewGame);
     navigate('/');
   };
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const _eventId = searchParams.get('eventId');
+    if (_eventId) {
+      setEventId(_eventId);
+    }
+  }, [searchParams])
 
   return (
     <div className='flex h-full w-full flex-col'>

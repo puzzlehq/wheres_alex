@@ -10,7 +10,7 @@ import {
   transitionFees,
 } from '@state/manager';
 import { Step, useClaimPrizeWinStore } from './store';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import {
   EventStatus,
@@ -35,6 +35,7 @@ const Win = () => {
   const [currentGame] = useGameStore((state) => [state.currentGame]);
 
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const msAddress = currentGame?.gameNotification.recordData.game_multisig;
   const { msPuzzleRecords, msGameRecords } = useMsRecords(msAddress);
 
@@ -180,6 +181,7 @@ const Win = () => {
     } else if (response.eventId) {
       console.log('success!', response.eventId);
       setEventId(response.eventId);
+      setSearchParams({ eventId: response.eventId });
     }
   };
 

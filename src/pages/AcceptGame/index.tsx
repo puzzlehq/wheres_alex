@@ -1,10 +1,11 @@
 import SubmitWager from './_01_SubmitWager';
 import AcceptGamePage from './_02_AcceptGame';
 import Confirmed from './_03_Confirmed';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Step, useAcceptGameStore } from './store';
 import { Game, useGameStore } from '@state/gameStore';
 import Button from '@components/Button';
+import { useEffect } from 'react';
 
 export const SubmitWagerButton = ({ game }: { game: Game }) => {
   const [initializeSubmitWager] = useAcceptGameStore((state) => [
@@ -30,7 +31,7 @@ export const SubmitWagerButton = ({ game }: { game: Game }) => {
         if (!puzzleRecord || !key_record || !game_req_notification) return;
         initializeSubmitWager(puzzleRecord, key_record, game_req_notification);
         setCurrentGame(game);
-        navigate('/accept-game');
+        navigate(`/accept-game/${game.gameNotification.recordData.game_multisig}`);
       }}
       color='yellow'
       size='sm'
@@ -49,7 +50,7 @@ export const AcceptGameButton = ({ game }: { game: Game }) => {
     <Button
       onClick={() => {
         setCurrentGame(game);
-        navigate('/accept-game');
+        navigate(`/accept-game/${game.gameNotification.recordData.game_multisig}`);
       }}
       color='yellow'
       size='sm'
@@ -61,12 +62,14 @@ export const AcceptGameButton = ({ game }: { game: Game }) => {
 
 const AcceptGame = () => {
   const navigate = useNavigate();
-  const [step, setStep, setAcceptGameInputs, setSubmitWagerInputs] =
+  const [step, setStep, setAcceptGameInputs, setSubmitWagerInputs, setEventIdSubmit, setEventIdAccept] =
     useAcceptGameStore((state) => [
       state.step,
       state.setStep,
       state.setAcceptGameInputs,
       state.setSubmitWagerInputs,
+      state.setEventIdSubmit,
+      state.setEventIdAccept
     ]);
 
   const done = () => {
@@ -75,6 +78,19 @@ const AcceptGame = () => {
     setStep(Step._01_SubmitWager);
     navigate('/');
   };
+
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+    const _eventIdSubmit = searchParams.get('eventIdSubmit');
+    const _eventIdAccept = searchParams.get('eventIdAccept');
+    if (_eventIdSubmit) {
+      setEventIdSubmit(_eventIdSubmit);
+    }
+    if (_eventIdAccept) {
+      setEventIdAccept(_eventIdAccept);
+    }
+  }, [searchParams])
 
   return (
     <div className='flex h-full w-full flex-col'>

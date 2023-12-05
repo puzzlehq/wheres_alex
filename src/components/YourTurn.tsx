@@ -29,7 +29,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               setCurrentGame(game);
-              navigate('/reveal-answer');
+              navigate(`/reveal-answer/${game.gameNotification.recordData.game_multisig}`);
             }}
             size='sm'
             color='yellow'
@@ -42,7 +42,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               setCurrentGame(game);
-              navigate('/finish-game/lose');
+              navigate(`/finish-game/lose/${game.gameNotification.recordData.game_multisig}`);
             }}
             size='sm'
             color='yellow'
@@ -55,7 +55,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               setCurrentGame(game);
-              navigate('/finish-game/win');
+              navigate(`/finish-game/win/${game.gameNotification.recordData.game_multisig}`);
             }}
             color='yellow'
             size='sm'
