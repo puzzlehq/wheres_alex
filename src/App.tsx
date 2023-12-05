@@ -43,7 +43,7 @@ function App() {
                 <Route path='/new-game' element={<NewGame />} />
                 <Route path='/renege-game' element={<RenegeGame />} />
                 <Route path='/accept-game' element={<AcceptGame />} />
-                <Route path='/finish-game' element={<FinishGame />} />
+                <Route path='/reveal-answer' element={<FinishGame />} />
                 <Route path='/claim-prize'>
                   <Route path='win' element={<WinRoute />} />
                   <Route path='lose' element={<LoseRoute />} />

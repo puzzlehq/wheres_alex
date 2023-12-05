@@ -13,7 +13,7 @@ import { useRenegeStore } from '../pages/Renege/store';
 import { Step, useAcceptGameStore } from '../pages/AcceptGame/store';
 import { useNewGameStore } from '../pages/NewGame/store';
 import { useClaimPrizeWinStore } from '../pages/FinishGame/Win/store';
-import { useFinishGameStore } from '../pages/RevealAnswer/store';
+import { useRevealAnswerStore } from '../pages/RevealAnswer/store';
 import _ from 'lodash';
 
 const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
@@ -255,7 +255,7 @@ export const useGameStore = create<GameStore>()(
         useAcceptGameStore.getState().close();
         useRenegeStore.getState().close();
         useClaimPrizeWinStore.getState().close();
-        useFinishGameStore.getState().close();
+        useRevealAnswerStore.getState().close();
         set({ currentGame: undefined });
       },
     }),

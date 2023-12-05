@@ -29,7 +29,7 @@ function YourTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               setCurrentGame(game);
-              navigate('/finish-game');
+              navigate('/reveal-answer');
             }}
             size='sm'
             color='yellow'

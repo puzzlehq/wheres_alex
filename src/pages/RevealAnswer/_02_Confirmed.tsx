@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import GameInfo from '../../components/GameInfo';
 import Button from '../../components/Button';
-import { useFinishGameStore } from './store';
+import { useRevealAnswerStore } from './store';
 import { useGameStore } from '../../state/store';
 import { useEvent } from '@puzzlehq/sdk';
 
 function Confirmed() {
-  const [eventId] = useFinishGameStore((state) => [state.eventId]);
+  const [eventId] = useRevealAnswerStore((state) => [state.eventId]);
   const [currentGame] = useGameStore((state) => [state.currentGame]);
 
   const game_address = currentGame?.gameNotification.recordData.game_multisig;

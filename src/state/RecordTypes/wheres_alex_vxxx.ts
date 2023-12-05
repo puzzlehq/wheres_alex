@@ -228,8 +228,6 @@ export const getGameState = (game: GameNotification): GameState => {
       ? 'challenger'
       : 'opponent';
 
-  console.log(challenger_or_opponent);
-
   switch (game.recordData.ix) {
     case '2u32':
       return `opponent:1`;

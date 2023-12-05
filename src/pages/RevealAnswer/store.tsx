@@ -8,7 +8,7 @@ export enum Step {
   _02_Confirmed,
 }
 
-type FinishGameStore = {
+type RevealAnswerStore = {
   inputsRevealAnswer?: Partial<RevealAnswerInputs>;
   eventId?: string;
   step: Step;
@@ -23,7 +23,7 @@ type FinishGameStore = {
   close: () => void;
 };
 
-export const useFinishGameStore = create<FinishGameStore>()(
+export const useRevealAnswerStore = create<RevealAnswerStore>()(
   persist(
     (set) => ({
       inputsRevealAnswer: undefined,
@@ -61,7 +61,7 @@ export const useFinishGameStore = create<FinishGameStore>()(
       },
     }),
     {
-      name: 'finish-game',
+      name: 'reveal-answer',
     }
   )
 );

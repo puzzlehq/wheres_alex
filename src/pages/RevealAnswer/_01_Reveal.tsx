@@ -5,7 +5,7 @@ import SelectedAlexLocation from '../../components/SelectedAlexLocation';
 import Wager from '../../components/Wager';
 import { useMsRecords } from '../../hooks/msRecords';
 import { useGameStore } from '../../state/store';
-import { Step, useFinishGameStore } from './store';
+import { Step, useRevealAnswerStore } from './store';
 import { Answer } from '../../state/RecordTypes/wheres_alex_vxxx';
 import Versus from '../../components/Versus';
 import { EventStatus, EventType, requestCreateEvent, useEvent } from '@puzzlehq/sdk';
@@ -16,7 +16,7 @@ import {
 } from '../../state/manager';
 
 const Reveal = () => {
-  const [inputs, eventId, initialize, setEventId, setStep] = useFinishGameStore(
+  const [inputs, eventId, initialize, setEventId, setStep] = useRevealAnswerStore(
     (state) => [
       state.inputsRevealAnswer,
       state.eventId,
@@ -145,6 +145,17 @@ const Reveal = () => {
     }
   };
 
+  const [buttonText, setButtonText] = useState('REVEAL ANSWER');
+  useEffect(() => {
+    if (!loading) {
+      setButtonText('REVEAL ANSWER');
+    } else if (event?.status === EventStatus.Creating) {
+      setButtonText('CREATING EVENT...');
+    } else if (event?.status === EventStatus.Pending) {
+      setButtonText('EVENT PENDING...');
+    }
+  }, [loading, event?.status]);
+
   const disabled =
     !inputs?.reveal_answer_notification_record ||
     !inputs?.challenger_answer_record ||
@@ -173,7 +184,7 @@ const Reveal = () => {
         onClick={createEvent}
         disabled={disabled || loading}
       >
-        REVEAL RESULTS
+        {buttonText}
       </Button>
     </div>
   );
