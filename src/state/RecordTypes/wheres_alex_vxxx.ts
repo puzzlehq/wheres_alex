@@ -6,6 +6,9 @@ export enum Answer {
   BehindTheBuilding = 'Behind the Building',
 }
 
+export const getAnswer = (answer: '0field' | '1field') =>
+  answer === '0field' ? Answer.InTheWeeds : Answer.BehindTheBuilding;
+
 export const GameRecordSchema = z.object({
   owner: zodAddress,
   challenger_commit: z.string(),

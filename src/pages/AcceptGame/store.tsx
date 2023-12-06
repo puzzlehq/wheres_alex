@@ -28,7 +28,7 @@ type AcceptGameStore = {
     piece_stake_challenger: RecordWithPlaintext,
     piece_claim_challenger: RecordWithPlaintext,
     piece_stake_opponent: RecordWithPlaintext,
-    piece_claim_opponent: RecordWithPlaintext,
+    piece_claim_opponent: RecordWithPlaintext
   ) => void;
   setEventIdSubmit: (id: string) => void;
   setEventIdAccept: (id: string) => void;
@@ -75,7 +75,7 @@ export const useAcceptGameStore = create<AcceptGameStore>()(
         piece_stake_challenger: RecordWithPlaintext,
         piece_claim_challenger: RecordWithPlaintext,
         piece_stake_opponent: RecordWithPlaintext,
-        piece_claim_opponent: RecordWithPlaintext,
+        piece_claim_opponent: RecordWithPlaintext
       ) => {
         set({
           inputsAcceptGame: {

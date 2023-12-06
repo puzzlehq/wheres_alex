@@ -44,9 +44,18 @@ function App() {
               <Routes>
                 <Route index element={account ? <Home /> : <Welcome />} />
                 <Route path='/new-game' element={<NewGame />} />
-                <Route path='/renege-game/:game_multisig' element={<RenegeGame />} />
-                <Route path='/accept-game/:game_multisig' element={<AcceptGame />} />
-                <Route path='/reveal-answer/:game_multisig' element={<RevealAnswer />} />
+                <Route
+                  path='/renege-game/:game_multisig'
+                  element={<RenegeGame />}
+                />
+                <Route
+                  path='/accept-game/:game_multisig'
+                  element={<AcceptGame />}
+                />
+                <Route
+                  path='/reveal-answer/:game_multisig'
+                  element={<RevealAnswer />}
+                />
                 <Route path='/finish-game'>
                   <Route path='win/:game_multisig' element={<WinRoute />} />
                   <Route path='lose/:game_multisig' element={<LoseRoute />} />

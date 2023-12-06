@@ -51,7 +51,9 @@ function TheirTurnItem({ game }: { game: Game }) {
                   game.gameNotification.recordData.total_pot / 2
                 );
                 setCurrentGame(game);
-                navigate(`/renege-game/${game.gameNotification.recordData.game_multisig}`);
+                navigate(
+                  `/renege-game/${game.gameNotification.recordData.game_multisig}`
+                );
               }}
               color='gray'
               size='sm'
@@ -65,7 +67,9 @@ function TheirTurnItem({ game }: { game: Game }) {
           <Button
             onClick={() => {
               setCurrentGame(game);
-              navigate(`/finish-game/lose/${game.gameNotification.recordData.game_multisig}`);
+              navigate(
+                `/finish-game/lose/${game.gameNotification.recordData.game_multisig}`
+              );
             }}
             size='sm'
             color='gray'

@@ -50,15 +50,18 @@ function ConfirmStartGame() {
   const amount = inputs?.challenger_wager_amount ?? 0;
 
   const { account } = useAccount();
-  
-  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventId, onSettled: () => setStep(Step._05_GameStarted) });
+
+  const { loading, error, event, setLoading, setError } = useEventHandling({
+    id: eventId,
+    onSettled: () => setStep(Step._05_GameStarted),
+  });
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
     if (event) {
       setConfirmStep(ConfirmStep.Signing);
     }
-  }, [event])
+  }, [event]);
 
   const createProposeGameEvent = async () => {
     setLoading(true);
@@ -135,9 +138,6 @@ function ConfirmStartGame() {
     inputs?.challenger_wager_amount,
     inputs?.challenger_answer,
   ].includes(undefined);
-  const eventLoading =
-    event &&
-    [EventStatus.Creating, EventStatus.Pending].includes(event?.status);
 
   const [buttonText, setButtonText] = useState('PROPOSE GAME');
 
@@ -174,13 +174,13 @@ function ConfirmStartGame() {
         <Button
           onClick={createProposeGameEvent}
           color='green'
-          disabled={disabled || loading || eventLoading}
+          disabled={disabled || loading}
         >
           {buttonText}
         </Button>
         <Button
           onClick={() => setStep(Step._03_StartWager)}
-          disabled={loading || eventLoading}
+          disabled={loading}
           color='gray'
         >
           BACK

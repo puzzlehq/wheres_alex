@@ -52,7 +52,10 @@ const SubmitWager = () => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventIdSubmit, onSettled: () => setStep(Step._02_AcceptGame) });
+  const { loading, error, event, setLoading, setError } = useEventHandling({
+    id: eventIdSubmit,
+    onSettled: () => setStep(Step._02_AcceptGame),
+  });
 
   const createEvent = async () => {
     if (

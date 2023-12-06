@@ -13,11 +13,7 @@ import {
 } from '@state/manager.js';
 import { useMsRecords } from '@hooks/msRecords.js';
 import { Step, useRevealAnswerStore } from './store.js';
-import {
-  EventStatus,
-  EventType,
-  requestCreateEvent,
-} from '@puzzlehq/sdk';
+import { EventStatus, EventType, requestCreateEvent } from '@puzzlehq/sdk';
 import { useEventHandling } from '@hooks/eventHandling.js';
 import { useSearchParams } from 'react-router-dom';
 
@@ -39,7 +35,10 @@ const Reveal = () => {
     currentGame?.gameNotification.recordData.game_multisig
   );
 
-  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventId, onSettled: () => setStep(Step._02_Confirmed) });
+  const { loading, error, event, setLoading, setError } = useEventHandling({
+    id: eventId,
+    onSettled: () => setStep(Step._02_Confirmed),
+  });
 
   const [searchParams, setSearchParams] = useSearchParams();
 

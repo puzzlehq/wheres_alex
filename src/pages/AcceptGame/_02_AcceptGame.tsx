@@ -45,7 +45,12 @@ function AcceptGame() {
   const msAddress = currentGame?.gameNotification.recordData.game_multisig;
   const { msPuzzleRecords, msGameRecords } = useMsRecords(msAddress);
 
-  const { loading, error, event, setLoading, setError } = useEventHandling({ id: eventIdAccept, address: msAddress, multisig: true, onSettled: () => setStep(Step._03_Confirmed) });
+  const { loading, error, event, setLoading, setError } = useEventHandling({
+    id: eventIdAccept,
+    address: msAddress,
+    multisig: true,
+    onSettled: () => setStep(Step._03_Confirmed),
+  });
 
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -109,7 +114,7 @@ function AcceptGame() {
       piece_stake_challenger,
       piece_claim_challenger,
       piece_stake_opponent,
-      piece_claim_opponent,
+      piece_claim_opponent
     );
   }, [
     currentGame?.gameNotification.recordData.game_multisig,

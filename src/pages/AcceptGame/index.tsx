@@ -1,11 +1,13 @@
 import SubmitWager from './_01_SubmitWager';
 import AcceptGamePage from './_02_AcceptGame';
 import Confirmed from './_03_Confirmed';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { Step, useAcceptGameStore } from './store';
 import { Game, useGameStore } from '@state/gameStore';
 import Button from '@components/Button';
 import { useEffect } from 'react';
+import { useInitCurrentGame } from '@hooks/currentGame';
+import { useEventHandling } from '@hooks/eventHandling';
 
 export const SubmitWagerButton = ({ game }: { game: Game }) => {
   const [initializeSubmitWager] = useAcceptGameStore((state) => [
@@ -31,13 +33,15 @@ export const SubmitWagerButton = ({ game }: { game: Game }) => {
         if (!puzzleRecord || !key_record || !game_req_notification) return;
         initializeSubmitWager(puzzleRecord, key_record, game_req_notification);
         setCurrentGame(game);
-        navigate(`/accept-game/${game.gameNotification.recordData.game_multisig}`);
+        navigate(
+          `/accept-game/${game.gameNotification.recordData.game_multisig}`
+        );
       }}
       color='yellow'
       size='sm'
       disabled={puzzleRecord === undefined}
     >
-      Accept 1
+      Submit Wager
     </Button>
   );
 };
@@ -50,37 +54,42 @@ export const AcceptGameButton = ({ game }: { game: Game }) => {
     <Button
       onClick={() => {
         setCurrentGame(game);
-        navigate(`/accept-game/${game.gameNotification.recordData.game_multisig}`);
+        navigate(
+          `/accept-game/${game.gameNotification.recordData.game_multisig}`
+        );
       }}
       color='yellow'
       size='sm'
     >
-      Accept 2
+      Accept
     </Button>
   );
 };
 
 const AcceptGame = () => {
   const navigate = useNavigate();
-  const [step, setStep, setAcceptGameInputs, setSubmitWagerInputs, setEventIdSubmit, setEventIdAccept] =
-    useAcceptGameStore((state) => [
-      state.step,
-      state.setStep,
-      state.setAcceptGameInputs,
-      state.setSubmitWagerInputs,
-      state.setEventIdSubmit,
-      state.setEventIdAccept
-    ]);
-
-  const done = () => {
-    setAcceptGameInputs({});
-    setSubmitWagerInputs({});
-    setStep(Step._01_SubmitWager);
-    navigate('/');
-  };
-
   const [searchParams] = useSearchParams();
+  const [
+    step,
+    eventIdSubmit,
+    eventIdAccept,
+    setStep,
+    setAcceptGameInputs,
+    setSubmitWagerInputs,
+    setEventIdSubmit,
+    setEventIdAccept,
+  ] = useAcceptGameStore((state) => [
+    state.step,
+    state.eventIdSubmit,
+    state.eventIdAccept,
+    state.setStep,
+    state.setAcceptGameInputs,
+    state.setSubmitWagerInputs,
+    state.setEventIdSubmit,
+    state.setEventIdAccept,
+  ]);
 
+  const { currentGame } = useInitCurrentGame();
   useEffect(() => {
     const _eventIdSubmit = searchParams.get('eventIdSubmit');
     const _eventIdAccept = searchParams.get('eventIdAccept');
@@ -90,7 +99,25 @@ const AcceptGame = () => {
     if (_eventIdAccept) {
       setEventIdAccept(_eventIdAccept);
     }
-  }, [searchParams])
+  }, [searchParams]);
+
+  useEventHandling({
+    id: eventIdSubmit,
+    onSettled: () => setStep(Step._02_AcceptGame),
+  });
+  useEventHandling({
+    id: eventIdAccept,
+    address: currentGame?.gameNotification.recordData.game_multisig,
+    multisig: true,
+    onSettled: () => setStep(Step._03_Confirmed),
+  });
+
+  const done = () => {
+    setAcceptGameInputs({});
+    setSubmitWagerInputs({});
+    setStep(Step._01_SubmitWager);
+    navigate('/');
+  };
 
   return (
     <div className='flex h-full w-full flex-col'>

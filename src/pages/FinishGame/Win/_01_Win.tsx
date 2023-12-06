@@ -3,7 +3,7 @@ import SelectedAlexLocation from '@components/SelectedAlexLocation';
 import Wager from '@components/Wager';
 import Button from '@components/Button';
 import { useGameStore } from '@state/gameStore';
-import { Answer } from '@state/RecordTypes/wheres_alex_vxxx';
+import { getAnswer } from '@state/RecordTypes/wheres_alex_vxxx';
 import {
   GAME_FUNCTIONS,
   GAME_PROGRAM_ID,
@@ -18,10 +18,9 @@ import {
   requestCreateEvent,
   shortenAddress,
   useBalance,
-  useEvent,
 } from '@puzzlehq/sdk';
-
 import { useMsRecords } from '@hooks/msRecords';
+import { useEventHandling } from '@hooks/eventHandling';
 
 const Win = () => {
   const [inputs, eventId, setEventId, initialize, setStep] =
@@ -38,36 +37,12 @@ const Win = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const msAddress = currentGame?.gameNotification.recordData.game_multisig;
   const { msPuzzleRecords, msGameRecords } = useMsRecords(msAddress);
-
-  const { event, error: _error } = useEvent({
+  const { loading, error, event, setLoading, setError } = useEventHandling({
     id: eventId,
     address: msAddress,
     multisig: true,
+    onSettled: () => setStep(Step._02_GameOver),
   });
-  const eventStatus = event?.status;
-
-  useEffect(() => {
-    event && console.log('Win: event', event);
-  }, [event]);
-
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | undefined>();
-
-  useEffect(() => {
-    const eventError = _error;
-    eventError && setError(eventError);
-  }, [_error]);
-
-  useEffect(() => {
-    if (eventStatus === EventStatus.Settled) {
-      setStep(Step._02_GameOver);
-      setLoading(false);
-      setError(undefined);
-    } else if (eventStatus === EventStatus.Failed) {
-      setLoading(false);
-      setError(event?.error);
-    }
-  }, [eventStatus]);
 
   const { balances: msBalances } = useBalance({
     address: msAddress,
@@ -136,26 +111,6 @@ const Win = () => {
     );
   }
 
-  const wager = currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
-  const answer =
-    currentGame?.gameNotification.recordData.challenger_answer === '0field'
-      ? Answer.InTheWeeds
-      : Answer.BehindTheBuilding;
-  const user = currentGame.gameNotification.recordData.owner;
-  const opponent_address =
-    currentGame.gameNotification.recordData.opponent_address;
-  const challenger_address =
-    currentGame.gameNotification.recordData.challenger_address;
-  const opponent_answer =
-    currentGame.gameNotification.recordData.opponent_answer === '0field'
-      ? Answer.InTheWeeds
-      : Answer.BehindTheBuilding;
-  const challenger_answer =
-    currentGame.gameNotification.recordData.challenger_answer === '0field'
-      ? Answer.InTheWeeds
-      : Answer.BehindTheBuilding;
-  const isChallenger = user === challenger_address;
-
   const claim = async () => {
     if (
       !msAddress ||
@@ -185,6 +140,18 @@ const Win = () => {
     }
   };
 
+  const {
+    total_pot,
+    challenger_answer,
+    owner,
+    opponent_address,
+    opponent_answer,
+    challenger_address,
+  } = currentGame?.gameNotification.recordData;
+
+  const wager = total_pot ?? 0 / 2;
+  const isChallenger = owner === challenger_address;
+
   const disabled =
     !inputs?.game_record ||
     !inputs?.joint_piece_winner ||
@@ -194,23 +161,26 @@ const Win = () => {
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-4'>
-      <Wager wagerAmount={wager} winnings />
       <PageHeader text="WHERE'S ALEX" bg='bg-primary-blue' />
+      <Wager wagerAmount={wager} winnings />
       <div className='flex flex-col gap-2'>
-        <SelectedAlexLocation answer={answer} win={true} />
+        <SelectedAlexLocation
+          answer={getAnswer(challenger_answer)}
+          win={true}
+        />
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           {isChallenger
-            ? `You put Alex ${challenger_answer}`
-            : `${shortenAddress(
-                challenger_address
-              )} put Alex ${challenger_answer}`}
+            ? `You put Alex ${getAnswer(challenger_answer)}`
+            : `${shortenAddress(challenger_address)} put Alex ${getAnswer(
+                challenger_answer
+              )}`}
         </div>
         <div className='self-center whitespace-nowrap text-center text-sm font-extrabold tracking-tight text-primary-green'>
           {!isChallenger
-            ? `You guessed Alex was ${opponent_answer}`
-            : `${shortenAddress(
-                opponent_address
-              )} guessed Alex was ${opponent_answer}`}
+            ? `You guessed Alex was ${getAnswer(opponent_answer)}`
+            : `${shortenAddress(opponent_address)} guessed Alex was ${getAnswer(
+                opponent_answer
+              )}`}
         </div>
       </div>
       <div className='flex flex-grow flex-col' />
