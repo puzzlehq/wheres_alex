@@ -99,7 +99,7 @@ const Win = () => {
     }
   }, [loading, event?.status]);
 
-  if (currentGame?.gameNotification.recordData.ix !== '9u32') {
+  if (!currentGame || currentGame?.gameNotification.recordData.ix !== '9u32') {
     return (
       <div className='flex h-full w-full flex-col justify-center gap-4'>
         <p>oops! you aren't supposed to be here</p>
@@ -147,9 +147,9 @@ const Win = () => {
     opponent_address,
     opponent_answer,
     challenger_address,
-  } = currentGame?.gameNotification.recordData;
+  } = currentGame.gameNotification.recordData;
 
-  const wager = total_pot ?? 0 / 2;
+  const wager = (total_pot ?? 0) / 2;
   const isChallenger = owner === challenger_address;
 
   const disabled =

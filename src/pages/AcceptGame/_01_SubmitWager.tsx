@@ -110,7 +110,7 @@ const SubmitWager = () => {
   };
 
   const opponent = currentGame?.gameNotification.recordData.challenger_address;
-  const wager = currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
+  const wager = (currentGame?.gameNotification.recordData.total_pot ?? 0) / 2;
   const opponent_wager_record = largestPiece;
 
   const disabled = !opponent || !wager || !opponent_wager_record || !inputs;

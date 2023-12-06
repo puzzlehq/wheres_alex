@@ -9,7 +9,7 @@ const GameOver = () => {
   const [currentGame] = useGameStore((state) => [state.currentGame]);
   const navigate = useNavigate();
 
-  const wager = currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
+  const wager = (currentGame?.gameNotification.recordData.total_pot ?? 0) / 2;
 
   return (
     <div className='flex h-full w-full flex-col justify-center gap-8'>

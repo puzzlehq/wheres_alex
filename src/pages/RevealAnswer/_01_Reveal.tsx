@@ -100,7 +100,7 @@ const Reveal = () => {
   ]);
   const opponent = currentGame?.gameNotification.recordData.challenger_address;
   const wagerAmount =
-    currentGame?.gameNotification.recordData.total_pot ?? 0 / 2;
+    (currentGame?.gameNotification.recordData.total_pot ?? 0) / 2;
   const answer =
     inputs?.challenger_answer_record?.data.answer === '0field.private'
       ? Answer.InTheWeeds
