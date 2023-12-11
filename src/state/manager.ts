@@ -13,16 +13,11 @@ export const GAME_FUNCTIONS = {
 
 /// todo - update these
 export const transitionFees = {
-  // propose_game: 0.01608,
-  // accept_game: 0.02901,
-  // submit_wager: 0.0086,
-  // reveal_answer: 0.009,
-  // finish_game: 0.0065,
-  propose_game: 1.0,
-  accept_game: 1.0,
-  submit_wager: 1.0,
-  reveal_answer: 1.0,
-  finish_game: 1.0,
+  propose_game: 0.01608,
+  accept_game: 0.02901,
+  submit_wager: 0.0086,
+  reveal_answer: 0.009,
+  finish_game: 0.0065,
 };
 
 export type LoadingStatus = 'idle' | 'loading' | 'success' | 'error';
