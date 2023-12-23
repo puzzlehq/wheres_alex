@@ -213,4 +213,4 @@ More information on the Puzzle Wallet and Puzzle SDK can be found [here](https:/
 
 # Walking through the Where's Alex Leo programs
 
-Repo [here](https://github.com/puzzlehq/serengeti/blob/main/wheres_alex_vXXX/README.md)
+Repo [here](https://github.com/puzzlehq/wheres_alex/tree/main/program)
