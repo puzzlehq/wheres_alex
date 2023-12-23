@@ -1,12 +1,18 @@
 # Where's Alex private multiparty game on Aleo 
-built with Puzzle Wallet & Puzzle SDK
+Hide Alex and challenge a friend to find Alex -- winner gets the pot!
 
-uses programmable private multisigs under the hood
+Alex's location is hidden onchain from the other party, and the entire game is hidden from everyone on chain so you can bet as much as you want without judgement :)
+
+Built with Puzzle Wallet & Puzzle SDK -- uses programmable private multisigs under the hood!
+
+### Where's Alex Leo Program Docs: [link](https://github.com/puzzlehq/wheres_alex/tree/main/program)
  
-### SDK Docs: [link](https://docs.puzzle.online/guides/getting_started/)
-### Where's Alex Leo Program Docs: [link](https://github.com/puzzlehq/serengeti/blob/main/README.md)
-### Puzzle Wallet Download [link](https://chromewebstore.google.com/detail/puzzle-wallet/fdchdcpieegfofnofhgdombfckhbcokj)
-### Puzzle Devtools [link](https://dev.puzzle.online/)
+### Puzzle SDK Docs: [link](https://docs.puzzle.online/guides/getting_started/)
+### Puzzle Devtools Site: [link](https://dev.puzzle.online/)
+
+### Puzzle Wallet Google Chrome Download [link](https://chromewebstore.google.com/detail/puzzle-wallet/fdchdcpieegfofnofhgdombfckhbcokj)
+### Puzzle Wallet iOS Download [link](https://testflight.apple.com/join/bikon7Nj)
+
 
 [<img src="https://github.com/puzzlehq/serengeti/assets/39972641/9650a6b8-5680-4a53-b6c6-608b8809d38e">](https://wheresalex.puzzle.online/)
 
