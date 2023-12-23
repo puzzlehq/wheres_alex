@@ -1,509 +1,837 @@
-import cflip_testing_123_token.leo;
-import puzz_testing_acct_123.leo;
-
-// todo: wait we're going to use alice's credits to send to multisig? need to add credits.leo but not supported yet per https://github.com/AleoHQ/leo/pull/2881
-// imports deployed to separate address: https://t.me/c/1766615939/3581
-
-// todo: the primary issue is that we need to consume owner rules inside of puzzle transfers but we can't do that?
-// todo: actually does this matter, there is only 1 owner rules record floating?
-// todo: can we consume it inside of this program?
-// todo: since if we do not consume it inside the transfer then someone could rug?
-// todo: also when transferring to winner will need to transfer both records
-// todo: can we do this with inline functions?
+import puzzle_pieces_v016.leo;
+import multiparty_pvp_utils_v015.leo;
 
 // The 'coinflip' program.
-program cflip_gm_aleo_testing_123.aleo {
+program wheres_alex_v019.aleo {
 
-    // record PlayerOneClaim {}
-
-    // record PlayerTwoClaim {}
-
-    // record Claim {
-    //     private owner: address,
-    //     private amount: u64,
-    // }
-
-    record NotifyKeyRecord {
-        private owner: address,
-        private keys: field,
-        private game_address: address,
-        private challenge_amount: u64,
-        private opponent: address,
-    }
-
-    record NotifyRevealedAnswer {
-        private owner: address,
-        private answer: field,
-        private game_address: address,
-        private opponent: address,
-    }
-
-    record NotifyGameOver {
-        private owner: address,
-        private winner: address,
-        private total_pot: u64,
-        private game_address: address,
-        private opponent: address,
-    }
-
-    record NotifyAcceptGame {
-        private owner: address,
-        private total_pot: u64,
-        private game_address: address,
-        private opponent: address,
-    }
-
-    record Key {
-        private owner: address,
-        private keys: field,
-        private opponent: address,
-    }
-
-    record Answer {
-        private owner: address,
-        private game_address: address,
-        private nonce: field,
-        private answer: field,
-    }
-
-    record RevealedAnswer {
-        private owner: address,
-        private answer: field,
-        private nonce: field,
-    }
-
-    // todo: this will likely need to store each player answer
-    // todo: may be best to store players in the game here on game record
-    // todo: add block height to game record?
+    // ix: 1
     record Game {
-        private owner: address,
-        private player_one_comm: field,
-        private player_two_answer: field,
-        private total_pot: u64,
-        private player_one_address: address,
-        private player_two_address: address,
-        private game_state: field,
-        // private game_state: field,
-        // 0 -> propose game
-        // 1 -> accept game
-        // 2 -> game finished
+        owner: address,
+        challenger_commit: field,
+        opponent_answer: field,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        game_multisig: address,
+        game_state: field,
+        ix: u32,
     }
 
-    mapping puzz_supply: field => u128;
-    mapping games: address => u32;
+    // GAME STATE RECORDED ON NOTIFICATIONS
+    // private game_state: field,
+        // NORMAL FLOW
+        // 1 -> challenger proposed game
+        // 2 -> opponent matched wager
+        // 3 -> accepted game
+        // 4 -> challenger revealed answer
+        // 5 -> finished game
+        //
+        // ALTERNATE EXIT PATHS
+        // 6 -> timeout finished game
+        // 0 -> Game reneged
 
+    // your turn:
+        // true -> your turn or ms turn
+        // false -> awaiting other party turn
 
-    transition mint_token (private amount: u64, private to: address) -> cflip_testing_123_token.leo/Piece.record {
-        let piece_token: Piece = cflip_testing_123_token.leo/mint(amount, to);
-        return piece_token;
+    // sent to opponent on propose game for FE/client detection.
+    // consumed in match wager
+    // ix: 2
+    record GameReqNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        ix: u32,
     }
 
-    // todo: do we want to limit this fn call only to users or will we allow contracts to call?
-    // todo: do we need to pass credits as input?
-    // player one proposes game
-    // outputs
-    // -> Answer record to player 1, to later reveal answer
-    // -> Claim record to player 1, to claim record if decides to pull back proposal before game is accepted
-    // -> Key record to player 2 to be able to reconstruct the game/multisig address
-    // -> OwnerRules record to the game/multisig address
-    // -> Game record to the game/multisig address
-    // -> PuzzRecord to the game/multisig address
-    // -> PuzzRecord to player 1 of any change from the wager credit
+    // sent to challenger on propose game for FE/client detection.
+    // consumed in reveal answer
+    // ix: 3
+    record WaitingAcceptanceNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        ix: u32,
+    }
 
-    // todo: tweak messages here
-    // called by p1 key
-    transition propose_game
-    (
-        private ms_seed: field,
-        private game_address: address,
-        private opponent: address,
-        private wager: cflip_testing_123_token.leo/Piece.record,
-        // private leo_credits: credits.leo/credits.record,
-        // private credit_amount: u64,
-        private wager_amount: u64,
-        private player_one_answer: field,
-        private sig: signature,
-        private msg: field,
-        private m_of_n: u8,
-        private nonce: field,
-    ) -> (Answer, NotifyKeyRecord, Game, puzz_testing_acct_123.leo/OwnerRules.record, cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record)
-    {
-        // removing puzz_claim record for now
+    // ix: 4
+    record StakeRenegedNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        renege_address: address,
+        ix: u32,
+    }
 
-        // limit calls to only users
+    // sent to challenger on submit wager for FE/client detection.
+    // consumed in reveal answer
+    // ix: 5
+    record ChallengerWagerNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        ix: u32,
+    }
+
+    // ix: 6
+    record OpponentWagerNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        ix: u32,
+    }
+
+    // sent to opponent on accept game for FE/client detection.
+    // consumed in finish_game/claim total pot
+    // ix: 7
+    record WaitingRevealNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        ix: u32,
+    }
+
+    // sent to challenger on accept game for FE/client detection.
+    // consumed in reveal answer
+    // ix: 8
+    record RevealAnswerNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        opponent_answer: field,
+        ix: u32,
+    }
+
+    // sent to opponent on reveal answer for FE/client detection.
+    // ix: 9
+    record GameFinishReqNotification {
+        owner: address, //opponent
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        challenger_answer: field,
+        opponent_answer: field,
+        winner: address,
+        loser: address,
+        ix: u32,
+    }
+
+    // sent to both opponent and challenger on finish game
+    // ix: 10
+    record GameFinishedNotification {
+        owner: address,
+        game_multisig: address,
+        game_state: field,
+        your_turn: bool,
+        total_pot: u64,
+        challenger_address: address,
+        opponent_address: address,
+        winner: address,
+        loser: address,
+        ix: u32,
+    }
+
+    // New propose game
+    transition propose_game (
+        //puzzle_pieces.stake_transfer_in() data
+        wager_record: puzzle_pieces_v016.leo/Piece.record,
+        challenger_wager_amount: u64,
+        sender: address, // Challenger address proposing game
+        challenger: address,
+        opponent: address,
+        game_multisig: address,
+        challenger_message_1: field, //from output of useSignature
+        challenger_message_2: field,
+        challenger_message_3: field,
+        challenger_message_4: field,
+        challenger_message_5: field,
+        challenger_sig: signature, //from output of useSignature
+        //multiparty_pvp_utils data
+        challenger_nonce: field,
+        challenger_answer: field,
+        game_multisig_seed: field, //game_multisig seed to send to user
+        //wheres_alex data
+    ) -> (
+        puzzle_pieces_v016.leo/PieceClaim.record,
+        puzzle_pieces_v016.leo/PieceStake.record,
+        puzzle_pieces_v016.leo/ClaimSignature.record,
+        puzzle_pieces_v016.leo/Piece.record,
+        puzzle_pieces_v016.leo/AuditStakeIn.record,
+        multiparty_pvp_utils_v015.leo/Answer.record,
+        multiparty_pvp_utils_v015.leo/AuditMintAnswer.record,
+        multiparty_pvp_utils_v015.leo/Key.record,
+        multiparty_pvp_utils_v015.leo/AuditKey.record,
+        Game,
+        GameReqNotification,
+        WaitingAcceptanceNotification,
+    ) {
+
+        // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
         // random edge case, maybe unnecessary
-        assert_neq(game_address, opponent);
+        assert_neq(game_multisig, opponent);
 
         // assert that player 1s answer is either "in weeds" or "behind building"
-        assert(player_one_answer == 0field || player_one_answer == 1field);
+        assert(challenger_answer == 0field || challenger_answer == 1field);
         // hash the answer and nonce
-        let player_one_answer_comm: field = BHP256::commit_to_field(player_one_answer, nonce as scalar);
+        let challenger_commit: field = BHP256::commit_to_field(challenger_answer, challenger_nonce as scalar);
 
         // assert that the wager amount > 0 and wager inside credit == wager amt passed
-        let wager_record: Piece = wager;
-        assert(wager_amount > 0u64);
+        assert(challenger_wager_amount > 0u64);
         // assert that the wager record has >= amount wagered
-        assert(wager_record.amount >= wager_amount);
+        assert(wager_record.amount >= challenger_wager_amount);
 
-        // initialize key record with ms_address and seed for p2
-        // so p2 can gen multisig locally
-        // todo: we probably don't need address here?
-        let notify_key_record: NotifyKeyRecord = NotifyKeyRecord {
-            owner: opponent,
-            keys: ms_seed,
-            game_address: game_address,
-            challenge_amount: wager_amount,
-            opponent: self.caller,
+        let (
+            piece_claim_challenger,
+            piece_stake_challenger,
+            claim_signature_challenger,
+            piece_change_challenger,
+            audit_stake_in_record
+        ): (
+            PieceClaim,
+            PieceStake,
+            ClaimSignature,
+            Piece,
+            AuditStakeIn
+        ) = puzzle_pieces_v016.leo/stake_transfer_in(
+            wager_record,
+            sender,
+            challenger,
+            opponent,
+            game_multisig,
+            challenger_wager_amount,
+            challenger_message_1,
+            challenger_message_2,
+            challenger_message_3,
+            challenger_message_4,
+            challenger_message_5,
+            challenger_sig
+        );
+
+        let (
+            key_record,
+            audit_key_record
+        ) : (
+            Key,
+            AuditKey
+        ) = multiparty_pvp_utils_v015.leo/mint_multisig_key(game_multisig_seed,challenger_wager_amount,challenger,opponent,game_multisig);
+
+        let game_request_notification_record: GameReqNotification = GameReqNotification {
+            owner: opponent, //opponent
+            game_multisig: game_multisig,
+            game_state: 1field,
+            your_turn: true,
+            total_pot: challenger_wager_amount + challenger_wager_amount,
+            challenger_address: challenger,
+            opponent_address: opponent,
+            ix: 2u32,
         };
 
-        // return answer record to player 1 in order to reveal later
-        let answer_record: Answer = Answer {
-            owner: self.caller,
-            game_address: game_address,
-            nonce: nonce,
-            answer: player_one_answer,
+        let game_waiting_acceptance_notification_record: WaitingAcceptanceNotification = WaitingAcceptanceNotification {
+            owner: challenger, //challenger
+            game_multisig: game_multisig,
+            game_state: 1field,
+            your_turn: false,
+            total_pot: challenger_wager_amount + challenger_wager_amount,
+            challenger_address: challenger,
+            opponent_address: opponent,
+            ix: 3u32,
         };
 
-        // output game record
         let game_record: Game = Game {
-            owner: game_address,
-            player_one_comm: player_one_answer_comm,
-            player_two_answer: 1field,
-            total_pot: wager_amount,
-            player_one_address: self.caller,
-            player_two_address: opponent,
-            game_state: 0field,
+            owner: game_multisig,
+            challenger_commit: challenger_commit,
+            opponent_answer: 123field, // random field for now until opponent answer in accept_game
+            total_pot: challenger_wager_amount + challenger_wager_amount,
+            challenger_address: challenger,
+            opponent_address: opponent,
+            game_multisig: game_multisig,
+            game_state: 1field,
+            ix: 1u32,
         };
 
-        // output rules record with caller and opponent with game ms address
-        // tbd on m of n here, or if even necessary
-        // todo: send player 1 sig here and message to verify we can transfer on propose_game?
-        let owner_rules_record: OwnerRules = puzz_testing_acct_123.leo/mint_owner_rules_record(game_address, self.caller, opponent, sig, sig);
-
-        // stake puzz token in
-        // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
-        // let (puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record): (PuzzClaim, Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_in(wager, self.caller, game_address, wager_amount);
-        let (piece_claim_record, piece_receiver_record, piece_sender_change_record): (PieceClaim, Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_in(wager, self.caller, game_address, wager_amount, msg, sig);
-
-        // todo: send credits to multisig
-        // let creds_to_ms_record: (credits, credits) = credits.leo/transfer_private(leo_credits, game_address, credit_amount);
-
-        // output claim record to game_addr if player 1 wants to renege or player 2 rejects
-        // todo: will likely need to iterate on claim design here
-        // let player_one_claim_record: Claim = puzz_testing_acct_123.leo/mint_claim_record(game_address, wager_amount);
-
-        // transfer puzz tokens to game address
-        // let (receiver_puzz_record, puzz_change): (Piece, Piece) = cflip_testing_123_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
+        let (challenger_answer_record, audit_mint_answer_record):  (Answer, AuditMintAnswer) = multiparty_pvp_utils_v015.leo/mint_answer(
+                challenger,
+                opponent,
+                game_multisig,
+                challenger_wager_amount,
+                challenger_nonce,
+                challenger_answer,
+                challenger_message_1,
+                challenger_message_2,
+                challenger_message_3,
+                challenger_message_4,
+                challenger_message_5,
+                challenger_sig
+        );
 
 
-        // return (answer_record, player_two_key_record, game_record, owner_rules_record, token_owner_rules_record, puzz_claim_claim_record, puzz_receiver_record, puzz_sender_change_record) then finalize(game_address);
-        return (answer_record, notify_key_record, game_record, owner_rules_record, piece_claim_record, piece_receiver_record, piece_sender_change_record) then finalize(game_address);
+        return (
+            piece_claim_challenger,
+            piece_stake_challenger,
+            claim_signature_challenger,
+            piece_change_challenger,
+            audit_stake_in_record,
+            challenger_answer_record,
+            audit_mint_answer_record,
+            key_record,
+            audit_key_record,
+            game_record,
+            game_request_notification_record,
+            game_waiting_acceptance_notification_record,
+        );
     }
 
-
-    finalize propose_game (game_address: address) {
-        Mapping::set(games, game_address, block.height);
-    }
-
-    // called by ms key
-    transition player_one_renege_proposal
+    // challenger calls this function with Multisig key and signature as input
+    // that was submitted when proposing game and that exists on claim record
+    transition challenger_renege_stake
     (
-        private game_record: Game,
-        // private ms_rules: puzz_testing_acct_123.leo/OwnerRules.record,
-        private token_owner_rules: cflip_testing_123_token.leo/TokenOwnerRules.record,
-        private player_one_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
-        private piece_record: cflip_testing_123_token.leo/Piece.record,
-        private amount: u64,
-        // private sig: signature, // player 1 sig
-        // private msg: field, // msg generated on propose_game with nonce
-    ) -> (cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record)
+        waiting_accept_game_notification: WaitingAcceptanceNotification,
+        piece_stake_challenger: puzzle_pieces_v016.leo/PieceStake.record,
+        piece_claim_challenger: puzzle_pieces_v016.leo/PieceClaim.record,
+        challenger_sig: signature,
+    ) -> (
+        puzzle_pieces_v016.leo/Piece.record,
+        puzzle_pieces_v016.leo/AuditStakeOut.record,
+        StakeRenegedNotification,
+        StakeRenegedNotification,
+        )
     {
-        // limit calls to only users
+        // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
-        // transfer out and check player 1 sig and message that is signed
-        // let (receiver_puzz_record, puzz_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_one_claim_record, sig, msg, amount);
-        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_one_claim_record, self.caller, amount);
+        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v016.leo/stake_transfer_out(piece_stake_challenger, piece_claim_challenger, challenger_sig);
 
-        return (receiver_piece_record, piece_record);
+        let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.challenger_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.challenger_address,
+            ix: 4u32,
+        };
 
-        // todo: what clean-up do we need to do here?
+
+        let notify_opponent_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.opponent_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.challenger_address,
+            ix: 4u32,
+        };
+
+        return (piece_record, audit_stake_out_record, notify_challenger_stake_reneged, notify_opponent_stake_reneged);
+
     }
 
-    // finalize player_one_renege_proposal (game_address: address) {
-    //     let previous_block_height: u32 = Mapping::get(games, game_address);
-    //     assert(block.height > previous_block_height);
-    //     Mapping::set(games, game_address, block.height);
-    // }
-
-    // todo: how do we check bob is wagering the correct amount before wager submission
-    // called by player 2 key
     transition submit_wager (
-        private game_address: address,
-        private opponent: address,
-        private wager: cflip_testing_123_token.leo/Piece.record,
-        private wager_amount: u64,
-        // private nonce: field,
-        private msg: field,
-        private sig: signature,
-    ) -> (cflip_testing_123_token.leo/PieceClaim.record, cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record) {
-
-        // todo: removing claim record for now
-        // todo: may be able to mint tokens to alice and then transfer to ms in this fn. logic and not require puzz tokens as input
-        let (piece_claim_record, piece_receiver_record, piece_sender_change_record): (PieceClaim, Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_in(wager, self.caller, game_address, wager_amount, msg, sig);
-
-        // let (receiver_puzz_record, puzz_change): (Piece, Piece) = cflip_testing_123_token.leo/puzz_transfer_private(wager, game_address, wager_amount);
-
-        // let player_two_claim_record: Claim = puzz_testing_acct_123.leo/mint_claim_record(game_address, wager_amount);
-
-        // return (token_owner_rules_record, puzz_claim_record, puzz_receiver_record, puzz_sender_change_record);
-        return (piece_claim_record, piece_receiver_record, piece_sender_change_record);
-
-    }
-
-    // called by ms key
-    transition player_two_renege_proposal (
-        private game_record: Game,
-        // private ms_rules: puzz_testing_acct_123.leo/OwnerRules.record,
-        // private token_owner_rules: cflip_testing_123_token.leo/TokenOwnerRules.record,
-        private player_two_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
-        private piece_record: cflip_testing_123_token.leo/Piece.record,
-        private amount: u64,
-        // private sig: signature, // player 1 sig
-        // private msg: field, // msg generated on propose_game with nonce
-    ) -> (cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record)
+        opponent_wager_record: puzzle_pieces_v016.leo/Piece.record,
+        key_record: multiparty_pvp_utils_v015.leo/Key.record,
+        game_req_notification: GameReqNotification,
+        opponent_message_1: field, //from output of useSignature
+        opponent_message_2: field,
+        opponent_message_3: field,
+        opponent_message_4: field,
+        opponent_message_5: field,
+        opponent_sig: signature, //from output of useSignature
+    ) -> (
+        puzzle_pieces_v016.leo/PieceClaim.record,
+        puzzle_pieces_v016.leo/PieceStake.record,
+        puzzle_pieces_v016.leo/ClaimSignature.record,
+        puzzle_pieces_v016.leo/Piece.record,
+        puzzle_pieces_v016.leo/AuditStakeIn.record,
+        ChallengerWagerNotification,
+        OpponentWagerNotification,
+    )
     {
+
+        // Logic Checks
         // limit calls to only users
         assert_eq(self.caller, self.signer);
 
-        // transfer out and check player 1 sig and message that is signed
-        // let (receiver_puzz_record, puzz_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_two_claim_record, sig, msg, amount);
-        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_two_claim_record, self.caller, amount);
+        // assert that the wager amount > 0 and wager inside credit == wager amt passed
+        assert(opponent_wager_record.amount > 0u64);
+        // assert that the wager record has >= total pot / 2u64
+        assert(opponent_wager_record.amount >= game_req_notification.total_pot / 2u64);
 
-        return (receiver_piece_record, piece_change);
-        // todo: what clean-up do we need to do here?
-        // todo: update game state to finished/tbd if we need sep states between finished and cancelled/rejected
+        let (
+            piece_claim_opponent,
+            piece_stake_opponent,
+            claim_signature_opponent,
+            piece_change_opponent,
+            audit_stake_in_record,
+        ): (
+            PieceClaim,
+            PieceStake,
+            ClaimSignature,
+            Piece,
+            AuditStakeIn
+        ) = puzzle_pieces_v016.leo/stake_transfer_in(
+            opponent_wager_record,
+            game_req_notification.opponent_address, // sender
+            game_req_notification.challenger_address, // challenger
+            game_req_notification.opponent_address,
+            game_req_notification.game_multisig,
+            game_req_notification.total_pot / 2u64, // divide total pot by 2
+            opponent_message_1,
+            opponent_message_2,
+            opponent_message_3,
+            opponent_message_4,
+            opponent_message_5,
+            opponent_sig,
+        );
+
+        let challenger_submitted_wager_notification_record: ChallengerWagerNotification = ChallengerWagerNotification {
+            owner: game_req_notification.challenger_address,
+            game_multisig: game_req_notification.game_multisig,
+            game_state: 2field,
+            your_turn: false,
+            total_pot: game_req_notification.total_pot,
+            challenger_address: game_req_notification.challenger_address,
+            opponent_address: game_req_notification.opponent_address,
+            ix: 5u32,
+
+        };
+
+        let opponent_submitted_wager_notification_record: OpponentWagerNotification = OpponentWagerNotification {
+            owner: game_req_notification.opponent_address,
+            game_multisig: game_req_notification.game_multisig,
+            game_state: 2field,
+            your_turn: true,
+            total_pot: game_req_notification.total_pot,
+            challenger_address: game_req_notification.challenger_address,
+            opponent_address: game_req_notification.opponent_address,
+            ix: 6u32,
+        };
+
+        return (
+            piece_claim_opponent,
+            piece_stake_opponent,
+            claim_signature_opponent,
+            piece_change_opponent,
+            audit_stake_in_record,
+            challenger_submitted_wager_notification_record,
+            opponent_submitted_wager_notification_record,
+        );
     }
 
-    // called by ms key
-    transition accept_game (
-        private game_record: Game,
-        // private player_one_claim_record: puzz_testing_acct_123.leo/Claim.record,
-        // private player_two_claim_record: puzz_testing_acct_123.leo/Claim.record,
-        // todo: do we need puzz record here/what for? since puzz record is already transferred to ms
-        // private puzz_record: cflip_testing_123_token.leo/Piece.record,
-        // private owner_rules_record: puzz_testing_acct_123.leo/OwnerRules.record,
-        private player_two_answer: field,
-        // private player_two_signature: signature,
-        // todo: adjust msg type here
-        // private leo_message: field,
-    ) -> (Game, NotifyAcceptGame)
+
+    // opponent calls this function with Multisig key and signature as input
+    // that was submitted when submitting wager that exists on claim record
+    transition opponent_renege_stake
+    (
+        waiting_accept_game_notification: WaitingAcceptanceNotification,
+        piece_stake_opponent: puzzle_pieces_v016.leo/PieceStake.record,
+        piece_claim_opponent: puzzle_pieces_v016.leo/PieceClaim.record,
+        opponent_sig: signature,
+    ) -> (
+        puzzle_pieces_v016.leo/Piece.record,
+        puzzle_pieces_v016.leo/AuditStakeOut.record,
+        StakeRenegedNotification,
+        StakeRenegedNotification,
+        )
     {
-        // limit calls to only users
+        // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
-        // assert that each player has wagered the same amount
-        // assert_eq(player_one_claim_record.amount, player_two_claim_record.amount);
+        let (piece_record, audit_stake_out_record): (Piece, AuditStakeOut) = puzzle_pieces_v016.leo/stake_transfer_out(piece_stake_opponent, piece_claim_opponent, opponent_sig);
 
-        // assert that the game_address matches on player claim records and game record
-        // assert_eq(player_one_claim_record.owner, player_two_claim_record.owner);
-        // assert_eq(game_record.owner, player_one_claim_record.owner);
+        let notify_challenger_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.challenger_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.opponent_address,
+            ix: 4u32,
+        };
 
-        // assert that the game is in the propose_state status
-        assert_eq(game_record.game_state, 0field);
+
+        let notify_opponent_stake_reneged: StakeRenegedNotification = StakeRenegedNotification {
+            owner: waiting_accept_game_notification.opponent_address, //opponent
+            game_multisig: waiting_accept_game_notification.game_multisig,
+            game_state: 0field,
+            your_turn: false,
+            total_pot: waiting_accept_game_notification.total_pot,
+            challenger_address: waiting_accept_game_notification.challenger_address,
+            opponent_address: waiting_accept_game_notification.opponent_address,
+            renege_address: waiting_accept_game_notification.opponent_address,
+            ix: 4u32,
+        };
+
+        return (piece_record, audit_stake_out_record, notify_challenger_stake_reneged, notify_opponent_stake_reneged);
+
+    }
+
+    // called by ms key after wager is confirmed on network
+    transition accept_game
+    (
+        game_record: Game,
+        opponent_answer: field,
+        piece_stake_challenger: puzzle_pieces_v016.leo/PieceStake.record,
+        piece_claim_challenger: puzzle_pieces_v016.leo/PieceClaim.record,
+        piece_stake_opponent: puzzle_pieces_v016.leo/PieceStake.record,
+        piece_claim_opponent: puzzle_pieces_v016.leo/PieceClaim.record,
+        block_ht: u32,
+    ) -> (
+        puzzle_pieces_v016.leo/PieceJointStake.record,
+        puzzle_pieces_v016.leo/JointPieceTimeClaim.record,
+        puzzle_pieces_v016.leo/JointPieceState.record,
+        puzzle_pieces_v016.leo/AuditJointStake.record,
+        WaitingRevealNotification,
+        RevealAnswerNotification,
+        Game,
+    )
+    {
+
+        // assert that the game address/multiisg is calling this
+        assert_eq(game_record.owner, self.signer);
+
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
 
         // assert that player 1s answer is either "in weeds" or "behind building"
-        assert(player_two_answer == 0field || player_two_answer == 1field);
+        assert(opponent_answer == 0field || opponent_answer == 1field);
 
-        // add player 2's answer to the game record
-        // todo: answers will need to be hashed?
-        let game_record_new: Game = Game {
+        let (
+            piece_joint_stake,
+            joint_piece_time_claim,
+            joint_piece_state,
+            audit_joint_stake
+        ): (
+            PieceJointStake,
+            JointPieceTimeClaim,
+            JointPieceState,
+            AuditJointStake
+        ) = puzzle_pieces_v016.leo/transfer_stakes_to_joint(
+            piece_stake_challenger,
+            piece_claim_challenger,
+            piece_stake_opponent,
+            piece_claim_opponent,
+            block_ht,
+        );
+
+        // sent to opponent on accept_game
+        let waiting_reveal_answer_notifcation_record: WaitingRevealNotification = WaitingRevealNotification {
+            owner: game_record.opponent_address,
+            game_multisig: game_record.owner,
+            game_state: 3field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            ix: 7u32,
+        };
+
+        // sent to challenger on accept_game
+        let reveal_answer_notification_record: RevealAnswerNotification = RevealAnswerNotification {
+            owner: game_record.challenger_address,
+            game_multisig: game_record.owner,
+            game_state: 3field,
+            your_turn: true,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            opponent_answer: opponent_answer,
+            ix: 8u32,
+        };
+
+        let updated_game_record: Game = Game {
             owner: game_record.owner,
-            player_one_comm: game_record.player_one_comm,
-            player_two_answer: player_two_answer,
+            challenger_commit: game_record.challenger_commit,
+            opponent_answer: opponent_answer,
             total_pot: game_record.total_pot,
-            player_one_address: game_record.player_one_address,
-            player_two_address: game_record.player_two_address,
-            game_state: 1field, // update to game accepted
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 3field,
+            ix: 1u32,
         };
 
-        // notify player 1 that the game has been accepted
-        let notify_accept_game_record: NotifyAcceptGame = NotifyAcceptGame {
-            owner: game_record.player_one_address,
-            total_pot: game_record.total_pot,
-            game_address: game_record.owner,
-            opponent: game_record.player_one_address,
-        };
-
-        // note: will need to tweak owner rules structure likely to include sig to lock next turn
-        // let new_owner_rules: OwnerRules =
-        // puzz_testing_acct_123.leo/mint_owner_rules_record(game_record.owner, self.caller, player_one_claim_record.signer_address, player_two_signature, player_two_signature);
-
-        // todo: tweak for notify records
-        // output owner rules record to ms so bob can claim later on
-        // return (game_record_new, new_owner_rules) then finalize(game_record.owner);
-        return (game_record_new, notify_accept_game_record) then finalize(game_record.owner);
+        return (
+            piece_joint_stake,
+            joint_piece_time_claim,
+            joint_piece_state,
+            audit_joint_stake,
+            waiting_reveal_answer_notifcation_record,
+            reveal_answer_notification_record,
+            updated_game_record,
+        ) then finalize (block_ht);
     }
 
-    finalize accept_game (game_address: address) {
-        let previous_block_height: u32 = Mapping::get(games, game_address);
-        assert(block.height > previous_block_height);
-        Mapping::set(games, game_address, block.height);
+
+    finalize accept_game
+    (
+        block_ht: u32,
+    )
+    {
+        // block every 5 seconds or so
+        // would need to wait for time between `accept_game` req. from client to being proved
+        // ~ 5s per block
+        // leeway of 100 blocks = 100 * 5 = 500 / 60 = ~8.33 mins.
+        // assert that block_ht passed in is within 1000 blocks of current block ht.
+        //
+        // Check legit block height as input
+        let current_block_ht: u32 = block.height;
+        assert(block_ht >= current_block_ht - 1000u32);
+        assert(block_ht <= current_block_ht + 1000u32);
     }
 
-    // called by p1 key
-    transition reveal_answer (
-        private answer_record: Answer,
-        private game_address: address,
-        private opponent_address: address,
-    ) -> (RevealedAnswer, NotifyRevealedAnswer)
+    // called by challenger to reveal answer record
+    transition reveal_answer_game
+    (
+        reveal_answer_notification_record: RevealAnswerNotification,
+        challenger_answer_record: multiparty_pvp_utils_v015.leo/Answer.record,
+        joint_piece_state: puzzle_pieces_v016.leo/JointPieceState.record,
+        challenger_claim_signature: puzzle_pieces_v016.leo/ClaimSignature.record,
+    ) -> (
+        multiparty_pvp_utils_v015.leo/RevealAnswer.record,
+        multiparty_pvp_utils_v015.leo/AuditRevealAnswer.record,
+        puzzle_pieces_v016.leo/JointPieceWinner.record,
+        puzzle_pieces_v016.leo/AuditJointPieceWinner.record,
+        GameFinishReqNotification,
+        GameFinishReqNotification,
+    )
     {
 
-        // limit calls to only users
+        // assert that the correct state updater address is the challenger and the challenger
+        // is invoking this
+        assert_eq(joint_piece_state.state_updater_address, self.signer);
+
+        // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
-        let revealed_answer: RevealedAnswer = RevealedAnswer {
-            owner: game_address,
-            answer: answer_record.answer,
-            nonce: answer_record.nonce,
+        // determine winner! If opponent correctly picked where the challenger hid alex, the opponent wins otherwise the challenger wins
+        let winner_address: address = reveal_answer_notification_record.opponent_answer == challenger_answer_record.answer ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
+        let loser_address: address = winner_address == challenger_answer_record.challenger_address ? challenger_answer_record.opponent_address : challenger_answer_record.challenger_address;
+        let challenger_sig: signature = challenger_claim_signature.sig;
+
+        // retrieve revealedanswer record
+        let (revealed_answer_record, audit_revealed_answer_record): (RevealAnswer, AuditRevealAnswer) = multiparty_pvp_utils_v015.leo/reveal_answer(challenger_answer_record, challenger_sig);
+
+        let (joint_piece_winner, audit_joint_piece_winner): (JointPieceWinner, AuditJointPieceWinner) = puzzle_pieces_v016.leo/joint_stake_state_update(joint_piece_state, challenger_claim_signature, winner_address);
+
+        let game_finish_req_notification_record_opponent: GameFinishReqNotification = GameFinishReqNotification {
+            owner: challenger_answer_record.opponent_address,
+            game_multisig: challenger_answer_record.game_multisig,
+            game_state: 4field,
+            your_turn: true,
+            total_pot: joint_piece_state.amount,
+            challenger_address: challenger_answer_record.challenger_address,
+            opponent_address: challenger_answer_record.opponent_address,
+            challenger_answer: challenger_answer_record.answer,
+            opponent_answer: reveal_answer_notification_record.opponent_answer,
+            winner: winner_address,
+            loser: loser_address,
+            ix: 9u32,
         };
 
-        // send notify reveal record answer to player 2
-        let notify_reveal_answer_p2: NotifyRevealedAnswer = NotifyRevealedAnswer {
-            owner: opponent_address,
-            answer: answer_record.answer,
-            game_address: game_address,
-            opponent: answer_record.owner,
+        let game_finish_req_notification_record_challenger: GameFinishReqNotification = GameFinishReqNotification{
+            owner: challenger_answer_record.challenger_address,
+            game_multisig: challenger_answer_record.game_multisig,
+            game_state: 4field,
+            your_turn: true,
+            total_pot: joint_piece_state.amount,
+            challenger_address: challenger_answer_record.challenger_address,
+            opponent_address: challenger_answer_record.opponent_address,
+            challenger_answer: challenger_answer_record.answer,
+            opponent_answer: reveal_answer_notification_record.opponent_answer,
+            winner: winner_address,
+            loser: loser_address,
+            ix: 9u32,
         };
 
-        return (revealed_answer, notify_reveal_answer_p2);
+        return (revealed_answer_record, audit_revealed_answer_record, joint_piece_winner, audit_joint_piece_winner, game_finish_req_notification_record_opponent, game_finish_req_notification_record_challenger);
     }
 
-
-    // called by ms key
-    transition finish_game (
-        private game_record: Game,
-        private revealed_answer_record: RevealedAnswer,
-        private piece_record: cflip_testing_123_token.leo/Piece.record,
-        private player_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
-        // private puzz_stake_two: cflip_testing_123_token.leo/PuzzStake.record,
-        // private token_owner_rules: cflip_testing_123_token.leo/TokenOwnerRules.record,
-        // private sig: signature,
-        // private msg: field,
-    ) -> (NotifyGameOver, NotifyGameOver)
+    // called by ms key to finish the game and get the total pot!
+    transition finish_game
+    (
+        game_record: Game,
+        joint_piece_winner: puzzle_pieces_v016.leo/JointPieceWinner.record,
+        piece_joint_stake: puzzle_pieces_v016.leo/PieceJointStake.record,
+        joint_piece_time_claim: puzzle_pieces_v016.leo/JointPieceTimeClaim.record,
+    ) -> (
+        puzzle_pieces_v016.leo/Piece.record,
+        puzzle_pieces_v016.leo/AuditTransferToWinner.record,
+        puzzle_pieces_v016.leo/AuditPieceOwner.record,
+        Game,
+        GameFinishedNotification,
+        GameFinishedNotification)
     {
-        // todo: how do we transfer out from ms/game addr to winner
-        // todo: do we just mint new tokens to winner?
-        // todo: add logic here to transfer to correct winner
-        // todo: how are we going to get player 1 and player 2 addresses here?
-        // todo: adjust revealing logic now that we are hashing p1's answer
 
-        // limit calls to only users
+        // assert that the game address/multiisg is calling this
+        assert_eq(game_record.owner, self.signer);
+
+        // assert contracts can't call this
         assert_eq(self.caller, self.signer);
 
-        // assert that the game has been accepted
-        assert_eq(game_record.game_state, 1field);
+        let loser_address: address = joint_piece_winner.winner == game_record.challenger_address ? game_record.opponent_address : game_record.challenger_address;
 
-        // player 1 loses, player 2 wins
-        if (revealed_answer_record.answer == game_record.player_two_answer) {
-            // transfer all funds to winner
-            let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_claim_record, game_record.player_two_address, game_record.total_pot);
-            // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
+        let (piece_record, audit_transfer_to_winner_record, audit_piece_owner): (Piece, AuditTransferToWinner, AuditPieceOwner) = puzzle_pieces_v016.leo/joint_stake_transfer_to_winner(
+            joint_piece_winner,
+            piece_joint_stake,
+            joint_piece_time_claim,
+        );
 
-            // notify p1 and p2 the game is over
-            let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
-                owner: game_record.player_one_address,
-                winner: game_record.player_two_address,
-                total_pot: game_record.total_pot,
-                game_address: game_record.owner,
-                opponent: game_record.player_two_address,
-            };
-            let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
-                owner: game_record.player_two_address,
-                winner: game_record.player_two_address,
-                total_pot: game_record.total_pot,
-                game_address: game_record.owner,
-                opponent: game_record.player_one_address,
-            };
-            // todo: return puzz records, some weird puzz undefined bug popping up
-            return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
-        }
-        // player 1 wins, player 2 loses
-        else {
-            // transfer all funds to winner
-            let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_claim_record, game_record.player_one_address, game_record.total_pot);
-            // notify p1 and p2 the game is over
-            let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
-                owner: game_record.player_one_address,
-                winner: game_record.player_one_address,
-                total_pot: game_record.total_pot,
-                game_address: game_record.owner,
-                opponent: game_record.player_two_address,
-            };
-            let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
-                owner: game_record.player_two_address,
-                winner: game_record.player_one_address,
-                total_pot: game_record.total_pot,
-                game_address: game_record.owner,
-                opponent: game_record.player_one_address,
-            };
-            // todo: return puzz records, some weird puzz undefined bug popping up
-            return (notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
-        }
-    }
-
-    finalize finish_game (game_address: address) {
-        let previous_block_height: u32 = Mapping::get(games, game_address);
-        assert(block.height > previous_block_height);
-        Mapping::set(games, game_address, block.height);
-    }
-
-    // called by ms key
-    transition claim_total_pot (
-        private game_record: Game,
-        private revealed_answer_record: RevealedAnswer,
-        private piece_record: cflip_testing_123_token.leo/Piece.record,
-        private player_claim_record: cflip_testing_123_token.leo/PieceClaim.record,
-        // private puzz_stake_two: cflip_testing_123_token.leo/PuzzStake.record,
-        // private token_owner_rules: cflip_testing_123_token.leo/TokenOwnerRules.record,
-        // private sig: signature,
-        // private msg: field,
-    ) -> (cflip_testing_123_token.leo/Piece.record, cflip_testing_123_token.leo/Piece.record, NotifyGameOver, NotifyGameOver)
-    {
-        // todo: if alice never reveals answer than bob gets to claim total pot
-        // limit calls to only users
-        assert_eq(self.caller, self.signer);
-
-        // need to assert that player 2 valid signature and valid message signed here, will validate inside stake transfer private logic
-        // let (receiver_puzz_record, puzz_change): (Piece, Piece) =
-            // cflip_testing_123_token.leo/stake_transfer_private_out(puzz_record, token_owner_rules, player_claim_record, sig, msg, player_claim_record.amount * 2u64);
-        let (receiver_piece_record, piece_change): (Piece, Piece) = cflip_testing_123_token.leo/stake_transfer_private_out(piece_record, player_claim_record, self.caller, game_record.total_pot);
-
-        let notify_game_over_p1_record: NotifyGameOver = NotifyGameOver {
-                owner: game_record.player_one_address,
-                winner: game_record.player_two_address,
-                total_pot: game_record.total_pot,
-                game_address: game_record.owner,
-                opponent: game_record.player_two_address,
-            };
-
-        let notify_game_over_p2_record: NotifyGameOver = NotifyGameOver {
-            owner: game_record.player_two_address,
-            winner: game_record.player_two_address,
+        let updated_game_record: Game = Game {
+            owner: game_record.owner,
+            challenger_commit: game_record.challenger_commit,
+            opponent_answer: game_record.opponent_answer,
             total_pot: game_record.total_pot,
-            game_address: game_record.owner,
-            opponent: game_record.player_one_address,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 5field,
+            ix: 0u32,
         };
 
-        return (receiver_piece_record, piece_change, notify_game_over_p1_record, notify_game_over_p2_record) then finalize(game_record.owner);
+        let game_finished_notification_challenger_record: GameFinishedNotification = GameFinishedNotification {
+            owner: game_record.challenger_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 5field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            winner: joint_piece_winner.winner,
+            loser: loser_address,
+            ix: 10u32,
+        };
+
+        let game_finished_notification_opponent_record: GameFinishedNotification = GameFinishedNotification {
+            owner: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 5field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            winner: joint_piece_winner.winner,
+            loser: loser_address,
+            ix: 10u32,
+        };
+
+        return (piece_record, audit_transfer_to_winner_record, audit_piece_owner, updated_game_record, game_finished_notification_challenger_record, game_finished_notification_opponent_record);
     }
 
-    finalize claim_total_pot (game_address: address) -> () {
-        // todo: change logic here to assert that a certain amount of time has passed to allow p2 to claim total pot
-        let previous_block_height: u32 = Mapping::get(games, game_address);
-        assert(block.height > previous_block_height + 1000u32);
-        Mapping::set(games, game_address, block.height);
+    // called by ms key via opponent to finish the game and get the total pot!
+    transition finish_game_by_timeout(
+        game_record: Game,
+        piece_joint_stake: puzzle_pieces_v016.leo/PieceJointStake.record,
+        joint_piece_time_claim: puzzle_pieces_v016.leo/JointPieceTimeClaim.record,
+        sig: signature, // use from ClaimSignature record on FE, can't consume in this fxn bc claim is owned by multisig
+    ) -> (
+        puzzle_pieces_v016.leo/Piece.record,
+        puzzle_pieces_v016.leo/AuditTransferToWinner.record,
+        Game,
+        GameFinishedNotification,
+        GameFinishedNotification)
+    {
+        // assert that the game address/multiisg is calling this
+        assert_eq(game_record.owner, self.signer);
+
+        // assert contracts can't call this
+        assert_eq(self.caller, self.signer);
+
+        // Update the game state
+        let updated_game_record: Game = Game {
+            owner: game_record.owner,
+            challenger_commit: game_record.challenger_commit,
+            opponent_answer: game_record.opponent_answer,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 6field,
+            ix: 0u32,
+        };
+
+        // Notification to challenger of game finished
+        let game_finished_notification_challenger_record: GameFinishedNotification = GameFinishedNotification {
+            owner: game_record.challenger_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 6field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            winner: game_record.opponent_address,
+            loser: game_record.challenger_address,
+            ix: 10u32,
+        };
+
+        // Notification to opponent of game finished
+        let game_finished_notification_opponent_record: GameFinishedNotification = GameFinishedNotification {
+            owner: game_record.opponent_address,
+            game_multisig: game_record.game_multisig,
+            game_state: 6field,
+            your_turn: false,
+            total_pot: game_record.total_pot,
+            challenger_address: game_record.challenger_address,
+            opponent_address: game_record.opponent_address,
+            winner: game_record.opponent_address,
+            loser: game_record.challenger_address,
+            ix: 10u32,
+        };
+
+        // Payout to winner
+        let (piece_record_winner, audit_transfer_to_winner_record): (Piece, AuditTransferToWinner) = puzzle_pieces_v016.leo/joint_timeout_to_opponent(piece_joint_stake, joint_piece_time_claim, sig);
+
+        return (
+            piece_record_winner,
+            audit_transfer_to_winner_record,
+            updated_game_record,
+            game_finished_notification_challenger_record,
+            game_finished_notification_opponent_record
+        ) then finalize (joint_piece_time_claim.block_ht);
+    }
+
+    finalize finish_game_by_timeout (joint_time_claim_block_ht: u32) {
+        // assert that 10000 blocks have passed (~ 83 minutes)
+        let current_block_ht: u32 = block.height;
+        let threshold_block_ht: u32 = joint_time_claim_block_ht + 10000u32;
+        assert(current_block_ht > threshold_block_ht);
     }
 }

@@ -1,8 +1,0 @@
-// The program input for coinflip/src/main.leo
-// [propose_game]
-// private answer: u32 = 1u32;
-// private opponent: address = aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u;
-// private wager: credits = credits {
-//     owner: aleo1ml2xr6fawppd6uaf8gn95uy2fpqqg8gk74k0lu8na7uvayk64v8qu8hw5u,
-//     microcredits: 0u64,
-// };
