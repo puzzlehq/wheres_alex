@@ -1,5 +1,7 @@
 # Where's Alex private multiparty game on Aleo 
 built with Puzzle Wallet & Puzzle SDK
+
+uses programmable private multisigs under the hood
  
 ### SDK Docs: [link](https://docs.puzzle.online/guides/getting_started/)
 ### Where's Alex Leo Program Docs: [link](https://github.com/puzzlehq/serengeti/blob/main/README.md)
