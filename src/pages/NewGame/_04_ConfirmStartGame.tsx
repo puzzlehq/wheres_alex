@@ -19,6 +19,7 @@ import {
   useAccount,
   EventType,
   EventStatus,
+  useBalance,
 } from '@puzzlehq/sdk';
 import { useEffect, useState } from 'react';
 import jsyaml from 'js-yaml';
@@ -50,6 +51,8 @@ function ConfirmStartGame() {
   const amount = inputs?.challenger_wager_amount ?? 0;
 
   const { account } = useAccount();
+  const { balances } = useBalance({});
+  const balance = balances?.[0]?.public ?? 0;
 
   const { loading, error, event, setLoading, setError } = useEventHandling({
     id: eventId,
@@ -67,14 +70,21 @@ function ConfirmStartGame() {
     setLoading(true);
     setConfirmStep(ConfirmStep.Signing);
     setError(undefined);
+    const signature = await requestSignature({ message: messageToSign });
+
+    if (signature.error || (!signature.messageFields || !signature.signature)) {
+      setError(signature.error);
+      setLoading(false);
+      return;
+    }
     const sharedStateResponse = await createSharedState();
     if (sharedStateResponse.error) {
       setError(sharedStateResponse.error);
+      setLoading(false);
+      return;
     } else if (sharedStateResponse.data) {
       const game_multisig_seed = sharedStateResponse.data.seed;
       const game_multisig = sharedStateResponse.data.address;
-
-      const signature = await requestSignature({ message: messageToSign });
 
       setInputs({ ...inputs, game_multisig_seed, game_multisig });
       if (
@@ -137,7 +147,9 @@ function ConfirmStartGame() {
     inputs?.wager_record,
     inputs?.challenger_wager_amount,
     inputs?.challenger_answer,
+    balance === 0
   ].includes(undefined);
+
 
   const [buttonText, setButtonText] = useState('PROPOSE GAME');
 

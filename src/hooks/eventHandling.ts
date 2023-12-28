@@ -24,22 +24,25 @@ export const useEventHandling = ({
   const eventStatus = event?.status;
 
   useEffect(() => {
+    if (!id) return;
     event && stepName && console.log(`${stepName}:`, event);
   }, [event]);
 
   useEffect(() => {
+    if (!id) return;
     const eventError = _error;
     eventError && setError(eventError);
   }, [_error]);
 
   useEffect(() => {
-    if (!eventStatus) return;
+    if (!eventStatus || !id) return;
     if ([EventStatus.Creating, EventStatus.Pending].includes(eventStatus)) {
       setLoading(true);
     }
   }, [event?.status])
 
   useEffect(() => {
+    if (!id) return;
     if (eventStatus === EventStatus.Settled) {
       onSettled && onSettled();
       setLoading(false);

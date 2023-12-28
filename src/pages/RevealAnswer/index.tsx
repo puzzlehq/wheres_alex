@@ -25,6 +25,7 @@ const RevealAnswer = () => {
 
   useEventHandling({
     id: eventId,
+    stepName: 'Reveal Index',
     onSettled: () => setStep(Step._02_Confirmed),
   });
 

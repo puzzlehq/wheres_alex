@@ -54,6 +54,7 @@ const SubmitWager = () => {
 
   const { loading, error, event, setLoading, setError } = useEventHandling({
     id: eventIdSubmit,
+    stepName: 'Submit Wager',
     onSettled: () => setStep(Step._02_AcceptGame),
   });
 
@@ -70,6 +71,7 @@ const SubmitWager = () => {
     setConfirmStep(ConfirmStep.Signing);
     if (!signature.messageFields || !signature.signature) {
       setError('Signature or signature message fields not found');
+      setLoading(false);
       return;
     }
     setConfirmStep(ConfirmStep.RequestingEvent);
@@ -98,9 +100,11 @@ const SubmitWager = () => {
       functionId: GAME_FUNCTIONS.submit_wager,
       fee: transitionFees.submit_wager,
       inputs: Object.values(newInputs),
+      address: inputs.game_req_notification.owner, // opponent address
     });
     if (response.error) {
       setError(response.error);
+      setLoading(false);
     } else if (response.eventId) {
       /// todo - other things here?
       setEventIdSubmit(response.eventId);

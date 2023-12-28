@@ -49,6 +49,7 @@ function AcceptGame() {
     id: eventIdAccept,
     address: msAddress,
     multisig: true,
+    stepName: 'Accept Game',
     onSettled: () => setStep(Step._03_Confirmed),
   });
 
@@ -160,8 +161,10 @@ function AcceptGame() {
       });
       if (response.error) {
         setError(response.error);
+        setLoading(false);
       } else if (!response.eventId) {
         setError('No eventId found!');
+        setLoading(false);
       } else {
         console.log('success', response.eventId);
         setEventIdAccept(response.eventId);

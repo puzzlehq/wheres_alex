@@ -8,16 +8,25 @@ import { Step, useNewGameStore } from './store';
 import { useEffect } from 'react';
 import { useInitCurrentGame } from '@hooks/currentGame';
 import { useEventHandling } from '@hooks/eventHandling';
+import { useAccount } from '@puzzlehq/sdk';
 
 const NewGame = () => {
   const navigate = useNavigate();
-  const [step,eventId, setInputs, setEventId, setStep] = useNewGameStore((state) => [
+  const [step, eventId, inputs, setInputs, setEventId, setStep] = useNewGameStore((state) => [
     state.step,
     state.eventId,
+    state.inputs,
     state.setInputs,
     state.setEventId,
     state.setStep,
   ]);
+
+  const { account } = useAccount();
+
+  useEffect(() => {
+    if (!account) return;
+    setInputs({ ...inputs, challenger: account.address });
+  }, [account])
 
   const done = () => {
     setInputs({});
@@ -37,6 +46,7 @@ const NewGame = () => {
 
   useEventHandling({
     id: eventId,
+    stepName: 'New Game Index',
     onSettled: () => setStep(Step._05_GameStarted),
   });
 

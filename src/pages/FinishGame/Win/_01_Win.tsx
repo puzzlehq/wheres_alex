@@ -41,6 +41,7 @@ const Win = () => {
     id: eventId,
     address: msAddress,
     multisig: true,
+    stepName: "Win",
     onSettled: () => setStep(Step._02_GameOver),
   });
 
