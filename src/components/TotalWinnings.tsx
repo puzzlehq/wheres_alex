@@ -14,7 +14,7 @@ function TotalWinnings({ amount }: { amount: number }) {
           </div>
         </div>
         <div className='flex flex-grow' />
-        <p className='font-bold'>Puzzle Pieces</p>
+        <p className='font-bold'>Puzzle Prudens</p>
       </div>
     </section>
   );

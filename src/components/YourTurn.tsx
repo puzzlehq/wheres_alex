@@ -78,7 +78,7 @@ function YourTurnItem({ game }: { game: Game }) {
         {shortenAddress(vs)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold tracking-tight text-primary-pink max-sm:ml-2'>
-        {wager} pieces
+        {wager} prudens
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>

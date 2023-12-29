@@ -25,7 +25,7 @@ function StartWager() {
     if (isNaN(input)) {
       setError('Please input a number');
     } else if (input > availableBalance) {
-      setError('You do not have enough Pieces');
+      setError('You do not have enough Prudens');
     } else {
       setError(undefined);
       setInputs({
@@ -67,7 +67,7 @@ function StartWager() {
         placeholder='Enter amount'
       />
       <p className='mx-auto mt-6'>
-        {'Available balance: ' + availableBalance} Pieces
+        {'Available balance: ' + availableBalance} Prudens
       </p>
       {error && <p className='mx-auto text-primary-red'>{error}</p>}
       <div className='flex flex-grow flex-col' />

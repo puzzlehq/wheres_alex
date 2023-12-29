@@ -19,7 +19,7 @@ const Wager = ({ wagerAmount, winnings = false }: WagerProps) => {
               Puzzle
             </p>
             <p className='flex-1 text-base font-bold text-primary-green'>
-              Pieces
+              Prudens
             </p>
           </div>
         </div>

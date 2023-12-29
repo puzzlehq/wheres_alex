@@ -22,7 +22,7 @@ function TheirTurnItem({ game }: { game: Game }) {
     const phoneNumber = 'ENTER_PHONE_NUMBER'; // Leave this as is if you want the user to enter the number.
     const message = `I'm betting you ${
       game.gameNotification.recordData.total_pot / 2
-    } puzzle pieces that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
+    } puzzle prudens that you can't find where I hid Alex! Click here to download Puzzle Wallet https://puzzle.online to play!`;
     const encodedMessage = encodeURIComponent(message);
     const smsHref = `sms:${phoneNumber}?&body=${encodedMessage}`;
 
@@ -86,7 +86,7 @@ function TheirTurnItem({ game }: { game: Game }) {
         {shortenAddress(vs)}
       </div>
       <div className='my-auto self-center text-left text-xs font-bold text-primary-red'>
-        {wager} pieces
+        {wager} prudens
       </div>
       <div className='flex justify-end'>{renderActionButton()}</div>
     </div>
