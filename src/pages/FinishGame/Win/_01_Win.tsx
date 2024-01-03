@@ -186,7 +186,7 @@ const Win = () => {
       </div>
       <div className='flex flex-grow flex-col' />
       {error && <p>{error}</p>}
-      {!loading && (
+      {/* {!loading && (
         <p>Game multisig public balance: {msPublicBalance} public credits</p>
       )}
       {!loading && msPublicBalance < transitionFees.finish_game && (
@@ -194,7 +194,7 @@ const Win = () => {
           {shortenAddress(msAddress ?? '') ?? 'Game multisig'} needs at least{' '}
           {transitionFees.finish_game} public credits!
         </p>
-      )}
+      )} */}
       <Button color='green' disabled={disabled || loading} onClick={claim}>
         {buttonText}
       </Button>

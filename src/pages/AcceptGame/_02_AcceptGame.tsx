@@ -55,12 +55,12 @@ function AcceptGame() {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { balances: msBalances } = useBalance({
-    address: msAddress,
-    multisig: true,
-  });
-  const msPublicBalance =
-    msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
+  // const { balances: msBalances } = useBalance({
+  //   address: msAddress,
+  //   multisig: true,
+  // });
+  // const msPublicBalance =
+  //   msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
 
   useEffect(() => {
     if (!currentGame || !msPuzzleRecords || !msGameRecords) return;
@@ -185,8 +185,8 @@ function AcceptGame() {
     !inputs.piece_claim_challenger ||
     !inputs.piece_stake_opponent ||
     !inputs.piece_claim_opponent ||
-    !answer ||
-    msPublicBalance < transitionFees.accept_game + transitionFees.finish_game;
+    !answer
+    // msPublicBalance < transitionFees.accept_game + transitionFees.finish_game;
 
   const [buttonText, setButtonText] = useState('ACCEPT GAME');
   useEffect(() => {
@@ -221,7 +221,7 @@ function AcceptGame() {
         />
         <div className='flex flex-grow flex-col' />
         {error && <p>Error: {error}</p>}
-        {!loading && (
+        {/* {!loading && (
           <p>Game multisig public balance: {msPublicBalance} public credits</p>
         )}
         {!loading &&
@@ -232,7 +232,7 @@ function AcceptGame() {
               least {transitionFees.accept_game + transitionFees.finish_game}{' '}
               public credits!
             </p>
-          )}
+          )} */}
         <Button
           onClick={createEvent}
           disabled={disabled || loading}
