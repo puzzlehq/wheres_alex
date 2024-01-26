@@ -136,7 +136,7 @@ function AcceptGame() {
     setError(undefined);
     try {
       const response_block_ht = await fetch(
-        'https://jigsaw-dev.puzzle.online/api/aleoapi/latest/height'
+        'https://jigsaw.puzzle.online/api/aleoapi/latest/height'
       );
       const block_ht = Number(await response_block_ht.json());
       const acceptGameInputs: Omit<
