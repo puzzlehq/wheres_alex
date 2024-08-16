@@ -50,7 +50,7 @@ const Win = () => {
     multisig: true,
   });
   const msPublicBalance =
-    msBalances && msBalances?.length > 0 ? msBalances[0].public : 0;
+    msBalances && msBalances?.length > 0 ? msBalances[0].values.public : 0;
 
   useEffect(() => {
     if (!currentGame || !msPuzzleRecords || !msGameRecords) return;

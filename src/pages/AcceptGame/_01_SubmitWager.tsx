@@ -74,6 +74,7 @@ const SubmitWager = () => {
       setLoading(false);
       return;
     }
+
     setConfirmStep(ConfirmStep.RequestingEvent);
     const messageFields = Object(jsyaml.load(signature.messageFields));
 
@@ -89,7 +90,12 @@ const SubmitWager = () => {
       opponent_sig: signature.signature,
     };
     const game_multisig_seed = currentGame?.utilRecords?.[0].data.seed ?? '';
-    console.log('game_multisig seed', game_multisig_seed);
+    if (typeof game_multisig_seed !== 'string' || typeof inputs.game_req_notification.owner !== 'string') {
+      setError('String values only!');
+      setLoading(false);
+      return;
+    }
+    console.log('game_multisig_seed', game_multisig_seed);
     const { data } = await importSharedState(game_multisig_seed);
     console.log(`Shared state imported: ${data?.address}`);
 

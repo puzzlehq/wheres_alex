@@ -67,32 +67,40 @@ function AcceptGame() {
     const piece_stake_challenger = msPuzzleRecords?.find(
       (r) =>
         r.data.ix === '3u32.private' &&
+        typeof r.data.challenger === 'string' &&
         r.data.challenger.replace('.private', '') ===
-          currentGame.gameNotification.recordData.challenger_address &&
+        currentGame.gameNotification.recordData.challenger_address &&
+        typeof r.data.staker === 'string' &&
         r.data.staker.replace('.private', '') ===
           currentGame.gameNotification.recordData.challenger_address
     );
     const piece_claim_challenger = msPuzzleRecords.find(
       (r) =>
         r.data.ix === '6u32.private' &&
+      typeof r.data.challenger === 'string' &&
         r.data.challenger.replace('.private', '') ===
-          currentGame.gameNotification.recordData.challenger_address &&
+        currentGame.gameNotification.recordData.challenger_address &&
+        typeof r.data.claimer === 'string' &&
         r.data.claimer.replace('.private', '') ===
           currentGame.gameNotification.recordData.challenger_address
     );
     const piece_stake_opponent = msPuzzleRecords.find(
       (r) =>
         r.data.ix === '3u32.private' &&
+      typeof r.data.opponent === 'string' &&
         r.data.opponent.replace('.private', '') ===
-          currentGame.gameNotification.recordData.opponent_address &&
+        currentGame.gameNotification.recordData.opponent_address &&
+        typeof r.data.staker === 'string' &&
         r.data.staker.replace('.private', '') ===
           currentGame.gameNotification.recordData.opponent_address
     );
     const piece_claim_opponent = msPuzzleRecords.find(
       (r) =>
         r.data.ix === '6u32.private' &&
+      typeof r.data.opponent === 'string' &&
         r.data.opponent.replace('.private', '') ===
-          currentGame.gameNotification.recordData.opponent_address &&
+        currentGame.gameNotification.recordData.opponent_address &&
+        typeof r.data.claimer === 'string' &&
         r.data.claimer.replace('.private', '') ===
           currentGame.gameNotification.recordData.opponent_address
     );
@@ -151,6 +159,7 @@ function AcceptGame() {
         piece_claim_opponent: inputs.piece_claim_opponent,
         block_ht: block_ht.toString() + 'u32',
       };
+      if (typeof inputs.game_record.owner !=='string') throw new Error('No game_record.owner!')
       const response = await requestCreateEvent({
         type: EventType.Execute,
         programId: GAME_PROGRAM_ID,

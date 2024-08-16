@@ -15,15 +15,16 @@ import { useNewGameStore } from '@pages/NewGame/store';
 import { useClaimPrizeWinStore } from '@pages/FinishGame/Win/store';
 import { useRevealAnswerStore } from '@pages/RevealAnswer/store';
 import _ from 'lodash';
+import { RecordStatus } from '@puzzlehq/types';
 
 const parsePuzzlePieces = (records: RecordWithPlaintext[]) => {
   if (records.length > 0) {
     let availableBalance = 0;
     let largestPiece = records[0];
     const totalBalance = records
-      .filter((record) => !record.spent)
+      .filter((record) => record.status === RecordStatus.Unspent)
       .map((record) => {
-        const amount = record.data?.amount?.replace('u64.private', '');
+        const amount = typeof record.data?.amount === 'string' ? record.data?.amount?.replace('u64.private', '') : undefined;
         if (amount && record.data?.ix === '0u32.private') {
           /// find largestPiece (and thus availableBalance)
           const amountInt = parseInt(amount);
@@ -94,11 +95,13 @@ const createGame = (
     gameAction: getGameAction(gameState),
     puzzleRecords: puzzleRecords.filter(
       (puzzleRecord) =>
+        typeof puzzleRecord.data.game_multisig === 'string' && 
         puzzleRecord.data.game_multisig?.replace('.private', '') ===
         gameNotification.recordData.game_multisig
     ),
     utilRecords: utilRecords.filter(
       (utilRecord) =>
+        typeof utilRecord.data.game_multisig === 'string' && 
         utilRecord.data.game_multisig?.replace('.private', '') ===
         gameNotification.recordData.game_multisig
     ),

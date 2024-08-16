@@ -1,4 +1,5 @@
 import { useRecords } from '@puzzlehq/sdk';
+import { RecordStatus } from '@puzzlehq/types';
 
 export const useGameRecords = () => {
   const { records } = useRecords({
@@ -8,7 +9,7 @@ export const useGameRecords = () => {
         'puzzle_pieces_v015.aleo',
         'multiparty_pvp_utils_v015.aleo',
       ],
-      type: 'unspent',
+      status: RecordStatus.Unspent,
     },
     multisig: false,
   });

@@ -6,7 +6,6 @@ import react from '@vitejs/plugin-react';
 import liveReload from 'vite-plugin-live-reload';
 import wasm from 'vite-plugin-wasm';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill';
-import { NodeModulesPolyfillPlugin } from '@esbuild-plugins/node-modules-polyfill';
 import polyfills from 'rollup-plugin-polyfill-node';
 import inject from '@rollup/plugin-inject';
 
@@ -43,7 +42,6 @@ export default defineConfig({
           process: true,
           buffer: true,
         }),
-        NodeModulesPolyfillPlugin(),
       ],
     },
   },

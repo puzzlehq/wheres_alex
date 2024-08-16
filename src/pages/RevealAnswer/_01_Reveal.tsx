@@ -56,16 +56,17 @@ const Reveal = () => {
 
     const challenger_answer_record = currentGame.utilRecords.find(
       (r) =>
+        typeof r.data.owner === 'string' &&
         r.data.owner.replace('.private', '') ===
         currentGame.gameNotification.recordData.challenger_address
     );
 
     const joint_piece_stake = currentGame.puzzleRecords.find(
-      (r) => r.data.ix.replace('.private', '') === '10u32'
+      (r) => typeof r.data.ix === 'string' && r.data.ix.replace('.private', '') === '10u32'
     );
 
     const challenger_claim_signature = currentGame.puzzleRecords.find(
-      (r) => r.data.ix.replace('.private', '') === '7u32'
+      (r) => typeof r.data.ix === 'string' && r.data.ix.replace('.private', '') === '7u32'
     );
 
     console.log(

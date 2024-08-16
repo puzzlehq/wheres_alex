@@ -1,4 +1,5 @@
 import { RecordWithPlaintext, zodAddress } from '@puzzlehq/sdk';
+import { StringRecord } from '@puzzlehq/types';
 import { z } from 'zod';
 
 export enum Answer {
@@ -197,17 +198,22 @@ export type GameNotification =
   | GameFinishReqNotification
   | GameFinishedNotification;
 
-export const removeVisibilitySuffix = (obj: { [key: string]: string }) => {
-  for (const key in obj) {
-    if (typeof obj[key] === 'string') {
-      obj[key] = obj[key]
-        .replace('.private', '')
+  export const removeVisibilitySuffix = (obj: StringRecord | string) => {
+    if (typeof obj === 'string') {
+      return obj.replace('.private', '')
         .replace('.public', '')
         .replace('u64', '');
     }
-  }
-  return obj;
-};
+    for (const key in obj) {
+      if (typeof obj[key] === 'string') {
+        obj[key] = (obj[key] as string)
+          .replace('.private', '')
+          .replace('.public', '')
+          .replace('u64', '');
+      }
+    }
+    return obj;
+  };
 
 export type GameState =
   | 'challenger:0'

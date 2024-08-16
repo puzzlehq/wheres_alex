@@ -52,7 +52,7 @@ function ConfirmStartGame() {
 
   const { account } = useAccount();
   const { balances } = useBalance({});
-  const balance = balances?.[0]?.public ?? 0;
+  const balance = balances?.[0]?.values.public ?? 0;
 
   const { loading, error, event, setLoading, setError } = useEventHandling({
     id: eventId,
